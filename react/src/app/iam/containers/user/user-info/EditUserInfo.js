@@ -99,13 +99,12 @@ function EditUserInfo(props) {
       });
     }
   };
- * 
+ *
  */
   useImperativeHandle(props.forwardref, () => (
     {
       handleSubmit,
     }));
-
 
   const renderLanguageOptions = () => {
     let language;
@@ -164,7 +163,6 @@ function EditUserInfo(props) {
       </div>
     );
   };
-
 
   const checkEmailAddress = (rule, value, callback) => {
     if (value !== user.email && value !== '') {
@@ -288,7 +286,7 @@ function EditUserInfo(props) {
           {getFieldDecorator('phone', {
             rules: [{
               validator: checkPhone,
-
+              required: true,
             },
 
             ],
