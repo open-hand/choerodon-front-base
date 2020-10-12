@@ -25,8 +25,8 @@ const FailedStatistics = withRouter(observer((props) => {
   };
 
   const renderSagaCode = ({ value, record }) => (
-    <Tooltip title={`${value}-#${record.get('viewId')}`}>
-      <a className="c7n-overview-sage" onClick={() => handleClickSagaRecord(record)}>{`${value}-${record.get('id')}`}</a>
+    <Tooltip title={`${value}-${record.get('viewId')}`}>
+      <a className="c7n-overview-sage" onClick={() => handleClickSagaRecord(record)}>{`${value}-${record.get('viewId')}`}</a>
     </Tooltip>
   );
 

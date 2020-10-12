@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table } from 'choerodon-ui/pro';
+import { Table, Tooltip } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 
 import { useFailedStatisticsStore } from './stores';
@@ -24,7 +24,9 @@ const FailedStatistics = withRouter(observer((props) => {
   };
 
   const renderSagaCode = ({ value, record }) => (
-    <a className="c7n-overview-sage" onClick={() => handleClickSagaRecord(record)}>{`${value}-${record.get('id')}`}</a>
+    <Tooltip title={`${value}-${record.get('viewId')}`}>
+      <a className="c7n-overview-sage" onClick={() => handleClickSagaRecord(record)}>{`${value}-${record.get('viewId')}`}</a>
+    </Tooltip>
   );
 
 
