@@ -1,6 +1,10 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon } from '@choerodon/boot';
+import {
+  Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon,
+} from '@choerodon/boot';
 import { Button, Tag } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
 import Store from './stores';
@@ -23,6 +27,7 @@ const ListView = () => {
     listDataSet: dataSet,
     prefixCls,
     permissions,
+    intlPrefix,
   } = context;
 
   function refresh() {
@@ -46,9 +51,24 @@ const ListView = () => {
     });
   }
 
-  async function handleEnabled() {
+  function openEnabledModal() {
     const record = dataSet.current;
     const enabled = record.get('enabled');
+    if (enabled) {
+      Modal.open({
+        key: Modal.key(),
+        title: formatMessage({ id: `${intlPrefix}.enable.title` }, { name: record.get('name') }),
+        children: formatMessage({ id: `${intlPrefix}.enable.des` }),
+        movable: false,
+        onOk: () => handleEnabled(true),
+      });
+    } else {
+      handleEnabled(false);
+    }
+  }
+
+  async function handleEnabled(enabled) {
+    const record = dataSet.current;
     const postData = record.toData();
     try {
       await axios.put(`/iam/hzero/v1/${organizationId}/roles/${enabled ? 'disable' : 'enable'}`, JSON.stringify(postData));
@@ -56,6 +76,18 @@ const ListView = () => {
     } catch (e) {
       Choerodon.handleResponseError(e);
     }
+  }
+
+  function handleDelete() {
+    const record = dataSet.current;
+    const modalProps = {
+      title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
+      children: formatMessage({ id: `${intlPrefix}.delete.des` }),
+      okText: formatMessage({ id: 'delete' }),
+      okProps: { color: 'red' },
+      cancelProps: { color: 'dark' },
+    };
+    dataSet.delete(record, modalProps);
   }
 
   function renderName({ value, record: tableRecord }) {
@@ -84,9 +116,16 @@ const ListView = () => {
       {
         service: [enabled ? 'choerodon.code.organization.manager.role.ps.disable' : 'choerodon.code.organization.manager.role.ps.enable'],
         text: enabled ? '停用' : '启用',
-        action: handleEnabled,
+        action: openEnabledModal,
       },
     ];
+    if (!enabled) {
+      actionDatas.push({
+        service: ['choerodon.code.organization.manager.role.ps.delete'],
+        text: '删除',
+        action: handleDelete,
+      });
+    }
     return !builtIn && <Action data={actionDatas} />;
   }
 

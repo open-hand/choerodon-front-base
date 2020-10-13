@@ -1,12 +1,19 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+
 import React, { useEffect, useState } from 'react';
-import { Form, TextField, TextArea, Select, SelectBox, UrlField, DatePicker } from 'choerodon-ui/pro';
+import {
+  Form, TextField, TextArea, Select, SelectBox, NumberField,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import { Button, Icon, Input } from 'choerodon-ui';
+import { Button, Icon, Tooltip } from 'choerodon-ui';
 import './index.less';
 import AvatarUploader from '../../../components/avatarUploader';
+import Tips from '../../../components/new-tips';
 
 const { Option } = Select;
-const InfoForm = observer(({ dataSet, AppState, intl, hasRegister }) => {
+const InfoForm = observer(({
+  dataSet, AppState, intl, hasRegister,
+}) => {
   const favicon = dataSet.current && dataSet.current.get('favicon');
   const systemLogo = dataSet.current && dataSet.current.get('systemLogo');
   const [isShowAvatar, changeAvatarStatus] = useState(false);
@@ -41,7 +48,12 @@ const InfoForm = observer(({ dataSet, AppState, intl, hasRegister }) => {
               </div>
             </Button>
           </div>
-          <span style={{ display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem' }}>平台Logo</span>
+          <span style={{
+            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem',
+          }}
+          >
+            平台Logo
+          </span>
         </div>
         <div style={{ transform: 'translate(1.91rem, -1rem)', width: '1.1rem' }}>
           <div className="c7n-system-setting-avater">
@@ -55,7 +67,12 @@ const InfoForm = observer(({ dataSet, AppState, intl, hasRegister }) => {
               </div>
             </Button>
           </div>
-          <span style={{ display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem' }}>平台导航栏图形标</span>
+          <span style={{
+            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem',
+          }}
+          >
+            平台导航栏图形标
+          </span>
         </div>
       </div>
     );
@@ -79,6 +96,65 @@ const InfoForm = observer(({ dataSet, AppState, intl, hasRegister }) => {
         {hasRegister && dataSet.current && dataSet.current.get('registerEnabled') && (
           <TextArea resize="vertical" name="registerUrl" />
         )}
+        <Tips
+          title="是否自动清理邮件日志"
+          helpText="若选择自动清理平台中邮件日志后，系统将在每天凌晨2点自动清理超出“保留时间”的邮件日志"
+          className="c7n-system-setting-infoForm-label"
+        />
+        <SelectBox name="autoCleanEmailRecord">
+          <SelectBox.Option value>是</SelectBox.Option>
+          <SelectBox.Option value={false}>否</SelectBox.Option>
+        </SelectBox>
+        {dataSet.current && dataSet.current.get('autoCleanEmailRecord') && (
+          <NumberField
+            name="autoCleanEmailRecordInterval"
+            suffix={<span className="c7n-system-setting-infoForm-suffix">天</span>}
+            addonAfter={<Tips helpText="若将日志保留时间设置为180天，即表示每天会自动清除180天之前的日志" />}
+          />
+        )}
+        <Tips
+          title="是否自动清理Webhook日志"
+          helpText="若选择自动清理平台中Webhook日志后，系统将在每天凌晨2点自动清理超出“保留时间”的Webhook日志"
+          className="c7n-system-setting-infoForm-label"
+        />
+        <SelectBox name="autoCleanWebhookRecord">
+          <SelectBox.Option value>是</SelectBox.Option>
+          <SelectBox.Option value={false}>否</SelectBox.Option>
+        </SelectBox>
+        {dataSet.current && dataSet.current.get('autoCleanWebhookRecord') && (
+          <NumberField
+            name="autoCleanWebhookRecordInterval"
+            suffix={<span className="c7n-system-setting-infoForm-suffix">天</span>}
+            addonAfter={<Tips helpText="若将日志保留时间设置为180天，即表示每天会自动清除180天之前的日志" />}
+          />
+        )}
+        <Tips
+          title="是否自动清理事务记录"
+          helpText="若选择自动清理平台中事务记录后，系统将在每天凌晨2点自动清理超出“保留时间”的事务记录"
+          className="c7n-system-setting-infoForm-label"
+        />
+        <SelectBox name="autoCleanSagaInstance">
+          <SelectBox.Option value>是</SelectBox.Option>
+          <SelectBox.Option value={false}>否</SelectBox.Option>
+        </SelectBox>
+        {dataSet.current && dataSet.current.get('autoCleanSagaInstance') && (
+          <NumberField
+            name="autoCleanSagaInstanceInterval"
+            suffix={<span className="c7n-system-setting-infoForm-suffix">天</span>}
+            addonAfter={<Tips helpText="若将记录保留时间设置为180天，即表示每天会自动清除180天之前的事务记录" />}
+          />
+        )}
+        {dataSet.current && dataSet.current.get('autoCleanSagaInstance') && ([
+          <Tips
+            title="是否保留失败状态记录"
+            showHelp={false}
+            className="c7n-system-setting-infoForm-label"
+          />,
+          <SelectBox name="retainFailedSagaInstance">
+            <SelectBox.Option value>是</SelectBox.Option>
+            <SelectBox.Option value={false}>否</SelectBox.Option>
+          </SelectBox>,
+        ])}
       </Form>
 
       <AvatarUploader
