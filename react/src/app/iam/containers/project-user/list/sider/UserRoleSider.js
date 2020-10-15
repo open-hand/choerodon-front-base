@@ -11,7 +11,7 @@ const { Option } = Select;
 
 let InviteModal = false;
 try {
-  const { default: requireData } = require('@choerodon/base-pro/lib/routes/invite-user');
+  const { default: requireData } = require('@choerodon/base-business/lib/routes/invite-user');
   InviteModal = requireData;
 } catch (error) {
   InviteModal = false;
