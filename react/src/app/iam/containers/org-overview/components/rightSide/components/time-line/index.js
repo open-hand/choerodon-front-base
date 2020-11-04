@@ -20,45 +20,46 @@ function handleDropDown(e) {
 }
 
 function renderMonth(month) {
+  let newMonth = month;
   switch (month) {
     case '01':
-      month = 'Jan';
+      newMonth = 'Jan';
       break;
     case '02':
-      month = 'Feb';
+      newMonth = 'Feb';
       break;
     case '03':
-      month = 'Mar';
+      newMonth = 'Mar';
       break;
     case '04':
-      month = 'Apr';
+      newMonth = 'Apr';
       break;
     case '05':
-      month = 'May';
+      newMonth = 'May';
       break;
     case '06':
-      month = 'Jun';
+      newMonth = 'Jun';
       break;
     case '07':
-      month = 'Jul';
+      newMonth = 'Jul';
       break;
     case '08':
-      month = 'Aug';
+      newMonth = 'Aug';
       break;
     case '09':
-      month = 'Sept';
+      newMonth = 'Sept';
       break;
     case '10':
-      month = 'Oct';
+      newMonth = 'Oct';
       break;
     case '11':
-      month = 'Nov';
+      newMonth = 'Nov';
       break;
     default:
-      month = 'Dec';
+      newMonth = 'Dec';
       break;
   }
-  return month;
+  return newMonth;
 }
 
 const iconType = {
@@ -155,9 +156,8 @@ const TimeLine = observer(() => {
       overStores.setOldOptsRecord(optsDs.records);
       setLoadMoreBtn(res.hasNextPage);
       return res;
-    } else {
-      return false;
     }
+    return false;
   }
   // 更多操作
   function loadMoreOptsRecord() {
@@ -207,16 +207,18 @@ const TimeLine = observer(() => {
       <ul>
         {
           record.map((item) => {
-            const { logId: id, auditDatetime: creationDate, type, auditContent: content } = item;
+            const {
+              logId: id, auditDatetime: creationDate, type, auditContent: content,
+            } = item;
             return (
               <li key={id}>
                 {renderDateLine(creationDate)}
                 <div className="c7ncd-timeLine-content">
                   <div className="c7ncd-timeLine-content-header">
                     <div className="c7ncd-timeLine-content-header-icon">
-                      <Icon type={iconType[type].icon} className={iconType[type].className} />
+                      <Icon type={iconType[type]?.icon} className={iconType[type]?.className} />
                     </div>
-                    <span className="c7ncd-timeLine-content-header-title">{iconType[type].typeTxt}</span>
+                    <span className="c7ncd-timeLine-content-header-title">{iconType[type]?.typeTxt}</span>
                     <Button
                       className="c7ncd-timeLine-content-header-btn"
                       shape="circle"
