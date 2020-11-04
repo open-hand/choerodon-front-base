@@ -1,5 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro/lib';
 
+import JSONbig from 'json-bigint';
+
 export default (userId, intl, intlPrefix, orgId) => {
   const name = intl.formatMessage({ id: `${intlPrefix}.name` });
   const code = intl.formatMessage({ id: `${intlPrefix}.code` });
@@ -40,12 +42,10 @@ export default (userId, intl, intlPrefix, orgId) => {
 
     ],
     queryFields: [
-
       { name: 'name', type: 'string', label: name },
       // { name: 'code', type: 'string', label: code },
       { name: 'level', type: 'string', label: level, textField: 'value', valueField: 'key', options: queryPredefined },
       // { name: 'roles', type: 'string', label: role },
-
     ],
 
     transport: {
@@ -53,8 +53,8 @@ export default (userId, intl, intlPrefix, orgId) => {
         url: `/iam/choerodon/v1/${orgId}/roles/self/roles`,
         method: 'get',
         transformResponse: (data) => ({
-          list: JSON.parse(data).content,
-          ...JSON.parse(data),
+          list: JSONbig.parse(data).content,
+          ...JSONbig.parse(data),
         }),
       }),
     },
