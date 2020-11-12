@@ -1,5 +1,20 @@
 const docServer = 'http://v0-14.choerodon.io/zh/docs';
 
+const enterprises = {
+  'c7ncd.enterprise.info.confirm': '系统信息确认',
+  'c7ncd.enterprise.info.tips': '通过Choerodon猪齿鱼信息确认，您可以创建系统组织信息，并创建和维护系统admin的账号信息。',
+  'c7ncd.enterprise.info.name': '组织名称',
+  'c7ncd.enterprise.info.business.name': '公司名称',
+  'c7ncd.enterprise.info.business.type': '行业',
+  'c7ncd.enterprise.info.business.scale': '公司规模',
+  'c7ncd.enterprise.info.business.email': '公司邮箱',
+  'c7ncd.enterprise.info.phone': '手机号码',
+  'c7ncd.enterprise.info.admin.name': 'admin姓名',
+  'c7ncd.enterprise.info.admin.info': 'Admin账号信息',
+  'c7ncd.enterprise.info.admin.info.tips': 'admin在此输入的姓名、邮箱与手机号，将作为之后在系统中admin的用户名、登录邮箱与手机号',
+  'c7ncd.enterprise.info.agree': '请阅读并同意隐私声明',
+};
+
 const pageDetail = {
   // menusetting
   // home
@@ -1968,6 +1983,7 @@ const zh_CN = {
   // page
   ...pageDetail,
   ...c7nHzeroPage,
+  ...enterprises,
 
 };
 /* eslint-disable-next-line */
