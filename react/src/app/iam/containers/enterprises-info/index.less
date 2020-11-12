@@ -1,0 +1,154 @@
+.c7ncd-enterprise-info {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+
+  &-header {
+    height: 60px;
+    background: #3f51b5;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &-overImg {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    max-height: 71.7%;
+    display: block;
+  }
+
+  &-logo {
+    width: 37%;
+    position: absolute;
+    top: 6.7%;
+    left: 6.7%;
+  }
+
+  &-left {
+    width: 50%;
+    background: #4c6df6;
+    position: relative;
+  }
+
+  &-form {
+    padding-top: 20px;
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    a:visited {
+      text-decoration: none;
+    }
+
+    &-title {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+      margin-top: 4px;
+    }
+
+    &-tip {
+      margin-bottom: .3rem;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+
+    &-success-info {
+      font-size: 14px;
+      margin: 20px 0;
+    }
+
+    &-admin {
+      font-size: 16px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #202124;
+      line-height: 22px;
+      padding-top: .3rem;
+      border-top: 1px dashed #4c6df6;
+      margin: .2rem 0;
+    }
+  }
+
+  &-btn {
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  &-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.66);
+    line-height: 20px;
+  }
+
+  &-bbs {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.66);
+    text-align: center;
+    line-height: 18px;
+    width: 100%;
+    margin-top: .2rem;
+  }
+
+  &-right {
+    width: 50%;
+    height: inherit;
+    position: relative;
+
+    &-content {
+      width: 80%;
+      margin: auto;
+      left: 0;
+      right: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 0;
+      min-height: 610px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .c7ncd-enterprise-info {
+    &-right {
+      width: 100%;
+      &-content {
+        width: auto;
+        margin: 0 10%;
+      }
+    }
+    &-link {
+      font-size: 14px;
+      text-align: left;
+      color: rgba(0, 0, 0, 0.66);
+      line-height: 20px;
+    }
+
+    &-bbs {
+      font-family: PingFangSC-Regular;
+      font-size: 13px;
+      color: rgba(0, 0, 0, 0.66);
+      text-align: left;
+      line-height: 18px;
+      padding-bottom: 30px;
+    }
+
+    &-left {
+      display: none;
+    }
+  }
+}

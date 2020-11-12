@@ -7,23 +7,33 @@
   "files": [
     "lib"
   ],
+  "resolutions": {
+    "react": "16.14.0",
+    "react-dom": "16.14.0"
+  },
   "dependencies": {
-    "universal-cookie": "2.2.0",
     "echarts": "^4.1.0",
     "echarts-for-react": "^2.0.12",
     "hjson": "^3.1.1",
+    "json-bigint": "^1.0.0",
     "mobx-react-lite": "^1.4.1",
     "react-codemirror": "^1.0.0",
     "react-copy-to-clipboard": "^5.0.2",
+    "react-helmet": "^6.1.0",
     "react-image-lightbox": "^4.6.0",
     "react-markdown": "^4.2.2",
     "react-quill": "^1.2.6",
     "rxjs-compat": "^6.5.3",
-    "json-bigint": "^1.0.0"
+    "universal-cookie": "2.2.0"
   },
   "devDependencies": {
     "@choerodon/boot": "0.22.0",
     "@choerodon/master": "0.24.0",
+    "@types/react": "^16.9.44",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
     "babel-eslint": "^8.1.0",
     "babel-preset-c7n-app": "^0.0.1",
     "choerodon-ui": "0.8.x",

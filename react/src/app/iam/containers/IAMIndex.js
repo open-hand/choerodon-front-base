@@ -57,6 +57,8 @@ const platformOverview = asyncRouter(() => import('./platform-overview'));
 
 const heroPage = asyncRouter(() => import('./hzero-page'));
 
+const enterpriseInfo = asyncRouter(() => import('./enterprises-info'));
+
 @inject('AppState')
 class IAMIndex extends React.Component {
   render() {
@@ -65,7 +67,7 @@ class IAMIndex extends React.Component {
     const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`../locale/${langauge}`));
     return (
       <IntlProviderAsync>
-        <React.Fragment>
+        <>
           <Switch>
             <Route path={`${match.url}/menu-setting`} component={menuSetting} />
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
@@ -102,10 +104,11 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/hzero/instance`} component={heroPage} />
             <Route path={`${match.url}/hzero/api-test`} component={heroPage} />
             <Route path={`${match.url}/hzero/api`} component={heroPage} />
+            <Route path={`${match.url}/enterprise`} component={enterpriseInfo} />
             <Route path="*" component={nomatch} />
           </Switch>
           <ModalContainer />
-        </React.Fragment>
+        </>
       </IntlProviderAsync>
     );
   }
