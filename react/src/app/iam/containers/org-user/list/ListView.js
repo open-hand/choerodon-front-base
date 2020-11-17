@@ -335,16 +335,13 @@ export default withRouter(observer((props) => {
     };
   }
   function renderAction({ record }) {
-    if (record.get('sagaInstanceId')) {
-      return null;
-    }
     let actionDatas = [{
       service: ['choerodon.code.organization.manager.user.ps.reset.password'],
       text: <FormattedMessage id={`${intlPrefix}.action.reset`} />,
       action: () => handleResetPassword(record),
     }];
     // 外部人员的处理
-    if (record.get('organizationId').toString() !== organizationId) {
+    if (record.get('organizationId').toString() !== organizationId || record.get('sagaInstanceId')) {
       actionDatas = [{
         service: ['choerodon.code.organization.manager.user.ps.delete'],
         text: '删除',
