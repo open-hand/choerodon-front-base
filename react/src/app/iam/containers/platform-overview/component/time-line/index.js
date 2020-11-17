@@ -68,6 +68,15 @@ const TimeLine = observer(() => {
         noticeDs.unshift(...records);
       }
       platOverStores.setOldNoticeRecord(noticeDs.records);
+      const lastRecord = noticeDs.records[noticeDs.records.length - 1];
+      const getDom = document.querySelector(`#notice-${lastRecord.get('id')}`);
+      if (getDom && !res.isFirstPage) {
+        getDom.scrollIntoView({
+          block: 'start',
+          inline: 'nearest',
+          behavior: 'smooth',
+        });
+      }
       setLoadMoreBtn(res.hasNextPage);
       return res;
     }
