@@ -36,11 +36,7 @@ export default observer(({
       <Form className="hidden-password" dataSet={dataSet}>
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} />
-        {
-          !isProject && (
-            <Password name="secret" />
-          )
-        }
+        <Password name="secret" />
         <SelectBox name="authorizedGrantTypes" multiple>
           <Option value="password">password</Option>
           <Option value="implicit">implicit</Option>
