@@ -15,7 +15,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
     console.log(props);
     // 是否为项目层客户端
-    const isProject = props.match.url.includes('proClient');
+    const isProject = props.match.url.includes('pro-client');
     const {
       AppState: {
         currentMenuType: {
