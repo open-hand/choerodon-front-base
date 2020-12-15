@@ -3,6 +3,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useLocalStore } from 'mobx-react-lite';
+import { withRouter } from 'react-router-dom';
 import ClientDataSet from './ClientDataSet';
 import OptionsDataSet from './OptionsDataSet';
 import useStore from './useStore';
@@ -10,14 +11,27 @@ import useStore from './useStore';
 const Store = createContext();
 export default Store;
 
-export const StoreProvider = injectIntl(inject('AppState')(
+export const StoreProvider = withRouter(injectIntl(inject('AppState')(
   (props) => {
-    const { AppState: { currentMenuType: { id, type, organizationId } }, children, intl } = props;
+    console.log(props);
+    // 是否为项目层客户端
+    const isProject = props.match.url.includes('proClient');
+    const {
+      AppState: {
+        currentMenuType: {
+          id, type, organizationId, projectId,
+        },
+      }, children, intl,
+    } = props;
     const intlPrefix = 'organization.pwdpolicy';
     const orgId = type === 'organization' ? id : organizationId;
     const clientStore = useStore();
-    const optionsDataSet = useMemo(() => new DataSet(OptionsDataSet(orgId)), [orgId]);
-    const clientDataSet = useMemo(() => new DataSet(ClientDataSet(orgId, optionsDataSet)), [orgId]);
+    const optionsDataSet = useMemo(
+      () => new DataSet(OptionsDataSet(orgId, isProject, projectId)), [orgId, isProject, projectId],
+    );
+    const clientDataSet = useMemo(
+      () => new DataSet(ClientDataSet(orgId, optionsDataSet, isProject, projectId)), [orgId],
+    );
 
     const remoteMobxStore = useLocalStore(() => ({
       disableAllBtn: false,
@@ -30,6 +44,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
     }));
 
     const value = {
+      projectId,
       orgId,
       id,
       clientDataSet,
@@ -38,6 +53,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intl,
       intlPrefix,
       clientStore,
+      isProject,
     };
     return (
       <Store.Provider value={value}>
@@ -45,4 +61,4 @@ export const StoreProvider = injectIntl(inject('AppState')(
       </Store.Provider>
     );
   },
-));
+)));

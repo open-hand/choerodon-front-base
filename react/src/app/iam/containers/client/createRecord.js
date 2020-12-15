@@ -1,13 +1,17 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { NumberField, Form, SelectBox, TextField, Password, Icon, Tooltip } from 'choerodon-ui/pro';
+import {
+  NumberField, Form, SelectBox, TextField, Password, Icon, Tooltip,
+} from 'choerodon-ui/pro';
 import { Modal } from 'choerodon-ui';
 
 import './index.less';
 
 const { Option } = SelectBox;
 const { Sidebar } = Modal;
-export default observer(({ dataSet, onOk, onCancel, prefixCls }) => {
+export default observer(({
+  dataSet, onOk, onCancel, prefixCls, isProject,
+}) => {
   function handleCancel() {
     onCancel();
     dataSet.reset();
@@ -32,7 +36,11 @@ export default observer(({ dataSet, onOk, onCancel, prefixCls }) => {
       <Form className="hidden-password" dataSet={dataSet}>
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} />
-        <Password name="secret" />
+        {
+          !isProject && (
+            <Password name="secret" />
+          )
+        }
         <SelectBox name="authorizedGrantTypes" multiple>
           <Option value="password">password</Option>
           <Option value="implicit">implicit</Option>

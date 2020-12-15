@@ -6,15 +6,25 @@ import { axios } from '@choerodon/boot';
 import FormSelectEditor from '../../components/formSelectEditor';
 
 const { Sidebar } = Modal;
-export default observer(({ onCancel, onOk, ds, record, organizationId, optionsDataSet }) => {
+export default observer(({
+  onCancel, onOk, ds, record, organizationId, optionsDataSet, isProject, projectId,
+}) => {
   const isFirstRender = useRef(true);
   function handleCancel() {
     onCancel();
     ds.reset();
   }
+  // eslint-disable-next-line consistent-return
   async function handleOk() {
     try {
-      const result = await axios.post(`/iam/choerodon/v1/organizations/${organizationId}/clients/${record.get('id')}/assign_roles`, JSON.stringify(ds.current.toData().roles.filter(v => v)));
+      let path;
+      if (isProject) {
+        path = `/iam/choerodon/v1/organizations/${organizationId}/clients-project/${projectId}/${record.get('id')}/assign_roles`;
+      } else {
+        path = `/iam/choerodon/v1/organizations/${organizationId}/clients/${record.get('id')}/assign_roles`;
+      }
+      const result = await axios
+        .post(path, JSON.stringify(ds.current.toData().roles.filter((v) => v)));
       if (result.failed) {
         throw result.message;
       }

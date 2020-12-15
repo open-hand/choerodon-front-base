@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Table, Icon, Button, message, Modal, Row, Col,
@@ -8,6 +8,7 @@ import {
   Content, Header, Page, axios, Action, Permission, TabPage, Breadcrumb,
 } from '@choerodon/boot';
 
+import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import Store, { StoreProvider } from './store';
 
@@ -17,9 +18,9 @@ import EditRole from './editRole';
 
 const { Column } = Table;
 
-const Client = observer(() => {
+const Client = withRouter(observer((props) => {
   const {
-    clientDataSet, optionsDataSet, orgId, clientStore,
+    clientDataSet, optionsDataSet, orgId, clientStore, isProject, projectId,
   } = useContext(Store);
   const [editModal, setEditModal] = useState(false);
   const [createModal, setCreateModal] = useState(false);
@@ -29,7 +30,12 @@ const Client = observer(() => {
     setEditModal(true);
   }
   async function openCreateRecordModal() {
-    const initData = await axios.get(`/iam/choerodon/v1/organizations/${orgId}/clients/createInfo`);
+    let initData;
+    if (isProject) {
+      initData = await axios.get(`/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/createInfo`);
+    } else {
+      initData = await axios.get(`/iam/choerodon/v1/organizations/${orgId}/clients/createInfo`);
+    }
     initData.accessTokenValidity = 3600;
     initData.refreshTokenValidity = 3600;
     initData.autoApprove = 'default';
@@ -42,7 +48,7 @@ const Client = observer(() => {
   }
   async function openRoleManageModal(record) {
     clientDataSet.current = record;
-    const roleData = await clientStore.loadClientRoles(orgId, record.get('id'));
+    const roleData = await clientStore.loadClientRoles(orgId, record.get('id'), isProject, projectId);
     const roleIds = (roleData || []).map(({ id: roleId }) => roleId);
     await record.set('roles', roleIds || []);
     setEditRoleModal(true);
@@ -59,7 +65,11 @@ const Client = observer(() => {
       okText: '删除',
       onOk: async () => {
         try {
-          await axios.delete(`/iam/choerodon/v1/organizations/${orgId}/clients/${record.get('id')}`);
+          await axios.delete(
+            isProject
+              ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/${record.get('id')}`
+              : `/iam/choerodon/v1/organizations/${orgId}/clients/${record.get('id')}`,
+          );
           await clientDataSet.query();
         } catch (err) {
           message.prompt(err);
@@ -124,11 +134,14 @@ const Client = observer(() => {
           dataSet={clientDataSet}
           record={clientDataSet.current}
           clientStore={clientStore}
+          isProject={isProject}
+          projectId={projectId}
         />
         )}
         {createModal
         && (
         <CreateRecord
+          isProject={isProject}
           onOk={() => setCreateModal(false)}
           onCancel={() => setCreateModal(false)}
           dataSet={clientDataSet}
@@ -144,12 +157,14 @@ const Client = observer(() => {
           ds={clientDataSet}
           dataSet={optionsDataSet}
           record={clientDataSet.current}
+          isProject={isProject}
+          projectId={projectId}
         />
         )}
       </Content>
     </TabPage>
   );
-});
+}));
 
 export default (props) => (
   <StoreProvider {...props}>

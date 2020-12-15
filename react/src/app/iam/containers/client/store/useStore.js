@@ -4,18 +4,18 @@ import { axios } from '@choerodon/boot';
 export default function useStore() {
   return useLocalStore(() => ({
 
-    loadClientDetail(organizationId, clientId) {
-      return axios.get(`/iam/v1/${organizationId}/clients/${clientId}`);
+    loadClientDetail(organizationId, clientId, isProject, projectId) {
+      return axios.get(isProject ? `/iam/choerodon/v1/organizations/${organizationId}/clients-project/${projectId}/${clientId}` : `/iam/v1/${organizationId}/clients/${clientId}`);
     },
 
-    async loadClientRoles(organizationId, clientId) {
+    async loadClientRoles(organizationId, clientId, isProject, projectId) {
       try {
-        const res = await axios.get(`/iam/hzero/v1/${organizationId}/member-roles/client-roles/${clientId}?memberType=client&page=0&size=0`);
+        const path = isProject ? `/iam/choerodon/v1/organizations/${organizationId}/clients-project/${projectId}/client-roles/${clientId}` : `/iam/hzero/v1/${organizationId}/member-roles/client-roles/${clientId}?memberType=client&page=0&size=0`;
+        const res = await axios.get(path);
         if (res && res.content) {
           return res.content;
-        } else {
-          return false;
         }
+        return false;
       } catch (e) {
         return false;
       }
