@@ -87,7 +87,7 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/org-safe`} component={orgSafe} />
             <Route path={`${match.url}/safe`} component={siteSafe} />
             <Route path={`${match.url}/client`} component={orgClient} />
-            <Route path={`${match.url}/proClient`} component={orgClient} />
+            <Route path={`${match.url}/pro-client`} component={orgClient} />
             <Route path={`${match.url}/org-admin`} component={orgAdmin} />
             <Route path={`${match.url}/org-overview`} component={orgOverview} />
             <Route path={`${match.url}/platform-overview`} component={platformOverview} />
