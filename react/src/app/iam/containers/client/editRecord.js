@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { inject } from 'mobx-react';
-import { NumberField, Form, SelectBox, TextArea, TextField, Password, Tooltip, Icon } from 'choerodon-ui/pro';
+import {
+  NumberField, Form, SelectBox, TextArea, TextField, Password, Tooltip, Icon,
+} from 'choerodon-ui/pro';
 import { Modal } from 'choerodon-ui';
 import forEach from 'lodash/forEach';
 import { Choerodon } from '@choerodon/boot';
@@ -11,14 +13,16 @@ import './index.less';
 const { Option } = SelectBox;
 const { Sidebar } = Modal;
 
-export default inject('AppState')(observer(({ dataSet, onOk, onCancel, clientStore, AppState, record }) => {
+export default inject('AppState')(observer(({
+  dataSet, onOk, onCancel, clientStore, AppState, record, isProject, projectId,
+}) => {
   const { current } = dataSet;
   const { currentMenuType: { organizationId } } = AppState;
 
   useEffect(() => {
     async function getClientDetail() {
       try {
-        const res = await clientStore.loadClientDetail(organizationId, record.get('id'));
+        const res = await clientStore.loadClientDetail(organizationId, record.get('id'), isProject, projectId);
         if (res) {
           forEach(res, (value, key) => {
             if (key !== 'authorizedGrantTypes' && (key !== 'scope' || value)) {
@@ -61,7 +65,11 @@ export default inject('AppState')(observer(({ dataSet, onOk, onCancel, clientSto
       <Form className="hidden-password" dataSet={dataSet}>
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} disabled />
-        <Password name="secret" />
+        {
+          !isProject && (
+            <Password name="secret" />
+          )
+        }
         <SelectBox name="authorizedGrantTypes">
           <Option value="password">password</Option>
           <Option value="implicit">implicit</Option>

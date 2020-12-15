@@ -1,4 +1,4 @@
-export default function (orgId, optionsDataSet) {
+export default function (orgId, optionsDataSet, isProject, projectId) {
   function checkIsJson(value, name, record) {
     try {
       const obj = JSON.parse(value);
@@ -16,16 +16,16 @@ export default function (orgId, optionsDataSet) {
     autoQueryAfterSubmit: false,
     transport: {
       read: {
-        url: `/iam/v1/${orgId}/clients`,
+        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/clients` : `/iam/v1/${orgId}/clients`,
         method: 'get',
       },
       create: ({ data: [data] }) => ({
-        url: `/iam/v1/${orgId}/clients`,
+        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}` : `/iam/v1/${orgId}/clients`,
         method: 'post',
         data: { ...data, pwdReplayFlag: 0 },
       }),
       update: ({ data: [data] }) => ({
-        url: `/iam/v1/${orgId}/clients`,
+        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}` : `/iam/v1/${orgId}/clients`,
         method: 'put',
         data: { ...data, pwdReplayFlag: 0 },
       }),
@@ -39,7 +39,12 @@ export default function (orgId, optionsDataSet) {
         name: 'authorizedGrantTypes', type: 'string', label: '授权类型', required: true, multiple: ',',
       },
       {
-        name: 'secret', type: 'string', label: '密钥', required: true,
+        name: 'secret',
+        type: 'string',
+        label: '密钥',
+        dynamicProps: {
+          required: !isProject,
+        },
       },
       {
         name: 'accessTokenValidity', type: 'number', label: '访问授权超时', min: 60, required: true,

@@ -57,8 +57,6 @@ const platformOverview = asyncRouter(() => import('./platform-overview'));
 
 const heroPage = asyncRouter(() => import('./hzero-page'));
 
-const enterpriseInfo = asyncRouter(() => import('./enterprises-info'));
-
 @inject('AppState')
 class IAMIndex extends React.Component {
   render() {
@@ -89,6 +87,7 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/org-safe`} component={orgSafe} />
             <Route path={`${match.url}/safe`} component={siteSafe} />
             <Route path={`${match.url}/client`} component={orgClient} />
+            <Route path={`${match.url}/proClient`} component={orgClient} />
             <Route path={`${match.url}/org-admin`} component={orgAdmin} />
             <Route path={`${match.url}/org-overview`} component={orgOverview} />
             <Route path={`${match.url}/platform-overview`} component={platformOverview} />
@@ -104,7 +103,6 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/hzero/instance`} component={heroPage} />
             <Route path={`${match.url}/hzero/api-test`} component={heroPage} />
             <Route path={`${match.url}/hzero/api`} component={heroPage} />
-            <Route path={`${match.url}/enterprise`} component={enterpriseInfo} />
             <Route path="*" component={nomatch} />
           </Switch>
           <ModalContainer />
