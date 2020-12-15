@@ -42,9 +42,7 @@ export default function (orgId, optionsDataSet, isProject, projectId) {
         name: 'secret',
         type: 'string',
         label: '密钥',
-        dynamicProps: {
-          required: !isProject,
-        },
+        required: true,
       },
       {
         name: 'accessTokenValidity', type: 'number', label: '访问授权超时', min: 60, required: true,

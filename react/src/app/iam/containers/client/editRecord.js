@@ -65,11 +65,7 @@ export default inject('AppState')(observer(({
       <Form className="hidden-password" dataSet={dataSet}>
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} disabled />
-        {
-          !isProject && (
-            <Password name="secret" />
-          )
-        }
+        <Password name="secret" />
         <SelectBox name="authorizedGrantTypes">
           <Option value="password">password</Option>
           <Option value="implicit">implicit</Option>
