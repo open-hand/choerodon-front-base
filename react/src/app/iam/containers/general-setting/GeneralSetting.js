@@ -320,7 +320,7 @@ const GeneralSetting = observer(() => {
                             {formatMessage({ id: `${intlPrefix}.waterfall.startTime` })}
                           </div>
                           <div className={`${prefixCls}-section-item-content`}>
-                            {String(projectEstablishmentTime).split(' ')[0]}
+                            {projectEstablishmentTime ? String(projectEstablishmentTime).split(' ')[0] : ''}
                           </div>
                         </div>,
                         <div className={`${prefixCls}-section-item`}>
@@ -328,7 +328,7 @@ const GeneralSetting = observer(() => {
                             {formatMessage({ id: `${intlPrefix}.waterfall.endTime` })}
                           </div>
                           <div className={`${prefixCls}-section-item-content`}>
-                            {String(projectConclusionTime).split(' ')[0]}
+                            {projectConclusionTime ? String(projectConclusionTime).split(' ')[0] : ''}
                           </div>
                         </div>] : null}
                   </div>

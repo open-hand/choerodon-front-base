@@ -28,6 +28,7 @@ const Edit = Form.create({})(observer(({
     validateFields,
     resetFields,
     setFieldsValue,
+    getFieldValue,
   },
   visible,
   categoryEnabled,
@@ -300,11 +301,19 @@ const Edit = Form.create({})(observer(({
               <FormItem>
                 {getFieldDecorator('projectEstablishmentTime', {
                   rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.waterfall.startTime.requiredMsg` }) }],
-                  initialValue: moment(projectEstablishmentTime, 'YYYY-MM-DD'),
+                  initialValue: projectEstablishmentTime ? moment(projectEstablishmentTime, 'YYYY-MM-DD') : undefined,
                 })(
                   <DatePicker
                     autoComplete="off"
                     style={{ width: '100%' }}
+                    disabledDate={(current) => {
+                      const endTime = getFieldValue('projectConclusionTime');
+                      if (endTime && current > endTime) {
+                        return true;
+                      }
+                      return false;
+                    }}
+                    placeholder={formatMessage({ id: `${intlPrefix}.waterfall.startTime` })}
                     label={<FormattedMessage id={`${intlPrefix}.waterfall.startTime`} />}
                   />,
                 )}
@@ -312,11 +321,22 @@ const Edit = Form.create({})(observer(({
               <FormItem>
                 {getFieldDecorator('projectConclusionTime', {
                   rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.waterfall.endTime.requiedMsg` }) }],
-                  initialValue: moment(projectConclusionTime, 'YYYY-MM-DD'),
+                  initialValue: projectConclusionTime ? moment(projectConclusionTime, 'YYYY-MM-DD') : undefined,
                 })(
                   <DatePicker
                     autoComplete="off"
                     style={{ width: '100%' }}
+                    disabledDate={(current) => {
+                      const startTime = getFieldValue('projectEstablishmentTime');
+                      if (startTime && current < startTime) {
+                        return true;
+                      }
+                      if (current < moment()) {
+                        return true;
+                      }
+                      return false;
+                    }}
+                    placeholder={formatMessage({ id: `${intlPrefix}.waterfall.endTime` })}
                     label={<FormattedMessage id={`${intlPrefix}.waterfall.endTime`} />}
                   />,
                 )}
