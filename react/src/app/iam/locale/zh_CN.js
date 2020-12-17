@@ -1770,6 +1770,8 @@ const zh_CN = {
   'project.info.name': '项目名称',
   'project.info.applicationName': '应用名称',
   'project.info.agile.prefix': '问题前缀',
+  'project.info.waterfall.startTime': '立项时间',
+  'project.info.waterfall.endTime': '结项时间',
 
   'project.info.code': '项目编码',
   'project.info.category': '项目类型',
@@ -1779,6 +1781,11 @@ const zh_CN = {
   'project.info.namerequiredmsg': '请输入项目名称',
   'project.info.appnamerequiredmsg': '请输入应用名称',
   'project.info.agilePrefixrequiredmsg': '请输入问题前缀',
+  'project.info.agilePrefix.maxMsg': '问题前缀长度超过5',
+
+  'project.info.waterfall.startTime.requiredMsg': '请输入立项时间',
+  'project.info.waterfall.endTime.requiedMsg': '请输入结项时间',
+
   'project.info.name.pattern.msg': '项目名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
   'project.info.app.name.pattern.msg': '应用名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
   'project.info.type': '项目类型',

@@ -33,12 +33,16 @@ const GeneralSetting = observer(() => {
       });
   };
 
-  const loadProject = () => {
-    store.axiosGetProjectInfo(projectId).then((data) => {
+  const loadProject = () => axios.all([
+    store.axiosGetProjectInfo(projectId),
+    ProjectCategory === 'WATERFALL' ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
+  ])
+    .then(([data, waterfallData]) => {
+      const newData = { ...data, waterfallData: waterfallData || {} };
       store.setImageUrl(data.imageUrl);
-      store.setProjectInfo(data);
+      store.setProjectInfo(newData);
+      return newData;
     }).catch(Choerodon.handleResponseError);
-  };
 
   const loadProjectTypes = () => {
     store.loadProjectTypes().then((data) => {
@@ -188,8 +192,13 @@ const GeneralSetting = observer(() => {
   }
 
   const {
-    enabled, name, code, agileProjectCode, categories = [], creationDate, createUserName,
+    enabled, name, code, agileProjectCode, categories = [], creationDate,
+    createUserName, waterfallData = {},
   } = store.getProjectInfo;
+  const {
+    projectCode: waterfallProjectCode,
+    projectConclusionTime, projectEstablishmentTime,
+  } = waterfallData;
   const imageUrl = store.getImageUrl;
   return (
     <Page
@@ -301,9 +310,27 @@ const GeneralSetting = observer(() => {
                         {formatMessage({ id: `${intlPrefix}.agile.prefix` })}
                       </div>
                       <div className={`${prefixCls}-section-item-content`}>
-                        {agileProjectCode}
+                        {waterfallProjectCode || agileProjectCode}
                       </div>
                     </div>
+                    {ProjectCategory === 'WATERFALL'
+                      ? [
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.waterfall.startTime` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {String(projectEstablishmentTime).split(' ')[0]}
+                          </div>
+                        </div>,
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.waterfall.endTime` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {String(projectConclusionTime).split(' ')[0]}
+                          </div>
+                        </div>] : null}
                   </div>
                 </section>
               </>
@@ -313,6 +340,8 @@ const GeneralSetting = observer(() => {
         <Edit
           visible={editing}
           onCancel={handleCancel}
+          onRefresh={loadProject}
+          projectCategory={ProjectCategory}
           categoryEnabled={categoryEnabled}
           isOPERATIONS={isOPERATIONS}
         />
