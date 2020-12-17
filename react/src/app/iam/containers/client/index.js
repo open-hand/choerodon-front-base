@@ -83,11 +83,11 @@ const Client = withRouter(observer((props) => {
 
   function renderAction({ record }) {
     const actionDatas = [{
-      service: ['choerodon.code.organization.setting.client.ps.delete'],
+      service: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.delete`],
       text: <FormattedMessage id="organization.client.delete.title" />,
       action: () => handleDelete(record),
     }, {
-      service: ['choerodon.code.organization.setting.client.ps.role'],
+      service: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.role`],
       text: '角色分配',
       action: () => handleRoleClick(record),
     }];
@@ -99,7 +99,7 @@ const Client = withRouter(observer((props) => {
   function renderName({ text, record }) {
     return (
       <Permission
-        service={['choerodon.code.organization.setting.client.ps.update']}
+        service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.update`]}
         defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{text}</span>)}
       >
         <span role="none" className="link" onClick={() => handleRowClick(record)}>
@@ -109,9 +109,9 @@ const Client = withRouter(observer((props) => {
     );
   }
   return (
-    <TabPage service={['choerodon.code.organization.setting.client.ps.default']}>
+    <TabPage service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.default`]}>
       <Header>
-        <Permission service={['choerodon.code.organization.setting.client.ps.add']}>
+        <Permission service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`]}>
           <Button color="blue" onClick={openCreateRecordModal}>
             <Icon type="playlist_add" />
             {' '}
