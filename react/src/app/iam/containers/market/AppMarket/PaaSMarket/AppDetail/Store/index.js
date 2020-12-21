@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useEffect } from 'react/index';
+import React, { createContext, useMemo, useEffect } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { inject } from 'mobx-react';

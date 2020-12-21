@@ -16,7 +16,7 @@ export default function (orgId, optionsDataSet, isProject, projectId) {
     autoQueryAfterSubmit: false,
     transport: {
       read: {
-        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/clients` : `/iam/v1/${orgId}/clients`,
+        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/clients` : `/iam/choerodon/v1/organizations/${orgId}/clients`,
         method: 'get',
       },
       create: ({ data: [data] }) => ({
