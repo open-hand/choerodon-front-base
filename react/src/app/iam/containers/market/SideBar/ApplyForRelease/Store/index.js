@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useReducer, useEffect } from 'react/index';
+import React, { createContext, useMemo, useReducer, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
 import { axios } from '@choerodon/boot';
