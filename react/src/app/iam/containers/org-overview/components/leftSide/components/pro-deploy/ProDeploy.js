@@ -33,7 +33,14 @@ const ProDeploy = observer(() => {
       maxTagCount={1}
       searchMatcher="name"
       optionRenderer={({ text }) => <Tooltip title={text}>{text}</Tooltip>}
-      maxTagPlaceholder={(omittedValues) => <MaxTagPopover dataSource={ProDeployStore.getProjectsArray} value={omittedValues} />}
+      maxTagPlaceholder={
+        (omittedValues) => (
+          <MaxTagPopover
+            dataSource={ProDeployStore.projectsArray}
+            value={omittedValues}
+          />
+        )
+}
     />
   );
 
