@@ -85,8 +85,8 @@ const RecordTable = observer(() => {
             </Select>
             <CheckBox name="agreement" style={{ fontSize: '14px' }}>
               我同意&nbsp;
-              <a href="/#/iam/register-organization/agreement" target="_blank" rel="noopener noreferrer">
-                隐私声明
+              <a href="/#/iam/enterprise/agreement" target="_blank" rel="noopener noreferrer">
+                使用条款
               </a>
             </CheckBox>
           </Form>
