@@ -8,6 +8,7 @@ const TimeItem = ((props) => {
     title,
     content,
     id,
+    renderId,
   } = props;
 
   const [isExpand, handleDropDown] = useState(false);
@@ -17,7 +18,7 @@ const TimeItem = ((props) => {
   return (
     <li>
       {renderDateLine(sendDate)}
-      <div className="c7ncd-notice-timeLine-content" id={`notice-${id}`}>
+      <div className="c7ncd-notice-timeLine-content" id={`notice-${renderId(id)}`}>
         <div className="c7ncd-notice-timeLine-content-header">
           <div className="c7ncd-notice-timeLine-content-header-icon">
             <Icon type="notifications_none" />

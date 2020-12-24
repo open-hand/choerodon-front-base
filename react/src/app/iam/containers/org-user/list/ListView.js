@@ -81,6 +81,7 @@ export default withRouter(observer((props) => {
       message.error(err);
     }
   }
+  // eslint-disable-next-line consistent-return
   async function handleEnable(record) {
     try {
       const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${record.get('id')}/enable`);
@@ -190,6 +191,7 @@ export default withRouter(observer((props) => {
       className: 'c7n-iam-confirm-modal',
       title: '删除用户',
       content: `确认删除用户"${record.get('realName')}"在本组织下的全部角色吗?`,
+      // eslint-disable-next-line consistent-return
       onOk: async () => {
         const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${record.toData().id}/assign_roles`, []);
         if (!result.failed) {
@@ -335,7 +337,7 @@ export default withRouter(observer((props) => {
     };
   }
   function renderAction({ record }) {
-    let actionDatas = [{
+    let actionDatas = record.get('ldap') ? [] : [{
       service: ['choerodon.code.organization.manager.user.ps.reset.password'],
       text: <FormattedMessage id={`${intlPrefix}.action.reset`} />,
       action: () => handleResetPassword(record),

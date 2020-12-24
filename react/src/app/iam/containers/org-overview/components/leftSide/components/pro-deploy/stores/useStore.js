@@ -39,6 +39,7 @@ export default function useStore() {
 
     loading: false,
 
+    // eslint-disable-next-line consistent-return
     async initChartData(orgId, projectIds, startTime, endTime) {
       this.loading = true;
       try {

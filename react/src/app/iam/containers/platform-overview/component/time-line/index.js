@@ -69,7 +69,7 @@ const TimeLine = observer(() => {
       }
       platOverStores.setOldNoticeRecord(noticeDs.records);
       const lastRecord = noticeDs.records[noticeDs.records.length - 1];
-      const getDom = document.querySelector(`#notice-${lastRecord.get('id')}`);
+      const getDom = document.querySelector(`#notice-${renderId(lastRecord.get('id'))}`);
       if (getDom && !res.isFirstPage) {
         getDom.scrollIntoView({
           block: 'start',
@@ -105,6 +105,16 @@ const TimeLine = observer(() => {
     );
   }
 
+  function renderId(id) {
+    const type = typeof id;
+    if (type === 'string') {
+      return id.slice(3, 6);
+    } if (type === 'number') {
+      return String(id).slice(3, 6);
+    }
+    return id;
+  }
+
   function renderData() {
     return record ? (
       <ul>
@@ -117,6 +127,7 @@ const TimeLine = observer(() => {
               <TimeItem
                 {...item}
                 key={id}
+                renderId={renderId}
                 renderDateLine={renderDateLine}
               />
             );

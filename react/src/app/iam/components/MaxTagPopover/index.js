@@ -6,7 +6,9 @@ import _ from 'lodash';
 import './index.less';
 
 export default function MaxTagPopover(props) {
-  const { value, dataSource, width, placement } = props;
+  const {
+    value, dataSource, width, placement,
+  } = props;
   const moreOption = [];
   _.forEach(value, (item, index) => {
     const appName = _.find(dataSource, ['id', item]);

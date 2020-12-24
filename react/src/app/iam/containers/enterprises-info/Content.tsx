@@ -32,11 +32,8 @@ const RecordTable = observer(() => {
       return false;
     }
     try {
-      if (await formDs.submit() !== false) {
-        window.history.back(-1);
-        return true;
-      }
-      return false;
+      await formDs.submit();
+      window.location.href = window.location.origin;
     } catch (e) {
       return false;
     }
@@ -85,8 +82,8 @@ const RecordTable = observer(() => {
             </Select>
             <CheckBox name="agreement" style={{ fontSize: '14px' }}>
               我同意&nbsp;
-              <a href="/#/iam/register-organization/agreement" target="_blank" rel="noopener noreferrer">
-                隐私声明
+              <a href="/#/iam/enterprise/agreement" target="_blank" rel="noopener noreferrer">
+                隐私条款
               </a>
             </CheckBox>
           </Form>
