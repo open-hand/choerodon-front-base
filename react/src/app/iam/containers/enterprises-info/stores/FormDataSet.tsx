@@ -35,6 +35,10 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
     autoCreate: false,
     autoQuery: true,
     selection: false,
+    feedback: {
+      submitSuccess() {},
+      submitFailed() {},
+    },
     transport: {
       read: {
         url: EnterprisesApis.getDefaultData(),
