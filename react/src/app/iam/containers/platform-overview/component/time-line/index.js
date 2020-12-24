@@ -108,9 +108,9 @@ const TimeLine = observer(() => {
   function renderId(id) {
     const type = typeof id;
     if (type === 'string') {
-      return id.slice(0, 6);
+      return id.slice(3, 6);
     } if (type === 'number') {
-      return String(id).slice(0, 6);
+      return String(id).slice(3, 6);
     }
     return id;
   }
