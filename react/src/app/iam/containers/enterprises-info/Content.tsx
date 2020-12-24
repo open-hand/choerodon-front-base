@@ -33,7 +33,7 @@ const RecordTable = observer(() => {
     }
     try {
       await formDs.submit();
-      window.location.href = document.referrer;
+      window.location.href = window.location.origin;
     } catch (e) {
       return false;
     }
