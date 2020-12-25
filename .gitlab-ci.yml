@@ -15,6 +15,5 @@ build front:
   only:
     - tags
     - master
-    - feature-Waterfall
     - /^.*hotfix.*$/
     - /^.*release.*$/
