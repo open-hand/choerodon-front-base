@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Button, SelectBox, Form, TextField, Select, EmailField, CheckBox,
@@ -26,12 +26,24 @@ const RecordTable = observer(() => {
     businessTypeList,
   } = useOpenManagementStore();
 
+  useEffect(() => {
+    window.onpopstate = () => {
+      window.history.forward();
+    };
+    return function clear() {
+      window.onpopstate = () => {};
+    };
+  }, []);
+
   const handleSubmit = async () => {
     if (!formDs.current?.get('agreement')) {
       Choerodon.prompt(formatMessage({ id: `${intlPrefix}.agree` }));
       return false;
     }
     try {
+      if (await formDs.validate() === false) {
+        return false;
+      }
       await formDs.submit();
       window.location.href = window.location.origin;
     } catch (e) {
