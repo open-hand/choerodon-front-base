@@ -62,6 +62,7 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
         type: 'string' as FieldType,
         required: true,
         validator: checkOrganizationName,
+        maxLength: 32,
         label: formatMessage({ id: `${intlPrefix}.name` }),
       },
       {
