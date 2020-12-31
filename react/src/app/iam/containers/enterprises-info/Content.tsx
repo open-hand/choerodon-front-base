@@ -32,6 +32,9 @@ const RecordTable = observer(() => {
       return false;
     }
     try {
+      if (await formDs.validate() === false) {
+        return false;
+      }
       await formDs.submit();
       window.location.href = window.location.origin;
     } catch (e) {
