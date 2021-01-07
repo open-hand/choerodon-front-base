@@ -1,8 +1,12 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Action, Content, Header, axios, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
+import {
+  Action, Content, Header, axios, Permission, Breadcrumb, TabPage,
+} from '@choerodon/boot';
 import { Button, Modal as OldModal } from 'choerodon-ui';
-import { Select, SelectBox, Table, TextField, Modal, message, Radio } from 'choerodon-ui/pro';
+import {
+  Table, Modal, message,
+} from 'choerodon-ui/pro';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import StatusTag from '../../../components/statusTag';
@@ -22,7 +26,8 @@ try {
 
 const { Column } = Table;
 export default function ListView(props) {
-  const { intlPrefix,
+  const {
+    intlPrefix,
     orgUserListDataSet: dataSet,
     projectId,
     orgUserCreateDataSet,
@@ -116,10 +121,10 @@ export default function ListView(props) {
           if (!result.failed) {
             await orgUserRoleDataSet.reset();
             dataSet.query();
-          } else {
-            message.error(result.message);
-            return false;
+            return true;
           }
+          message.error(result.message);
+          return false;
         },
       });
     }
@@ -145,16 +150,22 @@ export default function ListView(props) {
       </div>
     ) : null;
     return (
-      <Fragment>
+      <>
         <Permission
           service={['choerodon.code.project.cooperation.team-member.ps.update']}
           defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
         >
-          <span onClick={() => handleUserRole(record)} className="link">{value}</span>
+          <span
+            onClick={() => handleUserRole(record)}
+            className="link"
+            role="none"
+          >
+            {value}
+          </span>
         </Permission>
         {label}
         {programLabel}
-      </Fragment>
+      </>
     );
   }
 
@@ -180,6 +191,7 @@ export default function ListView(props) {
         />
       );
     }
+    return null;
   }
 
   return (
