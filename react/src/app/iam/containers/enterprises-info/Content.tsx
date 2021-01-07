@@ -24,6 +24,7 @@ const RecordTable = observer(() => {
     formatMessage,
     scaleList,
     businessTypeList,
+    store,
   } = useOpenManagementStore();
 
   const handleSubmit = async () => {
@@ -60,7 +61,8 @@ const RecordTable = observer(() => {
             {formatMessage({ id: `${intlPrefix}.tips` })}
           </p>
           <Form dataSet={formDs}>
-            <TextField name="tenantName" colSpan={2} />
+            <TextField name="tenantName" />
+            <TextField name="tenantNum" disabled={!store.getEnableEditCode} />
           </Form>
           <Tips
             colSpan={2}
