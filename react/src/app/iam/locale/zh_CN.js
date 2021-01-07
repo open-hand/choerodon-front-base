@@ -4,6 +4,7 @@ const enterprises = {
   'c7ncd.enterprise.info.confirm': '系统信息确认',
   'c7ncd.enterprise.info.tips': '通过Choerodon猪齿鱼信息确认，您可以创建系统组织信息，并创建和维护系统admin的账号信息。',
   'c7ncd.enterprise.info.name': '组织名称',
+  'c7ncd.enterprise.info.code': '组织编码',
   'c7ncd.enterprise.info.business.name': '公司名称',
   'c7ncd.enterprise.info.business.type': '行业',
   'c7ncd.enterprise.info.business.scale': '公司规模',
@@ -13,6 +14,7 @@ const enterprises = {
   'c7ncd.enterprise.info.admin.info': 'Admin账号信息',
   'c7ncd.enterprise.info.admin.info.tips': 'admin在此输入的姓名、邮箱与手机号，将作为之后在系统中admin的用户名、登录邮箱与手机号',
   'c7ncd.enterprise.info.agree': '请阅读并同意隐私声明',
+  'c7ncd.enterprise.info.code.failed': '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
 };
 
 const pageDetail = {

@@ -31,6 +31,13 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
     }
   };
 
+  const checkOrganizationCode = (value: any) => {
+    const p = /^[a-z](([a-z0-9]|-(?!-))*[a-z0-9])*$/;
+    if (value && !p.test(value)) {
+      return formatMessage({ id: `${intlPrefix}.code.failed` });
+    }
+  };
+
   return ({
     autoCreate: false,
     autoQuery: true,
@@ -45,7 +52,7 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
         method: 'get',
       },
       submit: ({ data: [data] }: any) => {
-        const postData = pick(data, ['adminEmail', 'adminName', 'adminPhone', 'enterpriseType', 'enterpriseName', 'enterpriseScale']);
+        const postData = pick(data, ['adminEmail', 'adminName', 'adminPhone', 'enterpriseType', 'enterpriseName', 'enterpriseScale', 'tenantNum']);
         // @ts-ignore
         postData.organizationName = data.tenantName;
 
@@ -64,6 +71,13 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
         validator: checkOrganizationName,
         maxLength: 32,
         label: formatMessage({ id: `${intlPrefix}.name` }),
+      },
+      {
+        name: 'tenantNum',
+        type: 'string' as FieldType,
+        required: true,
+        validator: checkOrganizationCode,
+        label: formatMessage({ id: `${intlPrefix}.code` }),
       },
       {
         name: 'enterpriseName',
