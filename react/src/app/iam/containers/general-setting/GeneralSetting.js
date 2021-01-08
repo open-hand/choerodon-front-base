@@ -8,6 +8,9 @@ import {
   axios, Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
 } from '@choerodon/boot';
 import queryString from 'query-string';
+import map from 'lodash/map';
+import intersection from 'lodash/intersection';
+import isEmpty from 'lodash/isEmpty';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import GeneralSettingContext, { ContextProvider } from './stores';
@@ -23,9 +26,13 @@ const GeneralSetting = observer(() => {
   const [editing, setEditing] = useState(false);
   const [categoryEnabled, setCategoryEnabled] = useState(false);
   const {
-    id: projectId, name: projectName, organizationId, category: ProjectCategory,
+    id: projectId, name: projectName, organizationId,
+    category: ProjectCategory, categories: projectCategories,
   } = AppState.currentMenuType;
-  const isOPERATIONS = useMemo(() => ProjectCategory === 'OPERATIONS', [ProjectCategory]);
+  const projectCategoryCodes = useMemo(() => map(projectCategories || [], 'code'), [projectCategories]);
+  const showAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL'])), [projectCategoryCodes]);
+  const isWATERFALL = useMemo(() => (projectCategories || []).includes('N_WATERFALL'), [projectCategories]);
+
   const loadEnableCategory = () => {
     axios.get('/iam/choerodon/v1/system/setting/enable_category')
       .then((response) => {
@@ -35,7 +42,7 @@ const GeneralSetting = observer(() => {
 
   const loadProject = () => axios.all([
     store.axiosGetProjectInfo(projectId),
-    ProjectCategory === 'WATERFALL' ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
+    isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
   ])
     .then(([data, waterfallData]) => {
       const newData = { ...data, waterfallData: waterfallData || {} };
@@ -297,7 +304,7 @@ const GeneralSetting = observer(() => {
             </section>
           </div>
           {
-            !isOPERATIONS && (
+            showAgilePrefix && (
               <>
                 <Divider />
                 <section className={`${prefixCls}-section`}>
@@ -313,7 +320,7 @@ const GeneralSetting = observer(() => {
                         {waterfallProjectCode || agileProjectCode}
                       </div>
                     </div>
-                    {ProjectCategory === 'WATERFALL'
+                    {isWATERFALL
                       ? [
                         <div className={`${prefixCls}-section-item`}>
                           <div className={`${prefixCls}-section-item-title`}>
@@ -341,9 +348,9 @@ const GeneralSetting = observer(() => {
           visible={editing}
           onCancel={handleCancel}
           onRefresh={loadProject}
-          projectCategory={ProjectCategory}
           categoryEnabled={categoryEnabled}
-          isOPERATIONS={isOPERATIONS}
+          showAgilePrefix={showAgilePrefix}
+          isWATERFALL={isWATERFALL}
         />
       </Content>
     </Page>
