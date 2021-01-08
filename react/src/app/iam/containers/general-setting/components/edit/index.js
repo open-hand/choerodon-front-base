@@ -22,7 +22,6 @@ const FormItem = Form.Item;
 const Edit = Form.create({})(observer(({
   onCancel,
   onRefresh,
-  projectCategory,
   form: {
     getFieldDecorator,
     validateFields,
@@ -32,7 +31,8 @@ const Edit = Form.create({})(observer(({
   },
   visible,
   categoryEnabled,
-  isOPERATIONS,
+  showAgilePrefix,
+  isWATERFALL,
 }) => {
   const [submitting, setSubmitting] = useState(false);
   const [isShowAvatar, setIsShowAvatar] = useState(false);
@@ -49,7 +49,7 @@ const Edit = Form.create({})(observer(({
         name,
         applicationName: applicationVO.name,
       });
-      if (!isOPERATIONS) {
+      if (showAgilePrefix) {
         setFieldsValue({
           agileProjectCode: projectCode || agileProjectCode,
         });
@@ -159,12 +159,14 @@ const Edit = Form.create({})(observer(({
         body.type = body.type === 'no' || undefined ? null : value.type;
         setSubmitting(true);
         axios.all([store.axiosSaveProjectInfo(body),
-          projectCategory === 'WATERFALL' ? store.axiosUpdateWaterfallProjectInfo({
+          isWATERFALL ? store.axiosUpdateWaterfallProjectInfo({
             projectCode,
             projectConclusionTime,
             projectEstablishmentTime,
           }) : undefined,
-          !['WATERFALL', 'OPERATIONS'].includes(projectCategory) ? store.axiosUpdateAgileProjectInfo({ agileProjectCode }) : undefined,
+          showAgilePrefix && !isWATERFALL
+            ? store.axiosUpdateAgileProjectInfo({ agileProjectCode })
+            : undefined,
         ])
           .then(() => {
             setSubmitting(false);
@@ -267,13 +269,13 @@ const Edit = Form.create({})(observer(({
             />,
           )}
         </FormItem>  */}
-        {!isOPERATIONS && (
+        {showAgilePrefix && (
           <>
             <div className={`${prefixCls}-section-title`}>
               {formatMessage({ id: `${intlPrefix}.otherSetting` })}
             </div>
             <FormItem>
-              {getFieldDecorator(projectCategory === 'WATERFALL' ? 'projectCode' : 'agileProjectCode', {
+              {getFieldDecorator(isWATERFALL ? 'projectCode' : 'agileProjectCode', {
                 rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) },
                   {
                     validator: (rule, value, callback) => {
@@ -297,7 +299,7 @@ const Edit = Form.create({})(observer(({
                 />,
               )}
             </FormItem>
-            {projectCategory === 'WATERFALL' && [
+            {isWATERFALL && [
               <FormItem>
                 {getFieldDecorator('projectEstablishmentTime', {
                   rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.waterfall.startTime.requiredMsg` }) }],
