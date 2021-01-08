@@ -5,10 +5,13 @@ import {
   Table, Modal, message,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import classNames from 'classnames';
 import {
   Action, Content, Header, axios, Permission, Breadcrumb, TabPage,
 } from '@choerodon/boot';
-import { Button, Modal as OldModal, Icon } from 'choerodon-ui';
+import {
+  Spin, Button, Modal as OldModal, Icon,
+} from 'choerodon-ui';
 
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
@@ -207,75 +210,120 @@ export default observer((props) => {
     return null;
   }
 
+  function handlePage(next) {
+    if (next) {
+      dataSet.nextPage();
+    } else {
+      dataSet.prePage();
+    }
+  }
+
   function renderNewContent() {
-    console.log(dataSet.toData());
     return (
-      <div className="theme4-c7n-member">
-        {dataSet.toData().map((item) => (
-          <div className="theme4-c7n-memberItem">
-            <div className="theme4-c7n-memberItem-line">
-              <div
-                className="theme4-c7n-memberItem-line-icon"
-                style={{
-                  ...item.imageUrl ? {
-                    backgroundImage: `url(${item.imageUrl})`,
-                  } : {
-                    background: '#F0F5FF',
-                  },
-                }}
-              >
-                {
-                  !item.imageUrl && item.loginName.substring(0, 1).toUpperCase()
-                }
-              </div>
-              <div
-                className="theme4-c7n-memberItem-line-name"
-              >
-                <p className="theme4-c7n-memberItem-line-name-realName">
-                  <span className="theme4-c7n-memberItem-line-name-realName-text">{item.realName}</span>
-                  <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
-                </p>
-                <p className="theme4-c7n-memberItem-line-name-loginName">{item.loginName}</p>
-              </div>
-            </div>
-            <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 16 }}>
-              <p className="theme4-c7n-memberItem-line-key">
-                角色:
-              </p>
-              <p className="theme4-c7n-memberItem-line-value">
-                {expandMoreColumn({
-                  value: '',
+      <Spin wrapperClassName="theme4-c7n-spin" spinning={dataSet.status == 'loading'}>
+        <div className="theme4-c7n-member">
+          {dataSet.toData().map((item) => (
+            <div className="theme4-c7n-memberItem">
+              <div className="theme4-c7n-memberItem-action">
+                {renderAction({
                   record: {
-                    getPristineValue: (key) => item.roles,
+                    get: (params) => item[params],
                   },
                 })}
-              </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line">
+                <div
+                  className="theme4-c7n-memberItem-line-icon"
+                  style={{
+                    ...item.imageUrl ? {
+                      backgroundImage: `url(${item.imageUrl})`,
+                    } : {
+                      background: '#F0F5FF',
+                    },
+                  }}
+                >
+                  {
+                    !item.imageUrl && item.loginName.substring(0, 1).toUpperCase()
+                  }
+                </div>
+                <div
+                  className="theme4-c7n-memberItem-line-name"
+                >
+                  <p className="theme4-c7n-memberItem-line-name-realName">
+                    <span className="theme4-c7n-memberItem-line-name-realName-text">{item.realName}</span>
+                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
+                  </p>
+                  <p className="theme4-c7n-memberItem-line-name-loginName">{item.loginName}</p>
+                </div>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 16 }}>
+                <p className="theme4-c7n-memberItem-line-key">
+                  角色:
+                </p>
+                <p className="theme4-c7n-memberItem-line-value">
+                  {expandMoreColumn({
+                    value: '',
+                    record: {
+                      getPristineValue: (key) => item.roles,
+                    },
+                  })}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+                  手机:
+                </p>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                  {item.phone}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+                  邮箱:
+                </p>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                  {item.email}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ marginTop: 11 }}>
+                {label({ get: (key) => item[key] })}
+                {programLabel({ get: (key) => item[key] })}
+              </div>
             </div>
-            <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
-              <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
-                手机:
-              </p>
-              <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
-                {item.phone}
-              </p>
-            </div>
-            <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
-              <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
-                邮箱:
-              </p>
-              <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
-                {item.email}
-              </p>
-            </div>
-            <div className="theme4-c7n-memberItem-line" style={{ marginTop: 11 }}>
-              {label({ get: (key) => item[key] })}
-              {programLabel({ get: (key) => item[key] })}
-            </div>
+          ))}
+          <div className="theme4-c7n-member-page">
+            <span
+              role="none"
+              onClick={() => handlePage(false)}
+              className={classNames({
+                'theme4-c7n-member-page-disabled': dataSet.currentPage === 1,
+                'theme4-c7n-member-page-enabled': dataSet.currentPage > 1,
+              })}
+            >
+              <Icon type="keyboard_arrow_left" />
+            </span>
+            <span
+              role="none"
+              style={{ marginLeft: 24 }}
+              onClick={() => handlePage(true)}
+              className={classNames({
+                'theme4-c7n-member-page-enabled': true,
+              })}
+            >
+              <Icon type="keyboard_arrow_right" />
+            </span>
           </div>
-        ))}
-      </div>
+        </div>
+      </Spin>
     );
   }
+
+  console.log(dataSet.status);
+
+  const handleChangeSearch = (value) => {
+    dataSet.setQueryParameter('params', value);
+    dataSet.query();
+  };
 
   return (
     <TabPage service={['choerodon.code.project.cooperation.team-member.ps.default']}>
@@ -303,7 +351,17 @@ export default observer((props) => {
       <Breadcrumb
         {
           ...AppState.getCurrentTheme === 'theme4' ? {
-            extraNode: (<TextField style={{ marginLeft: 32 }} suffix={<Icon type="search" />} />),
+            extraNode: (
+              <TextField
+                className="theme4-c7n-member-search"
+                placeholder="搜索成员"
+                style={{ marginLeft: 32 }}
+                suffix={(
+                  <Icon type="search" />
+                )}
+                onEnterDown={(e) => handleChangeSearch(e.target.value)}
+                onChange={handleChangeSearch}
+              />),
           } : {}
         }
       />
