@@ -1,5 +1,5 @@
 import React, {
-  Fragment, useState, useContext, useEffect,
+  Fragment, useState, useContext, useEffect, useMemo,
 } from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react-lite';
@@ -31,11 +31,13 @@ const Edit = Form.create({})(observer(({
   },
   visible,
   categoryEnabled,
-  showAgilePrefix,
+  showProjectPrefixArr,
   isWATERFALL,
 }) => {
   const [submitting, setSubmitting] = useState(false);
   const [isShowAvatar, setIsShowAvatar] = useState(false);
+  const isShowProjectPrefix = useMemo(() => showProjectPrefixArr.length > 0,
+    [showProjectPrefixArr]);
   const {
     store, intl: { formatMessage }, intlPrefix, prefixCls,
   } = useContext(GeneralSettingContext);
@@ -49,7 +51,7 @@ const Edit = Form.create({})(observer(({
         name,
         applicationName: applicationVO.name,
       });
-      if (showAgilePrefix) {
+      if (isShowProjectPrefix) {
         setFieldsValue({
           agileProjectCode: projectCode || agileProjectCode,
         });
@@ -164,8 +166,10 @@ const Edit = Form.create({})(observer(({
             projectConclusionTime,
             projectEstablishmentTime,
           }) : undefined,
-          showAgilePrefix && !isWATERFALL
+          showProjectPrefixArr.some((category) => ['N_AGILE', 'N_PROGRAM'].includes(category)) && !isWATERFALL
             ? store.axiosUpdateAgileProjectInfo({ agileProjectCode })
+            : undefined,
+          showProjectPrefixArr.includes('N_TEST') ? store.axiosUpdateTestProjectInfo({ projectCode: agileProjectCode })
             : undefined,
         ])
           .then(() => {
@@ -269,7 +273,7 @@ const Edit = Form.create({})(observer(({
             />,
           )}
         </FormItem>  */}
-        {showAgilePrefix && (
+        {isShowProjectPrefix && (
           <>
             <div className={`${prefixCls}-section-title`}>
               {formatMessage({ id: `${intlPrefix}.otherSetting` })}
