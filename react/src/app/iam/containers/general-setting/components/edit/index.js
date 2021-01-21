@@ -1,7 +1,14 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react';
+import React, {
+  Fragment, useState, useContext, useEffect,
+} from 'react';
+import moment from 'moment';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Input, Modal, Select } from 'choerodon-ui';
-import { axios, Content, Header, TabPage as Page, Breadcrumb, Permission, stores, Choerodon } from '@choerodon/boot';
+import {
+  Button, Form, Icon, Input, Modal, Select, DatePicker,
+} from 'choerodon-ui';
+import {
+  axios, Content, Header, TabPage as Page, Breadcrumb, Permission, stores, Choerodon,
+} from '@choerodon/boot';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import classnames from 'classnames';
 import GeneralSettingContext from '../../stores';
@@ -13,30 +20,38 @@ const { Sidebar } = Modal;
 const FormItem = Form.Item;
 
 const Edit = Form.create({})(observer(({
-  onCancel, 
+  onCancel,
+  onRefresh,
   form: {
     getFieldDecorator,
     validateFields,
     resetFields,
     setFieldsValue,
+    getFieldValue,
   },
   visible,
   categoryEnabled,
-  isOPERATIONS,
+  showAgilePrefix,
+  isWATERFALL,
 }) => {
   const [submitting, setSubmitting] = useState(false);
   const [isShowAvatar, setIsShowAvatar] = useState(false);
-  const { store, intl: { formatMessage }, intlPrefix, prefixCls } = useContext(GeneralSettingContext);
+  const {
+    store, intl: { formatMessage }, intlPrefix, prefixCls,
+  } = useContext(GeneralSettingContext);
   useEffect(() => {
     if (visible) {
-      const { enabled, name, code, agileProjectCode, categories, applicationVO = {} } = store.getProjectInfo;
+      const {
+        enabled, name, code, agileProjectCode, waterfallData: { projectCode },
+        categories, applicationVO = {},
+      } = store.getProjectInfo;
       setFieldsValue({
         name,
         applicationName: applicationVO.name,
       });
-      if (!isOPERATIONS) {
+      if (showAgilePrefix) {
         setFieldsValue({
-          agileProjectCode,
+          agileProjectCode: projectCode || agileProjectCode,
         });
       }
     }
@@ -45,7 +60,7 @@ const Edit = Form.create({})(observer(({
    * 打开上传图片模态框
    */
   const openAvatarUploader = () => {
-    setIsShowAvatar(true);    
+    setIsShowAvatar(true);
   };
 
   /**
@@ -53,12 +68,12 @@ const Edit = Form.create({})(observer(({
    * @param visible 模态框是否可见
    */
   const closeAvatarUploader = () => {
-    setIsShowAvatar(false);  
+    setIsShowAvatar(false);
   };
 
   const handleUploadOk = (res) => {
     store.setImageUrl(res);
-    setIsShowAvatar(false); 
+    setIsShowAvatar(false);
   };
   const getAvatar = () => {
     const { name } = store.getProjectInfo;
@@ -108,25 +123,31 @@ const Edit = Form.create({})(observer(({
     onCancel();
   };
 
-
   const handleSave = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
     validateFields((err, value, modify) => {
       if (!err) {
+        // eslint-disable-next-line no-param-reassign
         if (store.getProjectInfo.imageUrl !== store.getImageUrl) modify = true;
         if (!modify) {
           Choerodon.prompt(formatMessage({ id: 'save.success' }));
           onCancel();
           return;
         }
-        const { id, organizationId, objectVersionNumber, agileProjectObjectVersionNumber, agileProjectId } = store.getProjectInfo;
+        const {
+          id, organizationId, objectVersionNumber, agileProjectObjectVersionNumber, agileProjectId,
+        } = store.getProjectInfo;
+        const {
+          projectCode, agileProjectCode, projectConclusionTime,
+          projectEstablishmentTime, ...restValue
+        } = value;
         const body = {
           id,
           organizationId,
           objectVersionNumber,
-          agileProjectId,
-          agileProjectObjectVersionNumber,
-          ...value,
+          // agileProjectId,
+          // agileProjectObjectVersionNumber,
+          ...restValue,
           applicationVO: {
             name: value.applicationName,
           },
@@ -137,16 +158,24 @@ const Edit = Form.create({})(observer(({
         }
         body.type = body.type === 'no' || undefined ? null : value.type;
         setSubmitting(true);
-        store.axiosSaveProjectInfo(body)
+        axios.all([store.axiosSaveProjectInfo(body),
+          isWATERFALL ? store.axiosUpdateWaterfallProjectInfo({
+            projectCode,
+            projectConclusionTime,
+            projectEstablishmentTime,
+          }) : undefined,
+          showAgilePrefix && !isWATERFALL
+            ? store.axiosUpdateAgileProjectInfo({ agileProjectCode })
+            : undefined,
+        ])
           .then(() => {
             setSubmitting(false);
-            Choerodon.prompt(formatMessage({ id: 'save.success' }));            
-            store.axiosGetProjectInfo(id).then((data) => {
-              store.setImageUrl(data.imageUrl);
-              store.setProjectInfo(data);
+            Choerodon.prompt(formatMessage({ id: 'save.success' }));
+            onRefresh().then((data) => {
               HeaderStore.updateProject(data);
-            }).catch(Choerodon.handleResponseError);            
+            }).catch(Choerodon.handleResponseError);
             onCancel();
+            // eslint-disable-next-line max-len
             // history.replace(`${location.pathname}?type=project&id=${id}&name=${encodeURIComponent(data.name)}&organizationId=${organizationId}`);
           })
           .catch((error) => {
@@ -157,8 +186,11 @@ const Edit = Form.create({})(observer(({
     });
   };
 
-
-  const { enabled, name, code, agileProjectCode, categories, applicationVO = {} } = store.getProjectInfo;
+  const {
+    enabled, name, code, agileProjectCode, categories, applicationVO = {},
+    waterfallData = {},
+  } = store.getProjectInfo;
+  const { projectCode, projectConclusionTime, projectEstablishmentTime } = waterfallData;
   return (
     <Sidebar
       title="修改信息"
@@ -173,7 +205,8 @@ const Edit = Form.create({})(observer(({
             onClick={handleSave}
             loading={submitting}
             disabled={!enabled}
-          ><FormattedMessage id="save" />
+          >
+            <FormattedMessage id="save" />
           </Button>
           <Button
             funcType="raised"
@@ -236,15 +269,28 @@ const Edit = Form.create({})(observer(({
             />,
           )}
         </FormItem>  */}
-        {!isOPERATIONS && (
-          <Fragment>
+        {showAgilePrefix && (
+          <>
             <div className={`${prefixCls}-section-title`}>
               {formatMessage({ id: `${intlPrefix}.otherSetting` })}
             </div>
             <FormItem>
-              {getFieldDecorator('agileProjectCode', {
-                rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) }],
-                initialValue: agileProjectCode,
+              {getFieldDecorator(isWATERFALL ? 'projectCode' : 'agileProjectCode', {
+                rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) },
+                  {
+                    validator: (rule, value, callback) => {
+                      if (typeof (value) !== 'string') {
+                        callback();
+                        return;
+                      }
+                      if (String(value).length > 5 && value !== projectCode) {
+                        callback(formatMessage({ id: `${intlPrefix}.agilePrefix.maxMsg` }));
+                        return;
+                      }
+                      callback();
+                    },
+                  }],
+                initialValue: projectCode,
               })(
                 <Input
                   autoComplete="off"
@@ -253,8 +299,53 @@ const Edit = Form.create({})(observer(({
                 />,
               )}
             </FormItem>
-          </Fragment>
+            {isWATERFALL && [
+              <FormItem>
+                {getFieldDecorator('projectEstablishmentTime', {
+                  rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.waterfall.startTime.requiredMsg` }) }],
+                  initialValue: projectEstablishmentTime ? moment(projectEstablishmentTime, 'YYYY-MM-DD') : undefined,
+                })(
+                  <DatePicker
+                    autoComplete="off"
+                    style={{ width: '100%' }}
+                    disabledDate={(current) => {
+                      const endTime = getFieldValue('projectConclusionTime');
+                      if (endTime && current > endTime) {
+                        return true;
+                      }
+                      return false;
+                    }}
+                    placeholder={formatMessage({ id: `${intlPrefix}.waterfall.startTime` })}
+                    label={<FormattedMessage id={`${intlPrefix}.waterfall.startTime`} />}
+                  />,
+                )}
+              </FormItem>,
+              <FormItem>
+                {getFieldDecorator('projectConclusionTime', {
+                  rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.waterfall.endTime.requiedMsg` }) }],
+                  initialValue: projectConclusionTime ? moment(projectConclusionTime, 'YYYY-MM-DD') : undefined,
+                })(
+                  <DatePicker
+                    autoComplete="off"
+                    style={{ width: '100%' }}
+                    disabledDate={(current) => {
+                      const startTime = getFieldValue('projectEstablishmentTime');
+                      if (startTime && current < startTime) {
+                        return true;
+                      }
+                      if (current < moment()) {
+                        return true;
+                      }
+                      return false;
+                    }}
+                    placeholder={formatMessage({ id: `${intlPrefix}.waterfall.endTime` })}
+                    label={<FormattedMessage id={`${intlPrefix}.waterfall.endTime`} />}
+                  />,
+                )}
+              </FormItem>]}
+          </>
         )}
+
         {/* {categoryEnabled && (
           <FormItem>
             {getFieldDecorator('category', {

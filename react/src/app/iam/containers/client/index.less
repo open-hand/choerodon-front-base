@@ -16,9 +16,13 @@
     display: inline-block;
   }
 
-  .link:hover {
+  .link {
     color: @primary-color;
-    text-decoration: underline;
-    cursor: pointer;
+
+    &:hover {
+      color: @primary-color;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }

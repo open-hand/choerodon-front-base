@@ -4,6 +4,7 @@ const enterprises = {
   'c7ncd.enterprise.info.confirm': '系统信息确认',
   'c7ncd.enterprise.info.tips': '通过Choerodon猪齿鱼信息确认，您可以创建系统组织信息，并创建和维护系统admin的账号信息。',
   'c7ncd.enterprise.info.name': '组织名称',
+  'c7ncd.enterprise.info.code': '组织编码',
   'c7ncd.enterprise.info.business.name': '公司名称',
   'c7ncd.enterprise.info.business.type': '行业',
   'c7ncd.enterprise.info.business.scale': '公司规模',
@@ -13,6 +14,7 @@ const enterprises = {
   'c7ncd.enterprise.info.admin.info': 'Admin账号信息',
   'c7ncd.enterprise.info.admin.info.tips': 'admin在此输入的姓名、邮箱与手机号，将作为之后在系统中admin的用户名、登录邮箱与手机号',
   'c7ncd.enterprise.info.agree': '请阅读并同意隐私声明',
+  'c7ncd.enterprise.info.code.failed': '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
 };
 
 const pageDetail = {
@@ -1770,6 +1772,8 @@ const zh_CN = {
   'project.info.name': '项目名称',
   'project.info.applicationName': '应用名称',
   'project.info.agile.prefix': '问题前缀',
+  'project.info.waterfall.startTime': '立项时间',
+  'project.info.waterfall.endTime': '结项时间',
 
   'project.info.code': '项目编码',
   'project.info.category': '项目类型',
@@ -1779,6 +1783,11 @@ const zh_CN = {
   'project.info.namerequiredmsg': '请输入项目名称',
   'project.info.appnamerequiredmsg': '请输入应用名称',
   'project.info.agilePrefixrequiredmsg': '请输入问题前缀',
+  'project.info.agilePrefix.maxMsg': '问题前缀长度超过5',
+
+  'project.info.waterfall.startTime.requiredMsg': '请输入立项时间',
+  'project.info.waterfall.endTime.requiedMsg': '请输入结项时间',
+
   'project.info.name.pattern.msg': '项目名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
   'project.info.app.name.pattern.msg': '应用名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
   'project.info.type': '项目类型',

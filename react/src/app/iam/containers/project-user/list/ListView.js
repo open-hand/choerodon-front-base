@@ -1,8 +1,18 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Action, Content, Header, axios, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
-import { Button, Modal as OldModal } from 'choerodon-ui';
-import { Select, SelectBox, Table, TextField, Modal, message, Radio } from 'choerodon-ui/pro';
+import {
+  TextField,
+  Table, Modal, message,
+} from 'choerodon-ui/pro';
+import { observer } from 'mobx-react-lite';
+import classNames from 'classnames';
+import {
+  Action, Content, Header, axios, Permission, Breadcrumb, TabPage,
+} from '@choerodon/boot';
+import {
+  Spin, Button, Modal as OldModal, Icon,
+} from 'choerodon-ui';
+
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import StatusTag from '../../../components/statusTag';
@@ -14,6 +24,7 @@ const modalKey = Modal.key();
 
 let InviteModal = false;
 try {
+  // eslint-disable-next-line global-require
   const { default: requireData } = require('@choerodon/base-business/lib/routes/invite-user');
   InviteModal = requireData;
 } catch (error) {
@@ -21,8 +32,9 @@ try {
 }
 
 const { Column } = Table;
-export default function ListView(props) {
-  const { intlPrefix,
+export default observer((props) => {
+  const {
+    intlPrefix,
     orgUserListDataSet: dataSet,
     projectId,
     orgUserCreateDataSet,
@@ -32,6 +44,10 @@ export default function ListView(props) {
     allRoleDataSet,
     AppState,
   } = useContext(Store);
+
+  if (AppState.getCurrentTheme === 'theme4') {
+    import('./theme4.less');
+  }
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
 
@@ -116,10 +132,10 @@ export default function ListView(props) {
           if (!result.failed) {
             await orgUserRoleDataSet.reset();
             dataSet.query();
-          } else {
-            message.error(result.message);
-            return false;
+            return true;
           }
+          message.error(result.message);
+          return false;
         },
       });
     }
@@ -127,34 +143,45 @@ export default function ListView(props) {
   function rednerEnabled({ value }) {
     return <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'COMPLETED' : 'DEFAULT'} />;
   }
-  // 外部人员
-  function renderUserName({ value, record }) {
-    const label = record.get('organizationId').toString() !== organizationId ? (
+  function label(record) {
+    return record.get('organizationId').toString() !== organizationId ? (
       <div className="project-user-external-user">
         <span className="project-user-external-user-text">
           外部人员
         </span>
       </div>
     ) : null;
-    // const programLabel = InviteModal && record.get('programOwner') ? (
-    const programLabel = record.get('programOwner') ? (
+  }
+  function programLabel(record) {
+    return record.get('programOwner') ? (
       <div className="project-user-external-user">
         <span className="project-user-external-user-text">
           项目群人员
         </span>
       </div>
     ) : null;
+  }
+
+  // 外部人员
+  function renderUserName({ value, record }) {
+    // const programLabel = InviteModal && record.get('programOwner') ? (
     return (
-      <Fragment>
+      <>
         <Permission
           service={['choerodon.code.project.cooperation.team-member.ps.update']}
           defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
         >
-          <span onClick={() => handleUserRole(record)} className="link">{value}</span>
+          <span
+            onClick={() => handleUserRole(record)}
+            className="link"
+            role="none"
+          >
+            {value}
+          </span>
         </Permission>
-        {label}
-        {programLabel}
-      </Fragment>
+        {label(record)}
+        {programLabel(record)}
+      </>
     );
   }
 
@@ -180,7 +207,123 @@ export default function ListView(props) {
         />
       );
     }
+    return null;
   }
+
+  function handlePage(next) {
+    if (next) {
+      dataSet.nextPage();
+    } else {
+      dataSet.prePage();
+    }
+  }
+
+  function renderNewContent() {
+    return (
+      <Spin wrapperClassName="theme4-c7n-spin" spinning={dataSet.status == 'loading'}>
+        <div className="theme4-c7n-member">
+          {dataSet.toData().map((item) => (
+            <div className="theme4-c7n-memberItem">
+              <div className="theme4-c7n-memberItem-action">
+                {renderAction({
+                  record: {
+                    get: (params) => item[params],
+                  },
+                })}
+              </div>
+              <div className="theme4-c7n-memberItem-line">
+                <div
+                  className="theme4-c7n-memberItem-line-icon"
+                  style={{
+                    ...item.imageUrl ? {
+                      backgroundImage: `url(${item.imageUrl})`,
+                    } : {
+                      background: '#F0F5FF',
+                    },
+                  }}
+                >
+                  {
+                    !item.imageUrl && item.loginName.substring(0, 1).toUpperCase()
+                  }
+                </div>
+                <div
+                  className="theme4-c7n-memberItem-line-name"
+                >
+                  <p className="theme4-c7n-memberItem-line-name-realName">
+                    <span className="theme4-c7n-memberItem-line-name-realName-text">{item.realName}</span>
+                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
+                  </p>
+                  <p className="theme4-c7n-memberItem-line-name-loginName">{item.loginName}</p>
+                </div>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 16 }}>
+                <p className="theme4-c7n-memberItem-line-key">
+                  角色:
+                </p>
+                <p className="theme4-c7n-memberItem-line-value">
+                  {expandMoreColumn({
+                    value: '',
+                    record: {
+                      getPristineValue: (key) => item.roles,
+                    },
+                  })}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+                  手机:
+                </p>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                  {item.phone}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+                  邮箱:
+                </p>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                  {item.email}
+                </p>
+              </div>
+              <div className="theme4-c7n-memberItem-line" style={{ marginTop: 11 }}>
+                {label({ get: (key) => item[key] })}
+                {programLabel({ get: (key) => item[key] })}
+              </div>
+            </div>
+          ))}
+          <div className="theme4-c7n-member-page">
+            <span
+              role="none"
+              onClick={() => handlePage(false)}
+              className={classNames({
+                'theme4-c7n-member-page-disabled': dataSet.currentPage === 1,
+                'theme4-c7n-member-page-enabled': dataSet.currentPage > 1,
+              })}
+            >
+              <Icon type="keyboard_arrow_left" />
+            </span>
+            <span
+              role="none"
+              style={{ marginLeft: 24 }}
+              onClick={() => handlePage(true)}
+              className={classNames({
+                'theme4-c7n-member-page-enabled': true,
+              })}
+            >
+              <Icon type="keyboard_arrow_right" />
+            </span>
+          </div>
+        </div>
+      </Spin>
+    );
+  }
+
+  console.log(dataSet.status);
+
+  const handleChangeSearch = (value) => {
+    dataSet.setQueryParameter('params', value);
+    dataSet.query();
+  };
 
   return (
     <TabPage service={['choerodon.code.project.cooperation.team-member.ps.default']}>
@@ -205,7 +348,23 @@ export default function ListView(props) {
         </Permission>
         {getInitialButton()}
       </Header>
-      <Breadcrumb />
+      <Breadcrumb
+        {
+          ...AppState.getCurrentTheme === 'theme4' ? {
+            extraNode: (
+              <TextField
+                className="theme4-c7n-member-search"
+                placeholder="搜索成员"
+                style={{ marginLeft: 32 }}
+                suffix={(
+                  <Icon type="search" />
+                )}
+                onEnterDown={(e) => handleChangeSearch(e.target.value)}
+                onChange={handleChangeSearch}
+              />),
+          } : {}
+        }
+      />
       <DeleteRoleModal
         deleteRoleRecord={deleteRoleRecord}
         handleCancel={handleCancel}
@@ -214,14 +373,18 @@ export default function ListView(props) {
       <Content
         className="project-user"
       >
-        <Table labelLayout="float" pristine dataSet={dataSet}>
-          <Column renderer={renderUserName} name="realName" />
-          <Column renderer={renderAction} width={50} align="right" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
-          <Column minWidth={320} width={320} renderer={expandMoreColumn} className="project-user-roles" name="myRoles" />
-          <Column renderer={rednerEnabled} width={100} name="enabled" align="left" />
-        </Table>
+        {
+          AppState.getCurrentTheme === 'theme4' ? renderNewContent() : (
+            <Table labelLayout="float" pristine dataSet={dataSet}>
+              <Column renderer={renderUserName} name="realName" />
+              <Column renderer={renderAction} width={50} align="right" />
+              <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
+              <Column minWidth={320} width={320} renderer={expandMoreColumn} className="project-user-roles" name="myRoles" />
+              <Column renderer={rednerEnabled} width={100} name="enabled" align="left" />
+            </Table>
+          )
+        }
       </Content>
     </TabPage>
   );
-}
+});

@@ -8,6 +8,9 @@ import {
   axios, Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
 } from '@choerodon/boot';
 import queryString from 'query-string';
+import map from 'lodash/map';
+import intersection from 'lodash/intersection';
+import isEmpty from 'lodash/isEmpty';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import GeneralSettingContext, { ContextProvider } from './stores';
@@ -23,9 +26,13 @@ const GeneralSetting = observer(() => {
   const [editing, setEditing] = useState(false);
   const [categoryEnabled, setCategoryEnabled] = useState(false);
   const {
-    id: projectId, name: projectName, organizationId, category: ProjectCategory,
+    id: projectId, name: projectName, organizationId,
+    category: ProjectCategory, categories: projectCategories,
   } = AppState.currentMenuType;
-  const isOPERATIONS = useMemo(() => ProjectCategory === 'OPERATIONS', [ProjectCategory]);
+  const projectCategoryCodes = useMemo(() => map(projectCategories || [], 'code'), [projectCategories]);
+  const showAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL'])), [projectCategoryCodes]);
+  const isWATERFALL = useMemo(() => (projectCategories || []).includes('N_WATERFALL'), [projectCategories]);
+
   const loadEnableCategory = () => {
     axios.get('/iam/choerodon/v1/system/setting/enable_category')
       .then((response) => {
@@ -33,12 +40,16 @@ const GeneralSetting = observer(() => {
       });
   };
 
-  const loadProject = () => {
-    store.axiosGetProjectInfo(projectId).then((data) => {
+  const loadProject = () => axios.all([
+    store.axiosGetProjectInfo(projectId),
+    isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
+  ])
+    .then(([data, waterfallData]) => {
+      const newData = { ...data, waterfallData: waterfallData || {} };
       store.setImageUrl(data.imageUrl);
-      store.setProjectInfo(data);
+      store.setProjectInfo(newData);
+      return newData;
     }).catch(Choerodon.handleResponseError);
-  };
 
   const loadProjectTypes = () => {
     store.loadProjectTypes().then((data) => {
@@ -188,8 +199,13 @@ const GeneralSetting = observer(() => {
   }
 
   const {
-    enabled, name, code, agileProjectCode, categories = [], creationDate, createUserName,
+    enabled, name, code, agileProjectCode, categories = [], creationDate,
+    createUserName, waterfallData = {},
   } = store.getProjectInfo;
+  const {
+    projectCode: waterfallProjectCode,
+    projectConclusionTime, projectEstablishmentTime,
+  } = waterfallData;
   const imageUrl = store.getImageUrl;
   return (
     <Page
@@ -288,7 +304,7 @@ const GeneralSetting = observer(() => {
             </section>
           </div>
           {
-            !isOPERATIONS && (
+            showAgilePrefix && (
               <>
                 <Divider />
                 <section className={`${prefixCls}-section`}>
@@ -301,9 +317,27 @@ const GeneralSetting = observer(() => {
                         {formatMessage({ id: `${intlPrefix}.agile.prefix` })}
                       </div>
                       <div className={`${prefixCls}-section-item-content`}>
-                        {agileProjectCode}
+                        {waterfallProjectCode || agileProjectCode}
                       </div>
                     </div>
+                    {isWATERFALL
+                      ? [
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.waterfall.startTime` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {projectEstablishmentTime ? String(projectEstablishmentTime).split(' ')[0] : ''}
+                          </div>
+                        </div>,
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.waterfall.endTime` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {projectConclusionTime ? String(projectConclusionTime).split(' ')[0] : ''}
+                          </div>
+                        </div>] : null}
                   </div>
                 </section>
               </>
@@ -313,8 +347,10 @@ const GeneralSetting = observer(() => {
         <Edit
           visible={editing}
           onCancel={handleCancel}
+          onRefresh={loadProject}
           categoryEnabled={categoryEnabled}
-          isOPERATIONS={isOPERATIONS}
+          showAgilePrefix={showAgilePrefix}
+          isWATERFALL={isWATERFALL}
         />
       </Content>
     </Page>
