@@ -30,22 +30,26 @@ const GeneralSetting = observer(() => {
     category: ProjectCategory, categories: projectCategories,
   } = AppState.currentMenuType;
   const projectCategoryCodes = useMemo(() => map(projectCategories || [], 'code'), [projectCategories]);
-  const showAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL'])), [projectCategoryCodes]);
+  const showProjectPrefixArr = useMemo(() => intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL']), [projectCategoryCodes]);
   const isWATERFALL = useMemo(() => (projectCategories || []).includes('N_WATERFALL'), [projectCategories]);
-
   const loadEnableCategory = () => {
     axios.get('/iam/choerodon/v1/system/setting/enable_category')
       .then((response) => {
         setCategoryEnabled(response);
       });
   };
-
   const loadProject = () => axios.all([
     store.axiosGetProjectInfo(projectId),
     isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
+    !isWATERFALL && !showProjectPrefixArr.some((category) => ['N_AGILE', 'N_PROGRAM'].includes(category)) ? store.axiosGetProjectInfoOnlyTest(projectId)
+      : undefined,
   ])
-    .then(([data, waterfallData]) => {
-      const newData = { ...data, waterfallData: waterfallData || {} };
+    .then(([data, waterfallData, testData = {}]) => {
+      const newData = {
+        ...data,
+        waterfallData: waterfallData || {},
+        agileProjectCode: data.agileProjectCode || testData.projectCode,
+      };
       store.setImageUrl(data.imageUrl);
       store.setProjectInfo(newData);
       return newData;
@@ -304,7 +308,7 @@ const GeneralSetting = observer(() => {
             </section>
           </div>
           {
-            showAgilePrefix && (
+            showProjectPrefixArr.length > 0 && (
               <>
                 <Divider />
                 <section className={`${prefixCls}-section`}>
@@ -349,7 +353,7 @@ const GeneralSetting = observer(() => {
           onCancel={handleCancel}
           onRefresh={loadProject}
           categoryEnabled={categoryEnabled}
-          showAgilePrefix={showAgilePrefix}
+          showProjectPrefixArr={showProjectPrefixArr}
           isWATERFALL={isWATERFALL}
         />
       </Content>

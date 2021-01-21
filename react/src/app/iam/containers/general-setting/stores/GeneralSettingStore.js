@@ -37,6 +37,10 @@ class GeneralSettingStore {
     return axios.get(`/iam/choerodon/v1/projects/${id}`);
   }
 
+  axiosGetProjectInfoOnlyTest(id) {
+    return axios.get(`/test/v1/projects/${id}/project_info`);
+  }
+
   axiosSaveProjectInfo(data) {
     return axios.put(`/iam/choerodon/v1/projects/${data.id}`, data);
   }
@@ -71,6 +75,16 @@ class GeneralSettingStore {
       infoId: agileProjectId,
       projectCode: agileProjectCode,
       objectVersionNumber: agileProjectObjectVersionNumber,
+    });
+  }
+
+  axiosUpdateTestProjectInfo(data) {
+    const { id, agileProjectObjectVersionNumber } = this.getProjectInfo;
+    const { projectCode } = data;
+    return axios.put(`/test/v1/projects/${id}/project_info`, {
+      infoId: id,
+      projectCode,
+      // objectVersionNumber: agileProjectObjectVersionNumber,
     });
   }
 
