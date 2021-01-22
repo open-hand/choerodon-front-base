@@ -1,6 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import {
-  axios, Content, Header, Page, Permission, Breadcrumb, TabPage,
+  axios, Content, Header, Page, Permission, Breadcrumb, TabPage, PageWrap, PageTab,
 } from '@choerodon/boot';
 import {
   Form, Output, Modal, message,
@@ -9,6 +9,8 @@ import { SketchPicker } from 'react-color';
 import { withRouter } from 'react-router-dom';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import GitlabSync from './components/gitlab-sync';
+import { mapping } from '../stores/FuncModeDataSet';
 import './index.less';
 
 import InfoForm from './InfoForm';
@@ -17,10 +19,11 @@ import Store from '../stores';
 
 const modalKey = Modal.key();
 
-const InfoView = observer(() => {
+const basicInfo = withRouter(observer(() => {
   const {
     systemSettingDataSet: dataSet, AppState, intl, intlPrefix, presetColors, colorMap, hasRegister,
   } = useContext(Store);
+
   const favicon = dataSet.current && dataSet.current.getPristineValue('favicon');
   const systemLogo = dataSet.current && dataSet.current.getPristineValue('systemLogo');
   const themeColor = dataSet.current && dataSet.current.getPristineValue('themeColor');
@@ -109,7 +112,6 @@ const InfoView = observer(() => {
   function renderBoolean({ value }) {
     return value === true ? '是' : '否';
   }
-
   return (
     <TabPage service={['choerodon.code.site.setting.general-setting.ps.default']}>
       <Header>
@@ -126,10 +128,10 @@ const InfoView = observer(() => {
 
       <Breadcrumb />
 
-      <Content className="c7n-system-setting-page-content">
+      <Content className="c7n-system-setting-page-content" style={{ marginTop: 20 }}>
         <div className="c7n-system-setting-form">
-          <h3>平台信息</h3>
-          <div className="divider" />
+          {/* <h3>平台信息</h3> */}
+          {/* <div className="divider" /> */}
           <Form
             pristine
             labelWidth={190}
@@ -179,5 +181,66 @@ const InfoView = observer(() => {
       </Content>
     </TabPage>
   );
-});
+}));
+
+const funcMode = withRouter(observer(() => {
+  const {
+    FuncModeDataSet,
+  } = useContext(Store);
+
+  const handleClickSync = () => {
+    Modal.open({
+      key: Modal.key(),
+      title: 'GitLab用户同步',
+      drawer: true,
+      children: <GitlabSync />,
+      style: {
+        width: 'calc(100% - 3.5rem)',
+      },
+      okText: '手动同步',
+    });
+  };
+
+  console.log(FuncModeDataSet);
+
+  return (
+    <TabPage>
+      <Header>
+        <Button
+          icon="refresh"
+          onClick={handleClickSync}
+        >
+          GitLab用户同步
+        </Button>
+      </Header>
+      <Breadcrumb />
+      <Content>
+        <Form className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
+          <Output name={mapping.isInstallMission.name} colSpan={1} />
+          <Output name={mapping.isInstallDevops.name} colSpan={1} />
+          <Output name={mapping.isInstallTest.name} colSpan={1} />
+        </Form>
+      </Content>
+    </TabPage>
+  );
+}));
+
+const InfoView = observer(() => (
+  <Page>
+    <PageWrap noHeader={[]} cache>
+      <PageTab
+        title="基础信息"
+        tabKey="baseInfo"
+        component={basicInfo}
+        alwaysShow
+      />
+      <PageTab
+        title="功能模块"
+        tabKey="function"
+        component={funcMode}
+        alwaysShow
+      />
+    </PageWrap>
+  </Page>
+));
 export default withRouter(InfoView);
