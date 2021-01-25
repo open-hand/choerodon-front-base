@@ -31,6 +31,8 @@ const GeneralSetting = observer(() => {
   } = AppState.currentMenuType;
   const projectCategoryCodes = useMemo(() => map(projectCategories || [], 'code'), [projectCategories]);
   const showProjectPrefixArr = useMemo(() => intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL']), [projectCategoryCodes]);
+  const isShowAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM'])), [projectCategoryCodes]);
+  const isShowTestPrefix = useMemo(() => showProjectPrefixArr.includes('N_TEST'), [showProjectPrefixArr]);
   const isWATERFALL = useMemo(() => (projectCategories || []).includes('N_WATERFALL'), [projectCategories]);
   const loadEnableCategory = () => {
     axios.get('/iam/choerodon/v1/system/setting/enable_category')
@@ -41,14 +43,17 @@ const GeneralSetting = observer(() => {
   const loadProject = () => axios.all([
     store.axiosGetProjectInfo(projectId),
     isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
-    !isWATERFALL && !showProjectPrefixArr.some((category) => ['N_AGILE', 'N_PROGRAM'].includes(category)) ? store.axiosGetProjectInfoOnlyTest(projectId)
+    isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
+    isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
       : undefined,
   ])
-    .then(([data, waterfallData, testData = {}]) => {
+    .then(([data, waterfallData, agileData = {}, testData = {}]) => {
       const newData = {
         ...data,
+        agileProjectCode: agileData.projectCode,
         waterfallData: waterfallData || {},
-        agileProjectCode: data.agileProjectCode || testData.projectCode,
+        testProjectCode: testData.projectCode,
+        agileProjectObjectVersionNumber: agileData.objectVersionNumber,
       };
       store.setImageUrl(data.imageUrl);
       store.setProjectInfo(newData);
@@ -203,7 +208,7 @@ const GeneralSetting = observer(() => {
   }
 
   const {
-    enabled, name, code, agileProjectCode, categories = [], creationDate,
+    enabled, name, code, agileProjectCode, categories = [], creationDate, testProjectCode,
     createUserName, waterfallData = {},
   } = store.getProjectInfo;
   const {
@@ -316,14 +321,30 @@ const GeneralSetting = observer(() => {
                     {formatMessage({ id: `${intlPrefix}.otherSetting` })}
                   </div>
                   <div className={`${prefixCls}-section-content`}>
-                    <div className={`${prefixCls}-section-item`}>
-                      <div className={`${prefixCls}-section-item-title`}>
-                        {formatMessage({ id: `${intlPrefix}.agile.prefix` })}
-                      </div>
-                      <div className={`${prefixCls}-section-item-content`}>
-                        {waterfallProjectCode || agileProjectCode}
-                      </div>
-                    </div>
+                    {
+                      isShowAgilePrefix ? (
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.agile.prefix` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {waterfallProjectCode || agileProjectCode}
+                          </div>
+                        </div>
+                      ) : null
+                    }
+                    {
+                      isShowTestPrefix ? (
+                        <div className={`${prefixCls}-section-item`}>
+                          <div className={`${prefixCls}-section-item-title`}>
+                            {formatMessage({ id: `${intlPrefix}.test.prefix` })}
+                          </div>
+                          <div className={`${prefixCls}-section-item-content`}>
+                            {testProjectCode}
+                          </div>
+                        </div>
+                      ) : null
+                    }
                     {isWATERFALL
                       ? [
                         <div className={`${prefixCls}-section-item`}>
@@ -355,6 +376,8 @@ const GeneralSetting = observer(() => {
           categoryEnabled={categoryEnabled}
           showProjectPrefixArr={showProjectPrefixArr}
           isWATERFALL={isWATERFALL}
+          isShowAgilePrefix={isShowAgilePrefix}
+          isShowTestPrefix={isShowTestPrefix}
         />
       </Content>
     </Page>
