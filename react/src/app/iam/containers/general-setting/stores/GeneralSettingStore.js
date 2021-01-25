@@ -37,6 +37,10 @@ class GeneralSettingStore {
     return axios.get(`/iam/choerodon/v1/projects/${id}`);
   }
 
+  axiosGetProjectInfoOnlyAgile(id) {
+    return axios.get(`/agile/v1/projects/${id}/project_info`);
+  }
+
   axiosGetProjectInfoOnlyTest(id) {
     return axios.get(`/test/v1/projects/${id}/project_info`);
   }

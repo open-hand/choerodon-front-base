@@ -32,6 +32,8 @@ const Edit = Form.create({})(observer(({
   visible,
   categoryEnabled,
   showProjectPrefixArr,
+  isShowTestPrefix,
+  isShowAgilePrefix,
   isWATERFALL,
 }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -140,7 +142,7 @@ const Edit = Form.create({})(observer(({
           id, organizationId, objectVersionNumber, agileProjectObjectVersionNumber, agileProjectId,
         } = store.getProjectInfo;
         const {
-          projectCode, agileProjectCode, projectConclusionTime,
+          projectCode, agileProjectCode, testProjectCode, projectConclusionTime,
           projectEstablishmentTime, ...restValue
         } = value;
         const body = {
@@ -166,10 +168,10 @@ const Edit = Form.create({})(observer(({
             projectConclusionTime,
             projectEstablishmentTime,
           }) : undefined,
-          showProjectPrefixArr.some((category) => ['N_AGILE', 'N_PROGRAM'].includes(category)) && !isWATERFALL
+          isShowAgilePrefix
             ? store.axiosUpdateAgileProjectInfo({ agileProjectCode })
             : undefined,
-          showProjectPrefixArr.includes('N_TEST') ? store.axiosUpdateTestProjectInfo({ projectCode: agileProjectCode })
+          isShowTestPrefix ? store.axiosUpdateTestProjectInfo({ projectCode: testProjectCode })
             : undefined,
         ])
           .then(() => {
@@ -192,7 +194,7 @@ const Edit = Form.create({})(observer(({
 
   const {
     enabled, name, code, agileProjectCode, categories, applicationVO = {},
-    waterfallData = {},
+    waterfallData = {}, testProjectCode,
   } = store.getProjectInfo;
   const { projectCode, projectConclusionTime, projectEstablishmentTime } = waterfallData;
   return (
@@ -278,31 +280,60 @@ const Edit = Form.create({})(observer(({
             <div className={`${prefixCls}-section-title`}>
               {formatMessage({ id: `${intlPrefix}.otherSetting` })}
             </div>
-            <FormItem>
-              {getFieldDecorator(isWATERFALL ? 'projectCode' : 'agileProjectCode', {
-                rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) },
-                  {
-                    validator: (rule, value, callback) => {
-                      if (typeof (value) !== 'string') {
+            {isShowAgilePrefix ? (
+              <FormItem>
+                {getFieldDecorator(isWATERFALL ? 'projectCode' : 'agileProjectCode', {
+                  rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) },
+                    {
+                      validator: (rule, value, callback) => {
+                        if (typeof (value) !== 'string') {
+                          callback();
+                          return;
+                        }
+                        if (String(value).length > 5 && value !== projectCode) {
+                          callback(formatMessage({ id: `${intlPrefix}.agilePrefix.maxMsg` }));
+                          return;
+                        }
                         callback();
-                        return;
-                      }
-                      if (String(value).length > 5 && value !== projectCode) {
-                        callback(formatMessage({ id: `${intlPrefix}.agilePrefix.maxMsg` }));
-                        return;
-                      }
-                      callback();
-                    },
-                  }],
-                initialValue: projectCode,
-              })(
-                <Input
-                  autoComplete="off"
-                  label={<FormattedMessage id={`${intlPrefix}.agile.prefix`} />}
-                  maxLength={5}
-                />,
-              )}
-            </FormItem>
+                      },
+                    }],
+                  initialValue: projectCode,
+                })(
+                  <Input
+                    autoComplete="off"
+                    label={<FormattedMessage id={`${intlPrefix}.agile.prefix`} />}
+                    maxLength={5}
+                  />,
+                )}
+              </FormItem>
+            ) : null}
+            {isShowTestPrefix ? (
+              <FormItem>
+                {getFieldDecorator('testProjectCode', {
+                  rules: [{ required: true, message: formatMessage({ id: `${intlPrefix}.agilePrefixrequiredmsg` }) },
+                    {
+                      validator: (rule, value, callback) => {
+                        if (typeof (value) !== 'string') {
+                          callback();
+                          return;
+                        }
+                        if (String(value).length > 5 && value !== testProjectCode) {
+                          callback(formatMessage({ id: `${intlPrefix}.agilePrefix.maxMsg` }));
+                          return;
+                        }
+                        callback();
+                      },
+                    }],
+                  initialValue: testProjectCode,
+                })(
+                  <Input
+                    autoComplete="off"
+                    label={<FormattedMessage id={`${intlPrefix}.test.prefix`} />}
+                    maxLength={5}
+                  />,
+                )}
+              </FormItem>
+            ) : null}
             {isWATERFALL && [
               <FormItem>
                 {getFieldDecorator('projectEstablishmentTime', {

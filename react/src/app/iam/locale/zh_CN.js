@@ -1771,7 +1771,8 @@ const zh_CN = {
   'project.info.otherSetting': '其他设置',
   'project.info.name': '项目名称',
   'project.info.applicationName': '应用名称',
-  'project.info.agile.prefix': '问题前缀',
+  'project.info.agile.prefix': '敏捷问题前缀',
+  'project.info.test.prefix': '测试问题前缀',
   'project.info.waterfall.startTime': '立项时间',
   'project.info.waterfall.endTime': '结项时间',
 
