@@ -1,4 +1,5 @@
 const config = {
+  port: 8082,
   // server: 'http://localhost:8080',
   server: 'http://api.staging.saas.hand-china.com',
   // server: 'http://api.c7nf.choerodon.staging.saas.hand-china.com',
