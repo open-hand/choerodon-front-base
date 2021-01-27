@@ -201,8 +201,6 @@ const funcMode = withRouter(observer(() => {
     });
   };
 
-  console.log(FuncModeDataSet);
-
   return (
     <TabPage>
       <Header>
@@ -215,7 +213,7 @@ const funcMode = withRouter(observer(() => {
       </Header>
       <Breadcrumb />
       <Content>
-        <Form className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
+        <Form useColon labelWidth={210} className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
           <Output name={mapping.isInstallMission.name} colSpan={1} />
           <Output name={mapping.isInstallDevops.name} colSpan={1} />
           <Output name={mapping.isInstallTest.name} colSpan={1} />
