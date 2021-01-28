@@ -1795,6 +1795,16 @@ const zh_CN = {
   'project.info.type.empty': '无项目类型',
   'project.info.empty': '无',
   'project.info.avatar': '项目Logo',
+
+  // 修改项目进度提示框
+  'project.info.failed.update': '更新失败',
+  'project.info.updating': '更新中',
+  'project.info.saga.title.updating.update': '修改项目',
+  'project.info.saga.title.success.update': '更新项目成功',
+  'project.info.saga.title.failed.update': '更新项目失败',
+  'project.info.saga.des.updating.update': '正在更新项目，该过程可能会持续几分钟。待修改成功，刷新页面后即可见到项目的新菜单。',
+  'project.info.saga.des.success.update': '项目更新成功，进入项目后刷新即可。',
+
   // 应用配置
   'application.setting.title': '应用配置',
   'application.setting.modify': '修改应用配置',

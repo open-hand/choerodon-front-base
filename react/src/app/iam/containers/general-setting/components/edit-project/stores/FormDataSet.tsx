@@ -62,7 +62,7 @@ export default ({
       label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
       required: isShowAgilePrefix,
       dynamicProps: {
-        maxLength: ({ record }) => (record.dirty ? 5 : null),
+        maxLength: ({ record }) => isShowAgilePrefix && (record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 5 : null),
       },
     },
     {
@@ -70,7 +70,7 @@ export default ({
       label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
       required: isShowTestPrefix,
       dynamicProps: {
-        maxLength: ({ record }) => (record.dirty ? 5 : null),
+        maxLength: ({ record }) => isShowTestPrefix && (record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 5 : null),
       },
     },
     {

@@ -6,8 +6,10 @@ import classnames from 'classnames';
 import {
   Form, TextField, Tooltip, Spin, Icon, Button, DatePicker,
 } from 'choerodon-ui/pro';
+import { notification } from 'choerodon-ui';
 import { map, some, isEmpty } from 'lodash';
 import { axios, Choerodon } from '@choerodon/boot';
+import ProjectNotification from '@choerodon/master/lib/containers/components/c7n/routes/projectsPro/components/create-project/components/project-notification';
 import AvatarUploader from '../../../../components/avatarUploader';
 import { useCreateProjectProStore } from './stores';
 import { LabelLayoutType, Record } from '../../../../../../../interface';
@@ -24,6 +26,7 @@ const EditProject = observer(() => {
     isWATERFALL,
     editProjectStore,
     projectId,
+    organizationId,
   } = useCreateProjectProStore();
   const [isShowAvatar, setIsShowAvatar] = useState(false);
 
@@ -65,6 +68,7 @@ const EditProject = observer(() => {
       if (res === false) {
         return false;
       }
+      openNotification();
       refresh();
       return true;
     } catch (e) {
@@ -72,6 +76,26 @@ const EditProject = observer(() => {
       return false;
     }
   });
+
+  const openNotification = useCallback(() => {
+    const notificationKey = `${organizationId}-${projectId}`;
+    notification.open({
+      key: notificationKey,
+      message: <span className="c7ncd-project-create-notification-title">修改项目</span>,
+      description: <ProjectNotification
+        notificationKey={notificationKey}
+        organizationId={organizationId}
+        projectId={projectId}
+        operateType="update"
+        formatMessage={formatMessage}
+        intlPrefix={intlPrefix}
+        refresh={refresh}
+      />,
+      duration: null,
+      placement: 'bottomLeft',
+      className: 'c7ncd-project-create-notification',
+    });
+  }, []);
 
   const changeAvatarUploader = useCallback((flag) => {
     setIsShowAvatar(flag);
