@@ -1,4 +1,6 @@
-import React, { useContext, useState, Fragment } from 'react';
+import React, {
+  useContext, useState, Fragment, useImperativeHandle, useMemo,
+} from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
   TextField,
@@ -30,9 +32,13 @@ try {
 } catch (error) {
   InviteModal = false;
 }
-
-const { Column } = Table;
 export default observer((props) => {
+  const {
+    cRef,
+    breadCrumb,
+    styles,
+    render,
+  } = props;
   const {
     intlPrefix,
     orgUserListDataSet: dataSet,
@@ -44,10 +50,6 @@ export default observer((props) => {
     allRoleDataSet,
     AppState,
   } = useContext(Store);
-
-  if (AppState.getCurrentTheme === 'theme4') {
-    import('./theme4.less');
-  }
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
 
@@ -70,6 +72,16 @@ export default observer((props) => {
       title: '导入团队成员',
     },
   };
+
+  useImperativeHandle(cRef, () => ({
+    handleChangeSearch,
+    renderUserName,
+    renderAction,
+    expandMoreColumn,
+    rednerEnabled,
+    renderNewContent,
+  }));
+
   function handleSave() {
     dataSet.query();
   }
@@ -220,20 +232,20 @@ export default observer((props) => {
 
   function renderNewContent() {
     return (
-      <Spin wrapperClassName="theme4-c7n-spin" spinning={dataSet.status == 'loading'}>
-        <div className="theme4-c7n-member">
+      <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
+        <div className={styles['theme4-c7n-member']}>
           {dataSet.toData().map((item) => (
-            <div className="theme4-c7n-memberItem">
-              <div className="theme4-c7n-memberItem-action">
+            <div className={styles['theme4-c7n-memberItem']}>
+              <div className={styles['theme4-c7n-memberItem-action']}>
                 {renderAction({
                   record: {
                     get: (params) => item[params],
                   },
                 })}
               </div>
-              <div className="theme4-c7n-memberItem-line">
+              <div className={styles['theme4-c7n-memberItem-line']}>
                 <div
-                  className="theme4-c7n-memberItem-line-icon"
+                  className={styles['theme4-c7n-memberItem-line-icon']}
                   style={{
                     ...item.imageUrl ? {
                       backgroundImage: `url(${item.imageUrl})`,
@@ -247,20 +259,20 @@ export default observer((props) => {
                   }
                 </div>
                 <div
-                  className="theme4-c7n-memberItem-line-name"
+                  className={styles['theme4-c7n-memberItem-line-name']}
                 >
-                  <p className="theme4-c7n-memberItem-line-name-realName">
-                    <span className="theme4-c7n-memberItem-line-name-realName-text">{item.realName}</span>
+                  <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
+                    <span className={styles['theme4-c7n-memberItem-line-name-realName-text']}>{item.realName}</span>
                     <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
                   </p>
-                  <p className="theme4-c7n-memberItem-line-name-loginName">{item.loginName}</p>
+                  <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                 </div>
               </div>
-              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 16 }}>
-                <p className="theme4-c7n-memberItem-line-key">
+              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 16 }}>
+                <p className={styles['theme4-c7n-memberItem-line-key']}>
                   角色:
                 </p>
-                <p className="theme4-c7n-memberItem-line-value">
+                <p className={styles['theme4-c7n-memberItem-line-value']}>
                   {expandMoreColumn({
                     value: '',
                     record: {
@@ -269,35 +281,35 @@ export default observer((props) => {
                   })}
                 </p>
               </div>
-              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
                   手机:
                 </p>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
                   {item.phone}
                 </p>
               </div>
-              <div className="theme4-c7n-memberItem-line" style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-key">
+              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
                   邮箱:
                 </p>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className="theme4-c7n-memberItem-line-value">
+                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
                   {item.email}
                 </p>
               </div>
-              <div className="theme4-c7n-memberItem-line" style={{ marginTop: 11 }}>
+              <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
                 {label({ get: (key) => item[key] })}
                 {programLabel({ get: (key) => item[key] })}
               </div>
             </div>
           ))}
-          <div className="theme4-c7n-member-page">
+          <div className={styles['theme4-c7n-member-page']}>
             <span
               role="none"
               onClick={() => handlePage(false)}
               className={classNames({
-                'theme4-c7n-member-page-disabled': dataSet.currentPage === 1,
-                'theme4-c7n-member-page-enabled': dataSet.currentPage > 1,
+                [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === 1,
+                [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage > 1,
               })}
             >
               <Icon type="keyboard_arrow_left" />
@@ -307,7 +319,7 @@ export default observer((props) => {
               style={{ marginLeft: 24 }}
               onClick={() => handlePage(true)}
               className={classNames({
-                'theme4-c7n-member-page-enabled': true,
+                [styles['theme4-c7n-member-page-enabled']]: true,
               })}
             >
               <Icon type="keyboard_arrow_right" />
@@ -317,8 +329,6 @@ export default observer((props) => {
       </Spin>
     );
   }
-
-  console.log(dataSet.status);
 
   const handleChangeSearch = (value) => {
     dataSet.setQueryParameter('params', value);
@@ -350,19 +360,7 @@ export default observer((props) => {
       </Header>
       <Breadcrumb
         {
-          ...AppState.getCurrentTheme === 'theme4' ? {
-            extraNode: (
-              <TextField
-                className="theme4-c7n-member-search"
-                placeholder="搜索成员"
-                style={{ marginLeft: 32 }}
-                suffix={(
-                  <Icon type="search" />
-                )}
-                onEnterDown={(e) => handleChangeSearch(e.target.value)}
-                onChange={handleChangeSearch}
-              />),
-          } : {}
+          ...breadCrumb
         }
       />
       <DeleteRoleModal
@@ -374,15 +372,15 @@ export default observer((props) => {
         className="project-user"
       >
         {
-          AppState.getCurrentTheme === 'theme4' ? renderNewContent() : (
-            <Table labelLayout="float" pristine dataSet={dataSet}>
-              <Column renderer={renderUserName} name="realName" />
-              <Column renderer={renderAction} width={50} align="right" />
-              <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
-              <Column minWidth={320} width={320} renderer={expandMoreColumn} className="project-user-roles" name="myRoles" />
-              <Column renderer={rednerEnabled} width={100} name="enabled" align="left" />
-            </Table>
-          )
+          render({
+            dataSet,
+            handleChangeSearch,
+            renderUserName,
+            renderAction,
+            expandMoreColumn,
+            rednerEnabled,
+            renderNewContent,
+          })
         }
       </Content>
     </TabPage>
