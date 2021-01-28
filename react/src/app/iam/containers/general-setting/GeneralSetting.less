@@ -1,29 +1,44 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
 .c7n-iam-generalsetting {
   margin-top: .16rem;
+  padding-top: 0;
+
+  &-content {
+    display: flex;
+  }
+
   &-section {
-    margin-left: .16rem;
-    &-title {
-      font-size: 16px;
-      font-weight: 500;
-      margin-bottom: 15px;
+    margin-left: .11rem;
+    font-size: .14rem;
+
+    .@{c7n-pro-prefix}-field-label-output {
+      color: rgba(0, 0, 0, 0.65);
     }
 
-    &-content {
+    & > table {
+      width: auto;
+    }
+
+    &-title {
+      font-size: .16rem;
+      font-weight: 500;
+      margin: 0 0 .15rem .16rem;
+    }
+  }
+
+  &-logo {
+    margin-left: 1rem;
+    display: flex;
+
+    &-title {
+      width: 100px;
+      color: rgba(0, 0, 0, 0.65);
       font-size: .14rem;
     }
 
-    &-item {
-      margin-bottom: 15px;
-      display: flex;
-
-      &-title {
-        width: 100px;
-        color: rgba(0, 0, 0, 0.65);
-      }
-
-      &-content {
-        flex: 1;
-      }
+    &-content {
+      flex: 1;
     }
   }
 

@@ -23,6 +23,8 @@ import { Action } from 'choerodon-ui/pro/lib/trigger/enum';
 // Upload File
 import { UploadFile } from 'choerodon-ui/lib/upload/interface';
 
+import { LabelAlign } from 'choerodon-ui/pro/lib/form/enum';
+
 interface RecordObjectProps {
   record: Record;
 }
@@ -54,4 +56,5 @@ export {
   ColumnAlign,
   RecordObjectProps,
   ActionProps,
+  LabelAlign,
 };
