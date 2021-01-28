@@ -1,8 +1,8 @@
 import { axios } from '@choerodon/boot';
-import AppPublishApi from '../apis';
+import GeneralSettingApi from '../apis';
 
 export default class GeneralSettingServices {
   static disableProject(organizationId: number, projectId: number) {
-    return axios.put(AppPublishApi.disableProject(organizationId, projectId));
+    return axios.put(GeneralSettingApi.disableProject(organizationId, projectId));
   }
 }
