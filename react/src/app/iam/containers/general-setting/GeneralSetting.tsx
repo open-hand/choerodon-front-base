@@ -246,6 +246,7 @@ const GeneralSetting = observer(() => {
               <Form
                 dataSet={infoDs}
                 labelWidth={110}
+                labelLayout={'horizontal' as LabelLayoutType}
                 labelAlign={'left' as LabelAlign}
                 className={`${prefixCls}-section`}
               >
