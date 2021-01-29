@@ -63,7 +63,7 @@ export default ({ modal }) => {
           上次同步完成时间
         </p>
         <p className="c7ncd-gitlab-sync-line-value">
-          {data?.endTime ? `${data.endTime}(耗时${getDuration(data.startTime, data.endTime)})` : '无'}
+          {data?.endTime ? `${data.endTime}(耗时${(data.startTime && data.endTime) ? getDuration(data.startTime, data.endTime) : '1秒'})` : '无'}
         </p>
       </div>
       <p className="c7ncd-gitlab-sync-text">
