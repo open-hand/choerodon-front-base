@@ -13,7 +13,7 @@ import queryString from 'query-string';
 import { map, some } from 'lodash';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
 import { FormattedMessage } from 'react-intl';
-import { LabelAlign } from '@/interface';
+import { LabelAlign, LabelLayoutType } from '@/interface';
 import { StoreProvider, useGeneralSettingContent } from './stores';
 import EditProject from './components/edit-project';
 import GeneralSettingServices from './services';
@@ -206,6 +206,7 @@ const GeneralSetting = observer(() => {
         <div className={`${prefixCls}-content`}>
           <Form
             dataSet={infoDs}
+            labelLayout={'horizontal' as LabelLayoutType}
             labelWidth={110}
             labelAlign={'left' as LabelAlign}
             className={`${prefixCls}-section`}
