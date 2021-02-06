@@ -53,6 +53,12 @@ export default ({
       validator: nameValidator,
     },
     {
+      name: 'description',
+      type: 'string' as FieldType,
+      label: formatMessage({ id: `${intlPrefix}.description` }),
+      maxLength: 100,
+    },
+    {
       name: 'categories',
       label: formatMessage({ id: `${intlPrefix}.category` }),
       required: true,

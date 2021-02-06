@@ -4,7 +4,7 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import {
-  Form, TextField, Tooltip, Spin, Icon, Button, DatePicker,
+  Form, TextField, Tooltip, Spin, Icon, Button, DatePicker, TextArea,
 } from 'choerodon-ui/pro';
 import { notification } from 'choerodon-ui';
 import { map, some, isEmpty } from 'lodash';
@@ -206,6 +206,7 @@ const EditProject = observer(() => {
       {renderAvatar()}
       <Form record={record} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
         <TextField name="name" />
+        <TextArea name="description" resize="vertical" />
       </Form>
       <div className={`${prefixCls}-category-label`}>项目类型</div>
       <Spin spinning={categoryDs.status === 'loading'}>
