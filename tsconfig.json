@@ -1,20 +1,37 @@
 {
   "compilerOptions": {
-    "module": "es6", // 使用 ES2015 模块
-    "target": "es6", // 编译成 ES2015 (Babel 将做剩下的事情)
-    "sourceMap": true, // 使 TypeScript 生成 sourcemaps
-    "jsx": "preserve", // 开启 JSX 模式, 但是 "preserve" 告诉 TypeScript 不要转换它(我们将使用 Babel)
-    "strict": true,
-    "allowSyntheticDefaultImports": true,
+    "module": "esnext",
+    "baseUrl": ".",
     "strictNullChecks": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    "jsx": "preserve",
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "noImplicitAny": true,
-    "allowJs": true
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmitOnError": false,
+    "noEmit": true,
+    "target": "es6",
+    "resolveJsonModule": true,
+    "lib": [
+      "dom",
+      "es2017"
+    ],
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "react/*"
+      ]
+    }
   },
+  "include": [
+    "react"
+  ],
   "exclude": [
-    "node_modules" // 这个目录下的代码不会被 typescript 处理
+    "node_modules",
+    "dist"
   ]
 }
