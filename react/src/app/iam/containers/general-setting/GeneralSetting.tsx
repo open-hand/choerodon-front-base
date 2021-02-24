@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useMemo,
 } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -10,7 +11,7 @@ import {
   Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
 } from '@choerodon/boot';
 import queryString from 'query-string';
-import { map, some } from 'lodash';
+import { map, some, compact } from 'lodash';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
 import { FormattedMessage } from 'react-intl';
 import { LabelAlign, LabelLayoutType } from '@/interface';
@@ -175,6 +176,16 @@ const GeneralSetting = observer(() => {
     }
   }
 
+  const renderCategories = useCallback(({ value }) => {
+    const newCategories = map(value || [], ({ name, code }: { code: string, name: string }) => {
+      if (code !== 'N_PROGRAM_PROJECT') {
+        return name;
+      }
+      return null;
+    });
+    return compact(newCategories || []).join('，');
+  }, []);
+
   if (!record) {
     return <Spin spinning />;
   }
@@ -213,7 +224,7 @@ const GeneralSetting = observer(() => {
           >
             <Output name="name" />
             <Output name="code" />
-            <Output name="categories" renderer={({ value }) => map(value || [], 'name').join(',')} />
+            <Output name="categories" renderer={renderCategories} />
             <Output name="creationDate" />
             <Output name="createUserName" />
           </Form>
