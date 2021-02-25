@@ -44,7 +44,7 @@ const GeneralSetting = observer(() => {
     }
     try {
       const organizationId = record.get('organizationId');
-      const projectId = record.get('projectId');
+      const projectId = record.get('id');
       const result = await GeneralSettingServices.disableProject(organizationId, projectId);
       if (result && result.failed) {
         return false;
