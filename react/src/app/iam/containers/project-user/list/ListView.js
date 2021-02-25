@@ -14,7 +14,7 @@ import {
 import {
   Spin, Button, Modal as OldModal, Icon,
 } from 'choerodon-ui';
-
+import some from 'lodash/some';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import StatusTag from '../../../components/statusTag';
@@ -132,7 +132,8 @@ export default observer((props) => {
       sourceId: Number(projectId),
       data: { [record.get('id')]: roleIds },
     };
-    if (InviteModal && AppState.menuType.category === 'PROGRAM') {
+    const { categories } = AppState?.currentMenuType || {};
+    if (InviteModal && some(categories || [], ['code', 'N_PROGRAM'])) {
       setDeleteRoleRecord(record);
     } else {
       OldModal.confirm({
