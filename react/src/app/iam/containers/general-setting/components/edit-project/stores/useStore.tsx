@@ -16,7 +16,7 @@ export default function useStore() {
       }
     },
 
-    axiosUpdateWaterfallProjectInfo(data) {
+    axiosUpdateWaterfallProjectInfo(data:any) {
       const {
         id, projectCode, projectEstablishmentTime, projectConclusionTime, waterfallData,
       } = data;
@@ -32,7 +32,7 @@ export default function useStore() {
       });
     },
 
-    axiosUpdateAgileProjectInfo(data) {
+    axiosUpdateAgileProjectInfo(data:any) {
       const {
         id, agileProjectId, agileProjectObjectVersionNumber, agileProjectCode,
       } = data;
@@ -43,11 +43,14 @@ export default function useStore() {
       });
     },
 
-    axiosUpdateTestProjectInfo(data) {
-      const { projectId, projectCode } = data;
+    axiosUpdateTestProjectInfo(data:any) {
+      const {
+        projectId, projectCode, testProjectInfoId, testProjectObjectVersionNumber,
+      } = data;
       return axios.put(`/test/v1/projects/${projectId}/project_info`, {
-        infoId: projectId,
+        infoId: testProjectInfoId,
         projectCode,
+        objectVersionNumber: testProjectObjectVersionNumber,
       });
     },
   }));
