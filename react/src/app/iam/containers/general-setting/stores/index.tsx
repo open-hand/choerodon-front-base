@@ -73,6 +73,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           agileProjectCode: agileData.projectCode,
           waterfallData: waterfallData || {},
           testProjectCode: testData.projectCode,
+          testProjectInfoId: testData.infoId,
+          testProjectObjectVersionNumber: testData.objectVersionNumber,
           agileProjectObjectVersionNumber: agileData.objectVersionNumber,
         });
       }
