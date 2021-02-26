@@ -83,12 +83,12 @@ class GeneralSettingStore {
   }
 
   axiosUpdateTestProjectInfo(data) {
-    const { id, agileProjectObjectVersionNumber } = this.getProjectInfo;
+    const { id, testProjectInfoId, testProjectObjectVersionNumber } = this.getProjectInfo;
     const { projectCode } = data;
     return axios.put(`/test/v1/projects/${id}/project_info`, {
-      infoId: id,
+      infoId: testProjectInfoId,
       projectCode,
-      // objectVersionNumber: agileProjectObjectVersionNumber,
+      objectVersionNumber: testProjectObjectVersionNumber,
     });
   }
 
