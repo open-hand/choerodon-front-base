@@ -59,5 +59,9 @@ export default ({
       name: 'projectConclusionTime',
       label: formatMessage({ id: `${intlPrefix}.waterfall.endTime` }),
     },
+    {
+      name: 'description',
+      label: formatMessage({ id: `${intlPrefix}.description.title` }),
+    },
   ],
 });
