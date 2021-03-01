@@ -5,7 +5,9 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import { axios, Choerodon } from '@choerodon/boot';
-import { map, intersection, isEmpty } from 'lodash';
+import {
+  map, intersection, isEmpty, assign,
+} from 'lodash';
 import { DataSet } from 'choerodon-ui/pro';
 import MainStore from './GeneralSettingStore';
 import GeneralSettingDataSet from './GeneralSettingDataSet';
@@ -60,26 +62,31 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
 
   const loadProject = useCallback(async () => {
     try {
-      const [, waterfallData, agileData = {}, testData = {}] = await axios.all([
+      const [infoData, waterfallData, agileData = {}, testData = {}] = await axios.all([
         infoDs.query(),
         isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
         isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
         isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
           : undefined,
       ]);
-      const record = infoDs.current;
-      if (record) {
-        record.init({
-          agileProjectCode: agileData.projectCode,
-          waterfallData: waterfallData || {},
-          testProjectCode: testData.projectCode,
-          agileProjectObjectVersionNumber: agileData.objectVersionNumber,
-        });
-      }
+      infoDs.loadData([assign(infoData, {
+        agileProjectCode: agileData.projectCode,
+        waterfallData: waterfallData || {},
+        testProjectCode: testData.projectCode,
+        testProjectInfoId: testData.infoId,
+        testProjectObjectVersionNumber: testData.objectVersionNumber,
+        agileProjectObjectVersionNumber: agileData.objectVersionNumber,
+      })]);
+      // const record = infoDs.current || infoDs.get(0);
+      // if (record) {
+      //   record.init({
+      //
+      //   });
+      // }
     } catch (e) {
       Choerodon.handleResponseError(e);
     }
-  }, [projectId]);
+  }, [projectId, isWATERFALL, isShowAgilePrefix, isShowTestPrefix]);
 
   const value = {
     ...props,

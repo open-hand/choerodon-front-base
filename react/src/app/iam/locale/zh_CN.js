@@ -1795,7 +1795,7 @@ const zh_CN = {
   'project.info.type.empty': '无项目类型',
   'project.info.empty': '无',
   'project.info.avatar': '项目Logo',
-  'project.info.description': '项目描述',
+  'project.info.description.title': '项目描述',
 
   // 修改项目进度提示框
   'project.info.failed.update': '更新失败',

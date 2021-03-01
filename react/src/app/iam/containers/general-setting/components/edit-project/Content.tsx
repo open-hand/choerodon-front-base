@@ -49,7 +49,9 @@ const EditProject = observer(() => {
       record.set('categories', categories);
       const postData = record.toData();
       // @ts-ignore
-      const { agileProjectCode, testProjectCode } = postData || {};
+      const {
+        agileProjectCode, testProjectCode, testProjectInfoId, testProjectObjectVersionNumber,
+      } = postData || {};
       const [res] = await axios.all([formDs.submit(),
         isWATERFALL ? editProjectStore.axiosUpdateWaterfallProjectInfo({
           ...postData,
@@ -61,7 +63,9 @@ const EditProject = observer(() => {
         isShowTestPrefix && testProjectCode !== record.getPristineValue('testProjectCode')
           ? editProjectStore.axiosUpdateTestProjectInfo({
             projectId,
+            testProjectInfoId,
             projectCode: testProjectCode,
+            testProjectObjectVersionNumber,
           })
           : undefined,
       ]);
