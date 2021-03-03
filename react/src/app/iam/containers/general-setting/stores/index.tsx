@@ -77,12 +77,6 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
         testProjectObjectVersionNumber: testData.objectVersionNumber,
         agileProjectObjectVersionNumber: agileData.objectVersionNumber,
       })]);
-      // const record = infoDs.current || infoDs.get(0);
-      // if (record) {
-      //   record.init({
-      //
-      //   });
-      // }
     } catch (e) {
       Choerodon.handleResponseError(e);
     }

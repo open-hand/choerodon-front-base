@@ -225,6 +225,7 @@ const GeneralSetting = observer(() => {
             <Output name="name" />
             <Output name="code" />
             <Output name="categories" renderer={renderCategories} />
+            <Output name="description" />
             <Output name="creationDate" />
             <Output name="createUserName" />
           </Form>
