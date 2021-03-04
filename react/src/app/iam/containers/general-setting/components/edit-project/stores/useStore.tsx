@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import moment from 'moment';

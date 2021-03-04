@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+// @ts-nocheck
 
 import pick from 'lodash/pick';
 import { FieldType, DataSetProps } from '@/interface';

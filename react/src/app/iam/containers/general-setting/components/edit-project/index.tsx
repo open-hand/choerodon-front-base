@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import 'moment/locale/zh-cn';
 import moment from 'moment';
