@@ -1,7 +1,14 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, {
+  useContext, useState, useEffect, useMemo,
+} from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
-import { Form, TextField, Password, Select, EmailField, Modal } from 'choerodon-ui/pro';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage,
+} from '@choerodon/boot';
+import NewTips from '@/src/app/iam/components/new-tips';
+import {
+  Form, TextField, Password, Select, EmailField, Modal,
+} from 'choerodon-ui/pro';
 import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 import './index.less';
@@ -37,7 +44,7 @@ export default observer(() => {
       userStore.setEmailSuffix(null);
     };
   }, []);
-  
+
   async function handleOk() {
     try {
       if (await orgUserCreateDataSet.submit()) {
@@ -61,7 +68,7 @@ export default observer(() => {
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="realName" />
-        <TextField name="email" {...addonAfterObj} />
+        <TextField name="email" {...addonAfterObj} addonAfter={<NewTips helpText="此处填入的邮箱，将作为用户的登录名。" />} />
         <Password name="password" />
       </Form>
       <FormSelectEditor
@@ -74,7 +81,7 @@ export default observer(() => {
         maxDisable
       >
         {((itemProps) => (
-          <Select 
+          <Select
             {...itemProps}
             labelLayout="float"
             style={{ width: '100%' }}
