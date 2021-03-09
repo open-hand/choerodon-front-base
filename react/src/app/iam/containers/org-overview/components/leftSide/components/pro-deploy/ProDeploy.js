@@ -32,6 +32,14 @@ const ProDeploy = observer(() => {
       popupCls="proDeploy-select-dropdown"
       maxTagCount={1}
       searchMatcher="name"
+      reverse={false}
+      onOption={({ record }) => ({
+        disabled: ProDeploySelectDataSet.current.get('proSelect').length === 4
+              && !ProDeploySelectDataSet.current.get('proSelect').includes(record.get('id')),
+      })}
+      // ({
+      //   disabled: ProDeploySelectDataSet.current.get('proSelect').length === 4 && ,
+      // })
       optionRenderer={({ text }) => <Tooltip title={text}>{text}</Tooltip>}
       maxTagPlaceholder={
         (omittedValues) => (
