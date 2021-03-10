@@ -11,7 +11,7 @@ export default function useStore() {
       this.canCreate = flag;
     },
 
-    emailSuffix: null,
+    emailSuffix: 'null',
     get getEmailSuffix() {
       return this.emailSuffix;
     },
