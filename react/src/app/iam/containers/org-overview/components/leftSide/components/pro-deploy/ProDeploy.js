@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Select, Tooltip } from 'choerodon-ui/pro';
+import { message, Select, Tooltip } from 'choerodon-ui/pro';
 import ContainerBlock from '../../../ContainerBlock';
 import { useProDeployStore } from './stores';
 import MaxTagPopover from '../../../../../../components/MaxTagPopover';
@@ -33,14 +33,27 @@ const ProDeploy = observer(() => {
       maxTagCount={1}
       searchMatcher="name"
       reverse={false}
-      onOption={({ record }) => ({
-        disabled: ProDeploySelectDataSet.current.get('proSelect').length === 4
-              && !ProDeploySelectDataSet.current.get('proSelect').includes(record.get('id')),
-      })}
+      onChange={(value) => {
+        if (value && value.length && value.length > 4) {
+          message.error('最多选择4个项目');
+          value.pop();
+          ProDeploySelectDataSet.current.set('proSelect', value);
+        }
+      }}
+      // onOption={({ record }) => ({
+      //   disabled: ProDeploySelectDataSet.current.get('proSelect').length === 4
+      //         && !ProDeploySelectDataSet.current.get('proSelect').includes(record.get('id')),
+      // })}
       // ({
       //   disabled: ProDeploySelectDataSet.current.get('proSelect').length === 4 && ,
       // })
-      optionRenderer={({ text }) => <Tooltip title={text}>{text}</Tooltip>}
+      optionRenderer={({ text }) => (
+        <Tooltip
+          title={text}
+        >
+          {text}
+        </Tooltip>
+      )}
       maxTagPlaceholder={
         (omittedValues) => (
           <MaxTagPopover
