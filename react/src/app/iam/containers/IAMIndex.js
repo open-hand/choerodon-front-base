@@ -4,6 +4,8 @@ import { inject } from 'mobx-react';
 import { ModalContainer } from 'choerodon-ui/pro';
 import { asyncLocaleProvider, asyncRouter, nomatch } from '@choerodon/boot';
 
+import '../../../../style/index.less';
+
 // global 对应目录
 const siteSetting = asyncRouter(() => import('./site-setting'));
 const menuSetting = asyncRouter(() => import('./global/menu-setting'));
@@ -60,6 +62,7 @@ const heroPage = asyncRouter(() => import('./hzero-page'));
 // 收集企业信息
 const enterpriseInfo = asyncRouter(() => import('./enterprises-info'));
 
+// 应用模板
 const appTemplate = asyncRouter(() => import('./application-template'));
 
 @inject('AppState')
@@ -70,9 +73,10 @@ class IAMIndex extends React.Component {
     const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`../locale/${langauge}`));
     return (
       <IntlProviderAsync>
-        <>
+        <div className="c7ncd-base-root">
           <Switch>
             <Route path={`${match.url}/application-template`} component={appTemplate} />
+            <Route path={`${match.url}/org-template`} component={appTemplate} />
             <Route path={`${match.url}/menu-setting`} component={menuSetting} />
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
             <Route path={`${match.url}/role`} component={role} />
@@ -113,7 +117,7 @@ class IAMIndex extends React.Component {
             <Route path="*" component={nomatch} />
           </Switch>
           <ModalContainer />
-        </>
+        </div>
       </IntlProviderAsync>
     );
   }

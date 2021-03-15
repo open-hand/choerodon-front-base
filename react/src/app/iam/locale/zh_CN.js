@@ -17,6 +17,15 @@ const enterprises = {
   'c7ncd.enterprise.info.code.failed': '编码只能由小写字母、数字、"-"组成，且以小写字母开头，不能以"-"结尾',
 };
 
+const template = {
+  'c7ncd.template.status.F': '成功',
+  'c7ncd.template.status.C': '创建中',
+  'c7ncd.template.status.enable': '启用',
+  'c7ncd.template.status.disable': '停用',
+  'c7ncd.template.title.create': '创建应用模板',
+  'c7ncd.template.title.edit': '修改应用模板',
+};
+
 const pageDetail = {
   // menusetting
   // home
@@ -2005,6 +2014,7 @@ const zh_CN = {
   ...pageDetail,
   ...c7nHzeroPage,
   ...enterprises,
+  ...template,
 
 };
 /* eslint-disable-next-line */
