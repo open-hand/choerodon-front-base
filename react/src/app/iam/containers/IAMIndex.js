@@ -4,6 +4,8 @@ import { inject } from 'mobx-react';
 import { ModalContainer } from 'choerodon-ui/pro';
 import { asyncLocaleProvider, asyncRouter, nomatch } from '@choerodon/boot';
 
+import '../../../../style/index.less';
+
 // global 对应目录
 const siteSetting = asyncRouter(() => import('./site-setting'));
 const menuSetting = asyncRouter(() => import('./global/menu-setting'));
@@ -68,7 +70,7 @@ class IAMIndex extends React.Component {
     const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`../locale/${langauge}`));
     return (
       <IntlProviderAsync>
-        <>
+        <div className="c7ncd-base-root">
           <Switch>
             <Route path={`${match.url}/menu-setting`} component={menuSetting} />
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
@@ -110,7 +112,7 @@ class IAMIndex extends React.Component {
             <Route path="*" component={nomatch} />
           </Switch>
           <ModalContainer />
-        </>
+        </div>
       </IntlProviderAsync>
     );
   }
