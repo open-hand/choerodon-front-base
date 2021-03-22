@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { StoreProvider } from './stores';
 
 const Content = asyncRouter(() => import('./Content'));
-const agreement = asyncRouter(() => import('./agreement/index'));
+const agreement = asyncRouter(() => import('./agreement'));
 
 const HostConfigIndex = ({ match }: any) => (
   <StoreProvider>

@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet';
 import { Choerodon } from '@choerodon/boot';
 import { ButtonColor, FuncType } from '@/interface';
 import { useOpenManagementStore } from './stores';
-import Tips from '../../components/new-tips/index';
+import Tips from '../../components/new-tips';
 import leftImg from './icon/bgImg.svg';
 import logoImg from './icon/choerodon_logo.svg';
 

@@ -11,7 +11,7 @@ import { notification } from 'choerodon-ui';
 import { map, some, isEmpty } from 'lodash';
 import { axios, Choerodon } from '@choerodon/boot';
 import ProjectNotification from '@choerodon/master/lib/containers/components/c7n/routes/projectsPro/components/create-project/components/project-notification';
-import AvatarUploader from '../../../../components/avatarUploader/index';
+import AvatarUploader from '../../../../components/avatarUploader';
 import { useCreateProjectProStore } from './stores';
 import { LabelLayoutType, Record } from '../../../../interface';
 
