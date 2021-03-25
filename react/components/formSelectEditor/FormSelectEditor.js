@@ -6,13 +6,8 @@ import { observer } from 'mobx-react-lite';
 import Store from './stores';
 import './index.less';
 
-let InviteModal = false;
-try {
-  const { default: requireData } = require('@choerodon/base-business/lib/routes/invite-user');
-  InviteModal = requireData;
-} catch (error) {
-  InviteModal = false;
-}
+// eslint-disable-next-line no-undef
+const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 export default observer(({ name, optionDataSetConfig, optionDataSet, record, children, addButton, maxDisable, canDeleteAll = true, idField, alwaysRequired = false, required = false, allRoleDataSet, orgUserListDataSet }) => {
   const formElement = useRef(null);
@@ -107,7 +102,7 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
   }
 
   function checkCanDisabled(recordd, v) {
-    if (InviteModal && recordd.get('programOwner')) {
+    if (hasBusiness && recordd.get('programOwner')) {
       const { roles } = orgUserListDataSet.toData().find(d => d.id === recordd.get('id'));
       const item = roles.find(i => i.id === v);
       if (item && item.origin && item.projectMemberFlag) {

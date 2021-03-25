@@ -5,14 +5,8 @@ import { DataSet } from 'choerodon-ui/pro';
 import SystemSettingDataSet from './SystemSettingDataSet';
 import funcModeDataSet from './FuncModeDataSet';
 
-let hasRegister = false;
-try {
-  // eslint-disable-next-line global-require
-  require('@choerodon/base-pro');
-  hasRegister = true;
-} catch (error) {
-  hasRegister = false;
-}
+// eslint-disable-next-line no-undef
+const hasRegister = C7NHasModule('@choerodon/base-pro');
 
 const Store = createContext();
 export default Store;
