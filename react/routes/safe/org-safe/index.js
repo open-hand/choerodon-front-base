@@ -1,10 +1,13 @@
 import React from 'react';
-import { PageWrap, PageTab } from '@choerodon/boot';
+import { PageWrap, PageTab, nomatch } from '@choerodon/boot';
+import { Route, Switch } from 'react-router';
+import { PermissionRoute } from '@choerodon/master';
 import { StoreProvider } from './store';
 import Password from './password';
+
 import './index.less';
 
-function Index(props) {
+function TabIndex(props) {
   return (
     <StoreProvider {...props}>
       <PageWrap cache noHeader={[]}>
@@ -13,5 +16,17 @@ function Index(props) {
     </StoreProvider>
   );
 }
+
+const Index = ({ match }) => (
+  <Switch>
+    <PermissionRoute
+      exact
+      path={match.url}
+      component={TabIndex}
+      service={['choerodon.code.organization.setting.security.ps.password-policy']}
+    />
+    <Route path="*" component={nomatch} />
+  </Switch>
+);
 
 export default Index;
