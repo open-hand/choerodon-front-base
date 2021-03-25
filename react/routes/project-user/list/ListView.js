@@ -25,14 +25,9 @@ import './index.less';
 
 const modalKey = Modal.key();
 
-let InviteModal = false;
-try {
-  // eslint-disable-next-line global-require
-  const { default: requireData } = require('@choerodon/base-business/lib/routes/invite-user');
-  InviteModal = requireData;
-} catch (error) {
-  InviteModal = false;
-}
+// eslint-disable-next-line no-undef
+const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user');
+
 export default observer((props) => {
   const {
     cRef,

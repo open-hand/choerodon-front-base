@@ -6,16 +6,12 @@ import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 import DeleteRoleModal from '../../DeleteRoleModal';
 import './index.less';
+import some from "../index";
 
 const { Option } = Select;
 
-let InviteModal = false;
-try {
-  const { default: requireData } = require('@choerodon/base-pro/lib/routes/invite-user');
-  InviteModal = requireData;
-} catch (error) {
-  InviteModal = false;
-}
+// eslint-disable-next-line no-undef
+const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 export default observer((props) => {
   const { prefixCls, modal, intl, orgUserRoleDataSet, onOk, projectId, allRoleDataSet, orgRoleDataSet, orgUserListDataSet, AppState } = useContext(Store);
@@ -53,7 +49,8 @@ export default observer((props) => {
   };
 
   async function handleOk() {
-    if (InviteModal && AppState.menuType.category === 'PROGRAM' && current.get('roles') && !current.get('roles').length) {
+    const { categories } = AppState?.currentMenuType || {};
+    if (hasBusiness && some(categories || [], ['code', 'N_PROGRAM']) && current.get('roles') && !current.get('roles').length) {
       await setDeleteRoleRecord(current);
       return false;
     } else {
