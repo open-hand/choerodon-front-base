@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { asyncRouter, nomatch } from '@choerodon/boot';
+import { PermissionRoute } from '@choerodon/master';
 
 const List = asyncRouter(() => import('./list'));
 
 const Index = ({ match }) => (
   <Switch>
-    <Route exact path={match.url} component={List} />
+    <PermissionRoute
+      exact
+      path={match.url}
+      component={List}
+      service={['choerodon.code.project.cooperation.team-member.ps.default']}
+    />
     <Route path="*" component={nomatch} />
   </Switch>
 );

@@ -23,7 +23,7 @@ const organizationSetting = asyncRouter(() => import('./routes/organization/orga
 const orgSafe = asyncRouter(() => import('./routes/safe/org-safe'));
 const siteSafe = asyncRouter(() => import('./routes/safe/site-safe'));
 const orgAdmin = asyncRouter(() => import('./routes/org-admin'));
-const orgClient = asyncRouter(() => import('./routes/client'));
+const orgClient = asyncRouter(() => import('./routes/client/route'));
 
 // project
 const generalSetting = asyncRouter(() => import('./routes/general-setting'));
@@ -87,21 +87,29 @@ class IAMIndex extends React.Component {
             {/* <Route path={`${match.url}/lang-config`} component={langConfig} /> */}
             {/* <Route path={`${match.url}/lov-config`} component={lovConfig} /> */}
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
-            <PermissionRoute path={`${match.url}/org-role`} component={orgRole} service={['choerodon.code.organization.manager.role.ps.default']} />
-            <PermissionRoute path={`${match.url}/root-user`} component={rootUser} service={['choerodon.code.site.manager.root-user.ps.default']} />
-            <PermissionRoute path={`${match.url}/team-member`} component={projectUser} service={['choerodon.code.project.cooperation.team-member.ps.default']} />
-            <PermissionRoute path={`${match.url}/org-user`} component={orgUser} service={['choerodon.code.organization.manager.user.ps.default']} />
+            <Route path={`${match.url}/org-role`} component={orgRole} />
+            <Route path={`${match.url}/root-user`} component={rootUser} />
+            <Route path={`${match.url}/team-member`} component={projectUser} />
+            <Route path={`${match.url}/org-user`} component={orgUser} />
             <Route path={`${match.url}/project-setting/info`} component={generalSetting} />
             <Route path={`${match.url}/user-info`} component={userInfo} />
             <Route path={`${match.url}/permission-info`} component={permissionInfo} />
-            <Route path={`${match.url}/organization-setting`} component={organizationSetting} />
+            <PermissionRoute
+              path={`${match.url}/organization-setting`}
+              component={organizationSetting}
+              service={[
+                'choerodon.code.organization.setting.general-setting.ps.info',
+                'choerodon.code.organization.setting.general-setting.ps.ldap',
+                'choerodon.code.organization.setting.general-setting.ps.working-calendar',
+              ]}
+            />
             <Route path={`${match.url}/org-safe`} component={orgSafe} />
             <Route path={`${match.url}/safe`} component={siteSafe} />
-            <PermissionRoute path={`${match.url}/client`} component={orgClient} service={['choerodon.code.organization.setting.client.ps.default']} />
-            <PermissionRoute path={`${match.url}/pro-client`} component={orgClient} service={['choerodon.code.project.setting.client.ps.default']} />
-            <PermissionRoute path={`${match.url}/org-admin`} component={orgAdmin} service={['choerodon.code.organization.manager.organization-admin.ps.default']} />
-            <PermissionRoute path={`${match.url}/org-overview`} component={orgOverview} service={['choerodon.code.organization.manager.overview.ps.default']} />
-            <PermissionRoute path={`${match.url}/platform-overview`} component={platformOverview} service={['choerodon.code.site.manager.platform-overview.ps.default']} />
+            <Route path={`${match.url}/client`} component={orgClient} />
+            <Route path={`${match.url}/pro-client`} component={orgClient} />
+            <Route path={`${match.url}/org-admin`} component={orgAdmin} />
+            <Route path={`${match.url}/org-overview`} component={orgOverview} />
+            <Route path={`${match.url}/platform-overview`} component={platformOverview} />
             <Route path={`${match.url}/hzero/user`} component={heroPage} />
             <Route path={`${match.url}/hzero/role`} component={heroPage} />
             <Route path={`${match.url}/hzero/menu`} component={heroPage} />
