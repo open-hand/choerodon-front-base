@@ -2,11 +2,11 @@ import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon } from '@choerodon/boot';
 import { Form, Modal, TextField, Select, EmailField } from 'choerodon-ui/pro';
+import some from 'lodash/some';
 import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 import DeleteRoleModal from '../../DeleteRoleModal';
 import './index.less';
-import some from "../index";
 
 const { Option } = Select;
 

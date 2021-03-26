@@ -94,7 +94,7 @@ export default function ListView() {
         </Permission>
       </Header>
       <Breadcrumb />
-      <Content style={{ paddingTop: 0 }}>
+      <Content className="c7ncd-page-content-padding">
         <Table pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="userName" />
           <Column renderer={renderAction} width={50} align="right" />

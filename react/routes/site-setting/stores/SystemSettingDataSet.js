@@ -5,7 +5,9 @@ export default ({ id = 0, hasRegister }) => {
       name: 'registerUrl',
       type: 'url',
       label: '注册页面链接',
-      dynamicProps: ({ record }) => ({ required: record.get('registerEnabled') }),
+      dynamicProps: {
+        required: ({ record }) => record.get('registerEnabled'),
+      },
     },
   ] : [];
   return {
@@ -81,7 +83,9 @@ export default ({ id = 0, hasRegister }) => {
         name: 'registerUrl',
         type: 'url',
         label: '注册页面链接',
-        dynamicProps: ({ record }) => ({ required: record.get('registerEnabled') }),
+        dynamicProps: {
+          required: ({ record }) => record.get('registerEnabled'),
+        },
       },
       { name: 'systemLogo', type: 'string', label: '平台导航栏图形标' },
       { name: 'defaultPassword', type: 'string', label: '平台默认密码' },
@@ -96,7 +100,9 @@ export default ({ id = 0, hasRegister }) => {
         step: 1,
         min: 1,
         max: 1000,
-        dynamicProps: ({ record }) => ({ required: record.get('autoCleanEmailRecord') }),
+        dynamicProps: {
+          required: ({ record }) => record.get('autoCleanEmailRecord'),
+        },
       },
       {
         name: 'autoCleanWebhookRecordInterval',
@@ -105,7 +111,9 @@ export default ({ id = 0, hasRegister }) => {
         step: 1,
         min: 1,
         max: 1000,
-        dynamicProps: ({ record }) => ({ required: record.get('autoCleanWebhookRecord') }),
+        dynamicProps: {
+          required: ({ record }) => record.get('autoCleanWebhookRecord'),
+        },
       },
       {
         name: 'autoCleanSagaInstanceInterval',
@@ -114,7 +122,9 @@ export default ({ id = 0, hasRegister }) => {
         step: 1,
         min: 1,
         max: 1000,
-        dynamicProps: ({ record }) => ({ required: record.get('autoCleanSagaInstance') }),
+        dynamicProps: {
+          required: ({ record }) => record.get('autoCleanSagaInstance'),
+        },
       },
       {
         name: 'retainFailedSagaInstance',
