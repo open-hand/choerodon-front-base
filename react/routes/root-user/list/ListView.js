@@ -67,7 +67,7 @@ export default function ListView() {
         </Permission>
       </Header>
       <Breadcrumb />
-      <Content style={{ paddingTop: 0 }}>
+      <Content className="c7ncd-page-content-padding">
         <Table pristine dataSet={adminListDataSet}>
           <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="realName" />
           <Column renderer={renderAction} width={50} align="right" />
