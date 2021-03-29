@@ -1,30 +1,38 @@
-import React, { Fragment, useEffect, useMemo, useCallback } from 'react';
+import React, {
+  useEffect, useMemo, useCallback, useState,
+} from 'react';
 import { observer } from 'mobx-react-lite';
-import { Choerodon } from '@choerodon/boot';
-import { Icon, message } from 'choerodon-ui';
+import { message, Radio } from 'choerodon-ui';
 import pick from 'lodash/pick';
-import { Table, Form, TextField, Select } from 'choerodon-ui/pro';
+import {
+  Table, Form, TextField, Select, Icon,
+} from 'choerodon-ui/pro';
 import { useCreateRoleStore } from './stores';
 import LoadingBar from '../../../components/loadingBar';
 
 import './index.less';
 
 const { Column } = Table;
+const { Button: RadioButton, Group: RadioGroup } = Radio;
 
 const ListView = () => {
   const {
     AppState: { currentMenuType: { organizationId } },
     menuDs,
+    projectMenuDs,
     formDs,
     modal,
     refresh,
     prefixCls,
     level,
     roleStore,
+    type,
   } = useCreateRoleStore();
-  
+
+  const [menuLevel, setMenuLevel] = useState('organization');
   const record = useMemo(() => formDs.current, [formDs.current]);
   const isModify = useMemo(() => formDs.current && formDs.current.status !== 'add', [formDs.current]);
+  const isDetail = useMemo(() => type === 'detail', [type]);
 
   const handleOkRole = useCallback(async () => {
     const selectedRecords = menuDs.filter((eachRecord) => eachRecord.get('isChecked'));
@@ -55,29 +63,31 @@ const ListView = () => {
       }
       if (result) {
         refresh();
-      } else {
-        return false;
+        return true;
       }
+      return false;
     } catch (e) {
       // Choerodon.handleResponseError(e);
       return false;
     }
-  }, [menuDs.selected]);
+  }, [menuDs.selected, record, level]);
 
   useEffect(() => {
-    modal.handleOk(handleOkRole);
-  }, [handleOkRole]);
+    if (type !== 'detail') {
+      modal.handleOk(handleOkRole);
+    }
+  }, [handleOkRole, type]);
 
   function renderName({ record: tableRecord }) {
     const { icon, name } = tableRecord.toData();
     return (
-      <Fragment>
+      <>
         <Icon
           type={icon}
           style={{ marginRight: '.08rem', lineHeight: '.32rem', verticalAlign: 'top' }}
         />
         {name}
-      </Fragment>
+      </>
     );
   }
 
@@ -101,16 +111,29 @@ const ListView = () => {
         columns={2}
         className="c7n-role-msg-form"
       >
-        <TextField name="code" disabled={isModify} />
-        <TextField name="name" />
-        {level === 'project' && <Select name="roleLabels" disabled={isModify} />}
+        <TextField name="code" disabled={isDetail || isModify} />
+        <TextField name="name" disabled={isDetail} />
+        {level === 'project' && <Select name="roleLabels" disabled={isDetail || isModify} />}
       </Form>
-      <div className={`${prefixCls}-menu`}>
-        <span className={`${prefixCls}-menu-text`}>菜单分配</span>
-      </div>
       <div className={`${prefixCls}-table-wrap-${level}`}>
+        <div className={`${prefixCls}-menu`}>
+          <span className={`${prefixCls}-menu-text`}>菜单分配</span>
+        </div>
+        {projectMenuDs.length ? (
+          <div className={`${prefixCls}-menu-level`}>
+            <RadioGroup
+              defaultValue="organization"
+              name="level"
+              value={menuLevel}
+              onChange={(e) => setMenuLevel(e.target.value)}
+            >
+              <RadioButton value="organization">组织层</RadioButton>
+              <RadioButton value="project">项目层</RadioButton>
+            </RadioGroup>
+          </div>
+        ) : null}
         <Table
-          dataSet={menuDs}
+          dataSet={menuLevel === 'organization' ? menuDs : projectMenuDs}
           queryBar="none"
           mode="tree"
           buttons={[
@@ -120,8 +143,14 @@ const ListView = () => {
           expandIconColumnIndex={1}
           className={`${prefixCls}-table`}
           autoHeight={{ type: 'maxHeight', diff: 50 }}
+          pristine={isDetail}
         >
-          <Column name="isChecked" editor width={50} />
+          <Column
+            name="isChecked"
+            editor
+            width={50}
+            className={isDetail ? `${prefixCls}-table-checked` : ''}
+          />
           <Column name="name" renderer={renderName} width={400} />
           <Column name="permissionType" renderer={renderType} />
         </Table>

@@ -39,14 +39,17 @@ const ListView = () => {
     Modal.open({
       key: modalKey,
       drawer: true,
-      title: type === 'add' ? '创建角色' : '修改角色',
+      title: formatMessage({ id: `${intlPrefix}.${type}` }),
       children: (
         <FormView
           level={level}
-          roleId={type === 'edit' ? record.get('id') : null}
+          roleId={type === 'add' ? null : record.get('id')}
           refresh={refresh}
+          type={type}
         />
       ),
+      okCancel: type !== 'detail',
+      okText: formatMessage({ id: type === 'detail' ? 'close' : 'ok' }),
       style: modalStyle,
     });
   }
@@ -91,13 +94,26 @@ const ListView = () => {
   }
 
   function renderName({ value, record: tableRecord }) {
+    const defaultChildren = <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
     if (tableRecord.get('builtIn')) {
-      return <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+      return (
+        <Permission
+          service={['choerodon.code.organization.manager.role.ps.detail']}
+          defaultChildren={defaultChildren}
+        >
+          <span
+            onClick={() => openModal('detail', tableRecord.get('roleLevel'))}
+            className="link"
+          >
+            {value}
+          </span>
+        </Permission>
+      );
     }
     return (
       <Permission
         service={['choerodon.code.organization.manager.role.ps.update']}
-        defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
+        defaultChildren={defaultChildren}
       >
         <span
           onClick={() => openModal('edit', tableRecord.get('roleLevel'))}

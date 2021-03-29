@@ -5,10 +5,12 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 import MenuListDataSet from './MenuListDataSet';
 import FormDataSet from './FormDataSet';
 import LabelDataSet from './LabelDataSet';
 import useStore from './useStore';
+import ProjectMenuListDataSet from './ProjectMenuListDataSet';
 
 const Store = createContext();
 
@@ -30,6 +32,9 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
   const menuDs = useMemo(
     () => new DataSet(MenuListDataSet({ level, organizationId, roleId })), [level, organizationId],
   );
+  const projectMenuDs = useMemo(
+    () => new DataSet(ProjectMenuListDataSet()), [],
+  );
   const formDs = useMemo(() => new DataSet(FormDataSet({
     level, roleId, roleLabelsDs, organizationId, menuDs, formatMessage,
   })), [level, roleId, organizationId]);
@@ -43,6 +48,15 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
       }
     });
     menuDs.loadData(formDs.current.get('menuList'));
+    if (!isEmpty(formDs.current.get('projectList'))) {
+      forEach(formDs.current.get('projectList'), (item) => {
+        if (item.checkedFlag === 'Y') {
+          // eslint-disable-next-line no-param-reassign
+          item.isChecked = true;
+        }
+      });
+      projectMenuDs.loadData(formDs.current.get('projectList'));
+    }
   }
 
   useEffect(() => {
@@ -61,6 +75,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     ...props,
     formDs,
     menuDs,
+    projectMenuDs,
     roleStore,
     prefixCls: 'base-org-role-create',
   };

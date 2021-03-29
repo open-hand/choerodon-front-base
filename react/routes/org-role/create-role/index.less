@@ -1,25 +1,32 @@
-.base-org-role-create {
+@prefixCls: base-org-role-create;
+
+.@{prefixCls} {
 
   &-menu {
     font-weight: 500;
-    position: absolute;
-    height: .32rem;
+    //position: absolute;
+    //height: .32rem;
     line-height: .32rem;
     margin-top: .1rem;
 
     &-text {
       font-size: .16rem;
     }
+
+    &-level {
+      margin: .2rem 0;
+    }
   }
 
   &-table-wrap {
-
     &-project {
       height: ~'calc(100vh - 3.1rem)';
+      position: relative;
     }
 
     &-organization {
       height: ~'calc(100vh - 2.5rem)';
+      position: relative;
     }
   }
 
@@ -27,7 +34,25 @@
     margin-top: .1rem;
 
     .c7n-pro-table-toolbar {
-      padding-left: 1rem;
+      position: absolute;
+      top: 0;
+      left: 1.25rem;
+    }
+
+    .@{prefixCls}-table-checked {
+
+      .c7n-pro-checkbox {
+        cursor: not-allowed;
+
+        + .c7n-pro-checkbox-inner {
+          color: rgba(0, 0, 0, 0.25);
+          background-color: #f5f5f5 !important;
+          border-color: rgba(0, 0, 0, 0.25) !important;
+        }
+        + .c7n-pro-checkbox-inner:after {
+          border-color: rgba(0, 0, 0, .25) !important;
+        }
+      }
     }
   }
 }
