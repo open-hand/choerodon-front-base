@@ -3,6 +3,9 @@ import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import moment from 'moment';
 
+// eslint-disable-next-line no-undef
+const hasBusiness = C7NHasModule('@choerodon/base-business');
+
 export default function useStore() {
   return useLocalStore(() => ({
     async hasProgramProjects(organizationId: number, projectId: number) {
@@ -48,7 +51,7 @@ export default function useStore() {
       const {
         projectId, projectCode, testProjectInfoId, testProjectObjectVersionNumber,
       } = data;
-      return axios.put(`/test/v1/projects/${projectId}/project_info`, {
+      return axios.put(`/test/v1/projects/${projectId}/${hasBusiness ? 'bus/' : ''}project_info`, {
         infoId: testProjectInfoId,
         projectCode,
         objectVersionNumber: testProjectObjectVersionNumber,

@@ -1765,6 +1765,9 @@ const zh_CN = {
   'organization.role.list.delete.des': '确定删除该自定义角色吗？',
   'organization.role.list.enable.title': '停用自定义角色“{name}”',
   'organization.role.list.enable.des': '确定停用该自定义角色吗？',
+  'organization.role.list.add': '创建角色',
+  'organization.role.list.edit': '修改角色',
+  'organization.role.list.detail': '角色详情',
 
   // 项目层
   // 应用管理
