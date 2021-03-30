@@ -7,6 +7,7 @@ import pick from 'lodash/pick';
 import {
   Table, Form, TextField, Select, Icon,
 } from 'choerodon-ui/pro';
+import classnames from 'classnames';
 import { useCreateRoleStore } from './stores';
 import LoadingBar from '../../../components/loadingBar';
 
@@ -99,6 +100,39 @@ const ListView = () => {
     return tableRecord.get('type') === 'ps' ? permissionType[value] || '' : '';
   }
 
+  const tableClassName = useCallback((currentLevel) => classnames({
+    [`${prefixCls}-table`]: true,
+    [`${prefixCls}-table-display`]: currentLevel !== menuLevel,
+  }), [menuLevel]);
+
+  const getTableContent = useCallback((tableType) => {
+    const tableDs = tableType === 'project' ? projectMenuDs : menuDs;
+    return (
+      <Table
+        dataSet={tableDs}
+        queryBar="none"
+        mode="tree"
+        buttons={[
+          ['collapseAll', { icon: 'expand_less', children: '全部收起' }],
+          ['expandAll', { icon: 'expand_more', children: '全部展开' }],
+        ]}
+        expandIconColumnIndex={1}
+        className={tableClassName(tableType)}
+        autoHeight={{ type: 'maxHeight', diff: 50 }}
+        pristine={isDetail}
+      >
+        <Column
+          name="isChecked"
+          editor
+          width={50}
+          className={isDetail ? `${prefixCls}-table-checked` : ''}
+        />
+        <Column name="name" renderer={renderName} width={400} />
+        <Column name="permissionType" renderer={renderType} />
+      </Table>
+    );
+  }, [isDetail, menuLevel]);
+
   if (!record) {
     return <LoadingBar />;
   }
@@ -119,7 +153,7 @@ const ListView = () => {
         <div className={`${prefixCls}-menu`}>
           <span className={`${prefixCls}-menu-text`}>菜单分配</span>
         </div>
-        {projectMenuDs.length ? (
+        {projectMenuDs.length ? ([
           <div className={`${prefixCls}-menu-level`}>
             <RadioGroup
               defaultValue="organization"
@@ -130,30 +164,11 @@ const ListView = () => {
               <RadioButton value="organization">组织层</RadioButton>
               <RadioButton value="project">项目层</RadioButton>
             </RadioGroup>
-          </div>
-        ) : null}
-        <Table
-          dataSet={menuLevel === 'organization' ? menuDs : projectMenuDs}
-          queryBar="none"
-          mode="tree"
-          buttons={[
-            ['collapseAll', { icon: 'expand_less', children: '全部收起' }],
-            ['expandAll', { icon: 'expand_more', children: '全部展开' }],
-          ]}
-          expandIconColumnIndex={1}
-          className={`${prefixCls}-table`}
-          autoHeight={{ type: 'maxHeight', diff: 50 }}
-          pristine={isDetail}
-        >
-          <Column
-            name="isChecked"
-            editor
-            width={50}
-            className={isDetail ? `${prefixCls}-table-checked` : ''}
-          />
-          <Column name="name" renderer={renderName} width={400} />
-          <Column name="permissionType" renderer={renderType} />
-        </Table>
+          </div>,
+          getTableContent('project'),
+        ]) : null}
+        {/* 数据多，表格树形渲染慢，因此通过样式来隐藏显示 */}
+        {getTableContent('organization')}
       </div>
     </div>
   );
