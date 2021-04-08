@@ -12,8 +12,7 @@ import FormSelectEditor from '../../../../components/formSelectEditor';
 import './index.less';
 
 // eslint-disable-next-line no-undef
-// const hasRegister = C7NHasModule('@choerodon/base-pro');
-const hasRegister = true;
+const hasRegister = C7NHasModule('@choerodon/base-pro');
 
 export default observer(() => {
   const {
