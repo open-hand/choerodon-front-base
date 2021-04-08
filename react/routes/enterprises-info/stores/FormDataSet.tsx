@@ -122,7 +122,6 @@ export default ({ intlPrefix, formatMessage }: TableProps): DataSetProps => {
         name: 'lastUpdateDate',
         type: 'string' as FieldType,
         required: true,
-        label: formatMessage({ id: `${intlPrefix}.updateDate` }),
       },
     ],
   });

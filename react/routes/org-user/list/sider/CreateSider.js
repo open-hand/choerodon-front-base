@@ -12,7 +12,8 @@ import FormSelectEditor from '../../../../components/formSelectEditor';
 import './index.less';
 
 // eslint-disable-next-line no-undef
-const hasRegister = C7NHasModule('@choerodon/base-pro');
+// const hasRegister = C7NHasModule('@choerodon/base-pro');
+const hasRegister = true;
 
 export default observer(() => {
   const {
@@ -26,7 +27,7 @@ export default observer(() => {
     userStore,
   } = useContext(Store);
   const addonAfterObj = useMemo(() => ({
-    addonAfter: userStore.getEmailSuffix || undefined,
+    suffix: userStore.getEmailSuffix || undefined,
   }), [userStore.getEmailSuffix]);
 
   useEffect(() => {
@@ -61,7 +62,12 @@ export default observer(() => {
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
         <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="realName" />
-        <TextField name="email" {...addonAfterObj} addonAfter={<NewTips helpText="此处填入的邮箱，将作为用户的登录名。" />} />
+        <TextField
+          name="email"
+          addonAfter={<NewTips helpText="此处填入的邮箱，将作为用户的登录名。" />}
+          className={`${prefixCls}-modal-email`}
+          {...addonAfterObj}
+        />
         <Password name="password" />
       </Form>
       <FormSelectEditor
