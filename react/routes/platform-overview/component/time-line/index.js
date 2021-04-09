@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { Button, Tooltip } from 'choerodon-ui';
@@ -7,53 +7,14 @@ import './index.less';
 import { usePlatformOverviewStore } from '../../stores';
 import TimeItem from './TimeItem';
 
-function renderMonth(month) {
-  switch (month) {
-    case '01':
-      month = 'Jan';
-      break;
-    case '02':
-      month = 'Feb';
-      break;
-    case '03':
-      month = 'Mar';
-      break;
-    case '04':
-      month = 'Apr';
-      break;
-    case '05':
-      month = 'May';
-      break;
-    case '06':
-      month = 'Jun';
-      break;
-    case '07':
-      month = 'Jul';
-      break;
-    case '08':
-      month = 'Aug';
-      break;
-    case '09':
-      month = 'Sept';
-      break;
-    case '10':
-      month = 'Oct';
-      break;
-    case '11':
-      month = 'Nov';
-      break;
-    default:
-      month = 'Dec';
-      break;
-  }
-  return month;
-}
-
 const TimeLine = observer(() => {
   const {
     noticeDs,
     platOverStores,
+    renderMonth,
   } = usePlatformOverviewStore();
+
+  const scorllRef = useRef();
 
   const [isMore, setLoadMoreBtn] = useState(false);
 
@@ -71,10 +32,10 @@ const TimeLine = observer(() => {
       const lastRecord = noticeDs.records[noticeDs.records.length - 1];
       const getDom = document.querySelector(`#notice-${renderId(lastRecord.get('id'))}`);
       if (getDom && !res.isFirstPage) {
-        getDom.scrollIntoView({
-          block: 'start',
-          inline: 'nearest',
+        const parent = scorllRef.current;
+        parent.scrollTo({
           behavior: 'smooth',
+          top: parent.scrollHeight,
         });
       }
       setLoadMoreBtn(res.hasNextPage);
@@ -140,11 +101,11 @@ const TimeLine = observer(() => {
   return (
     <div className="c7ncd-notice-timeLine">
       {record && record.length > 0 ? (
-        <div className="c7ncd-notice-timeLine-body">
+        <div className="c7ncd-notice-timeLine-body" ref={scorllRef}>
           {renderData()}
         </div>
       ) : <span className="c7ncd-notice-timeLine-empty">暂无更多记录...</span>}
-      {isMore && <Button type="primary" onClick={loadMoreNoticeRecord}>加载更多</Button>}
+      {isMore && <Button disabled={noticeDs.status === 'loading'} loading={noticeDs.status === 'loading'} type="primary" onClick={loadMoreNoticeRecord}>加载更多</Button>}
     </div>
   );
 });
