@@ -108,12 +108,12 @@ export default withRouter(observer((props) => {
     try {
       const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${userId}/reset`);
       if (!result.failed) {
-        await dataSet.query();
-      } else {
-        message.error(result.message);
+        dataSet.query();
+        return true;
       }
+      return false;
     } catch (err) {
-      message.error(err);
+      return false;
     }
   }
 

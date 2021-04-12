@@ -47,6 +47,15 @@ export default observer((props) => {
     e.persist();
     queryUser(e.target.value, optionDataSet);
   }
+  function handleBlur(optionDataSet, rowIndex) {
+    const currentRecord = roleAssignDataSet.current;
+    const memberIdArr = currentRecord ? currentRecord.get('memberId') || [] : null;
+    const memberId = memberIdArr && memberIdArr[rowIndex];
+    if (memberIdArr && !optionDataSet?.some((eachRecord) => eachRecord.get('id') === memberId)) {
+      memberIdArr[rowIndex] = '';
+      currentRecord.set('memberId', memberIdArr);
+    }
+  }
   function getOption({ record }) {
     const isLdap = record.get('ldap');
     const email = record.get('email');
@@ -63,15 +72,9 @@ export default observer((props) => {
             }
           </div>
           <span>{realName}</span>
-          {isLdap && loginName ? (
-            <span>
-              {`(${loginName})`}
-            </span>
-          ) : (
-            <span>
-              {`(${email})`}
-            </span>
-          )}
+          <span>
+            {`(${isLdap && loginName ? loginName : email})`}
+          </span>
         </div>
       </Tooltip>
     );
@@ -95,6 +98,7 @@ export default observer((props) => {
             searchable
             searchMatcher={() => true}
             onInput={(e) => handleFilterChange(e, itemProps.options)}
+            onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
             style={{ width: '100%' }}
             optionRenderer={getOption}
             addonAfter={(

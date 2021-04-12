@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { message } from 'choerodon-ui';
-import LoadingProgress from '@choerodon/testmanager-pro/lib/components/progress-loading';
+import LoadingProgress from '@/components/progress-loading';
 import { axios } from '@choerodon/boot';
 import { getDuration } from '../../../../../utils';
 

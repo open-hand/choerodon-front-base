@@ -1,65 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import './index.less';
 import { Icon, Button, Tooltip } from 'choerodon-ui';
 import { usePlatformOverviewStore } from '../../stores';
-
-// 点击展示更多
-function handleDropDown(e) {
-  const pNode = e.currentTarget.parentNode.parentNode.getElementsByTagName('p')[0]; // p元素
-  const i = e.currentTarget.getElementsByClassName('icon')[0]; // btn的图标
-  if (i.classList.contains('icon-expand_more')) {
-    i.classList.remove('icon-expand_more');
-    i.classList.add('icon-expand_less');
-    pNode.style.setProperty('white-space', 'normal');
-  } else {
-    i.classList.remove('icon-expand_less');
-    i.classList.add('icon-expand_more');
-    pNode.style.setProperty('white-space', 'nowrap');
-  }
-}
-
-function renderMonth(month) {
-  switch (month) {
-    case '01':
-      month = 'Jan';
-      break;
-    case '02':
-      month = 'Feb';
-      break;
-    case '03':
-      month = 'Mar';
-      break;
-    case '04':
-      month = 'Apr';
-      break;
-    case '05':
-      month = 'May';
-      break;
-    case '06':
-      month = 'Jun';
-      break;
-    case '07':
-      month = 'Jul';
-      break;
-    case '08':
-      month = 'Aug';
-      break;
-    case '09':
-      month = 'Sept';
-      break;
-    case '10':
-      month = 'Oct';
-      break;
-    case '11':
-      month = 'Nov';
-      break;
-    default:
-      month = 'Dec';
-      break;
-  }
-  return month;
-}
 
 const iconType = {
   addAdminUsers: {
@@ -153,11 +96,24 @@ const OptsLine = observer(() => {
   const {
     optsDs,
     platOverStores,
+    renderMonth,
   } = usePlatformOverviewStore();
+
+  const scorllRef = useRef();
 
   const [isMore, setLoadMoreBtn] = useState(false);
 
   const record = optsDs.current && optsDs.toData();
+
+  function renderId(id) {
+    const type = typeof id;
+    if (type === 'string') {
+      return id.slice(3, 6);
+    } if (type === 'number') {
+      return String(id).slice(3, 6);
+    }
+    return id;
+  }
 
   // 加载记录
   async function loadData(page = 1) {
@@ -168,11 +124,19 @@ const OptsLine = observer(() => {
         optsDs.unshift(...records);
       }
       platOverStores.setOldOptsRecord(optsDs.records);
+      const lastRecord = optsDs.records[optsDs.records.length - 1];
+      const getDom = document.querySelector(`#optNotice-${renderId(lastRecord.get('logId'))}`);
+      if (getDom && !res.isFirstPage) {
+        const parent = scorllRef.current;
+        parent.scrollTo({
+          behavior: 'smooth',
+          top: parent.scrollHeight,
+        });
+      }
       setLoadMoreBtn(res.hasNextPage);
       return res;
-    } else {
-      return false;
     }
+    return false;
   }
   // 更多操作
   function loadMoreOptsRecord() {
@@ -182,27 +146,6 @@ const OptsLine = observer(() => {
   useEffect(() => {
     loadData();
   }, []);
-
-  /* eslint-disable no-shadow */
-  /* eslint-disable wrap-iife */
-  /* eslint-disable no-loop-func */
-  useEffect(() => {
-    const flow = document.getElementsByClassName('c7n-pOverflow');
-    if (flow && flow.length > 0) {
-      for (let i = 0; i < flow.length; i += 1) {
-        new ResizeObserver((entries) => {
-          entries.forEach((entry) => {
-            const pDom = entry.target;
-            const scrollW = Math.ceil(pDom.scrollWidth);
-            const width = Math.ceil(pDom.clientWidth);
-            if (scrollW > width) {
-              optsDs.records[i].set('display', 'block');
-            }
-          });
-        }).observe(flow[i]);
-      }
-    }
-  });
 
   function renderDateLine(date) {
     const dateArr = date && date.split('-');
@@ -226,9 +169,11 @@ const OptsLine = observer(() => {
       <ul>
         {
           record.map((item) => {
-            const { logId: id, auditDatetime: creationDate, type, auditContent: content } = item;
+            const {
+              logId: id, auditDatetime: creationDate, type, auditContent: content,
+            } = item;
             return (
-              <li key={id}>
+              <li key={id} id={`optNotice-${renderId(id)}`}>
                 {renderDateLine(creationDate)}
                 <div className="c7ncd-opts-timeLine-content">
                   <div className="c7ncd-opts-timeLine-content-header">
@@ -236,16 +181,6 @@ const OptsLine = observer(() => {
                       <Icon type={iconType[type]?.icon} className={iconType[type]?.className} />
                     </div>
                     <span className="c7ncd-opts-timeLine-content-header-title">{iconType[type]?.typeTxt}</span>
-                    <Button
-                      className="c7ncd-opts-timeLine-content-header-btn"
-                      shape="circle"
-                      funcType="flat"
-                      icon="expand_more"
-                      style={{ display: item.display }}
-                      type="primary"
-                      size="small"
-                      onClick={handleDropDown}
-                    />
                   </div>
                   <Tooltip placement="top" title={content}>
                     <p className="c7n-pOverflow">{content}</p>
@@ -268,12 +203,12 @@ const OptsLine = observer(() => {
   return (
     <div className="c7ncd-opts-timeLine">
       {record && record.length > 0 ? (
-        <div className="c7ncd-opts-timeLine-body">
+        <div className="c7ncd-opts-timeLine-body" ref={scorllRef}>
           {renderData()}
         </div>
       ) : <span className="c7ncd-opts-timeLine-empty">暂无更多记录...</span>}
 
-      {isMore && <Button type="primary" onClick={loadMoreOptsRecord}>加载更多</Button>}
+      {isMore && <Button disabled={optsDs.status === 'loading'} loading={optsDs.status === 'loading'} type="primary" onClick={loadMoreOptsRecord}>加载更多</Button>}
     </div>
   );
 });

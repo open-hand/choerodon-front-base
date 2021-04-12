@@ -77,12 +77,12 @@ const RecordTable = observer(() => {
             <TextField name="enterpriseName" />
             <Select name="enterpriseType">
               {businessTypeList.map((item: string) => (
-                <Option value={item}>{item}</Option>
+                <Option value={item} key={item}>{item}</Option>
               ))}
             </Select>
             <Select name="enterpriseScale">
               {scaleList.map((v: string, index: number) => (
-                <Option value={v}>{index !== scaleList.length - 1 ? `${v}-${scaleList[index + 1]}` : '5000人以上'}</Option>
+                <Option value={v} key={v}>{index !== scaleList.length - 1 ? `${v}-${scaleList[index + 1]}` : '5000人以上'}</Option>
               ))}
             </Select>
             <CheckBox name="agreement" style={{ fontSize: '14px' }}>

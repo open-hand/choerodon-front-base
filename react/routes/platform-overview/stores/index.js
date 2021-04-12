@@ -29,6 +29,23 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
   const optsDs = useMemo(() => new DataSet(SystemOptsDataset({ organizationId })), [id]); // 操作DS
   const clusterDs = useMemo(() => new DataSet(ClusterDataSet()), [id]);
 
+  function renderMonth(month) {
+    const dayMap = new Map([
+      ['01', 'Jan'],
+      ['02', 'Feb'],
+      ['03', 'Mar'],
+      ['04', 'Apr'],
+      ['05', 'May'],
+      ['06', 'Jun'],
+      ['07', 'Jul'],
+      ['08', 'Aug'],
+      ['09', 'Sept'],
+      ['10', 'Oct'],
+      ['11', 'Nov'],
+      ['12', 'Dec'],
+    ]);
+    return dayMap.get(month);
+  }
 
   const value = {
     ...props,
@@ -38,6 +55,7 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     optsDs,
     platOverStores,
     clusterDs,
+    renderMonth,
   };
 
   return (
