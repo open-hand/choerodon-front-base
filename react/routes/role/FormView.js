@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+/* eslint-disable */
+import React, {
+  useState, useEffect, useMemo, useCallback, useRef,
+} from 'react';
 import remove from 'lodash/remove';
 import { observer } from 'mobx-react-lite';
 import { Action, axios } from '@choerodon/boot';
-import { Tabs, Icon, message, Checkbox, Popover } from 'choerodon-ui';
-import { Table, Form, TextField, DataSet, Modal, Button, Select, Tooltip } from 'choerodon-ui/pro';
+import {
+  Tabs, Icon, message, Checkbox, Popover,
+} from 'choerodon-ui';
+import {
+  Table, Form, TextField, DataSet, Modal, Button, Select, Tooltip,
+} from 'choerodon-ui/pro';
 import map from 'lodash/map';
 import FormSelectEditor from '../../components/formSelectEditor';
 import FormListDataSet from './stores/FormListDataSet';
@@ -29,7 +36,9 @@ const modalStyle = {
 };
 const modalKey = Modal.key();
 
-const ListView = ({ context, level, modal, base }) => {
+const ListView = ({
+  context, level, modal, base,
+}) => {
   const { listDataSet: dataSet, labelTipDataSet } = context;
   const { status } = dataSet.current;
   const prefix = `role/${level}/custom/`;
@@ -111,7 +120,7 @@ const ListView = ({ context, level, modal, base }) => {
       const roleObj = record.toData();
       let noEmptyLabels;
       if (roleObj.labels && roleObj.labels.length) {
-        const filterdLabels = roleObj.labels.filter(v => v !== '');
+        const filterdLabels = roleObj.labels.filter((v) => v !== '');
         if (filterdLabels.length) {
           noEmptyLabels = filterdLabels;
         }
@@ -135,13 +144,11 @@ const ListView = ({ context, level, modal, base }) => {
         message.success(status === 'add' ? '创建成功' : '修改成功');
         dataSet.query();
         return true;
-      } else {
-        message.error(res.message);
-        return false;
       }
-    } else {
+      message.error(res.message);
       return false;
     }
+    return false;
   }, [permissionsArr, userPermissionsArr]);
 
   useEffect(() => {
@@ -334,10 +341,10 @@ const ListView = ({ context, level, modal, base }) => {
       nameNode = <span>{name}</span>;
     }
     return (
-      <React.Fragment>
+      <>
         <Icon type={icon} style={{ marginRight: '.08rem', lineHeight: '.32rem', verticalAlign: 'top' }} />
         {nameNode}
-      </React.Fragment>
+      </>
     );
   }
 
@@ -376,27 +383,27 @@ const ListView = ({ context, level, modal, base }) => {
 
   function renderTab() {
     return (
-      <React.Fragment>
+      <>
         <div style={{ marginTop: 24 }}>
           <span style={{ marginRight: 80, fontSize: '16px' }}>菜单分配</span>
         </div>
         <Tabs onChange={handleChangeTab} activeKey={tabLevel}>
           {getTabCodes().map((l) => (
             <TabPane style={{ marginTop: '-0.08rem' }} tab={LEVEL_NAME[l]} key={l}>
-              {renderTable(l)}
+              {renderTable()}
             </TabPane>
           ))}
         </Tabs>
-      </React.Fragment>
+      </>
     );
   }
 
   return (
-    <React.Fragment>
+    <>
       {renderForm()}
       {renderLabel()}
       {renderTab()}
-    </React.Fragment>
+    </>
   );
 };
 

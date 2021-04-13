@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef, useContext } from 'react';
+/* eslint-disable */
+import React, {
+  useState, useEffect, useMemo, useCallback, useRef, useContext,
+} from 'react';
 import remove from 'lodash/remove';
 import { observer } from 'mobx-react-lite';
-import { Tabs, Icon, message, Checkbox, Popover } from 'choerodon-ui';
-import { Table, Form, TextField, DataSet, Modal, Button, Select, TextArea, Output } from 'choerodon-ui/pro';
+import {
+  Tabs, Icon, message, Checkbox, Popover,
+} from 'choerodon-ui';
+import {
+  Table, Form, TextField, DataSet, Modal, Button, Select, TextArea, Output,
+} from 'choerodon-ui/pro';
 import PermissionListView from './PermissionListView';
 import Store from './stores';
 import '../index.less';
@@ -112,9 +119,8 @@ const ListView = () => {
     }
     if (tabLevel === 'organization') {
       return menuCodeDataSet.current && menuCodeDataSet.current.get('menuOrgCodes').some(({ menuCode }) => menuCode === data.code);
-    } else {
-      return menuCodeDataSet.current && menuCodeDataSet.current.get('menuProCodes').some(({ menuCode }) => menuCode === data.code);
     }
+    return menuCodeDataSet.current && menuCodeDataSet.current.get('menuProCodes').some(({ menuCode }) => menuCode === data.code);
   }
 
   function renderTable() {
@@ -141,26 +147,26 @@ const ListView = () => {
 
   function renderTab() {
     return (
-      <React.Fragment>
+      <>
         <div>
           <span style={{ marginRight: 80, fontSize: '16px' }}>菜单分配</span>
         </div>
         <Tabs onChange={handleChangeTab} activeKey={tabLevel}>
           {['organization', 'project'].map((l) => (
             <TabPane tab={LEVEL_NAME[l]} key={l}>
-              {renderTable(l)}
+              {renderTable()}
             </TabPane>
           ))}
         </Tabs>
-      </React.Fragment>
+      </>
     );
   }
 
   return (
-    <React.Fragment>
+    <>
       {renderForm()}
       {renderTab()}
-    </React.Fragment>
+    </>
   );
 };
 
