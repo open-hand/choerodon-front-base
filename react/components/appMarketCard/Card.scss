@@ -53,10 +53,12 @@
           right: 0;
           top: 0;
           border-top-width: 0 !important;
+          border-bottom-width: 34px;
+          border-left-width: 34px;
+          border-right-width: 34px;
           border-right-style: dashed;
           border-bottom-style: dashed;
           border-right-color: rgba(255, 177, 0, 1);
-          border-width: 34px;
           border-bottom-color: #fff;
 
           .money-icon {

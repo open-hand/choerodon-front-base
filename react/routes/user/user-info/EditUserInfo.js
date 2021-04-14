@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useState, useEffect, useContext, Fragment, useImperativeHandle,
 } from 'react';
@@ -13,7 +14,9 @@ const { Option } = Select;
 const FormItem = Form.Item;
 function EditUserInfo(props) {
   const [selecteds, setSelecteds] = useState([]);
-  const { form, UserInfoStore, intl, intlPrefix } = props;
+  const {
+    form, UserInfoStore, intl, intlPrefix,
+  } = props;
   const { getFieldDecorator, getFieldValue } = form;
   const [visible, setVisible] = useState(false);
   const [user, setUser] = useState({});
@@ -33,7 +36,7 @@ function EditUserInfo(props) {
     newSelecteds[current] = 0;
     setSelecteds(newSelecteds);
     form.setFieldsValue({
-      keys: keys.filter(key => key !== current),
+      keys: keys.filter((key) => key !== current),
     });
   };
   const handleSubmit = () => {
@@ -106,27 +109,29 @@ function EditUserInfo(props) {
       handleSubmit,
     }));
 
-  const renderLanguageOptions = () => {
-    let language;
-    if (language) {
-      return language.content.map(({ code, name }) => (<Option key={code} value={code}>{name}</Option>));
-    } else {
-      return [
-        <Option key="zh_CN" value="zh_CN"><FormattedMessage id={`${intlPrefix}.language.zhcn`} /></Option>,
-        // <Option key="en_US" value="en_US"><FormattedMessage id={`${intlPrefix}.language.enus`}/></Option>,
-      ];
-    }
-  };
+  const renderLanguageOptions = () => [
+    <Option key="zh_CN" value="zh_CN"><FormattedMessage id={`${intlPrefix}.language.zhcn`} /></Option>,
+    // <Option key="en_US" value="en_US"><FormattedMessage id={`${intlPrefix}.language.enus`}/></Option>,
+  ]
+  // let language;
+  // if (language) {
+  //   return language.content.map(({ code, name }) => (<Option key={code} value={code}>{name}</Option>));
+  // } else {
+  //   return [
+  //     <Option key="zh_CN" value="zh_CN"><FormattedMessage id={`${intlPrefix}.language.zhcn`} /></Option>,
+  //     // <Option key="en_US" value="en_US"><FormattedMessage id={`${intlPrefix}.language.enus`}/></Option>,
+  //   ];
+  // }
+  ;
   const renderTimeZoneOptions = () => {
     const timeZone = [];
     if (timeZone.length > 0) {
       return timeZone.map(({ code, description }) => (<Option key={code} value={code}>{description}</Option>));
-    } else {
-      return [
-        <Option key="CTT" value="CTT"><FormattedMessage id={`${intlPrefix}.timezone.ctt`} /></Option>,
-        // <Option key="EST" value="EST"><FormattedMessage id={`${intlPrefix}.timezone.est`}/></Option>,
-      ];
     }
+    return [
+      <Option key="CTT" value="CTT"><FormattedMessage id={`${intlPrefix}.timezone.ctt`} /></Option>,
+      // <Option key="EST" value="EST"><FormattedMessage id={`${intlPrefix}.timezone.est`}/></Option>,
+    ];
   };
   const openAvatorUploader = () => {
     setVisible(true);
@@ -213,7 +218,9 @@ function EditUserInfo(props) {
     setUser(UserInfoStore.getUserInfo);
   }, []);
   const renderForm = () => {
-    const { organizationName, realName, organizationCode, email, loginName, phone, language, timeZone } = user;
+    const {
+      organizationName, realName, organizationCode, email, loginName, phone, language, timeZone,
+    } = user;
     return (
       <Form layout="vertical">
         <FormItem>

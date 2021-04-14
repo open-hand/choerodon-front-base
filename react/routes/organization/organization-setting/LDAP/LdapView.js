@@ -1,6 +1,13 @@
-import React, { useContext, Fragment, useState, useCallback } from 'react';
-import { Choerodon, Content, Header, Page, Permission, TabPage, axios, Breadcrumb } from '@choerodon/boot';
-import { Form, Output, Modal, TextField, Password } from 'choerodon-ui/pro';
+/* eslint-disable */
+import React, {
+  useContext, Fragment, useState, useCallback,
+} from 'react';
+import {
+  Choerodon, Content, Header, Page, Permission, TabPage, axios, Breadcrumb,
+} from '@choerodon/boot';
+import {
+  Form, Output, Modal, TextField, Password,
+} from 'choerodon-ui/pro';
 import { Button } from 'choerodon-ui';
 import { withRouter } from 'react-router';
 import './OrganizationLdap.less';
@@ -55,7 +62,7 @@ const LdapView = observer(() => {
   }
   // type：给modal传个值知道是那个按钮
   function openModal(btnType) {
-    const modalProps = renderFormType(btnType, ldapDataSet);
+    const modalProps = renderFormType(btnType);
     Modal.open({
       ...modalProps,
       key: modalKey,

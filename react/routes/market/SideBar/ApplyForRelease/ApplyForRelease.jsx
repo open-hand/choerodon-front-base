@@ -121,8 +121,8 @@ const ApplyForRelease = observer((props) => {
                     throw new Error();
                   }
                   if (mobxStore.createType === 'new' && newPlatformAppTableDataSet.selected.length === 0) {
-                    return message.error('至少选择一个应用服务');
                     throw new Error();
+                    return message.error('至少选择一个应用服务');
                   }
                   if (mobxStore.createType === 'new') {
                     const versionNameValidate = await versionNameDataSet.validate();

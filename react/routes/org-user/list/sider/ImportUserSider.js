@@ -1,14 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon } from '@choerodon/boot';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
+} from '@choerodon/boot';
 import { Button, Upload } from 'choerodon-ui';
-import { Spin, Modal, message, Select, EmailField } from 'choerodon-ui/pro';
+import {
+  Spin, Modal, message, Select, EmailField,
+} from 'choerodon-ui/pro';
 import Store from './stores';
 import { useInterval } from '../../../../components/costomHooks';
 import './index.less';
 
 export default observer(() => {
-  const { prefixCls, intlPrefix, intl, onOk, organizationId, userId, modal } = useContext(Store);
+  const {
+    prefixCls, intlPrefix, intl, onOk, organizationId, userId, modal,
+  } = useContext(Store);
   const [syncData, setSyncData] = useState({});
   const [uploading, setUploading] = useState(false);
   const [delay, setDelay] = useState(false);
@@ -96,8 +102,7 @@ export default observer(() => {
     axios.get(`/iam/choerodon/v1/organizations/${organizationId}/users/download_templates`, {
       responseType: 'arraybuffer',
     }).then((result) => {
-      const blob = new Blob([result], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
+      const blob = new Blob([result], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
       const url = window.URL.createObjectURL(blob);
       const linkElement = document.getElementById('c7n-user-download-template');
       linkElement.setAttribute('href', url);
@@ -111,8 +116,8 @@ export default observer(() => {
         <div className="loading">
           <Spin />
         </div>
-        <div className="text">{intl.formatMessage({
-          id: `organization.user.${uploading ? 'fileloading' : 'uploading'}.text` })}
+        <div className="text">
+          {intl.formatMessage({ id: `organization.user.${uploading ? 'fileloading' : 'uploading'}.text` })}
         </div>
         {!uploading && (<div className="tip">{intl.formatMessage({ id: 'organization.user.uploading.tip' })}</div>)}
       </div>
@@ -122,14 +127,21 @@ export default observer(() => {
   function getInfo() {
     return (
       <div>
-        <p className="last-import-time">上次导入完成时间<span className="import-user-time">{syncData.endTime}</span>{syncData.endTime && `（耗时${getSpentTime()}）`}</p>
-        <p className="total-import">共导入
+        <p className="last-import-time">
+          上次导入完成时间
+          <span className="import-user-time">{syncData.endTime}</span>
+          {syncData.endTime && `（耗时${getSpentTime()}）`}
+        </p>
+        <p className="total-import">
+          共导入
           <span className="import-user-success">
             {syncData.successfulCount || 0}
-          </span>条数据成功,
+          </span>
+          条数据成功,
           <span className="import-user-failed">
             {syncData.failedCount || 0}
-          </span>条数据失败
+          </span>
+          条数据失败
         </p>
         <a className="download-detail" href={syncData.url || null} target="_blank" rel="noopener noreferrer">
           点击下载失败详情
@@ -141,9 +153,8 @@ export default observer(() => {
   function renderUploadPanel() {
     if ((syncData.id && !syncData.endTime) || uploading) {
       return getLoading();
-    } else {
-      return getInfo();
     }
+    return getInfo();
   }
 
   useInterval(pollHistory, delay);
@@ -163,7 +174,7 @@ export default observer(() => {
       <div className="divider" />
       <h3 className="import-user-title">导入用户</h3>
       {renderUploadPanel()}
-      <Upload {...getUploadProps(organizationId)}>
+      <Upload {...getUploadProps()}>
         <Button style={{ display: !((syncData.id && !syncData.endTime) || uploading) ? 'block' : 'none' }} disabled={uploading || (syncData.id && !syncData.endTime)} type="primary" funcType="flat" icon="file_upload">上传文件</Button>
       </Upload>
     </div>

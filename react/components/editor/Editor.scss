@@ -68,83 +68,83 @@
   .ql-snow .ql-picker.ql-font .ql-picker-item {
     &[data-value=STSong]::before {
       content: "华文宋体";
-      font-family: "STSong";
+      font-family: "STSong", sans-serif;
     }
 
     &[data-value=STKaiti]::before {
       content: "华文楷体";
-      font-family: "STKaiti";
+      font-family: "STKaiti", sans-serif;
     }
 
     &[data-value=STHeiti]::before {
       content: "华文黑体";
-      font-family: "STHeiti";
+      font-family: "STHeiti", sans-serif;
     }
 
     &[data-value=STFangsong]::before {
       content: "华文仿宋";
-      font-family: "STFangsong";
+      font-family: "STFangsong", sans-serif;
     }
 
     &[data-value=SimSun]::before {
       content: "宋体";
-      font-family: "SimSun";
+      font-family: "SimSun", sans-serif;
     }
 
     &[data-value=SimHei]::before {
       content: "黑体";
-      font-family: "SimHei";
+      font-family: "SimHei", sans-serif;
     }
 
     &[data-value=KaiTi]::before {
       content: "楷体";
-      font-family: "KaiTi";
+      font-family: "KaiTi", sans-serif;
     }
 
     &[data-value=FangSong]::before {
       content: "仿宋";
-      font-family: "FangSong";
+      font-family: "FangSong", sans-serif;
     }
 
     &[data-value=Microsoft-YaHei]::before {
       content: "微软雅黑";
-      font-family: "Microsoft-YaHei";
+      font-family: "Microsoft-YaHei", sans-serif;
     }
 
     .ql-font-STSong {
-      font-family: "STSong";
+      font-family: "STSong", sans-serif;
     }
 
     .ql-font-STKaiti {
-      font-family: "STKaiti";
+      font-family: "STKaiti", sans-serif;
     }
 
     .ql-font-STHeiti {
-      font-family: "STHeiti";
+      font-family: "STHeiti", sans-serif;
     }
 
     .ql-font-STFangsong {
-      font-family: "STFangsong";
+      font-family: "STFangsong", sans-serif;
     }
 
     .ql-font-SimSun {
-      font-family: "SimSun";
+      font-family: "SimSun", sans-serif;
     }
 
     .ql-font-KaiTi {
-      font-family: "KaiTi";
+      font-family: "KaiTi", sans-serif;
     }
 
     .ql-font-SimHei {
-      font-family: "SimHei";
+      font-family: "SimHei", sans-serif;
     }
 
     .ql-font-FangSong {
-      font-family: "FangSong";
+      font-family: "FangSong", sans-serif;
     }
 
     .ql-font-Microsoft-YaHei {
-      font-family: "Microsoft YaHei";
+      font-family: "Microsoft YaHei", sans-serif;
     }
   }
 

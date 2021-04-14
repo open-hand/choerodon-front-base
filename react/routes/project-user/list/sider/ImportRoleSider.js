@@ -1,8 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon } from '@choerodon/boot';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
+} from '@choerodon/boot';
 import { Button, Modal, Upload } from 'choerodon-ui';
-import { Spin, SelectBox, Password, Select, Tooltip } from 'choerodon-ui/pro';
+import {
+  Spin, SelectBox, Password, Select, Tooltip,
+} from 'choerodon-ui/pro';
 import Store from './stores';
 import UserOptionDataSet from './stores/UserOptionDataSet';
 import FormSelectEditor from '../../../../components/formSelectEditor';
@@ -10,8 +14,9 @@ import { useInterval } from '../../../../components/costomHooks';
 import './index.less';
 
 export default observer(() => {
-  const { prefixCls, intlPrefix, intl, projectId, userId } = useContext(Store);
-
+  const {
+    prefixCls, intlPrefix, intl, projectId, userId,
+  } = useContext(Store);
 
   // 导入用户角色部分
   const [syncData, setSyncData] = useState({});
@@ -103,8 +108,7 @@ export default observer(() => {
     axios.get(`/iam/choerodon/v1/projects/${projectId}/role_members/download_templates`, {
       responseType: 'arraybuffer',
     }).then((result) => {
-      const blob = new Blob([result], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
+      const blob = new Blob([result], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
       const url = window.URL.createObjectURL(blob);
       const linkElement = document.getElementById('c7n-user-download-template');
       linkElement.setAttribute('href', url);
@@ -118,8 +122,8 @@ export default observer(() => {
         <div className="loading">
           <Spin />
         </div>
-        <div className="text">{intl.formatMessage({
-          id: `organization.user.${uploading ? 'fileloading' : 'uploading'}.text` })}
+        <div className="text">
+          {intl.formatMessage({ id: `organization.user.${uploading ? 'fileloading' : 'uploading'}.text` })}
         </div>
         {!uploading && (<div className="tip">{intl.formatMessage({ id: 'organization.user.uploading.tip' })}</div>)}
       </div>
@@ -129,14 +133,21 @@ export default observer(() => {
   function getInfo() {
     return (
       <div>
-        <p className="last-import-time">上次导入完成时间<span className="import-user-time">{syncData.endTime}</span>{syncData.endTime && `（耗时${getSpentTime()}秒）`}</p>
-        <p className="total-import">共导入
+        <p className="last-import-time">
+          上次导入完成时间
+          <span className="import-user-time">{syncData.endTime}</span>
+          {syncData.endTime && `（耗时${getSpentTime()}秒）`}
+        </p>
+        <p className="total-import">
+          共导入
           <span className="import-user-success">
             {syncData.successfulCount || 0}
-          </span>条数据成功,
+          </span>
+          条数据成功,
           <span className="import-user-failed">
             {syncData.failedCount || 0}
-          </span>条数据失败
+          </span>
+          条数据失败
         </p>
         <a className="download-detail" href={syncData.url || null} target="_blank" rel="noopener noreferrer">
           点击下载失败详情
@@ -148,16 +159,15 @@ export default observer(() => {
   function renderUploadPanel() {
     if ((syncData.id && !syncData.endTime) || uploading) {
       return getLoading();
-    } else {
-      return getInfo();
     }
+    return getInfo();
   }
 
   useInterval(pollHistory, delay);
 
   function renderImportUserRole() {
     return (
-      <React.Fragment>
+      <>
 
         <h3>下载模板</h3>
         <p>您必须使用模版文件，录入团队成员信息</p>
@@ -170,10 +180,10 @@ export default observer(() => {
         <div className="divider" />
         <h3 className="import-user-title">导入团队成员</h3>
         <span>{renderUploadPanel()}</span>
-        <Upload {...getUploadProps(projectId)}>
+        <Upload {...getUploadProps()}>
           <Button style={{ display: !((syncData.id && !syncData.endTime) || uploading) ? 'block' : 'none' }} disabled={uploading || (syncData.id && !syncData.endTime)} type="primary" funcType="flat" icon="file_upload">上传文件</Button>
         </Upload>
-      </React.Fragment>
+      </>
     );
   }
 

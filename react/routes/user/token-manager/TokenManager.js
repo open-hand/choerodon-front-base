@@ -1,8 +1,13 @@
+/* eslint-disable */
 import React, { Component, useEffect } from 'react';
 import { observer, inject } from 'mobx-react-lite';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Breadcrumb, Content, Header, Page, Permission, axios, Choerodon } from '@choerodon/boot';
-import { Button, Tooltip, Modal, Dropdown, Menu } from 'choerodon-ui';
+import {
+  Breadcrumb, Content, Header, Page, Permission, axios, Choerodon,
+} from '@choerodon/boot';
+import {
+  Button, Tooltip, Modal, Dropdown, Menu,
+} from 'choerodon-ui';
 import { Table } from 'choerodon-ui/pro';
 import './TokenManager.less';
 import TimeAgo from 'timeago-react';
@@ -12,7 +17,6 @@ import MouseOverWrapper from '../../../components/mouseOverWrapper';
 import StatusTag from '../../../components/statusTag';
 import { useStore } from './stores';
 
-
 // timeago.register('zh_CN', require('./locale/zh_CN'));
 const { Column } = Table;
 function TokenManager(props) {
@@ -21,7 +25,7 @@ function TokenManager(props) {
 
   function deleteRecords(records) {
     const currentToken = Choerodon.getAccessToken().split(' ')[1];
-    const recordTokens = records.map(v => v.get('tokenId'));
+    const recordTokens = records.map((v) => v.get('tokenId'));
     return axios.delete(`/iam/choerodon/v1/token/batch?currentToken=${currentToken}`, { data: recordTokens });
   }
   function deleteTokenById(tokenId) {
@@ -33,7 +37,7 @@ function TokenManager(props) {
       className: 'c7n-iam-confirm-modal',
       title: intl.formatMessage({ id: `${intlPrefix}.remove.title` }),
       content: intl.formatMessage({ id: `${intlPrefix}.remove.content` }, { name: record.get('accesstoken') }),
-      onOk: () => deleteTokenById(record.get('tokenId'), Choerodon.getAccessToken().split(' ')[1]).then(({ failed, message }) => {
+      onOk: () => deleteTokenById(record.get('tokenId')).then(({ failed, message }) => {
         if (failed) {
           Choerodon.prompt(message);
         } else {
@@ -85,7 +89,7 @@ function TokenManager(props) {
     });
   };
 
-  const renderTime = time => (
+  const renderTime = (time) => (
     <Tooltip
       title={time}
       placement="top"
@@ -98,7 +102,7 @@ function TokenManager(props) {
   );
 
   const renderAccesstoken = ({ value, record }) => (
-    <React.Fragment>
+    <>
       <MouseOverWrapper style={{ float: 'left' }} text={value} width={0.15}>
         {value}
       </MouseOverWrapper>
@@ -108,7 +112,7 @@ function TokenManager(props) {
             <span className="c7n-iam-token-manager-current">当前</span>
           ) : null
       }
-    </React.Fragment>
+    </>
   );
   const renderRedirectUri = ({ value }) => (
     <MouseOverWrapper text={value} width={0.2}>
