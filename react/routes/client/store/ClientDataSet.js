@@ -19,11 +19,17 @@ export default function (orgId, optionsDataSet, isProject, projectId) {
         url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}/clients` : `/iam/choerodon/v1/organizations/${orgId}/clients`,
         method: 'get',
       },
-      create: ({ data: [data] }) => ({
-        url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}` : `/iam/v1/${orgId}/clients`,
-        method: 'post',
-        data: { ...data, pwdReplayFlag: 0 },
-      }),
+      create: ({ data: [data] }) => {
+        const postData = { ...data, pwdReplayFlag: 0 };
+        if (!isProject) {
+          postData.menuIdFlag = 0;
+        }
+        return ({
+          url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}` : `/iam/v1/${orgId}/clients`,
+          method: 'post',
+          data: postData,
+        });
+      },
       update: ({ data: [data] }) => ({
         url: isProject ? `/iam/choerodon/v1/organizations/${orgId}/clients-project/${projectId}` : `/iam/v1/${orgId}/clients`,
         method: 'put',
