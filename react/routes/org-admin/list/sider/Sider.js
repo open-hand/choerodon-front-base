@@ -1,16 +1,16 @@
 import React, { useContext, useState, use } from 'react';
-import _ from 'lodash';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { useDebounceFn } from 'ahooks';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
 import { Select, Tooltip } from 'choerodon-ui/pro';
 import Store from './stores';
 import './index.less';
 import FormSelectEditor from '../../../../components/formSelectEditor';
-import TwoFormSelectEditor from '../../../../components/twoFormSelectEditor';
 
 export default observer((props) => {
-  const { prefixCls, intlPrefix, intl, orgAdminCreateDataSet, OrgUserDataSetConfig, orgAdminListDataSet, modal, dsStore } = useContext(Store);
+  const {
+    prefixCls, intlPrefix, intl, orgAdminCreateDataSet, OrgUserDataSetConfig,
+    orgAdminListDataSet, modal, dsStore,
+  } = useContext(Store);
   modal.handleOk(async () => {
     try {
       const res = await orgAdminCreateDataSet.submit();
@@ -54,15 +54,29 @@ export default observer((props) => {
     );
   }
 
-  const queryUser = _.debounce((str, optionDataSet) => {
+  const {
+    run,
+    cancel,
+  } = useDebounceFn((str, optionDataSet) => {
     optionDataSet.setQueryParameter('user_name', str);
     if (str !== '') {
       optionDataSet.query();
     }
-  }, 500);
+  }, { wait: 500 });
+
   function handleFilterChange(e, optionDataSet) {
     e.persist();
-    queryUser(e.target.value, optionDataSet);
+    run(e.target.value, optionDataSet);
+  }
+
+  function handleBlur(optionDataSet, rowIndex) {
+    const currentRecord = orgAdminCreateDataSet.current;
+    const memberIdArr = currentRecord ? currentRecord.get('userName') || [] : null;
+    const memberId = memberIdArr && memberIdArr[rowIndex];
+    if (memberIdArr && !optionDataSet?.some((eachRecord) => eachRecord.get('id') === memberId)) {
+      memberIdArr[rowIndex] = '';
+      currentRecord.set('userName', memberIdArr);
+    }
   }
 
   return (
@@ -84,6 +98,12 @@ export default observer((props) => {
             searchable
             searchMatcher={() => true}
             onInput={(e) => handleFilterChange(e, itemProps.options)}
+            onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                cancel();
+              }
+            }}
             optionRenderer={getUserOption}
           />
         ))}
