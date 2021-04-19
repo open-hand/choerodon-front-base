@@ -1,9 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, {
+  useContext, useState, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Spin, SelectBox, Password, Select, Tooltip, Icon,
 } from 'choerodon-ui/pro';
-import _ from 'lodash';
+import { useDebounceFn } from 'ahooks';
 import Store from './stores';
 import UserOptionDataSet from './stores/UserOptionDataSet';
 import './index.less';
@@ -36,13 +38,16 @@ export default observer((props) => {
   modal.handleCancel(handleCancel);
   modal.handleOk(handleOk);
 
-  const queryUser = _.debounce((str, optionDataSet) => {
+  const {
+    run,
+    cancel,
+  } = useDebounceFn((str, optionDataSet) => {
     optionDataSet.setQueryParameter('user_name', str);
     if (str !== '') { optionDataSet.query(); }
-  }, 500);
+  }, { wait: 500 });
   function handleFilterChange(e, optionDataSet) {
     e.persist();
-    queryUser(e.target.value, optionDataSet);
+    run(e.target.value, optionDataSet);
   }
 
   function handleBlur(optionDataSet, rowIndex) {
@@ -105,6 +110,11 @@ export default observer((props) => {
             searchMatcher={() => true}
             onInput={(e) => handleFilterChange(e, itemProps.options)}
             onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                cancel();
+              }
+            }}
             style={{ width: '100%' }}
             optionRenderer={getOption}
             addonAfter={(
