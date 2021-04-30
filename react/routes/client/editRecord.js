@@ -81,7 +81,7 @@ export default inject('AppState')(observer(({
         <TextArea name="additionalInformation" resize="vertical" />
       </Form>
       <div className="organization-pwdpolicy-label">
-        <span>是否进行加密</span>
+        <span className="organization-pwdpolicy-label-span">是否进行加密</span>
         <Tooltip title="用此客户端调用接口查询，返回结果是否进行主键加密" placement="top">
           <Icon type="help" />
         </Tooltip>
