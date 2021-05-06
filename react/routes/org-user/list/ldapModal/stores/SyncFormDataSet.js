@@ -1,3 +1,7 @@
+function getRequired({ record }) {
+  return record.get('active');
+}
+
 export default ({ orgId }) => ({
   autoCreate: false,
   autoQuery: true,
@@ -19,8 +23,24 @@ export default ({ orgId }) => ({
     }),
   },
   fields: [
-    { name: 'active', type: 'boolean', label: '是否自动同步', defaultValue: false, required: true },
-    { name: 'frequency', label: '同步频率', type: 'string', required: true },
-    { name: 'startTime', label: '开始同步时间', type: 'string', required: true },
+    {
+      name: 'active', type: 'boolean', label: '是否自动同步', defaultValue: false, required: true,
+    },
+    {
+      name: 'frequency',
+      label: '同步频率',
+      type: 'string',
+      dynamicProps: {
+        required: getRequired,
+      },
+    },
+    {
+      name: 'startTime',
+      label: '开始同步时间',
+      type: 'string',
+      dynamicProps: {
+        required: getRequired,
+      },
+    },
   ],
 });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactEchartsCore from 'echarts-for-react/lib/core';
 import { observer } from 'mobx-react-lite';
 import echarts from 'echarts';
+import EmptyPage from '@/components/empty-page';
 import { useProDeployStore } from './stores';
 
 const Charts = observer(() => {
@@ -39,7 +40,7 @@ const Charts = observer(() => {
       legend: {
         right: 0,
         itemHeight: 10,
-        data: projectDataList ? projectDataList.map(p => ({
+        data: projectDataList ? projectDataList.map((p) => ({
           name: p.name,
           icon: 'circle',
         })) : [],
@@ -67,7 +68,7 @@ const Charts = observer(() => {
         formatter(params) {
           return `
           日期: ${params[0].name}</br>
-          ${params.map(p => (`${p.seriesName}: ${p.data}</br>`)).join('')}
+          ${params.map((p) => (`${p.seriesName}: ${p.data}</br>`)).join('')}
         `;
         },
       },
@@ -106,7 +107,7 @@ const Charts = observer(() => {
           },
         },
       },
-      series: projectDataList ? projectDataList.map(p => ({
+      series: projectDataList ? projectDataList.map((p) => ({
         name: p.name,
         type: 'bar',
         data: p.data,
@@ -118,6 +119,11 @@ const Charts = observer(() => {
       })) : [],
     };
   };
+
+  if (!chartData?.projectDataList?.length) {
+    return <EmptyPage title="暂无部署情况" describe="未选择项目，暂无部署情况" />;
+  }
+
   return !resizeIf ? (
     <ReactEchartsCore
       echarts={echarts}

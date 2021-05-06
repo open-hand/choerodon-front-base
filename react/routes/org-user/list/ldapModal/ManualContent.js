@@ -22,9 +22,8 @@ function handleLoadTime(startTime, endTime) {
     const diffSeconds = diffDuration.seconds();
 
     return `${diffYears ? `${diffYears}年` : ''}${diffMonths ? `${diffMonths}月` : ''}${diffDays ? `${diffDays}日` : ''}${diffHours ? `${diffHours}小时` : ''}${diffMinutes ? `${diffMinutes}分钟` : ''}${diffSeconds ? `${diffSeconds}秒` : ''}`;
-  } else {
-    return '正在计算时间...';
   }
+  return '正在计算时间...';
 }
 
 const manualContent = observer((props) => {
@@ -69,7 +68,7 @@ const manualContent = observer((props) => {
         }
       }
     } catch (e) {
-      return false;
+      // return false;
     }
   }
 
@@ -78,25 +77,24 @@ const manualContent = observer((props) => {
     if (ldapStore.getTabKey === 'manual') {
       pollHistory();
       modal.handleOk(async () => {
-        if (!isStop) {
-          const result = await ldapStore.syncUsers(orgId, ldapId);
-          if (!result.failed) {
-            pollHistory();
-            setDelay(3000);
-          } else {
-            message.error(result.message);
+        try {
+          if (!isStop) {
+            const result = await ldapStore.syncUsers(orgId, ldapId);
+            if (!result.failed) {
+              pollHistory();
+              setDelay(3000);
+            }
+            return false;
           }
-          return false;
-        } else {
           clearInterval(intervalId);
           setDelay(false);
           const result = await ldapStore.stopSyncUsers(orgId, ldapId);
           if (!result.failed) {
             syncRecordDs.query();
-          } else {
-            message.error(result.message);
           }
           modal.update({ okProps: { color: 'primary', loading: false }, okText: '手动同步' });
+          return false;
+        } catch (e) {
           return false;
         }
       });
@@ -111,28 +109,29 @@ const manualContent = observer((props) => {
     }
     if (!id) {
       return <span className={`${prefixCls}-manual-record`}>暂无同步记录</span>;
-    } else {
-      const syncBeginTime = record.get('syncBeginTime');
-      const newUserCount = record.get('newUserCount');
-      const errorUserCount = record.get('errorUserCount');
-      const updateUserCount = record.get('updateUserCount');
-      return (
-        <div className={`${prefixCls}-manual-record`} style={{ display: syncEndTime ? 'block' : 'none' }}>
-          <div className={`${prefixCls}-manual-record-text`}>
-            上次同步完成时间
-            <span className={`${prefixCls}-manual-record-time`}>{syncEndTime}</span>
-            &nbsp; (耗时{handleLoadTime(syncBeginTime, syncEndTime)})
-          </div>
-          <div>
-            共同步
-            <span className={`${prefixCls}-manual-record-number-success`}>{newUserCount + updateUserCount || 0}</span>
-            个用户成功，
-            <span className={`${prefixCls}-manual-record-number-failed`}>{errorUserCount || 0}</span>
-            个用户失败
-          </div>
-        </div>
-      );
     }
+    const syncBeginTime = record.get('syncBeginTime');
+    const newUserCount = record.get('newUserCount');
+    const errorUserCount = record.get('errorUserCount');
+    const updateUserCount = record.get('updateUserCount');
+    return (
+      <div className={`${prefixCls}-manual-record`} style={{ display: syncEndTime ? 'block' : 'none' }}>
+        <div className={`${prefixCls}-manual-record-text`}>
+          上次同步完成时间
+          <span className={`${prefixCls}-manual-record-time`}>{syncEndTime}</span>
+            &nbsp; (耗时
+          {handleLoadTime(syncBeginTime, syncEndTime)}
+          )
+        </div>
+        <div>
+          共同步
+          <span className={`${prefixCls}-manual-record-number-success`}>{newUserCount + updateUserCount || 0}</span>
+          个用户成功，
+          <span className={`${prefixCls}-manual-record-number-failed`}>{errorUserCount || 0}</span>
+          个用户失败
+        </div>
+      </div>
+    );
   }
 
   useInterval(pollHistory, delay);
