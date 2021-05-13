@@ -55,7 +55,7 @@ const InfoForm = observer(({
             平台Logo
           </span>
         </div>
-        <div style={{ transform: 'translate(1.91rem, -1rem)', width: '1.1rem' }}>
+        <div style={{ transform: 'translate(1.91rem, -1.05rem)', width: '1.1rem' }}>
           <div className="c7n-system-setting-avater">
             <div colSpan={1} rowSpan={2} className="c7n-system-setting-formImg" label="平台导航栏图形标：">
               {!systemLogo && <div className="c7n-system-setting-formImg-wrapper default-logo" />}
