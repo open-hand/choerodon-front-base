@@ -10,6 +10,11 @@ const iconType = {
     className: '',
     typeTxt: '分配root权限',
   },
+  assignUserRole: {
+    icon: 'account_circle',
+    className: '',
+    typeTxt: '分配权限',
+  },
   assignUsersRoles: {
     icon: 'account_circle',
     className: '',
