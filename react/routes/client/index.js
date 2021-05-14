@@ -7,7 +7,7 @@ import { Modal as OldModal } from 'choerodon-ui';
 import {
   Content, Header, Page, axios, Action, Permission, Breadcrumb,
 } from '@choerodon/boot';
-
+import { HeaderButtons } from "@choerodon/master";
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import Store, { StoreProvider } from './store';
@@ -111,13 +111,15 @@ const Client = withRouter(observer((props) => {
   return (
     <Page service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.default`]}>
       <Header>
-        <Permission service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`]}>
-          <Button color="blue" onClick={openCreateRecordModal}>
-            <Icon type="playlist_add" />
-            {' '}
-            添加客户端
-          </Button>
-        </Permission>
+        <HeaderButtons
+          items={([{
+            name: '添加客户端',
+            icon: 'playlist_add',
+            display: true,
+            permissions: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`],
+            handler: openCreateRecordModal,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="organization-pwdpolicy">
