@@ -5,9 +5,9 @@ import {
 } from 'choerodon-ui/pro';
 import { Modal as OldModal } from 'choerodon-ui';
 import {
-  Content, Header, Page, axios, Action, Permission, Breadcrumb,
+  Content, Header, Page, axios, Action, Permission, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
-import { HeaderButtons } from "@choerodon/master";
+
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import Store, { StoreProvider } from './store';
@@ -112,6 +112,7 @@ const Client = withRouter(observer((props) => {
     <Page service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.default`]}>
       <Header>
         <HeaderButtons
+          showClassName={false}
           items={([{
             name: '添加客户端',
             icon: 'playlist_add',
