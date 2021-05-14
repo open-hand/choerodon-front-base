@@ -11,6 +11,7 @@ import {
 import {
   Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
 } from '@choerodon/boot';
+import { HeaderButtons } from "@choerodon/master";
 import queryString from 'query-string';
 import { map, some, compact } from 'lodash';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
@@ -196,22 +197,21 @@ const GeneralSetting = observer(() => {
       service={['choerodon.code.project.setting.general-setting.ps.info']}
     >
       <Header>
-        <Permission service={['choerodon.code.project.setting.general-setting.ps.update']}>
-          <Button
-            icon="mode_edit"
-            onClick={handleEditClick}
-          >
-            <FormattedMessage id="modify" />
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.project.setting.general-setting.ps.disable']}>
-          <Button
-            icon="remove_circle_outline"
-            onClick={handleDisable}
-          >
-            <FormattedMessage id="disable" />
-          </Button>
-        </Permission>
+        <HeaderButtons
+          items={([{
+            name: formatMessage({ id: 'modify' }),
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.project.setting.general-setting.ps.update'],
+            handler: handleEditClick,
+          }, {
+            name: formatMessage({ id: 'disable' }),
+            icon: 'remove_circle_outline',
+            display: true,
+            permissions: ['choerodon.code.project.setting.general-setting.ps.disable'],
+            handler: handleDisable,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className={prefixCls}>

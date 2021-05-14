@@ -6,6 +6,7 @@ import {
 import {
   Content, Header, Permission, TabPage, Breadcrumb,
 } from '@choerodon/boot';
+import { HeaderButtons } from '@choerodon/master';
 import Store from '../store';
 import EditPassword from './editPassword';
 
@@ -29,11 +30,15 @@ export default observer(() => {
   return (
     <TabPage service={['choerodon.code.organization.setting.security.ps.password-policy']}>
       <Header>
-        <Permission service={['choerodon.code.organization.setting.security.ps.password-policy.update']}>
-          <Button color="blue" onClick={openPasswordModal}>
-            <Icon type="mode_edit" /> 修改安全策略
-          </Button>
-        </Permission>
+        <HeaderButtons
+          items={([{
+            name: '修改安全策略',
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.security.ps.password-policy.update'],
+            handler: openPasswordModal,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="safe-content ml-15">
