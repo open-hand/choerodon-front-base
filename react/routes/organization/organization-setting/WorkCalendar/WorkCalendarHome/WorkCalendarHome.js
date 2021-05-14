@@ -1,7 +1,7 @@
 import React, { Component, useContext, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  stores, axios, TabPage, Header, Content, Permission, Breadcrumb,
+  stores, axios, TabPage, Header, Content, Permission, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
 import { Button } from 'choerodon-ui';
 import { Modal, Form, Output } from 'choerodon-ui/pro';
@@ -20,7 +20,7 @@ export default observer(() => {
   const saturdayWork = workDaySettingDataSet.current && workDaySettingDataSet.current.getPristineValue('saturdayWork');
   const sundayWork = workDaySettingDataSet.current && workDaySettingDataSet.current.getPristineValue('sundayWork');
   const useHoliday = workDaySettingDataSet.current && workDaySettingDataSet.current.getPristineValue('useHoliday');
-  
+
   function handleEdit() {
     Modal.open({
       key: modalKey,
@@ -37,13 +37,20 @@ export default observer(() => {
   return (
     <TabPage service={['choerodon.code.organization.setting.general-setting.ps.working-calendar']}>
       <Header title="工作日历">
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.update.working-calendar']}>
-          <Button onClick={handleEdit} type="primary" funcType="flat" icon="mode_edit">修改</Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '修改',
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.update.working-calendar'],
+            handler: handleEdit,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="work-calendar">
-        <Form 
+        <Form
           pristine
           dataSet={workDaySettingDataSet}
           className="work-calendar-form"
@@ -64,10 +71,10 @@ export default observer(() => {
                 holidayRefs={holidayDataSet.toData()}
                 updateSelete={noop}
               />
-            )} 
+            )}
           />
         </Form>
-        
+
       </Content>
     </TabPage>
   );

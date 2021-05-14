@@ -39,8 +39,8 @@ export default observer(({ dataSet, modal }) => {
         {/* </SelectBox> */}
         <input colSpan={2} type="password" style={{ position: 'absolute', top: '-999px' }} />
         <Password colSpan={2} name="defaultPassword" />
-        <NumberField name="minPasswordLength" />
-        <NumberField name="maxPasswordLength" />
+        <NumberField colSpan={2} name="minPasswordLength" />
+        <NumberField colSpan={2} name="maxPasswordLength" />
       </Form>
     </div>
   );

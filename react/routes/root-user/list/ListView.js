@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
@@ -20,6 +20,7 @@ export default function ListView() {
       className: 'c7n-iam-confirm-modal',
       title: '删除root用户',
       content: `确认删除root用户"${record.get('realName')}"吗?`,
+      // eslint-disable-next-line consistent-return
       onOk: async () => {
         try {
           await axios.delete(`/iam/choerodon/v1/users/admin/${record.get('id')}`);
@@ -62,9 +63,16 @@ export default function ListView() {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.site.manager.root-user.ps.add']}>
-          <Button icon="playlist_add" onClick={handleCreate}><FormattedMessage id={`${intlPrefix}.button.add`} /></Button>
-        </Permission>
+        <HeaderButtons
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.button.add`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.site.manager.root-user.ps.add'],
+            handler: handleCreate,
+          }])}
+          showClassName={false}
+        />
       </Header>
       <Breadcrumb />
       <Content className="c7ncd-page-content-padding">

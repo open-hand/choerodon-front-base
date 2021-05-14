@@ -1,6 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import {
-  axios, Content, Header, Page, Permission, Breadcrumb, TabPage, PageWrap, PageTab,
+  axios, Content, Header, Page, Permission, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Form, Output, Modal, message,
@@ -115,15 +115,28 @@ const basicInfo = withRouter(observer(() => {
   return (
     <TabPage service={['choerodon.code.site.setting.general-setting.ps.default']}>
       <Header>
-        <Permission service={['choerodon.code.site.setting.general-setting.ps.update']}>
-          <Button type="primary" funcType="flat" icon="mode_edit" onClick={openModal}> 修改信息 </Button>
-        </Permission>
-        <Permission service={['choerodon.code.site.setting.general-setting.ps.update.theme']}>
-          <Button type="primary" funcType="flat" icon="mode_edit" onClick={openThemeColorModal}> 修改主题色 </Button>
-        </Permission>
-        <Permission service={['choerodon.code.site.setting.general-setting.ps.reset']}>
-          <Button type="primary" funcType="flat" icon="swap_horiz" onClick={handleReset}> 重置 </Button>
-        </Permission>
+        <HeaderButtons
+          items={([{
+            name: '修改信息',
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.site.setting.general-setting.ps.update'],
+            handler: openModal,
+          }, {
+            name: '修改主题色',
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.site.setting.general-setting.ps.update.theme'],
+            handler: openThemeColorModal,
+          }, {
+            name: '重置',
+            icon: 'swap_horiz',
+            display: true,
+            permissions: ['choerodon.code.site.setting.general-setting.ps.reset'],
+            handler: handleReset,
+          }])}
+          showClassName={false}
+        />
       </Header>
 
       <Breadcrumb />
@@ -204,16 +217,19 @@ const funcMode = withRouter(observer(() => {
   return (
     <TabPage>
       <Header>
-        <Button
-          icon="refresh"
-          onClick={handleClickSync}
-        >
-          GitLab用户同步
-        </Button>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: 'GitLab用户同步',
+            icon: 'refresh',
+            display: true,
+            handler: handleClickSync,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content>
-        <Form useColon labelWidth={210} className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
+        <Form labelWidth={210} className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
           <Output name={mapping.isInstallMission.name} colSpan={1} />
           <Output name={mapping.isInstallDevops.name} colSpan={1} />
           <Output name={mapping.isInstallTest.name} colSpan={1} />

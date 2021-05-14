@@ -1,5 +1,7 @@
 import React, { useContext, Fragment } from 'react';
-import { Action, Content, Header, Page, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
+import {
+  Action, Content, Header, Page, Permission, Breadcrumb, TabPage, HeaderButtons,
+} from '@choerodon/boot';
 import { Form, Output, Modal } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { Button } from 'choerodon-ui';
@@ -13,11 +15,14 @@ import Store from '../stores';
 const modalKey = Modal.key();
 
 const InfoView = observer(() => {
-  const { organizationDataSet: dataSet, AppState, intl, orgName } = useContext(Store);
+  const {
+    organizationDataSet: dataSet, AppState, intl, orgName,
+  } = useContext(Store);
   const imageUrl = dataSet.current && dataSet.current.getPristineValue('imageUrl');
   function handleRefresh() {
     dataSet.query();
   }
+  // eslint-disable-next-line consistent-return
   async function handleSave() {
     try {
       if ((await dataSet.submit())) {
@@ -54,16 +59,16 @@ const InfoView = observer(() => {
     >
 
       <Header>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.update.info']}>
-          <Button
-            type="primary"
-            funcType="flat"
-            icon="mode_edit"
-            onClick={openModal}
-          >
-            修改
-          </Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '修改',
+            icon: 'mode_edit',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],
+            handler: openModal,
+          }])}
+        />
       </Header>
 
       <Breadcrumb />

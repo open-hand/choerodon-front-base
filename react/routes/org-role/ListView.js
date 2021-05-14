@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon,
+  Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import { Button, Tag } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
@@ -160,22 +160,22 @@ const ListView = () => {
   return (
     <Page service={permissions}>
       <Header>
-        <Permission service={['choerodon.code.organization.manager.role.ps.create.organization']}>
-          <Button
-            icon="playlist_add"
-            onClick={() => openModal('add', 'organization')}
-          >
-            创建组织角色
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.role.ps.create.project']}>
-          <Button
-            icon="playlist_add"
-            onClick={() => openModal('add', 'project')}
-          >
-            创建项目角色
-          </Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '创建组织角色',
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.role.ps.create.organization'],
+            handler: () => openModal('add', 'organization'),
+          }, {
+            name: '创建项目角色',
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.role.ps.create.project'],
+            handler: () => openModal('add', 'project'),
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}`}>

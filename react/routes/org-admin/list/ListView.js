@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { Table, message, Modal } from 'choerodon-ui/pro';
@@ -89,9 +89,16 @@ export default function ListView() {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.organization.manager.organization-admin.ps.add']}>
-          <Button icon="playlist_add" onClick={handleCreate}><FormattedMessage id={`${intlPrefix}.button.add`} /></Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.button.add`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.organization-admin.ps.add'],
+            handler: handleCreate,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="c7ncd-page-content-padding">
