@@ -1,10 +1,14 @@
 import React, { Component, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Input, Select, Modal as OldModal, Tooltip } from 'choerodon-ui';
+import {
+  Button, Form, Icon, Input, Select, Modal as OldModal, Tooltip,
+} from 'choerodon-ui';
 import { Modal, Spin } from 'choerodon-ui/pro';
 import { FormattedMessage } from 'react-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Content, Header, Page, Permission, axios, Breadcrumb, Choerodon } from '@choerodon/boot';
+import {
+  Content, Header, Page, Permission, axios, Breadcrumb, Choerodon, HeaderButtons,
+} from '@choerodon/boot';
 import './Userinfo.less';
 import TextEditToggle from './textEditToggle';
 import EditUserInfo from './EditUserInfo';
@@ -18,12 +22,14 @@ const resetGitlabKey = Modal.key();
 
 function UserInfo(props) {
   const context = useStore();
-  const { AppState, UserInfoStore, intl, intlPrefix, prefixCls, userId } = context;
+  const {
+    AppState, UserInfoStore, intl, intlPrefix, prefixCls, userId,
+  } = context;
   const [enablePwd, setEnablePwd] = useState({});
   const [avatar, setAvatar] = useState('');
   const modalRef = React.createRef();
   const loadUserInfo = () => {
-    UserInfoStore.loadUserInfo().then(data => {
+    UserInfoStore.loadUserInfo().then((data) => {
       // AppState.setUserInfo(data);
       UserInfoStore.setUserInfo(data);
       setAvatar(UserInfoStore.getAvatar);
@@ -54,18 +60,36 @@ function UserInfo(props) {
   }
 
   function renderUserInfo(user) {
-    const { loginName, realName, email, language, timeZone, phone, ldap, organizationName, organizationCode, internationalTelCode } = user;
+    const {
+      loginName,
+      realName,
+      email,
+      language,
+      timeZone,
+      phone,
+      ldap,
+      organizationName,
+      organizationCode,
+      internationalTelCode,
+    } = user;
     return (
-      <React.Fragment>
+      <>
         <div className={`${prefixCls}-top-container`}>
           <div className={`${prefixCls}-avatar-wrap-container`}>
             {renderAvatar(user)}
           </div>
           <div className={`${prefixCls}-login-info`}>
             <div>{realName}</div>
-            <div>{intl.formatMessage({ id: `${intlPrefix}.source` })}:{ldap ? intl.formatMessage({ id: `${intlPrefix}.ldap` }) : intl.formatMessage({ id: `${intlPrefix}.notldap` })}</div>
             <div>
-              <span>{intl.formatMessage({ id: `${intlPrefix}.loginname` })}：</span>
+              {intl.formatMessage({ id: `${intlPrefix}.source` })}
+              :
+              {ldap ? intl.formatMessage({ id: `${intlPrefix}.ldap` }) : intl.formatMessage({ id: `${intlPrefix}.notldap` })}
+            </div>
+            <div>
+              <span>
+                {intl.formatMessage({ id: `${intlPrefix}.loginname` })}
+                ：
+              </span>
               <Text style={{ fontSize: '13px' }}>
                 <span>{loginName}</span>
               </Text>
@@ -112,7 +136,7 @@ function UserInfo(props) {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -161,7 +185,6 @@ function UserInfo(props) {
       onOk: goToGitlab,
     });
   }
-
 
   function handleUpdatePassword() {
     const user = UserInfoStore.getUserInfo;
@@ -268,23 +291,25 @@ function UserInfo(props) {
     return (
       <Page>
         <Header className={`${prefixCls}-header`}>
-          <Button
-            className={`${prefixCls}-header-btn`}
-            onClick={handleUpdateInfo.bind(this)}
-            icon="mode_edit"
-          >
-            修改信息
-          </Button>
-          <Tooltip placement="bottom" title={AppState.getUserInfo.ldap ? 'LDAP用户无法修改登录密码' : ''}>
-            <Button
-              className="user-info-header-btn"
-              onClick={handleUpdatePassword.bind(this)}
-              icon="mode_edit"
-              disabled={AppState.getUserInfo.ldap}
-            >
-              修改登录密码
-            </Button>
-          </Tooltip>
+          <HeaderButtons
+            showClassName={false}
+            items={([{
+              name: '修改信息',
+              icon: 'mode_edit',
+              display: true,
+              permissions: [],
+              handler: handleUpdateInfo.bind(this),
+            }, {
+              name: '修改登录密码',
+              icon: 'mode_edit',
+              display: true,
+              permissions: [],
+              handler: handleUpdatePassword.bind(this),
+              tooltipsConfig: {
+                title: AppState.getUserInfo.ldap ? 'LDAP用户无法修改登录密码' : '',
+              },
+            }])}
+          />
         </Header>
         <Breadcrumb />
         <Content className={`${prefixCls}-container`}>

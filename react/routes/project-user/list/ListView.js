@@ -9,7 +9,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Spin, Button, Modal as OldModal, Icon,
@@ -337,22 +337,22 @@ export default observer((props) => {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.project.cooperation.team-member.ps.add']}>
-          <Button
-            icon="person_add"
-            onClick={handleCreate}
-          >
-            添加团队成员
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.project.cooperation.team-member.ps.import']}>
-          <Button
-            icon="archive"
-            onClick={handleImportRole}
-          >
-            导入团队成员
-          </Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '添加团队成员',
+            icon: 'person_add',
+            display: true,
+            permissions: ['choerodon.code.project.cooperation.team-member.ps.add'],
+            handler: handleCreate,
+          }, {
+            name: '导入团队成员',
+            icon: 'archive',
+            display: true,
+            permissions: ['choerodon.code.project.cooperation.team-member.ps.import'],
+            handler: handleImportRole,
+          }])}
+        />
         {getInitialButton()}
       </Header>
       <Breadcrumb
