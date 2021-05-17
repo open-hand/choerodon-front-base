@@ -428,7 +428,7 @@ export default withRouter(observer((props) => {
       >
         <Table queryFields={getQueryFields()} queryFieldsLimit={3} labelLayout="float" pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="realName" />
-          <Column renderer={renderAction} width={50} align="right" />
+          <Column renderer={renderAction} width={60} align="right" />
           <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
           <Column renderer={rednerEnabled} name="enabled" align="left" width={70} />
           <Column minWidth={320} width={320} renderer={expandMoreColumn} className="org-user-roles" name="myRoles" />

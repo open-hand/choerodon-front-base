@@ -104,7 +104,7 @@ export default function ListView() {
       <Content className="c7ncd-page-content-padding">
         <Table pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="userName" />
-          <Column renderer={renderAction} width={50} align="right" />
+          <Column renderer={renderAction} width={60} align="right" />
           <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" />
           <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="creationDate" />
         </Table>

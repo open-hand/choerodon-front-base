@@ -126,7 +126,7 @@ const Client = withRouter(observer((props) => {
       <Content className="organization-pwdpolicy">
         <Table pristine filter={filterData} dataSet={clientDataSet} className="tab2">
           <Column renderer={renderName} width={250} name="name" align="left" />
-          <Column width={50} renderer={renderAction} />
+          <Column width={60} renderer={renderAction} />
           <Column name="authorizedGrantTypes" width={500} />
         </Table>
         {editModal
