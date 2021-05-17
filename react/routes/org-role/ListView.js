@@ -181,7 +181,7 @@ const ListView = () => {
       <Content className={`${prefixCls}`}>
         <Table dataSet={dataSet}>
           <Column name="name" width={200} renderer={renderName} />
-          <Column renderer={renderAction} width={50} />
+          <Column renderer={renderAction} width={60} />
           <Column name="code" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
           <Column name="roleLevel" renderer={renderLevel} width={150} style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
           <Column name="builtIn" renderer={renderBuildIn} width={150} align="left" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
