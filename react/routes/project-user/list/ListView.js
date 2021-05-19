@@ -8,6 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
+import { StatusTag } from '@choerodon/components';
 import {
   Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
@@ -17,7 +18,6 @@ import {
 import some from 'lodash/some';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
-import StatusTag from '../../../components/statusTag';
 import Store from './stores';
 import Sider from './sider';
 
@@ -260,7 +260,7 @@ export default observer((props) => {
                 >
                   <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
                     <span className={styles['theme4-c7n-memberItem-line-name-realName-text']}>{item.realName}</span>
-                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
+                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
                   </p>
                   <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                 </div>
@@ -337,6 +337,7 @@ export default observer((props) => {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
+        {getInitialButton()}
         <HeaderButtons
           showClassName={false}
           items={([{
@@ -353,7 +354,6 @@ export default observer((props) => {
             handler: handleImportRole,
           }])}
         />
-        {getInitialButton()}
       </Header>
       <Breadcrumb
         {
