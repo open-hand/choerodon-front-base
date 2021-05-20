@@ -1,15 +1,15 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment, useState } from 'react';
 import {
   axios, Content, Header, Page, Permission, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Form, Output, Modal, message,
 } from 'choerodon-ui/pro';
-import { SketchPicker } from 'react-color';
 import { withRouter } from 'react-router-dom';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import GitlabSync from './components/gitlab-sync';
+import SketchPicker from './components/sketchPicker';
 import { mapping } from '../stores/FuncModeDataSet';
 import './index.less';
 
@@ -60,10 +60,7 @@ const basicInfo = withRouter(observer(() => {
       onCancel: handleCancel,
     });
   }
-  function handleColorChange({ hex }) {
-    const secondColor = colorMap[hex] || hex;
-    dataSet.current.set('themeColor', `${hex},${secondColor}`);
-  }
+
   function openThemeColorModal() {
     Modal.open({
       key: modalKey,
@@ -72,10 +69,10 @@ const basicInfo = withRouter(observer(() => {
       style: { width: 380 },
       children: (
         <SketchPicker
-          width="inherit"
-          color={(themeColor && themeColor.split(',')[0]) || '#3f51b5'}
-          onChangeComplete={handleColorChange}
           presetColors={presetColors}
+          colorMap={colorMap}
+          dataSet={dataSet}
+          themeColor={(themeColor && themeColor.split(',')[0]) || '#3f51b5'}
         />
       ),
       fullScreen: true,
