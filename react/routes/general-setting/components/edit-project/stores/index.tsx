@@ -96,6 +96,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     try {
       await categoryDs.query();
       if (projectData && projectData.categories && projectData.categories.length) {
+        const isBeforeProgram = (projectData.beforeCategory || '').includes(categoryCodes.program);
+        const isBeforeAgile = (projectData.beforeCategory || '').includes(categoryCodes.agile);
         let isProgram = false;
         let isProgramProject = false;
         let isRequire = false;
@@ -125,26 +127,24 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           }
           switch (currentCode) {
             case categoryCodes.program:
-              if ((projectData.beforeCategory || '').includes(categoryCodes.program)) {
-                categoryRecord.setState('isProgram', true);
-              }
-              if (isProgram && await editProjectStore.hasProgramProjects(
+              categoryRecord.setState('isProgram', isBeforeProgram);
+              if (isBeforeAgile || (isProgram && await editProjectStore.hasProgramProjects(
                 organizationId, projectId,
-              )) {
+              ))) {
                 categoryRecord.setState('disabled', true);
               }
               break;
             case categoryCodes.agile:
-              if ((projectData.beforeCategory || '').includes(categoryCodes.agile)) {
-                categoryRecord.setState('isAgile', true);
-              }
-              if (isProgramProject) {
-                categoryRecord.setState('disabled', true);
-              }
+              categoryRecord.setState({
+                isAgile: isBeforeAgile,
+                disabled: isBeforeProgram || isProgramProject,
+              });
               break;
             case categoryCodes.require:
-              categoryRecord.setState('isRequire', isRequire);
-              categoryRecord.setState('disabled', !isProgram && !isAgile);
+              categoryRecord.setState({
+                isRequire,
+                disabled: !isProgram && !isAgile,
+              });
               break;
             default:
               break;
