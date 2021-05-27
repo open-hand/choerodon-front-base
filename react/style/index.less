@@ -4,21 +4,12 @@
 .c7ncd-base-root {
   // 表格名称可点击列样式
   .table-link {
-    color: @primary-color;
+    color: var(--table-click-color);
     cursor: pointer;
 
     &:hover {
-      color: @primary-color;
+      color: var(--table-click-color);
       text-decoration: underline;
-    }
-  }
-  // 表格文字默认颜色
-  .table-default-color {
-
-    .@{c7n-pro-prefix}-table {
-      .@{c7n-pro-prefix}-table-tbody {
-        color: @TABLE_FONT_COLOR;
-      }
     }
   }
 }

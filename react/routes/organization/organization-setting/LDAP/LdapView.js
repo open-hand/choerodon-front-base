@@ -128,7 +128,7 @@ const LdapView = observer(() => {
           showClassName={false}
           items={([{
             name: '修改',
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.update.ldap'],
             handler: modifyInfo,
@@ -140,7 +140,7 @@ const LdapView = observer(() => {
             handler: handleDisable,
           }, {
             name: '启用',
-            icon: 'check_circle',
+            icon: 'finished',
             display: currentRecord && currentRecord.getPristineValue('enabled'),
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.enable'],
             handler: handleEnableLdap,

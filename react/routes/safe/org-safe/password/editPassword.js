@@ -3,27 +3,34 @@ import { observer } from 'mobx-react-lite';
 import {
   Form, Select, SelectBox, NumberField, TextField,
 } from 'choerodon-ui/pro';
-import { Divider, Modal } from 'choerodon-ui';
+import { Divider } from 'choerodon-ui';
 import '../index.less';
 
 const { Option } = Select;
-const { Sidebar } = Modal;
 
-export default observer(({ dataSet, onCancel, onOk }) => {
+export default observer(({
+  dataSet, onCancel, onOk, modal,
+}) => {
   const { current } = dataSet;
+
+  modal.handleOk(handleOk);
+  modal.handleCancel(handleCancel);
 
   async function handleOk() {
     if (!current.dirty) {
-      onOk();
+      return true;
     }
-
-    if (await dataSet.submit()) {
-      await dataSet.query();
-      await onOk();
+    try {
+      if (await dataSet.submit()) {
+        await dataSet.query();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      return false;
     }
   }
   function handleCancel() {
-    onCancel();
     dataSet.reset();
   }
   function getSecurity() {
@@ -64,17 +71,8 @@ export default observer(({ dataSet, onCancel, onOk }) => {
     return ret;
   }
   return (
-    <Sidebar
-      title="修改密码策略"
-      bodyStyle={{ padding: 0 }}
-      okCancel
-      okText="保存"
-      onOk={handleOk}
-      onCancel={handleCancel}
-      visible
-      className="safe-modal"
-    >
-      <Form style={{ margin: '0 0.15rem', marginTop: '0.24rem' }} className="safe-modal-form" dataSet={dataSet} columns={6}>
+    <div className="safe-modal">
+      <Form className="safe-modal-form" dataSet={dataSet} columns={6}>
         <div className="form-title" colSpan={6}>密码安全策略</div>
         <SelectBox name="enablePassword" label="是否启用：" colSpan={6} className="safe-select">
           <Option value key="yes">是</Option>
@@ -105,7 +103,7 @@ export default observer(({ dataSet, onCancel, onOk }) => {
           ) : null}
       </Form>
       <Divider className="divider" colSpan={6} />
-      <Form style={{ margin: '0 0.15rem' }} className="safe-modal-form" dataSet={dataSet} columns={6}>
+      <Form className="safe-modal-form" dataSet={dataSet} columns={6}>
         <div className="form-title" colSpan={6}>登录安全策略</div>
         <SelectBox name="enableSecurity" label="是否启用:" colSpan={6} className="addLine">
           <Option value key="yes">是</Option>
@@ -113,6 +111,6 @@ export default observer(({ dataSet, onCancel, onOk }) => {
         </SelectBox>
         {getSecurity()}
       </Form>
-    </Sidebar>
+    </div>
   );
 });

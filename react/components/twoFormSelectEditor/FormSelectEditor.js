@@ -120,6 +120,7 @@ export default observer(({
               disabled={(record[0].get(name[0]) || []).length <= 1}
               onClick={() => handleDeleteItem(index)}
               icon="delete"
+              funcType="flat"
             />,    
           ];
         })}
@@ -127,11 +128,12 @@ export default observer(({
       </Form>
       <Button
         colSpan={12}
-        color={addDisabled() ? 'gray' : 'blue'}
+        // color={addDisabled() ? 'gray' : 'blue'}
         onClick={handleCreatOther}
         style={{ textAlign: 'left', marginTop: '-0.04rem' }}
         icon="add"
         disabled={addDisabled()}
+        funcType="flat"
       >
         {addButton || '添加'}
       </Button>

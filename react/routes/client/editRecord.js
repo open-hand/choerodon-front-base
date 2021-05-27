@@ -11,10 +11,9 @@ import { Choerodon } from '@choerodon/boot';
 import './index.less';
 
 const { Option } = SelectBox;
-const { Sidebar } = Modal;
 
 export default inject('AppState')(observer(({
-  dataSet, onOk, onCancel, clientStore, AppState, record, isProject, projectId,
+  dataSet, onOk, onCancel, clientStore, AppState, record, isProject, projectId, modal,
 }) => {
   const { current } = dataSet;
   const { currentMenuType: { organizationId } } = AppState;
@@ -37,33 +36,30 @@ export default inject('AppState')(observer(({
     getClientDetail();
   }, []);
 
+  modal.handleOk(handleOk);
+  modal.handleCancel(handleCancel);
+
   function handleCancel() {
-    onCancel();
     record.reset();
     dataSet.reset();
   }
   async function handleOk() {
     if (!current.dirty) {
-      onOk();
+      return true;
     }
-    if (await dataSet.submit()) {
-      await dataSet.query();
-      await onOk();
+    try {
+      if (await dataSet.submit()) {
+        await dataSet.query();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
   return (
-    <Sidebar
-      title="修改客户端"
-      bodyStyle={{ padding: '0 0.2rem' }}
-      okCancel
-      okText="保存"
-      onOk={handleOk}
-      onCancel={handleCancel}
-      visible
-      width={390}
-    >
+    <div>
       <Form className="hidden-password" dataSet={dataSet}>
-        <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} disabled />
         <Password name="secret" />
         <SelectBox name="authorizedGrantTypes">
@@ -96,6 +92,6 @@ export default inject('AppState')(observer(({
           </Option>
         </SelectBox>
       </Form>
-    </Sidebar>
+    </div>
   );
 }));

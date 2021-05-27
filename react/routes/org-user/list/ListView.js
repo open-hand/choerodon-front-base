@@ -288,7 +288,7 @@ export default withRouter(observer((props) => {
       >
         <Permission
           service={service}
-          defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
+          defaultChildren={(<span>{value}</span>)}
         >
           <>
             <span
@@ -396,20 +396,20 @@ export default withRouter(observer((props) => {
             disabled: !getCanCreate,
           }, {
             name: <FormattedMessage id={`${intlPrefix}.button.import-user`} />,
-            icon: 'archive',
+            icon: 'archive-o',
             display: true,
             permissions: ['choerodon.code.organization.manager.user.ps.import'],
             handler: handleImportUser,
             disabled: !getCanCreate,
           }, {
             name: '添加组织用户',
-            icon: 'person_add',
+            icon: 'person_add-o',
             display: true,
             permissions: ['choerodon.code.organization.manager.user.ps.add.user'],
             handler: handleRoleAssignment,
           }, {
             name: '导入组织用户',
-            icon: 'archive',
+            icon: 'archive-o',
             display: true,
             permissions: ['choerodon.code.organization.manager.user.ps.import.user'],
             handler: handleImportRole,
@@ -429,11 +429,11 @@ export default withRouter(observer((props) => {
         <Table queryFields={getQueryFields()} queryFieldsLimit={3} labelLayout="float" pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="realName" />
           <Column renderer={renderAction} width={60} align="right" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
+          <Column name="loginName" tooltip="overflow" />
           <Column renderer={rednerEnabled} name="enabled" align="left" width={70} />
           <Column minWidth={320} width={320} renderer={expandMoreColumn} className="org-user-roles" name="myRoles" />
-          <Column renderer={renderSource} name="ldap" style={{ color: 'rgba(0, 0, 0, 0.65)' }} align="left" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} renderer={renderLocked} name="locked" align="left" width={100} />
+          <Column renderer={renderSource} name="ldap" align="left" />
+          <Column renderer={renderLocked} name="locked" align="left" width={100} />
         </Table>
       </Content>
     </Page>

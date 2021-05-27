@@ -8,6 +8,7 @@
     .icon {
       font-size: .14rem;
       margin-left: .04rem;
+      color: var(--help-icon-color);
     }
 
     &-span::after {
@@ -28,12 +29,12 @@
   }
 
   .link {
-    color: @primary-color;
+    color: var(--table-click-color);
+    cursor: pointer;
 
     &:hover {
-      color: @primary-color;
+      color: var(--table-click-color);
       text-decoration: underline;
-      cursor: pointer;
     }
   }
 }

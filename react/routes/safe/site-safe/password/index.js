@@ -42,7 +42,7 @@ export default observer(() => {
           showClassName={false}
           items={([{
             name: '修改密码策略',
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.security.ps.password-policy.update'],
             handler: openPasswordModal,

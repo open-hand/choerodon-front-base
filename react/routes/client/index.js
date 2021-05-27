@@ -17,17 +17,33 @@ import CreateRecord from './createRecord';
 import EditRole from './editRole';
 
 const { Column } = Table;
+const createKey = Modal.key();
+const editKey = Modal.key();
+const roleKey = Modal.key();
 
 const Client = withRouter(observer((props) => {
   const {
     clientDataSet, optionsDataSet, orgId, clientStore, isProject, projectId,
   } = useContext(Store);
-  const [editModal, setEditModal] = useState(false);
-  const [createModal, setCreateModal] = useState(false);
-  const [editRoleModal, setEditRoleModal] = useState(false);
+
   function openEditRecordModal(record) {
     clientDataSet.current = record;
-    setEditModal(true);
+    Modal.open({
+      key: editKey,
+      title: '修改客户端',
+      children: <EditRecord
+        dataSet={clientDataSet}
+        record={clientDataSet.current}
+        clientStore={clientStore}
+        isProject={isProject}
+        projectId={projectId}
+      />,
+      style: {
+        width: 380,
+      },
+      drawer: true,
+      okText: '保存',
+    });
   }
   async function openCreateRecordModal() {
     let initData;
@@ -44,14 +60,40 @@ const Client = withRouter(observer((props) => {
 
     await clientDataSet.create(initData);
 
-    setCreateModal(true);
+    Modal.open({
+      key: createKey,
+      title: '添加客户端',
+      children: <CreateRecord isProject={isProject} dataSet={clientDataSet} />,
+      style: {
+        width: 380,
+      },
+      drawer: true,
+      okText: '添加',
+    });
   }
   async function openRoleManageModal(record) {
     clientDataSet.current = record;
     const roleData = await clientStore.loadClientRoles(orgId, record.get('id'), isProject, projectId);
     const roleIds = (roleData || []).map(({ id: roleId }) => roleId);
     await record.set('roles', roleIds || []);
-    setEditRoleModal(true);
+    Modal.open({
+      key: roleKey,
+      title: `为客户端"${record.get('name')}"分配角色`,
+      children: <EditRole
+        optionsDataSet={optionsDataSet}
+        organizationId={orgId}
+        ds={clientDataSet}
+        dataSet={optionsDataSet}
+        record={clientDataSet.current}
+        isProject={isProject}
+        projectId={projectId}
+      />,
+      style: {
+        width: 380,
+      },
+      drawer: true,
+      okText: '保存',
+    });
   }
   function handleRowClick(record) {
     openEditRecordModal(record);
@@ -100,7 +142,7 @@ const Client = withRouter(observer((props) => {
     return (
       <Permission
         service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.update`]}
-        defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{text}</span>)}
+        defaultChildren={(<span>{text}</span>)}
       >
         <span role="none" className="link" onClick={() => handleRowClick(record)}>
           {text}
@@ -129,41 +171,6 @@ const Client = withRouter(observer((props) => {
           <Column width={60} renderer={renderAction} />
           <Column name="authorizedGrantTypes" width={500} />
         </Table>
-        {editModal
-        && (
-        <EditRecord
-          onOk={() => setEditModal(false)}
-          onCancel={() => setEditModal(false)}
-          dataSet={clientDataSet}
-          record={clientDataSet.current}
-          clientStore={clientStore}
-          isProject={isProject}
-          projectId={projectId}
-        />
-        )}
-        {createModal
-        && (
-        <CreateRecord
-          isProject={isProject}
-          onOk={() => setCreateModal(false)}
-          onCancel={() => setCreateModal(false)}
-          dataSet={clientDataSet}
-        />
-        )}
-        {editRoleModal
-        && (
-        <EditRole
-          optionsDataSet={optionsDataSet}
-          organizationId={orgId}
-          onOk={() => setEditRoleModal(false)}
-          onCancel={() => setEditRoleModal(false)}
-          ds={clientDataSet}
-          dataSet={optionsDataSet}
-          record={clientDataSet.current}
-          isProject={isProject}
-          projectId={projectId}
-        />
-        )}
       </Content>
     </Page>
   );

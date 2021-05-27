@@ -200,7 +200,7 @@ const GeneralSetting = observer(() => {
         <HeaderButtons
           items={([{
             name: formatMessage({ id: 'modify' }),
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.project.setting.general-setting.ps.update'],
             handler: handleEditClick,

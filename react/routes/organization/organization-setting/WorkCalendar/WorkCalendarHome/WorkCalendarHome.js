@@ -41,7 +41,7 @@ export default observer(() => {
           showClassName={false}
           items={([{
             name: '修改',
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.update.working-calendar'],
             handler: handleEdit,
