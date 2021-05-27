@@ -94,7 +94,7 @@ const ListView = () => {
   }
 
   function renderName({ value, record: tableRecord }) {
-    const defaultChildren = <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+    const defaultChildren = <span>{value}</span>;
     if (tableRecord.get('builtIn')) {
       return (
         <Permission
@@ -182,9 +182,9 @@ const ListView = () => {
         <Table dataSet={dataSet}>
           <Column name="name" width={200} renderer={renderName} />
           <Column renderer={renderAction} width={60} />
-          <Column name="code" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
-          <Column name="roleLevel" renderer={renderLevel} width={150} style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
-          <Column name="builtIn" renderer={renderBuildIn} width={150} align="left" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
+          <Column name="code" />
+          <Column name="roleLevel" renderer={renderLevel} width={150} />
+          <Column name="builtIn" renderer={renderBuildIn} width={150} align="left" />
           <Column name="enabled" renderer={renderEnabled} width={150} align="left" />
         </Table>
       </Content>

@@ -115,13 +115,13 @@ const basicInfo = withRouter(observer(() => {
         <HeaderButtons
           items={([{
             name: '修改信息',
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.general-setting.ps.update'],
             handler: openModal,
           }, {
             name: '修改主题色',
-            icon: 'mode_edit',
+            icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.general-setting.ps.update.theme'],
             handler: openThemeColorModal,
@@ -138,7 +138,7 @@ const basicInfo = withRouter(observer(() => {
 
       <Breadcrumb />
 
-      <Content className="c7n-system-setting-page-content" style={{ marginTop: 20 }}>
+      <Content className="c7n-system-setting-page-content">
         <div className="c7n-system-setting-form">
           {/* <h3>平台信息</h3> */}
           {/* <div className="divider" /> */}

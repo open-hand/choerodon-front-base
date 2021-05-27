@@ -154,6 +154,7 @@ export default observer(({
                       position: 'relative',
                       top: '9px',
                     }}
+                    funcType="flat"
                     disabled={(!canDeleteAll && (record.get(name) || []).length <= 1) || checkCanDisabled(record, v)}
                     onClick={() => handleDeleteItem(index)}
                     icon="delete"
@@ -169,13 +170,14 @@ export default observer(({
         <Button
           colSpan={12}
           disabled={buttonDisable()}
-          color={buttonDisable() ? 'gray' : 'blue'}
+          // color={buttonDisable() ? 'gray' : 'blue'}
           onClick={handleCreatOther}
           style={{
             textAlign: 'left',
             marginTop: '-0.04rem',
           }}
           icon="add"
+          funcType="flat"
         >
           {addButton || '添加'}
         </Button>

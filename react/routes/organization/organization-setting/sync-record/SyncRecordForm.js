@@ -1,7 +1,9 @@
 import React, { useContext, Fragment } from 'react';
-import { Table, Modal, DataSet, Button } from 'choerodon-ui/pro';
+import {
+  Table, Modal, DataSet, Button,
+} from 'choerodon-ui/pro';
 import { Breadcrumb as Bread } from 'choerodon-ui/';
-import { Breadcrumb, Content, TabPage } from '@choerodon/boot';
+import { Breadcrumb, Content, Page } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -15,7 +17,9 @@ const { Column } = Table;
 const { Item } = Bread;
 let modal;
 const SyncRecordForm = observer(() => {
-  const { getLdapDataSet, history, orgName, orgId } = useContext(Store);
+  const {
+    getLdapDataSet, history, orgName, orgId,
+  } = useContext(Store);
   const dataSet = getLdapDataSet();
   if (!dataSet) return null;
   function renderNewsNum({ record }) {
@@ -93,26 +97,19 @@ const SyncRecordForm = observer(() => {
   }
 
   return (
-    <TabPage>
-      <Breadcrumb custom>
-        <Item>{orgName}</Item>
-        <Item>
-          <Link to={`/iam/organization-setting/ldap${history.location.search}`}>通用</Link>
-        </Item>
-        <Item>同步记录</Item>
-      </Breadcrumb>
+    <Page>
+      <Breadcrumb title="同步记录" />
       <Content className="sync-record">
         <Table
           dataSet={dataSet}
         >
           <Column renderer={renderClickableColumn} name="syncBeginTime" width={200} />
-          <Column className="text-gray" name="updateUserCount" renderer={renderNewsNum} />
-          <Column className="text-gray" name="errorUserCount" renderer={renderErrorUserCount} />
+          <Column className="text-gray" name="updateUserCount" renderer={renderNewsNum} align="left" />
+          <Column className="text-gray" name="errorUserCount" renderer={renderErrorUserCount} align="left" />
           <Column className="text-gray" name="syncEndTime" renderer={handleLoadTime} />
         </Table>
       </Content>
-
-    </TabPage>
+    </Page>
   );
 });
 

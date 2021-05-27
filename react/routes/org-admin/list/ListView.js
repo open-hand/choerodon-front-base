@@ -71,7 +71,7 @@ export default function ListView() {
     if (record.get('externalUser')) {
       return (
         <span>
-          <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>
+          <span>{value}</span>
           <div className="base-org-admin-external-user">
             <span className="base-org-admin-external-user-text">
               外部人员
@@ -80,7 +80,7 @@ export default function ListView() {
         </span>
       );
     }
-    return <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+    return <span>{value}</span>;
   }
   return (
     <Page
@@ -105,8 +105,8 @@ export default function ListView() {
         <Table pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="userName" />
           <Column renderer={renderAction} width={60} align="right" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="creationDate" />
+          <Column name="loginName" />
+          <Column name="creationDate" />
         </Table>
       </Content>
     </Page>
