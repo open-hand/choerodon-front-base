@@ -342,13 +342,13 @@ export default observer((props) => {
           showClassName={false}
           items={([{
             name: '添加团队成员',
-            icon: 'person_add',
+            icon: 'person_add-o',
             display: true,
             permissions: ['choerodon.code.project.cooperation.team-member.ps.add'],
             handler: handleCreate,
           }, {
             name: '导入团队成员',
-            icon: 'archive',
+            icon: 'archive-o',
             display: true,
             permissions: ['choerodon.code.project.cooperation.team-member.ps.import'],
             handler: handleImportRole,
