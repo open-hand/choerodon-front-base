@@ -49,7 +49,7 @@ const ListView = () => {
         />
       ),
       okCancel: type !== 'detail',
-      okText: formatMessage({ id: type === 'detail' ? 'close' : 'ok' }),
+      okText: type === 'detail' ? '关闭' : '创建',
       style: modalStyle,
     });
   }
