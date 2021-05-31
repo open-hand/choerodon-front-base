@@ -101,8 +101,8 @@ export default observer((props) => {
       className: 'base-project-user-sider',
     });
   }
-  function handleUserRole(record) {
-    const data = record.toData();
+  function handleUserRole(record, isData = false) {
+    const data = isData ? record : record.toData();
     data.roles = data.roles.map((v) => v.id);
     if (data.roles.length === 0) data.roles = [''];
     orgUserRoleDataSet.create(data);
@@ -259,7 +259,13 @@ export default observer((props) => {
                   className={styles['theme4-c7n-memberItem-line-name']}
                 >
                   <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
-                    <span className={styles['theme4-c7n-memberItem-line-name-realName-text']}>{item.realName}</span>
+                    <span
+                      role="none"
+                      className={styles['theme4-c7n-memberItem-line-name-realName-text']}
+                      onClick={() => handleUserRole(item, true)}
+                    >
+                      {item.realName}
+                    </span>
                     <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
                   </p>
                   <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
