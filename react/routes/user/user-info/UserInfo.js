@@ -295,16 +295,17 @@ function UserInfo(props) {
             showClassName={false}
             items={([{
               name: '修改信息',
-              icon: 'mode_edit',
+              icon: 'edit-o',
               display: true,
               permissions: [],
               handler: handleUpdateInfo.bind(this),
             }, {
               name: '修改登录密码',
-              icon: 'mode_edit',
+              icon: 'edit-o',
               display: true,
               permissions: [],
               handler: handleUpdatePassword.bind(this),
+              disabled: AppState.getUserInfo.ldap,
               tooltipsConfig: {
                 title: AppState.getUserInfo.ldap ? 'LDAP用户无法修改登录密码' : '',
               },
