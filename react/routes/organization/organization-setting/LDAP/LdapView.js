@@ -154,6 +154,12 @@ const LdapView = observer(() => {
             name: '同步用户',
             icon: 'sync_user',
             display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.sync'],
+            handler: loaderClient,
+          }, {
+            name: '同步记录',
+            icon: 'sync_records',
+            display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.records'],
             handler: goToHistory,
           }])}
