@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import './index.less';
 import { Icon, Button, Tooltip } from 'choerodon-ui';
@@ -148,7 +148,19 @@ const TimeLine = observer(() => {
 
   const [isMore, setLoadMoreBtn] = useState(false);
 
+  const scorllRef = useRef();
+
   const record = optsDs.current && optsDs.toData();
+
+  function renderId(id) {
+    const type = typeof id;
+    if (type === 'string') {
+      return id.slice(3, 6);
+    } if (type === 'number') {
+      return String(id).slice(3, 6);
+    }
+    return id;
+  }
 
   // 加载记录
   async function loadData(page = 1) {
@@ -159,6 +171,15 @@ const TimeLine = observer(() => {
         optsDs.unshift(...records);
       }
       overStores.setOldOptsRecord(optsDs.records);
+      const lastRecord = optsDs.records[optsDs.records.length - 1];
+      const getDom = document.querySelector(`#optNotice-${renderId(lastRecord.get('logId'))}`);
+      if (getDom && !res.isFirstPage) {
+        const parent = scorllRef.current;
+        parent.scrollTo({
+          behavior: 'smooth',
+          top: parent.scrollHeight,
+        });
+      }
       setLoadMoreBtn(res.hasNextPage);
       return res;
     }
@@ -216,7 +237,7 @@ const TimeLine = observer(() => {
               logId: id, auditDatetime: creationDate, type, auditContent: content,
             } = item;
             return (
-              <li key={id}>
+              <li key={id} id={`optNotice-${renderId(id)}`}>
                 {renderDateLine(creationDate)}
                 <div className="c7ncd-timeLine-content">
                   <div className="c7ncd-timeLine-content-header">
@@ -257,7 +278,7 @@ const TimeLine = observer(() => {
     <div className="c7ncd-timeLine">
       {
         record && record.length > 0 ? (
-          <div className="c7ncd-timeLine-body">
+          <div className="c7ncd-timeLine-body" ref={scorllRef}>
             {renderData()}
           </div>
         ) : <span className="c7ncd-timeLine-empty">暂无更多记录...</span>
