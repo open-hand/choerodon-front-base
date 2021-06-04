@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon,
+  Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import { Button, Tag } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
@@ -49,7 +49,7 @@ const ListView = () => {
         />
       ),
       okCancel: type !== 'detail',
-      okText: formatMessage({ id: type === 'detail' ? 'close' : 'ok' }),
+      okText: type === 'detail' ? '关闭' : '创建',
       style: modalStyle,
     });
   }
@@ -94,7 +94,7 @@ const ListView = () => {
   }
 
   function renderName({ value, record: tableRecord }) {
-    const defaultChildren = <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+    const defaultChildren = <span>{value}</span>;
     if (tableRecord.get('builtIn')) {
       return (
         <Permission
@@ -160,31 +160,31 @@ const ListView = () => {
   return (
     <Page service={permissions}>
       <Header>
-        <Permission service={['choerodon.code.organization.manager.role.ps.create.organization']}>
-          <Button
-            icon="playlist_add"
-            onClick={() => openModal('add', 'organization')}
-          >
-            创建组织角色
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.role.ps.create.project']}>
-          <Button
-            icon="playlist_add"
-            onClick={() => openModal('add', 'project')}
-          >
-            创建项目角色
-          </Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '创建组织角色',
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.role.ps.create.organization'],
+            handler: () => openModal('add', 'organization'),
+          }, {
+            name: '创建项目角色',
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.role.ps.create.project'],
+            handler: () => openModal('add', 'project'),
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}`}>
         <Table dataSet={dataSet}>
           <Column name="name" width={200} renderer={renderName} />
-          <Column renderer={renderAction} width={50} />
-          <Column name="code" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
-          <Column name="roleLevel" renderer={renderLevel} width={150} style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
-          <Column name="builtIn" renderer={renderBuildIn} width={150} align="left" style={{ color: 'rgba(0, 0, 0, 0.65)' }} />
+          <Column renderer={renderAction} width={60} />
+          <Column name="code" />
+          <Column name="roleLevel" renderer={renderLevel} width={150} />
+          <Column name="builtIn" renderer={renderBuildIn} width={150} align="left" />
           <Column name="enabled" renderer={renderEnabled} width={150} align="left" />
         </Table>
       </Content>

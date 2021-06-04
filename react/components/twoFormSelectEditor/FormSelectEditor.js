@@ -1,17 +1,22 @@
-import React, { useRef, useContext, useState, useEffect, useCallback } from 'react';
+/* eslint-disable */
+import React, {
+  useRef, useContext, useState, useEffect, useCallback,
+} from 'react';
 import { runInAction } from 'mobx';
-import { Form, DataSet, Button, Icon } from 'choerodon-ui/pro';
+import {
+  Form, DataSet, Button, Icon,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import Store from './stores';
 import './index.less';
 
-export default observer(({ 
-  name, 
+export default observer(({
+  name,
   optionDataSetConfig,
-  optionDataSet, 
-  record, 
-  children, 
-  addButton, 
+  optionDataSet,
+  record,
+  children,
+  addButton,
 }) => {
   const formElement = useRef(null);
 
@@ -42,7 +47,7 @@ export default observer(({
     record[0] && record[0].fields.get(name[0]).get('textField'),
     record[1] && record[1].fields.get(name[1]).get('textField'),
   ];
-  
+
   function handleCreatOther() {
     runInAction(() => {
       record[0].set(name[0], (record[0].get(name[0]) || []).concat(''));
@@ -59,7 +64,7 @@ export default observer(({
     changedValue[index] = e;
     record[1].set(name[1], changedValue);
   }];
-  
+
   function handleDeleteItem(index) {
     const arr = [record[0].get(name[0]) || [], record[1].get(name[1]) || []];
     arr[0].splice(index, 1);
@@ -73,13 +78,13 @@ export default observer(({
   }
 
   function addDisabled() {
-    const someEmpty = record[0].get(name[0]).some(value => !value) || record[1].get(name[1]).some(value => !value);
+    const someEmpty = record[0].get(name[0]).some((value) => !value) || record[1].get(name[1]).some((value) => !value);
     return someEmpty;
     // record[0].get(name[0]).length
   }
 
   return (
-    <React.Fragment>
+    <>
       <Form ref={formElement} className="two-form-select-editor" columns={13}>
         {(record[0].get(name[0]) || []).map((v, index) => {
           const value = [v, record[1].get(name[1])[index]];
@@ -90,7 +95,7 @@ export default observer(({
             dsStore[1][index] = optionDataSet[1] || new DataSet(optionDataSetConfig[1]);
           }
           return [
-            React.createElement(children[0], { 
+            React.createElement(children[0], {
               onChange: (text) => handleChange[0](text, index),
               value: value[0],
               options: optionDataSet[0] || dsStore[0][index],
@@ -102,7 +107,7 @@ export default observer(({
               label: record[0].fields.get(name[0]).get('label'),
               required: record[0].fields.get(name[0]).get('required'),
             }),
-            React.createElement(children[1], { 
+            React.createElement(children[1], {
               onChange: (text) => handleChange[1](text, index),
               value: value[1],
               options: optionDataSet[1] || dsStore[1][index],
@@ -110,31 +115,33 @@ export default observer(({
               valueField: valueField[1],
               allowClear: false,
               clearButton: false,
-              colSpan: 6,
+              colSpan: 5,
               label: record[1].fields.get(name[1]).get('label'),
               required: record[1].fields.get(name[1]).get('required'),
             }),
-            <Button 
-              colSpan={1}
+            <Button
+              colSpan={2}
               className="two-form-select-editor-button"
               disabled={(record[0].get(name[0]) || []).length <= 1}
               onClick={() => handleDeleteItem(index)}
               icon="delete"
-            />,    
+              funcType="flat"
+            />,
           ];
         })}
-      
+
       </Form>
       <Button
         colSpan={12}
-        color={addDisabled() ? 'gray' : 'blue'}
+        // color={addDisabled() ? 'gray' : 'blue'}
         onClick={handleCreatOther}
         style={{ textAlign: 'left', marginTop: '-0.04rem' }}
         icon="add"
         disabled={addDisabled()}
+        funcType="flat"
       >
         {addButton || '添加'}
       </Button>
-    </React.Fragment>
+    </>
   );
 });

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { Table, message, Modal } from 'choerodon-ui/pro';
@@ -71,7 +71,7 @@ export default function ListView() {
     if (record.get('externalUser')) {
       return (
         <span>
-          <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>
+          <span>{value}</span>
           <div className="base-org-admin-external-user">
             <span className="base-org-admin-external-user-text">
               外部人员
@@ -80,7 +80,7 @@ export default function ListView() {
         </span>
       );
     }
-    return <span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>;
+    return <span>{value}</span>;
   }
   return (
     <Page
@@ -89,17 +89,24 @@ export default function ListView() {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.organization.manager.organization-admin.ps.add']}>
-          <Button icon="playlist_add" onClick={handleCreate}><FormattedMessage id={`${intlPrefix}.button.add`} /></Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.button.add`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.organization-admin.ps.add'],
+            handler: handleCreate,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="c7ncd-page-content-padding">
         <Table pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="userName" />
-          <Column renderer={renderAction} width={50} align="right" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="creationDate" />
+          <Column renderer={renderAction} width={60} align="right" />
+          <Column name="loginName" />
+          <Column name="creationDate" />
         </Table>
       </Content>
     </Page>

@@ -1,6 +1,11 @@
-import React, { useRef, useContext, useState, useEffect } from 'react';
+/* eslint-disable */
+import React, {
+  useRef, useContext, useState, useEffect,
+} from 'react';
 import { runInAction } from 'mobx';
-import { Form, DataSet, Button, Icon, Tooltip } from 'choerodon-ui/pro';
+import {
+  Form, DataSet, Button, Icon, Tooltip,
+} from 'choerodon-ui/pro';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react-lite';
 import Store from './stores';
@@ -9,7 +14,9 @@ import './index.less';
 // eslint-disable-next-line no-undef
 const hasBusiness = C7NHasModule('@choerodon/base-business');
 
-export default observer(({ name, optionDataSetConfig, optionDataSet, record, children, addButton, maxDisable, canDeleteAll = true, idField, alwaysRequired = false, required = false, allRoleDataSet, orgUserListDataSet }) => {
+export default observer(({
+  name, optionDataSetConfig, optionDataSet, record, children, addButton, maxDisable, canDeleteAll = true, idField, alwaysRequired = false, required = false, allRoleDataSet, orgUserListDataSet,
+}) => {
   const formElement = useRef(null);
 
   async function handleSubmit({ dataSet, data }) {
@@ -62,7 +69,7 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
       return true;
     }
     if (idField) {
-      if (record.get(name) && (record.get(name).map(v => v[idField]) || []).includes(optionRecord.get(valueField))) {
+      if (record.get(name) && (record.get(name).map((v) => v[idField]) || []).includes(optionRecord.get(valueField))) {
         return false;
       }
     }
@@ -103,8 +110,8 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
 
   function checkCanDisabled(recordd, v) {
     if (hasBusiness && recordd.get('programOwner')) {
-      const { roles } = orgUserListDataSet.toData().find(d => d.id === recordd.get('id'));
-      const item = roles.find(i => i.id === v);
+      const { roles } = orgUserListDataSet.toData().find((d) => d.id === recordd.get('id'));
+      const item = roles.find((i) => i.id === v);
       if (item && item.origin && item.projectMemberFlag) {
         return true;
       }
@@ -113,7 +120,7 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
   }
 
   return (
-    <React.Fragment>
+    <>
       <Form ref={formElement} className="form-select-editor" columns={12}>
         {(record.get(name) || []).map((v, index) => {
           if (idField) {
@@ -143,6 +150,11 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
                   <Button
                     colSpan={1}
                     className="form-select-editor-button"
+                    style={{
+                      position: 'relative',
+                      top: '9px',
+                    }}
+                    funcType="flat"
                     disabled={(!canDeleteAll && (record.get(name) || []).length <= 1) || checkCanDisabled(record, v)}
                     onClick={() => handleDeleteItem(index)}
                     icon="delete"
@@ -158,14 +170,18 @@ export default observer(({ name, optionDataSetConfig, optionDataSet, record, chi
         <Button
           colSpan={12}
           disabled={buttonDisable()}
-          color={buttonDisable() ? 'gray' : 'blue'}
+          // color={buttonDisable() ? 'gray' : 'blue'}
           onClick={handleCreatOther}
-          style={{ textAlign: 'left', marginTop: '-0.04rem' }}
+          style={{
+            textAlign: 'left',
+            marginTop: '-0.04rem',
+          }}
           icon="add"
+          funcType="flat"
         >
           {addButton || '添加'}
         </Button>
       )}
-    </React.Fragment>
+    </>
   );
 });

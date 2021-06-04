@@ -26,9 +26,7 @@
       }
     }
   }
-  .c7n-pro-modal-body {
-    padding: 0;
-  }
+
   &-option {
     display: inline-flex;
     vertical-align: middle;
@@ -59,10 +57,11 @@
   &-modal.import-user {
     h3 {
       margin-bottom: .16rem;
+      color: var(--text-color);
     }
     p {
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--text-color3);
       line-height: 20px;
       margin-bottom: .16rem;
     }
@@ -84,27 +83,8 @@
   }
   &-modal {
     overflow: hidden;
-    & > button {
-      margin-left: .24rem;
-    }
-    .c7n-upload {
-      & > button {
-        margin-left: .24rem;
-      }
-    }
-    &:first-child {
-      padding-top: .24rem;
-    }
-    h3, p, a,
-    & > form {
-      padding: 0 .24rem;
-    }
     &-add-type {
       margin-left: .24rem;
-      & > form {
-        margin-top: .2rem;
-        margin-bottom: .235rem;
-      }
     }
     .hidden-password {
       & > table > tbody > tr:nth-child(1) {
@@ -119,7 +99,7 @@
     }
     .import-user {
       &-time {
-        color: #000;
+        color: var(--text-color);
       }
       &-success {
         color: #00bfa5;
@@ -138,16 +118,11 @@
     .divider {
       width: 3.8rem;
       height: .01rem;
-      border-bottom: .01rem solid rgba(0, 0, 0, 0.12);
-      margin-bottom: .195rem;
+      border-bottom: .01rem solid var(--divider);
+      margin-bottom: .2rem !important;
       left: 0;
       &-space {
         margin-bottom: .195rem;
-      }
-    }
-    .c7n-pro-modal {
-      &-body {
-        padding: 0;
       }
     }
   }
@@ -157,7 +132,7 @@
   }
 
   &-help-icon {
-    color: rgba(0, 0, 0, 0.36);
+    color: var(--help-icon-color);
     font-size: 0.14rem;
   }
 }

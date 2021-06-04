@@ -4,7 +4,7 @@ import {
   Modal, Icon, Button, Form, Row, Col, Output,
 } from 'choerodon-ui/pro';
 import {
-  Content, Header, Page, axios, Action, Permission, TabPage, Breadcrumb,
+  Content, Header, Page, axios, Action, Permission, TabPage, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
 
 import { FormattedMessage } from 'react-intl';
@@ -38,12 +38,16 @@ export default observer(() => {
   return (
     <TabPage service={['choerodon.code.site.setting.security.ps.password-policy']}>
       <Header>
-        <Permission service={['choerodon.code.site.setting.security.ps.password-policy.update']}>
-          <Button color="blue" onClick={openPasswordModal}>
-            <Icon type="mode_edit" />
-            修改密码策略
-          </Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '修改密码策略',
+            icon: 'edit-o',
+            display: true,
+            permissions: ['choerodon.code.site.setting.security.ps.password-policy.update'],
+            handler: openPasswordModal,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="site-password-content ml-15">

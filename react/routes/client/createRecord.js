@@ -3,38 +3,34 @@ import { observer } from 'mobx-react-lite';
 import {
   NumberField, Form, SelectBox, TextField, Password, Icon, Tooltip,
 } from 'choerodon-ui/pro';
-import { Modal } from 'choerodon-ui';
 
 import './index.less';
 
 const { Option } = SelectBox;
-const { Sidebar } = Modal;
+
 export default observer(({
-  dataSet, onOk, onCancel, prefixCls, isProject,
+  dataSet, onOk, onCancel, prefixCls, isProject, modal,
 }) => {
+  modal.handleOk(handleOk);
+  modal.handleCancel(handleCancel);
+
   function handleCancel() {
-    onCancel();
     dataSet.reset();
   }
   async function handleOk() {
-    if (await dataSet.submit()) {
-      await dataSet.query();
-      await onOk();
+    try {
+      if (await dataSet.submit()) {
+        await dataSet.query();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
   return (
-    <Sidebar
-      title="添加客户端"
-      bodyStyle={{ padding: '0 0.2rem' }}
-      okCancel
-      okText="保存"
-      onOk={handleOk}
-      onCancel={handleCancel}
-      visible
-      width={390}
-    >
+    <div>
       <Form className="hidden-password" dataSet={dataSet}>
-        <input type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="name" style={{ marginTop: 15 }} />
         <Password name="secret" />
         <SelectBox name="authorizedGrantTypes" multiple>
@@ -63,6 +59,6 @@ export default observer(({
           </Option>
         </SelectBox>
       </Form>
-    </Sidebar>
+    </div>
   );
 });

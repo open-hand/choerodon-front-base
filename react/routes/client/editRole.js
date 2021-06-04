@@ -5,13 +5,15 @@ import { Modal } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
 import FormSelectEditor from '../../components/formSelectEditor';
 
-const { Sidebar } = Modal;
 export default observer(({
-  onCancel, onOk, ds, record, organizationId, optionsDataSet, isProject, projectId,
+  onCancel, onOk, ds, record, organizationId, optionsDataSet, isProject, projectId, modal,
 }) => {
   const isFirstRender = useRef(true);
+
+  modal.handleOk(handleOk);
+  modal.handleCancel(handleCancel);
+
   function handleCancel() {
-    onCancel();
     ds.reset();
   }
   // eslint-disable-next-line consistent-return
@@ -25,16 +27,16 @@ export default observer(({
       }
       const result = await axios
         .post(path, JSON.stringify(ds.current.toData().roles.filter((v) => v)));
-      if (result.failed) {
-        throw result.message;
+      if (result && result.failed) {
+        return false;
       }
+      await ds.query();
+      message.info('保存成功');
+      return true;
     } catch (err) {
       // message.error(err);
       return false;
     }
-    await ds.query();
-    message.info('保存成功');
-    await onOk();
   }
   useEffect(() => {
     if (isFirstRender.current) {
@@ -45,17 +47,7 @@ export default observer(({
     }
   }, []);
   return (
-    <Sidebar
-      title={`为客户端"${record.get('name')}"分配角色`}
-      bodyStyle={{ padding: '0.24rem 0.2rem' }}
-      okCancel
-      okText="保存"
-      onOk={handleOk}
-      onCancel={handleCancel}
-      visible
-      className="safe-modal"
-      width={390}
-    >
+    <div className="safe-modal">
       <FormSelectEditor
         record={ds.current}
         optionDataSet={optionsDataSet}
@@ -73,6 +65,6 @@ export default observer(({
           />
         ))}
       </FormSelectEditor>
-    </Sidebar>
+    </div>
   );
 });

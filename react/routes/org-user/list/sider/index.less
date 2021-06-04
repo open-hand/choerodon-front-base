@@ -64,7 +64,7 @@
     }
     p {
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--text-color3);
       line-height: 20px;
       margin-bottom: .16rem;
     }
@@ -85,22 +85,8 @@
     }
   }
   &-modal {
-    overflow: hidden;
-    & > button {
-      margin-left: .24rem;
-    }
-    .c7n-upload {
-      & > button {
-        margin-left: .24rem;
-      }
-    }
-    &:first-child {
-      padding-top: .24rem;
-    }
+    //overflow: hidden;
     h3, p, a,
-    & > form {
-      padding: 0 .24rem;
-    }
     &-add-type {
       margin-left: .24rem;
       & > form {
@@ -121,7 +107,7 @@
     }
     .import-user {
       &-time {
-        color: #000;
+        color: var(--text-color);
       }
       &-success {
         color: #00bfa5;
@@ -140,11 +126,11 @@
     .divider {
       width: 3.8rem;
       height: .01rem;
-      border-bottom: .01rem solid rgba(0, 0, 0, 0.12);
-      margin-bottom: .195rem;
+      border-bottom: .01rem solid var(--divider);
       left: 0;
+      margin: 0 -0.2rem 0.2rem;
       &-space {
-        margin-bottom: .195rem;
+        margin-bottom: .2rem;
       }
     }
     .c7n-pro-modal {
@@ -159,7 +145,7 @@
   }
 
   &-help-icon {
-    color: rgba(0, 0, 0, 0.36);
+    color: var(--help-icon-color);
     font-size: 0.14rem;
   }
 

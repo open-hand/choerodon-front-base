@@ -8,8 +8,9 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
+import { StatusTag } from '@choerodon/components';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Spin, Button, Modal as OldModal, Icon,
@@ -17,7 +18,6 @@ import {
 import some from 'lodash/some';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
-import StatusTag from '../../../components/statusTag';
 import Store from './stores';
 import Sider from './sider';
 
@@ -101,8 +101,8 @@ export default observer((props) => {
       className: 'base-project-user-sider',
     });
   }
-  function handleUserRole(record) {
-    const data = record.toData();
+  function handleUserRole(record, isData = false) {
+    const data = isData ? record : record.toData();
     data.roles = data.roles.map((v) => v.id);
     if (data.roles.length === 0) data.roles = [''];
     orgUserRoleDataSet.create(data);
@@ -259,8 +259,14 @@ export default observer((props) => {
                   className={styles['theme4-c7n-memberItem-line-name']}
                 >
                   <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
-                    <span className={styles['theme4-c7n-memberItem-line-name-realName-text']}>{item.realName}</span>
-                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'COMPLETED' : 'DEFAULT'} />
+                    <span
+                      role="none"
+                      className={styles['theme4-c7n-memberItem-line-name-realName-text']}
+                      onClick={() => handleUserRole(item, true)}
+                    >
+                      {item.realName}
+                    </span>
+                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
                   </p>
                   <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                 </div>
@@ -337,23 +343,23 @@ export default observer((props) => {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.project.cooperation.team-member.ps.add']}>
-          <Button
-            icon="person_add"
-            onClick={handleCreate}
-          >
-            添加团队成员
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.project.cooperation.team-member.ps.import']}>
-          <Button
-            icon="archive"
-            onClick={handleImportRole}
-          >
-            导入团队成员
-          </Button>
-        </Permission>
         {getInitialButton()}
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '添加团队成员',
+            icon: 'person_add-o',
+            display: true,
+            permissions: ['choerodon.code.project.cooperation.team-member.ps.add'],
+            handler: handleCreate,
+          }, {
+            name: '导入团队成员',
+            icon: 'archive-o',
+            display: true,
+            permissions: ['choerodon.code.project.cooperation.team-member.ps.import'],
+            handler: handleImportRole,
+          }])}
+        />
       </Header>
       <Breadcrumb
         {

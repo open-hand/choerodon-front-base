@@ -3,7 +3,7 @@ import React, {
   useContext, Fragment, useState, useCallback,
 } from 'react';
 import {
-  Choerodon, Content, Header, Page, Permission, TabPage, axios, Breadcrumb,
+  Choerodon, Content, Header, Page, Permission, TabPage, axios, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
 import {
   Form, Output, Modal, TextField, Password,
@@ -124,24 +124,46 @@ const LdapView = observer(() => {
       service={['choerodon.code.organization.setting.general-setting.ps.ldap']}
     >
       <Header>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.update.ldap']}>
-          <Button type="primary" funcType="flat" icon="mode_edit" onClick={modifyInfo}>修改</Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.ldap.disable']}>
-          {currentRecord && currentRecord.getPristineValue('enabled') ? <Button type="primary" funcType="flat" icon="remove_circle_outline" onClick={handleDisable}>停用</Button> : ''}
-        </Permission>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.ldap.enable']}>
-          {currentRecord && !currentRecord.getPristineValue('enabled') ? <Button type="primary" funcType="flat" icon="check_circle" onClick={handleEnableLdap}>启用</Button> : ''}
-        </Permission>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.ldap.test']}>
-          <Button type="primary" funcType="flat" icon="low_priority" onClick={testLinks}>测试连接</Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.ldap.sync']}>
-          <Button type="primary" funcType="flat" icon="sync_user" onClick={loaderClient}>同步用户</Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.setting.general-setting.ps.ldap.records']}>
-          <Button type="primary" funcType="flat" icon="sync_records" onClick={goToHistory}>同步记录</Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: '修改',
+            icon: 'edit-o',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.update.ldap'],
+            handler: modifyInfo,
+          }, {
+            name: '停用',
+            icon: 'remove_circle_outline',
+            display: currentRecord && currentRecord.getPristineValue('enabled'),
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.disable'],
+            handler: handleDisable,
+          }, {
+            name: '启用',
+            icon: 'finished',
+            display: currentRecord && currentRecord.getPristineValue('enabled'),
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.enable'],
+            handler: handleEnableLdap,
+          }, {
+            name: '测试连接',
+            icon: 'low_priority',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.test'],
+            handler: testLinks,
+          }, {
+            name: '同步用户',
+            icon: 'sync_user',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.sync'],
+            handler: loaderClient,
+          }, {
+            name: '同步记录',
+            icon: 'sync_records',
+            display: true,
+            permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.records'],
+            handler: goToHistory,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content className="c7n-organization-page-content">

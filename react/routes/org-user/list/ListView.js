@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
 import { Modal as OldModal, Tooltip, Button } from 'choerodon-ui';
 import {
@@ -288,7 +288,7 @@ export default withRouter(observer((props) => {
       >
         <Permission
           service={service}
-          defaultChildren={(<span style={{ color: 'rgba(0, 0, 0, 0.65)' }}>{value}</span>)}
+          defaultChildren={(<span>{value}</span>)}
         >
           <>
             <span
@@ -385,48 +385,42 @@ export default withRouter(observer((props) => {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        <Permission service={['choerodon.code.organization.manager.user.ps.create']}>
-          <Tooltip
-            title={getCanCreate ? '' : formatMessage({ id: `${intlPrefix}.button.create.disabled` })}
-            placement="bottom"
-          >
-            <Button
-              icon="playlist_add"
-              disabled={!getCanCreate}
-              onClick={handleCreate}
-            >
-              <FormattedMessage id={`${intlPrefix}.button.create-user`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.user.ps.import']}>
-          <Tooltip
-            title={getCanCreate ? '' : formatMessage({ id: `${intlPrefix}.button.create.disabled` })}
-            placement="bottom"
-          >
-            <Button
-              icon="archive"
-              disabled={!getCanCreate}
-              onClick={handleImportUser}
-            >
-              <FormattedMessage id={`${intlPrefix}.button.import-user`} />
-            </Button>
-          </Tooltip>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.user.ps.add.user']}>
-          <Button
-            icon="person_add"
-            onClick={handleRoleAssignment}
-          >
-            添加组织用户
-          </Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.user.ps.import.user']}>
-          <Button icon="archive" onClick={handleImportRole}>导入组织用户</Button>
-        </Permission>
-        <Permission service={['choerodon.code.organization.manager.user.ps.ldap']}>
-          <Button icon="compare_arrows" onClick={handleSyncSetting}>LDAP同步设置</Button>
-        </Permission>
+        <HeaderButtons
+          showClassName={false}
+          items={([{
+            name: <FormattedMessage id={`${intlPrefix}.button.create-user`} />,
+            icon: 'playlist_add',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.user.ps.create'],
+            handler: handleCreate,
+            disabled: !getCanCreate,
+          }, {
+            name: <FormattedMessage id={`${intlPrefix}.button.import-user`} />,
+            icon: 'archive-o',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.user.ps.import'],
+            handler: handleImportUser,
+            disabled: !getCanCreate,
+          }, {
+            name: '添加组织用户',
+            icon: 'person_add-o',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.user.ps.add.user'],
+            handler: handleRoleAssignment,
+          }, {
+            name: '导入组织用户',
+            icon: 'archive-o',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.user.ps.import.user'],
+            handler: handleImportRole,
+          }, {
+            name: 'LDAP同步设置',
+            icon: 'compare_arrows',
+            display: true,
+            permissions: ['choerodon.code.organization.manager.user.ps.ldap'],
+            handler: handleSyncSetting,
+          }])}
+        />
       </Header>
       <Breadcrumb />
       <Content
@@ -434,12 +428,12 @@ export default withRouter(observer((props) => {
       >
         <Table queryFields={getQueryFields()} queryFieldsLimit={3} labelLayout="float" pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="realName" />
-          <Column renderer={renderAction} width={50} align="right" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} name="loginName" tooltip="overflow" />
+          <Column renderer={renderAction} width={60} align="right" />
+          <Column name="loginName" tooltip="overflow" />
           <Column renderer={rednerEnabled} name="enabled" align="left" width={70} />
           <Column minWidth={320} width={320} renderer={expandMoreColumn} className="org-user-roles" name="myRoles" />
-          <Column renderer={renderSource} name="ldap" style={{ color: 'rgba(0, 0, 0, 0.65)' }} align="left" />
-          <Column style={{ color: 'rgba(0, 0, 0, 0.65)' }} renderer={renderLocked} name="locked" align="left" width={100} />
+          <Column renderer={renderSource} name="ldap" align="left" />
+          <Column renderer={renderLocked} name="locked" align="left" width={100} />
         </Table>
       </Content>
     </Page>

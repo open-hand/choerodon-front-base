@@ -1,11 +1,11 @@
 @import '~choerodon-ui/lib/style/themes/default';
 
 // 颜色
-@font-color-dark: #000;
-@font-color-soDark: #000;
-@font-color-midlle: rgba(0, 0, 0, .54);
-@font-color-black: rgba(0, 0, 0, 1);
-@font-color: rgba(0, 0, 0, .65);
+@font-color-dark: var(--text-color);
+@font-color-soDark: var(--text-color);
+@font-color-midlle: var(--text-color4);
+@font-color-black: var(--text-color);
+@font-color: var(--text-color3);
 // 字体样式
 @font-style-regular: 'PingFangSC-Regular';
 @font-style-Medium: 'PingFangSC-Medium';
@@ -33,7 +33,7 @@
         color: @font-color-soDark;
         margin-bottom: 0.02rem;
         padding-bottom: 0.02rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        border-bottom: 1px solid var(--divider);
     }
     .c7n-pro-organization-LdapForm-header {
         width: 2.04rem;

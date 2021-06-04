@@ -10,9 +10,7 @@ import './index.less';
 function TabIndex(props) {
   return (
     <StoreProvider {...props}>
-      <PageWrap cache noHeader={[]}>
-        <PageTab alwaysShow title="密码策略" tabKey="choerodon.code.organization.security-password" component={Password} />
-      </PageWrap>
+      <Password />
     </StoreProvider>
   );
 }
