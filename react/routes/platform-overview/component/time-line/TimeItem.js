@@ -27,9 +27,7 @@ const TimeItem = ((props) => {
           <Button
             className="c7ncd-notice-timeLine-content-header-btn"
             shape="circle"
-            funcType="flat"
             icon="expand_more"
-            type="primary"
             size="small"
             onClick={() => handleDropDown(!isExpand)}
             style={{ minWidth: '0.24rem' }}
