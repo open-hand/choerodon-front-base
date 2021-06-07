@@ -157,11 +157,11 @@ function EditUserInfo(props) {
           service={[]}
           type="site"
         >
-          <Button className="user-info-avatar-button" onClick={openAvatorUploader}>
+          <div className="user-info-avatar-button" onClick={openAvatorUploader}>
             <div className="user-info-avatar-button-icon">
               <Icon type="photo_camera" />
             </div>
-          </Button>
+          </div>
 
           <AvatarUploader id={id} visible={visible} onVisibleChange={handleVisibleChange} setAvatar={setAvatar} />
         </Permission>
