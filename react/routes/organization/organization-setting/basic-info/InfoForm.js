@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Form, TextField, TextArea, Select, Output } from 'choerodon-ui/pro';
+import {
+  Form, TextField, TextArea, Select, Output,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { Button, Icon, Input } from 'choerodon-ui';
 import './OrganizationBasic.less';
 import AvatarUploader from '../../../../components/avatarUploader';
 
-
-const InfoForm = observer(({ dataSet, AppState, intl, orgName }) => {
+const InfoForm = observer(({
+  dataSet, AppState, intl, orgName,
+}) => {
   const imageUrlDefault = dataSet.current && dataSet.current.get('imageUrl');
   const [imageUrl, changeUrl] = useState(imageUrlDefault);
   const [isShowAvatar, changeAvatarStatus] = useState(false);
@@ -36,9 +39,9 @@ const InfoForm = observer(({ dataSet, AppState, intl, orgName }) => {
   return (
     <div className="c7n-organization-infoForm">
       <Form dataSet={dataSet} labelLayout="float">
-        <div className="c7n-organization-avater-container">
+        <div className="c7n-organization-avatar-container">
           <div
-            className="c7n-organization-avater"
+            className="c7n-organization-avatar"
             style={{
               backgroundImage: imageUrl ? `url('${imageUrl}')` : '',
             }}
@@ -48,11 +51,11 @@ const InfoForm = observer(({ dataSet, AppState, intl, orgName }) => {
               <div className="c7n-organization-formImg-wrapper">{orgName[0]}</div>
             </div>
             )}
-            <Button>
-              <div className="c7n-iam-organizationsetting-avatar-button-icon" onClick={openModalUpload}>
+            <div className="c7n-organization-avatar-mask">
+              <div className="c7n-organization-avatar-mask-icon" onClick={openModalUpload}>
                 <Icon type="photo_camera" />
               </div>
-            </Button>
+            </div>
             <AvatarUploader
               visible={isShowAvatar}
               AppState={AppState}
@@ -62,7 +65,12 @@ const InfoForm = observer(({ dataSet, AppState, intl, orgName }) => {
               onUploadOk={handleUploadOk}
             />
           </div>
-          <span style={{ display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)' }}>组织Logo</span>
+          <span style={{
+            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)',
+          }}
+          >
+            组织Logo
+          </span>
         </div>
         <TextField name="tenantName" required />
         <TextField name="tenantNum" disabled />

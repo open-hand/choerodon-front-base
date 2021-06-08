@@ -42,14 +42,14 @@ const InfoForm = observer(({
               {!favicon && <div className="c7n-system-setting-formImg-wrapper default-favicon" />}
               {favicon && <div style={{ backgroundImage: `url(${favicon})` }} className="c7n-system-setting-formImg-wrapper" />}
             </div>
-            <Button>
-              <div className="c7n-iam-system-setting-avatar-button-icon" onClick={() => openModalUpload('favicon')}>
+            <div className="c7n-system-setting-avater-mask">
+              <div className="c7n-system-setting-avater-mask-icon" onClick={() => openModalUpload('favicon')}>
                 <Icon type="photo_camera" />
               </div>
-            </Button>
+            </div>
           </div>
           <span style={{
-            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem',
+            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'var(--text-color4)', marginTop: '.06rem',
           }}
           >
             平台Logo
@@ -61,14 +61,14 @@ const InfoForm = observer(({
               {!systemLogo && <div className="c7n-system-setting-formImg-wrapper default-logo" />}
               {systemLogo && <div style={{ backgroundImage: `url(${systemLogo})` }} className="c7n-system-setting-formImg-wrapper" />}
             </div>
-            <Button>
-              <div className="c7n-iam-system-setting-avatar-button-icon" onClick={() => openModalUpload('systemLogo')}>
+            <div className="c7n-system-setting-avater-mask">
+              <div className="c7n-system-setting-avater-mask-icon" onClick={() => openModalUpload('systemLogo')}>
                 <Icon type="photo_camera" />
               </div>
-            </Button>
+            </div>
           </div>
           <span style={{
-            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'rgba(0,0,0,0.54)', marginTop: '.06rem',
+            display: 'block', textAlign: 'center', fontSize: '.13rem', color: 'var(--text-color4)', marginTop: '.06rem',
           }}
           >
             平台导航栏图形标
