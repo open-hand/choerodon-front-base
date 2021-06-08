@@ -93,31 +93,40 @@
     margin: 0 auto;
     border-radius: 50px;
     &:hover {
-        button {
-            opacity: 1;
-        }
+      .c7n-system-setting-avater-mask {
+        opacity: 1;
+      }
     }
     &-container {
         height: 1rem;
     }
-    button {
-        opacity: 0;
-    transition: .2s;
-    position: relative;
-    padding: 0;
-    display: block;
-    width: .8rem;
-    height: .8rem;
-    top: -.8rem;
-    background: rgba(0, 0, 0, 0.26);
-    border-radius: 50%;
-        color: @font-color-light;
-        &:hover {
-            background: @bg-color1;
-        }
+    &-mask {
+      opacity: 0;
+      transition: .2s;
+      position: relative;
+      padding: 0;
+      display: block;
+      width: .8rem;
+      height: .8rem;
+      top: -.8rem;
+      background: rgba(0, 0, 0, 0.26);
+      border-radius: 50%;
+      color: @font-color-light;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover {
+          background: @bg-color1;
+      }
+
+      &-icon {
+        color: #fff;
+        line-height: .8rem;
+
         i {
-            font-size: 0.3rem;
+          font-size: 0.3rem;
         }
+      }
     }
 }
 
