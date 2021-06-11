@@ -6,12 +6,12 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { Divider, Button } from 'choerodon-ui';
 import {
-  message, Modal, TextField, Form, Output, Spin,
+  message, Modal, TextField, Form, Output, Spin, Icon,
 } from 'choerodon-ui/pro';
 import {
   Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
 } from '@choerodon/boot';
-import { HeaderButtons } from "@choerodon/master";
+import { HeaderButtons } from '@choerodon/master';
 import queryString from 'query-string';
 import { map, some, compact } from 'lodash';
 import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
@@ -94,10 +94,6 @@ const GeneralSetting = observer(() => {
     const name = record.get('name');
     const okProps = {
       disabled: true,
-      color: 'red',
-      style: {
-        width: '100%', border: '1px solid rgba(27,31,35,.2)', height: 36, marginTop: -26,
-      },
     };
     const ModalContent = ({ modal }: any) => {
       let extraMessage;
@@ -105,9 +101,10 @@ const GeneralSetting = observer(() => {
         extraMessage = (
           <>
             <div className="c7n-projects-enable-tips">
+              <Icon type="report" style={{ marginTop: -5, color: 'red' }} />
               {formatMessage({ id: 'project.info.disable.program.tips' })}
             </div>
-            <div style={{ marginTop: 10 }}>
+            <div style={{ marginTop: 14, fontWeight: 500 }}>
               请输入
               {' '}
               <span style={{ fontWeight: 600 }}>{name}</span>
@@ -132,6 +129,7 @@ const GeneralSetting = observer(() => {
       } else if (isSubProject) {
         extraMessage = (
           <div className="c7n-projects-enable-tips">
+            <Icon type="report" style={{ marginTop: -5, color: 'red' }} />
             {formatMessage({ id: 'project.info.disable.subProject.tips' })}
           </div>
         );
@@ -139,17 +137,13 @@ const GeneralSetting = observer(() => {
       const content = (
         <div style={{ marginTop: -10 }}>
           {isProgram && (
-            <p style={{
-              marginBottom: 14,
-              background: '#fffbdd',
-              padding: '15px 26px',
-              border: '1px solid rgba(27,31,35,.15)',
-              width: 'calc(100% + 49px)',
-              marginLeft: -25,
+
+            <span style={{
+              width: '100%', display: 'inline-block', fontWeight: 500, marginBottom: 10,
             }}
             >
-              请仔细阅读下列事项！
-            </p>
+              请仔细阅读下列事项:
+            </span>
           )}
           <span>{formatMessage({ id: 'project.info.disable.content' }, { name })}</span>
           {extraMessage}
@@ -164,8 +158,8 @@ const GeneralSetting = observer(() => {
         children: <ModalContent />,
         okProps,
         okText: '我已经知道后果，停用此项目',
-        closable: true,
-        footer: (okBtn: any) => okBtn,
+        // closable: true,
+        // footer: (okBtn: any) => okBtn,
         onOk: handleOk,
       });
     } else {
@@ -252,7 +246,7 @@ const GeneralSetting = observer(() => {
         {
           showProjectPrefixArr.length > 0 && (
             <>
-              <Divider />
+              <Divider style={{ backgroundColor: 'var(--divider)' }} />
               <div className={`${prefixCls}-section-title`}>
                 <FormattedMessage id={`${intlPrefix}.otherSetting`} />
               </div>
