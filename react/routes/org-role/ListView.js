@@ -60,8 +60,8 @@ const ListView = () => {
     if (enabled) {
       Modal.open({
         key: Modal.key(),
-        title: formatMessage({ id: `${intlPrefix}.enable.title` }, { name: record.get('name') }),
-        children: formatMessage({ id: `${intlPrefix}.enable.des` }),
+        title: formatMessage({ id: `${intlPrefix}.enable.title` }),
+        children: formatMessage({ id: `${intlPrefix}.enable.des` }, { name: record.get('name') }),
         movable: false,
         onOk: () => handleEnabled(true),
       });
@@ -84,8 +84,8 @@ const ListView = () => {
   function handleDelete() {
     const record = dataSet.current;
     const modalProps = {
-      title: formatMessage({ id: `${intlPrefix}.delete.title` }, { name: record.get('name') }),
-      children: formatMessage({ id: `${intlPrefix}.delete.des` }),
+      title: formatMessage({ id: `${intlPrefix}.delete.title` }),
+      children: formatMessage({ id: `${intlPrefix}.delete.des` }, { name: record.get('name') }),
       okText: formatMessage({ id: 'delete' }),
       okProps: { color: 'red' },
       cancelProps: { color: 'dark' },
