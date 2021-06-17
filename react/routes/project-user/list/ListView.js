@@ -196,6 +196,7 @@ export default observer((props) => {
 
   function renderAction({ record, item }) {
     const actionDatas = [{
+      service: ['choerodon.code.project.cooperation.team-member.ps.update'],
       text: '修改',
       action: () => handleUserRole(item, true),
     }, {
