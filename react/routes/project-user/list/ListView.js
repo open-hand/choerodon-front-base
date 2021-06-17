@@ -194,8 +194,11 @@ export default observer((props) => {
     );
   }
 
-  function renderAction({ record }) {
+  function renderAction({ record, item }) {
     const actionDatas = [{
+      text: '修改',
+      action: () => handleUserRole(item, true),
+    }, {
       service: ['choerodon.code.project.cooperation.team-member.ps.delete'],
       text: '删除',
       action: () => handleDeleteUser(record),
@@ -238,6 +241,7 @@ export default observer((props) => {
                   record: {
                     get: (params) => item[params],
                   },
+                  item,
                 })}
               </div>
               <div className={styles['theme4-c7n-memberItem-line']}>
@@ -262,7 +266,7 @@ export default observer((props) => {
                     <span
                       role="none"
                       className={styles['theme4-c7n-memberItem-line-name-realName-text']}
-                      onClick={() => handleUserRole(item, true)}
+                      // onClick={() => handleUserRole(item, true)}
                     >
                       {item.realName}
                     </span>
