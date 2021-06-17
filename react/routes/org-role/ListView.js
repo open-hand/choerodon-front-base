@@ -36,6 +36,11 @@ const ListView = () => {
 
   function openModal(type, level) {
     const record = dataSet.current;
+    const okText = {
+      detail: '关闭',
+      edit: '保存',
+      add: '创建',
+    };
     Modal.open({
       key: modalKey,
       drawer: true,
@@ -49,7 +54,7 @@ const ListView = () => {
         />
       ),
       okCancel: type !== 'detail',
-      okText: type === 'detail' ? '关闭' : '创建',
+      okText: okText[type] ?? '创建',
       style: modalStyle,
     });
   }
