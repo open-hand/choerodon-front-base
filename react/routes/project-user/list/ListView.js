@@ -375,15 +375,16 @@ export default observer((props) => {
         className="project-user"
       >
         {
-          render({
-            dataSet,
-            handleChangeSearch,
-            renderUserName,
-            renderAction,
-            expandMoreColumn,
-            rednerEnabled,
-            renderNewContent,
-          })
+          renderNewContent()
+          // render({
+          //   dataSet,
+          //   handleChangeSearch,
+          //   renderUserName,
+          //   renderAction,
+          //   expandMoreColumn,
+          //   rednerEnabled,
+          //   renderNewContent,
+          // })
         }
       </Content>
     </Page>
