@@ -1,5 +1,5 @@
 import React, {
-  useContext, useState, Fragment, useImperativeHandle, useMemo,
+  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect,
 } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import { StatusTag } from '@choerodon/components';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
+  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons, checkPermission,
 } from '@choerodon/boot';
 import {
   Spin, Button, Modal as OldModal, Icon,
@@ -48,6 +48,41 @@ export default observer((props) => {
   } = useContext(Store);
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
+  const [permissions, setPermissions] = useState([{
+    code: 'choerodon.code.project.cooperation.team-member.ps.update',
+    approve: false,
+  }, {
+    code: 'choerodon.code.project.cooperation.team-member.ps.delete',
+    approve: false,
+  }]);
+
+  useEffect(() => {
+    function handleCheckPermission() {
+      const data = {
+        projectId,
+        organizationId,
+        resourceType: 'project',
+      };
+      const editPermission = checkPermission({
+        ...data,
+        code: permissions[0].code,
+      });
+      const deletePermission = checkPermission({
+        ...data,
+        code: permissions[1].code,
+      });
+      Promise.all([editPermission, deletePermission]).then((result) => {
+        setPermissions([{
+          code: permissions[0].code,
+          approve: result[0],
+        }, {
+          code: permissions[1].code,
+          approve: result[1],
+        }]);
+      });
+    }
+    handleCheckPermission();
+  }, []);
 
   const modalProps = {
     create: {
@@ -231,20 +266,46 @@ export default observer((props) => {
     }
   }
 
+  function handleRenderActionDom(selfPermissions, record, item) {
+    const actionDatas = [];
+    let flag = false;
+    if (selfPermissions[0].approve) {
+      flag = true;
+      actionDatas.push({
+        service: [],
+        text: '修改',
+        action: () => handleUserRole(item, true),
+      });
+    }
+    if (selfPermissions[1].approve) {
+      flag = true;
+      actionDatas.push({
+        service: [],
+        text: '删除',
+        action: () => handleDeleteUser(record),
+      });
+    }
+    if (!flag || (InviteModal && record.get('programOwner'))) {
+      return '';
+    }
+    return (
+      <div className={styles['theme4-c7n-memberItem-action']}>
+        <Action data={actionDatas} />
+      </div>
+    );
+  }
+
   function renderNewContent() {
     return (
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
         <div className={styles['theme4-c7n-member']}>
           {dataSet.toData().map((item) => (
             <div className={styles['theme4-c7n-memberItem']}>
-              <div className={styles['theme4-c7n-memberItem-action']}>
-                {renderAction({
-                  record: {
-                    get: (params) => item[params],
-                  },
-                  item,
-                })}
-              </div>
+              {
+                handleRenderActionDom(permissions, {
+                  get: (params) => item[params],
+                }, item)
+              }
               <div className={styles['theme4-c7n-memberItem-line']}>
                 <div
                   className={styles['theme4-c7n-memberItem-line-icon']}
