@@ -1,7 +1,12 @@
+/* eslint-disable */
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon } from '@choerodon/boot';
-import { Form, Modal, TextField, Select, EmailField } from 'choerodon-ui/pro';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
+} from '@choerodon/boot';
+import {
+  Form, Modal, TextField, Select, EmailField,
+} from 'choerodon-ui/pro';
 import some from 'lodash/some';
 import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
@@ -14,14 +19,26 @@ const { Option } = Select;
 const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 export default observer((props) => {
-  const { prefixCls, modal, intl, orgUserRoleDataSet, onOk, projectId, allRoleDataSet, orgRoleDataSet, orgUserListDataSet, AppState } = useContext(Store);
+  const {
+    prefixCls,
+    modal,
+    intl,
+    orgUserRoleDataSet,
+    onOk,
+    projectId,
+    allRoleDataSet,
+    orgRoleDataSet,
+    orgUserListDataSet,
+    AppState,
+  } = useContext(Store);
   const { current } = orgUserRoleDataSet;
 
   const [hasOwner, setHasOwner] = useState(false);
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
 
   useEffect(() => {
-    setHasOwner(current.get('roles').some(r => r === 9));
+    setHasOwner(current.get('roles').some((r) => r === 9));
+    orgUserListDataSet.current = orgUserListDataSet.records.find((i) => i.get('id') === current.get('id'));
   }, []);
 
   function handleCancel() {
@@ -53,16 +70,15 @@ export default observer((props) => {
     if (hasBusiness && some(categories || [], ['code', 'N_PROGRAM']) && current.get('roles') && !current.get('roles').length) {
       await setDeleteRoleRecord(current);
       return false;
-    } else {
-      await handleDeleteRoleRecord(true);
     }
+    await handleDeleteRoleRecord(true);
   }
 
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
 
   function renderOption({ text, value }) {
-    const result = allRoleDataSet.find(item => item.get('id') === value);
+    const result = allRoleDataSet.find((item) => item.get('id') === value);
     if (!result) {
       return `${value}`;
     }
@@ -100,7 +116,7 @@ export default observer((props) => {
         orgUserListDataSet={orgUserListDataSet}
       >
         {((itemProps) => {
-          const result = allRoleDataSet.find(item => item.get('id') === itemProps.value);
+          const result = allRoleDataSet.find((item) => item.get('id') === itemProps.value);
           return (
             <Select
               {...itemProps}

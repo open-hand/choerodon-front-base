@@ -318,7 +318,7 @@ export default observer((props) => {
                   }}
                 >
                   {
-                    !item.imageUrl && item.loginName.substring(0, 1).toUpperCase()
+                    !item.imageUrl && item?.loginName?.substring(0, 1)?.toUpperCase()
                   }
                 </div>
                 <div
@@ -388,7 +388,8 @@ export default observer((props) => {
               style={{ marginLeft: 24 }}
               onClick={() => handlePage(true)}
               className={classNames({
-                [styles['theme4-c7n-member-page-enabled']]: true,
+                [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === dataSet.totalPage,
+                [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage < dataSet.totalPage,
               })}
             >
               <Icon type="keyboard_arrow_right" />

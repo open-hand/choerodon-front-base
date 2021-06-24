@@ -10,31 +10,31 @@ import { PermissionRoute } from '@choerodon/master';
 import './style/index.less';
 
 // global 对应目录
-const siteSetting = asyncRouter(() => import('./routes/site-setting'));
+const siteSetting = React.lazy(() => import('./routes/site-setting'));
 // const menuSetting = asyncRouter(() => import('./routes/global/menu-setting'));
 // const role = asyncRouter(() => import('./routes/role'));
 // const siteUser = asyncRouter(() => import('./routes/site-user'));
-const rootUser = asyncRouter(() => import('./routes/root-user'));
+const rootUser = React.lazy(() => import('./routes/root-user'));
 
 // organization
-const orgRole = asyncRouter(() => import('./routes/org-role'));
-const orgUser = asyncRouter(() => import('./routes/org-user'));
-const organizationSetting = asyncRouter(() => import('./routes/organization/organization-setting'));
-const orgSafe = asyncRouter(() => import('./routes/safe/org-safe'));
-const siteSafe = asyncRouter(() => import('./routes/safe/site-safe'));
-const orgAdmin = asyncRouter(() => import('./routes/org-admin'));
-const orgClient = asyncRouter(() => import('./routes/client/route'));
+const orgRole = React.lazy(() => import('./routes/org-role'));
+const orgUser = React.lazy(() => import('./routes/org-user'));
+const organizationSetting = React.lazy(() => import('./routes/organization/organization-setting'));
+const orgSafe = React.lazy(() => import('./routes/safe/org-safe'));
+const siteSafe = React.lazy(() => import('./routes/safe/site-safe'));
+const orgAdmin = React.lazy(() => import('./routes/org-admin'));
+const orgClient = React.lazy(() => import('./routes/client/route'));
 
 // project
-const generalSetting = asyncRouter(() => import('./routes/general-setting'));
-const projectUser = asyncRouter(() => import('./routes/project-user'));
+const generalSetting = React.lazy(() => import('./routes/general-setting'));
+const projectUser = React.lazy(() => import('./routes/project-user'));
 // const applicationSetting = asyncRouter(() => import('./routes/application-setting'));
 // const applicationManagement = asyncRouter(() => import('./routes/application-management'));
 
 // user
 // const tokenManager = asyncRouter(() => import('./routes/user/token-manager'));
-const userInfo = asyncRouter(() => import('./routes/user/user-info'));
-const permissionInfo = asyncRouter(() => import('./routes/user/permission-info'));
+const userInfo = React.lazy(() => import('./routes/user/user-info'));
+const permissionInfo = React.lazy(() => import('./routes/user/permission-info'));
 
 // saga 事务管理
 // const saga = asyncRouter(() => import('./routes/saga/saga'));
@@ -53,14 +53,14 @@ const permissionInfo = asyncRouter(() => import('./routes/user/permission-info')
 // 多语言配置
 // const langConfig = asyncRouter(() => import('./routes/lang-config'));
 
-const orgOverview = asyncRouter(() => import('./routes/org-overview'));
+const orgOverview = React.lazy(() => import('./routes/org-overview'));
 
-const platformOverview = asyncRouter(() => import('./routes/platform-overview'));
+const platformOverview = React.lazy(() => import('./routes/platform-overview'));
 
-const heroPage = asyncRouter(() => import('./routes/hzero-page'));
+const heroPage = React.lazy(() => import('./routes/hzero-page'));
 
 // 收集企业信息
-const enterpriseInfo = asyncRouter(() => import('./routes/enterprises-info'));
+const enterpriseInfo = React.lazy(() => import('./routes/enterprises-info'));
 
 @inject('AppState')
 class IAMIndex extends React.Component {
