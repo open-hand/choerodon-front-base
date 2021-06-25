@@ -4,7 +4,7 @@ import React, {
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
   TextField,
-  Table, Modal, message,
+  Table, Modal, message, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
@@ -362,9 +362,11 @@ export default observer((props) => {
                 <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
                   邮箱:
                 </p>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                  {item.email}
-                </p>
+                <Tooltip title={item.email}>
+                  <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                    {item.email}
+                  </p>
+                </Tooltip>
               </div>
               <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
                 {label({ get: (key) => item[key] })}
