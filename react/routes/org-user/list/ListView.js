@@ -12,6 +12,7 @@ import {
 import {
   SagaDetails,
 } from '@choerodon/master';
+import OrgUserServices from '@/routes/org-user/list/services';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import StatusTag from '../../../components/statusTag';
 import Store from './stores';
@@ -25,6 +26,9 @@ const syncModalKey = Modal.key();
 const modalStyle = {
   width: 740,
 };
+
+// eslint-disable-next-line no-undef
+const HAS_BASE_PRO = C7NHasModule('@choerodon/base-pro');
 
 const { Column } = Table;
 export default withRouter(observer((props) => {
@@ -84,11 +88,31 @@ export default withRouter(observer((props) => {
   // eslint-disable-next-line consistent-return
   async function handleEnable(record) {
     try {
-      const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${record.get('id')}/enable`);
-      if (result.failed) {
-        throw result.message;
+      // 如果是汉得版 需要先校验人数是否超过限制
+      if (HAS_BASE_PRO) {
+        const res = await OrgUserServices.axiosGetCheckEnableUser(organizationId);
+        // 可创建
+        if (res.enableUser) {
+          rest();
+        } else {
+          Modal.confirm({
+            title: '组织用户已达套餐限量',
+            children: `当前组织的启用用户数量已达套餐限量：${res.limitUserCount}人。若想启用新的组织用户，请联系组织注册者升级套餐人数。`,
+            okText: '我知道了',
+            okCancel: false,
+          });
+        }
+      } else {
+        rest();
       }
-      await dataSet.query();
+      // eslint-disable-next-line no-inner-declarations
+      async function rest() {
+        const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${record.get('id')}/enable`);
+        if (result.failed) {
+          throw result.message;
+        }
+        dataSet.query();
+      }
     } catch (err) {
       return message.error(err);
     }
