@@ -20,6 +20,7 @@ const { Step } = Steps;
 
 // 这里是测试 saas用户的id
 let userId;
+let instanceId;
 
 const formDataSet = new DataSet({
   autoCreate: true,
@@ -134,6 +135,7 @@ export default observer((props) => {
   const getUserId = () => {
     const params = new URLSearchParams(window.location.hash.split('?')[1]);
     userId = params.get('crowdId');
+    instanceId = params.get('instanceId');
   };
 
   useEffect(() => {
@@ -142,8 +144,8 @@ export default observer((props) => {
       setTheme('theme4');
     }
     getUserId();
-    if (userId) {
-      checkUserStatus(userId, formDataSet);
+    if (userId || instanceId) {
+      checkUserStatus(userId, formDataSet, instanceId);
     } else {
       setLoading(false);
     }
@@ -157,9 +159,11 @@ export default observer((props) => {
    * 初始查询用户状态
    * @param id
    */
-  const checkUserStatus = async (id, ds) => {
+  const checkUserStatus = async (id, ds, selfInstanceId) => {
     try {
-      const result = await axios.get(`/iam/choerodon/v1/register_saas/register_status?crowd_id=${id}`);
+      // 如果有userId则是saas 有instanceId就是华为云
+      const result = await axios.get(`/iam/choerodon/v1/register_saas/register_status?${id ? `crowd_id=${id}` : `instanceId=${selfInstanceId}`}`);
+      // 如果有id说明是saas
       // 失败
       if (result && result.status === 'failed') {
         setFailedStatus(true);
@@ -189,8 +193,8 @@ export default observer((props) => {
   /**
    * 注册成功查询详情
    */
-  const getRegisterSuccessInfo = async (id, ds) => {
-    const result = await axios.get(`/iam/choerodon/v1/register_saas/register_success?crowd_id=${id}`);
+  const getRegisterSuccessInfo = async (id, ds, selfInstanceId) => {
+    const result = await axios.get(`/iam/choerodon/v1/register_saas/register_success?${id ? `crowd_id=${id}` : `instanceId=${selfInstanceId}`}`);
     const {
       organizationName, loginName, userName, loginUrl,
     } = result;
@@ -205,13 +209,13 @@ export default observer((props) => {
   /**
    * 轮询查询状态 处理
    */
-  const handlePollingStatus = (id) => {
+  const handlePollingStatus = (id, selfInstanceId) => {
     const polling = setInterval(() => {
-      axios.get(`/iam/choerodon/v1/register_saas/register_status?crowd_id=${id}`).then((res) => {
+      axios.get(`/iam/choerodon/v1/register_saas/register_status?${id ? `crowd_id=${id}` : `instanceId=${selfInstanceId}`}`).then((res) => {
         if (res && res.status === 'completed') {
           clearInterval(polling);
           handlerSetCurrent(1);
-          getRegisterSuccessInfo(userId, formDataSet);
+          getRegisterSuccessInfo(userId, formDataSet, instanceId);
           setRegisterLoading(false);
         } else if (res.status === 'failed') {
           message.error('注册失败，请重试');
@@ -251,7 +255,7 @@ export default observer((props) => {
    * 获取开放平台用户信息
    */
   const getUserInfo = async (ds) => {
-    const result = await axios.get(`/iam/choerodon/v1/register_saas/saas_user?openUserId=${userId}`);
+    const result = await axios.get(`/iam/choerodon/v1/register_saas/saas_user?${userId ? `openUserId=${userId}` : `instanceId=${instanceId}`}`);
     const { userName, phone, email } = result;
     ds.loadData([{
       username: userName,
@@ -286,9 +290,13 @@ export default observer((props) => {
             phone,
             email,
             password,
-            crowdId: userId,
+            ...userId ? {
+              crowdId: userId,
+            } : {
+              instanceId,
+            },
           }).then(() => {
-            handlePollingStatus(userId);
+            handlePollingStatus(userId, instanceId);
           }).catch(() => {
             setRegisterLoading(false);
           });
