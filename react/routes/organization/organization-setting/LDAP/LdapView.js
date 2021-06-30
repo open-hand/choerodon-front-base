@@ -177,7 +177,10 @@ const LdapView = observer(() => {
             <Output name="serverAddress" />
             <Output
               name="useSSL"
-              renderer={({ text }) => (text ? '是' : '否')}
+              renderer={({ value }) => {
+                return value ? '是' : '否';
+                // return (text ? '是' : '否')
+              }}
             />
             <Output name="port" />
             <Output name="sagaBatchSize" />
