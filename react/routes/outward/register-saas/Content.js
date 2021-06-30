@@ -323,7 +323,7 @@ export default observer((props) => {
                 </p>
                 <p className="c7ncd-failedStatus-title2">
                   注册失败，请点击下方按钮进行重试，或者直接前往
-                  <a>开放平台</a>
+                  <a href="https://open.hand-china.com/home" target="_blank">开放平台</a>
                   提工单反馈
                 </p>
               </div>
