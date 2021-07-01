@@ -106,28 +106,56 @@ export default observer((props) => {
 
   const [loading, setLoading] = useState(true);
 
+  const [createUser, setCreateUser] = useState(true);
+
   useEffect(() => {
     // 如果是ldap 则设置密码框为非必填
-    formDataSet.getField('password').set('required', !isLdap);
-    formDataSet.getField('password').set('validator', isLdap ? () => true : async (value, name, record) => {
-      const res = await axios.get(`/iam/choerodon/v1/register_saas/check_password?password=${value}`);
-      if (!res.success) {
-        return res.message;
+    function getRequired() {
+      if (!createUser) {
+        return false;
+      } if (isLdap) {
+        return false;
       }
       return true;
-    });
-    formDataSet.getField('checkPassword').set('required', !isLdap);
-    formDataSet.getField('checkPassword').set('validator', isLdap ? () => true : (value, name, record) => {
-      // 如果没写密码
-      if (!record.get('password')) {
-        return '请先填写密码';
+    }
+
+    function getValidator() {
+      if (!createUser) {
+        return () => true;
+      } if (isLdap) {
+        return () => true;
       }
-      if (record.get('password') !== value) {
-        return '与密码不符合';
+      return async (value, name, record) => {
+        const res = await axios.get(`/iam/choerodon/v1/register_saas/check_password?password=${value}`);
+        if (!res.success) {
+          return res.message;
+        }
+        return true;
+      };
+    }
+
+    function getValidatorCheck() {
+      if (!createUser) {
+        return () => true;
+      } if (isLdap) {
+        return () => true;
       }
-      return true;
-    });
-  }, [isLdap]);
+      return (value, name, record) => {
+        // 如果没写密码
+        if (!record.get('password')) {
+          return '请先填写密码';
+        }
+        if (record.get('password') !== value) {
+          return '与密码不符合';
+        }
+        return true;
+      };
+    }
+    formDataSet.getField('password').set('required', getRequired());
+    formDataSet.getField('password').set('validator', getValidator());
+    formDataSet.getField('checkPassword').set('required', getRequired());
+    formDataSet.getField('checkPassword').set('validator', getValidatorCheck());
+  }, [isLdap, createUser]);
 
   /**
    * 从url获取用户id
@@ -179,9 +207,12 @@ export default observer((props) => {
         }]);
       } else if (result.status === 'completed') {
         setStepIndex(1);
-        getRegisterSuccessInfo(userId, formDataSet);
+        getRegisterSuccessInfo(userId, formDataSet, instanceId, result.registeredInstanceId);
         setLoading(false);
       } else {
+        if (instanceId) {
+          setCreateUser(result.createUser);
+        }
         getUserInfo(ds);
         setLoading(false);
       }
@@ -193,8 +224,8 @@ export default observer((props) => {
   /**
    * 注册成功查询详情
    */
-  const getRegisterSuccessInfo = async (id, ds, selfInstanceId) => {
-    const result = await axios.get(`/iam/choerodon/v1/register_saas/register_success?${id ? `crowd_id=${id}` : `instanceId=${selfInstanceId}`}`);
+  const getRegisterSuccessInfo = async (id, ds, selfInstanceId, registedInstanceId) => {
+    const result = await axios.get(`/iam/choerodon/v1/register_saas/register_success?${id ? `crowd_id=${id}` : `instanceId=${registedInstanceId || selfInstanceId}`}`);
     const {
       organizationName, loginName, userName, loginUrl,
     } = result;
@@ -236,9 +267,10 @@ export default observer((props) => {
   /**
    * 重试接口
    */
-  const handleRetry = (id) => {
+  const handleRetry = (id, selfInstanceId) => {
     setRegisterLoading(true);
-    axios.get(`/iam/choerodon/v1/register_saas/retry?crowd_id=${id}`).then(() => {
+
+    axios.get(`/iam/choerodon/v1/register_saas/retry?${id ? `crowd_id=${id}` : `instanceId=${selfInstanceId}`}`).then(() => {
       handlePollingStatus(userId);
     });
   };
@@ -323,8 +355,20 @@ export default observer((props) => {
                 </p>
                 <p className="c7ncd-failedStatus-title2">
                   注册失败，请点击下方按钮进行重试，或者直接前往
-                  <a href="https://open.hand-china.com/home" target="_blank">开放平台</a>
-                  提工单反馈
+                  {
+                    userId ? (
+                      <>
+                        <a href="https://open.hand-china.com/home" target="_blank" rel="noreferrer">开放平台</a>
+                        提工单反馈
+                      </>
+                    ) : (
+                      <>
+                        {/* TODO href */}
+                        <a href="https://open.hand-china.com/home" target="_blank" rel="noreferrer">华为云市场</a>
+                        进行反馈
+                      </>
+                    )
+                  }
                 </p>
               </div>
               <Form style={{ marginTop: 32 }} disabled columns={2} labelLayout="float" dataSet={ds}>
@@ -360,7 +404,7 @@ export default observer((props) => {
                 style={{
                   width: '25%',
                 }}
-                onClick={() => handleRetry(userId)}
+                onClick={() => handleRetry(userId, instanceId)}
               >
                 重试
               </Button>
@@ -393,18 +437,25 @@ export default observer((props) => {
                 showHelp="tooltip"
               />
               {
-                !isLdap && [
-                  <Password
-                    colSpan={1}
-                    name="password"
-                    autoComplete="new-password"
-                  />,
-                  <Password
-                    colSpan={1}
-                    name="checkPassword"
-                    autoComplete="new-password"
-                  />,
-                ]
+                (function () {
+                  if (!createUser) {
+                    return '';
+                  } if (isLdap) {
+                    return '';
+                  }
+                  return [
+                    <Password
+                      colSpan={1}
+                      name="password"
+                      autoComplete="new-password"
+                    />,
+                    <Password
+                      colSpan={1}
+                      name="checkPassword"
+                      autoComplete="new-password"
+                    />,
+                  ];
+                }())
               }
               <CheckBox
                 colSpan={1}
