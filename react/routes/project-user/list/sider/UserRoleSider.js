@@ -88,6 +88,26 @@ export default observer((props) => {
     return result && result.get('name');
   }
 
+  /*
+     如果是项目群成员 并且角色是项目成员 则不让修改和删除
+   */
+  function checkItemDisabled(userDataSet, v, optionsDataSet) {
+    const projectOwner = userDataSet.current.get('programOwner')
+    const value = v;
+    const options = optionsDataSet;
+    let itemDisabled = false;
+    if (projectOwner) {
+      if (value) {
+        const item = options.records.find(i => String(i.get('id')) === String(value));
+        if (item) {
+          const isProjectMember = item.get('code') === 'project-member';
+          itemDisabled = isProjectMember;
+        }
+      }
+    }
+    return itemDisabled;
+  }
+
   return (
     <div className={`${prefixCls}-modal`}>
       <Form disabled dataSet={orgUserListDataSet}>
@@ -114,15 +134,18 @@ export default observer((props) => {
         maxDisable
         allRoleDataSet={allRoleDataSet}
         orgUserListDataSet={orgUserListDataSet}
+        itemDisabledFunc={checkItemDisabled}
       >
         {((itemProps) => {
+          const { value, options } = itemProps;
           const result = allRoleDataSet.find((item) => item.get('id') === itemProps.value);
+          const itemDisabled = checkItemDisabled(orgUserListDataSet, value, options);
           return (
             <Select
               {...itemProps}
               labelLayout="float"
               renderer={renderOption}
-              disabled={itemProps.disabled || (result && !result.get('enabled'))}
+              disabled={itemDisabled || itemProps.disabled || (result && !result.get('enabled'))}
               style={{ width: '100%' }}
             />
           );

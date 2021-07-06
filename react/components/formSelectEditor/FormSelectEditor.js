@@ -15,7 +15,21 @@ import './index.less';
 const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 export default observer(({
-  name, optionDataSetConfig, optionDataSet, record, children, addButton, maxDisable, canDeleteAll = true, idField, alwaysRequired = false, required = false, allRoleDataSet, orgUserListDataSet,
+   name,
+   optionDataSetConfig,
+   optionDataSet,
+   record,
+   children,
+   addButton,
+   maxDisable,
+   canDeleteAll = true,
+   idField,
+   alwaysRequired = false,
+   required = false,
+   allRoleDataSet,
+   orgUserListDataSet,
+   // 设置单个select框是否禁用的方法
+   itemDisabledFunc,
 }) => {
   const formElement = useRef(null);
 
@@ -155,7 +169,7 @@ export default observer(({
                       top: '9px',
                     }}
                     funcType="flat"
-                    disabled={(!canDeleteAll && (record.get(name) || []).length <= 1) || checkCanDisabled(record, v)}
+                    disabled={(itemDisabledFunc && itemDisabledFunc(orgUserListDataSet, v, optionDataSet || dsStore.get(index))) || (!canDeleteAll && (record.get(name) || []).length <= 1) || checkCanDisabled(record, v)}
                     onClick={() => handleDeleteItem(index)}
                     icon="delete"
                   />

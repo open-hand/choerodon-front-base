@@ -269,7 +269,8 @@ export default observer((props) => {
   function handleRenderActionDom(selfPermissions, record, item) {
     const actionDatas = [];
     let flag = false;
-    if (selfPermissions[0].approve) {
+    // 如果是项目群成员也加上这个按钮
+    if (selfPermissions[0].approve || record.get('programOwner')) {
       flag = true;
       actionDatas.push({
         service: [],
@@ -277,7 +278,8 @@ export default observer((props) => {
         action: () => handleUserRole(item, true),
       });
     }
-    if (selfPermissions[1].approve) {
+    // 必须不是项目群成员才能删除
+    if (selfPermissions[1].approve && !record.get('programOwner')) {
       flag = true;
       actionDatas.push({
         service: [],
@@ -285,7 +287,7 @@ export default observer((props) => {
         action: () => handleDeleteUser(record),
       });
     }
-    if (!flag || (InviteModal && record.get('programOwner'))) {
+    if (!flag) {
       return '';
     }
     return (
