@@ -1,12 +1,14 @@
 /* eslint-disable no-param-reassign */
 
 import { DataSet } from 'choerodon-ui/pro';
+import { StoreProps } from '@/routes/general-setting/components/edit-project/stores/useStore';
 import { CategoryCodesProps } from './index';
 import { DataSetProps, DataSetSelection, Record } from '../../../../../interface';
 
 interface DsProps {
   organizationId: number,
   categoryCodes: CategoryCodesProps
+  editProjectStore: StoreProps,
 }
 
 interface SelectProps {
@@ -17,6 +19,7 @@ interface SelectProps {
 interface DisableProps extends SelectProps{
   categoryCodes: CategoryCodesProps,
   isSelected: boolean,
+  editProjectStore: StoreProps,
 }
 
 interface RequireProps {
@@ -26,8 +29,12 @@ interface RequireProps {
 }
 
 function handleDisabled({
-  dataSet, record, categoryCodes, isSelected,
+  dataSet, record, categoryCodes, isSelected, editProjectStore,
 }: DisableProps) {
+  const isSenior = editProjectStore.getIsSenior;
+  if (!isSenior) {
+    return;
+  }
   if (record.get('code') === categoryCodes.agile) {
     if (!record.getState('isAgile')) {
       const findRecord = dataSet.find((eachRecord) => eachRecord.get('code') === categoryCodes.program);
@@ -64,7 +71,7 @@ function setRequireModule({ dataSet, selected, categoryCodes }: RequireProps) {
   }
 }
 
-export default ({ organizationId, categoryCodes }: DsProps): DataSetProps => ({
+export default ({ organizationId, categoryCodes, editProjectStore }: DsProps): DataSetProps => ({
   autoCreate: false,
   autoQuery: false,
   selection: 'multiple' as DataSetSelection,
@@ -79,13 +86,13 @@ export default ({ organizationId, categoryCodes }: DsProps): DataSetProps => ({
     select: ({ dataSet, record }: SelectProps) => {
       record.isSelected = true;
       handleDisabled({
-        dataSet, record, categoryCodes, isSelected: true,
+        dataSet, record, categoryCodes, isSelected: true, editProjectStore,
       });
     },
     unSelect: ({ dataSet, record }: SelectProps) => {
       record.isSelected = false;
       handleDisabled({
-        dataSet, record, categoryCodes, isSelected: false,
+        dataSet, record, categoryCodes, isSelected: false, editProjectStore,
       });
     },
   },
