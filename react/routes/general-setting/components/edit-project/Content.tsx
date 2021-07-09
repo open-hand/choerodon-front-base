@@ -28,6 +28,7 @@ const EditProject = observer(() => {
     editProjectStore,
     projectId,
     organizationId,
+    standardDisable,
   } = useCreateProjectProStore();
   const [isShowAvatar, setIsShowAvatar] = useState(false);
 
@@ -176,6 +177,9 @@ const EditProject = observer(() => {
     const code = categoryRecord.get('code');
     if (!categoryRecord.getState('disabled')) {
       return '';
+    }
+    if (!editProjectStore.getIsSenior && standardDisable.includes(code)) {
+      return '仅SaaS高级版可选此项目类型';
     }
     if (code === categoryCodes.require) {
       return '请先选择【敏捷管理】或【敏捷项目群】项目类型';

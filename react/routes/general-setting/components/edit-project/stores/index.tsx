@@ -7,6 +7,7 @@ import { DataSet } from 'choerodon-ui/pro';
 import { forEach, some } from 'lodash';
 import { injectIntl } from 'react-intl';
 import moment from 'moment';
+import { axios } from '@choerodon/boot';
 import FormDataSet from './FormDataSet';
 import CategoryDataSet from './CategoryDataSet';
 import useStore, { StoreProps } from './useStore';
@@ -28,6 +29,7 @@ interface ContextProps {
   projectId: number,
   modal: any,
   refresh(): void,
+  standardDisable: string[],
 }
 
 export interface CategoryCodesProps {
@@ -75,10 +77,16 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     waterfall: 'N_WATERFALL',
   }), []);
 
+  const standardDisable = useMemo(() => ([
+    categoryCodes.require, categoryCodes.program, categoryCodes.operations,
+  ]), []);
+
   const editProjectStore = useStore();
-  const categoryDs = useMemo(
-    () => new DataSet(CategoryDataSet({ organizationId, categoryCodes })), [organizationId],
-  );
+  const categoryDs = useMemo(() => new DataSet(CategoryDataSet({
+    organizationId,
+    categoryCodes,
+    editProjectStore,
+  })), [organizationId]);
   const formDs = useMemo(() => new DataSet(FormDataSet({
     isShowTestPrefix, intlPrefix, isShowAgilePrefix, formatMessage, isWATERFALL,
   })), [organizationId, projectId]);
@@ -94,7 +102,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
 
   const loadData = async () => {
     try {
-      await categoryDs.query();
+      await axios.all([categoryDs.query(), editProjectStore.checkSenior(organizationId)]);
+      const isSenior = editProjectStore.getIsSenior;
       if (projectData && projectData.categories && projectData.categories.length) {
         const isBeforeProgram = (projectData.beforeCategory || '').includes(categoryCodes.program);
         const isBeforeAgile = (projectData.beforeCategory || '').includes(categoryCodes.agile);
@@ -128,9 +137,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           switch (currentCode) {
             case categoryCodes.program:
               categoryRecord.setState('isProgram', isBeforeProgram);
-              if (isBeforeAgile || (isProgram && await editProjectStore.hasProgramProjects(
-                organizationId, projectId,
-              ))) {
+              // eslint-disable-next-line max-len
+              if (!isSenior || isBeforeAgile || (isProgram && await editProjectStore.hasProgramProjects(organizationId, projectId))) {
                 categoryRecord.setState('disabled', true);
               }
               break;
@@ -143,8 +151,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
             case categoryCodes.require:
               categoryRecord.setState({
                 isRequire,
-                disabled: !isProgram && !isAgile,
+                disabled: !isSenior || (!isProgram && !isAgile),
               });
+              break;
+            case categoryCodes.operations:
+              categoryRecord.setState('disabled', !isSenior);
               break;
             default:
               break;
@@ -165,6 +176,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     categoryDs,
     editProjectStore,
     projectId,
+    standardDisable,
   };
 
   return (

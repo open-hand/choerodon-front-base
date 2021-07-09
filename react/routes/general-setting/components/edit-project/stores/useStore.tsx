@@ -2,12 +2,21 @@
 import { useLocalStore } from 'mobx-react-lite';
 import { axios } from '@choerodon/boot';
 import moment from 'moment';
+import { has as hasInject, get as getInject } from '@choerodon/inject';
 
 // eslint-disable-next-line no-undef
 const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 export default function useStore() {
   return useLocalStore(() => ({
+    isSenior: true,
+    get getIsSenior() {
+      return this.isSenior;
+    },
+    setIsSenior(flag) {
+      this.isSenior = flag;
+    },
+
     async hasProgramProjects(organizationId: number, projectId: number) {
       try {
         const res = await axios.get(`/iam/choerodon/v1/organizations/${organizationId}/project_relations/${projectId}/${projectId}`);
@@ -56,6 +65,17 @@ export default function useStore() {
         projectCode,
         objectVersionNumber: testProjectObjectVersionNumber,
       });
+    },
+
+    async checkSenior(organizationId) {
+      if (hasInject('base-pro:checkSaaSSenior')) {
+        const res = await getInject('base-pro:checkSaaSSenior')(organizationId);
+        console.log('res1', res);
+        this.setIsSenior(res);
+      } else {
+        console.log('res2', res);
+        this.setIsSenior(true);
+      }
     },
   }));
 }
