@@ -320,7 +320,7 @@ export default observer((props) => {
                   }}
                 >
                   {
-                    !item.imageUrl && item?.loginName?.substring(0, 1)?.toUpperCase()
+                    !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
                   }
                 </div>
                 <div
