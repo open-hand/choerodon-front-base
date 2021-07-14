@@ -137,7 +137,8 @@ export default observer((props) => {
     });
   }
   function handleUserRole(record, isData = false) {
-    const data = isData ? record : record.toData();
+    const newRecord = JSON.parse(JSON.stringify(record));
+    const data = isData ? newRecord : newRecord.toData();
     data.roles = data.roles.map((v) => v.id);
     if (data.roles.length === 0) data.roles = [''];
     orgUserRoleDataSet.create(data);
@@ -320,7 +321,7 @@ export default observer((props) => {
                   }}
                 >
                   {
-                    !item.imageUrl && item?.loginName?.substring(0, 1)?.toUpperCase()
+                    !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
                   }
                 </div>
                 <div

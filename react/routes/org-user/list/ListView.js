@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+import React, {
+  useContext, useState, useCallback, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +9,15 @@ import {
 } from '@choerodon/boot';
 import { Modal as OldModal, Tooltip, Button } from 'choerodon-ui';
 import {
-  Select, SelectBox, Table, TextField, Modal, message, Icon, Button as ProButton,
+  Select,
+  SelectBox,
+  Table,
+  TextField,
+  Modal,
+  message,
+  Icon,
+  Button as ProButton,
+  Radio,
 } from 'choerodon-ui/pro';
 import {
   SagaDetails,
@@ -31,6 +41,63 @@ const modalStyle = {
 const HAS_BASE_PRO = C7NHasModule('@choerodon/base-pro');
 
 const { Column } = Table;
+
+const DeleteChildren = observer((props) => {
+  const {
+    record, orgName, modal, organizationId, orgUserRoleDataSet, dataSet,
+  } = props;
+
+  // 删除用户下拉框的选项值
+  const [deleteOption, setDeleteOption] = useState(undefined);
+
+  const handleChangeDeleteOption = (value) => {
+    setDeleteOption(value);
+  };
+
+  useEffect(() => {
+    modal.update({
+      okProps: {
+        disabled: !deleteOption,
+      },
+    });
+  }, [deleteOption]);
+
+  modal.handleOk(async () => {
+    const result = await axios
+      .delete(
+        `/iam/choerodon/v1/organizations/${organizationId}/users/${record.toData().id}/delete?onlyOrganization=${deleteOption === 'onlyOrg'}`,
+      );
+    if (!result.failed) {
+      await orgUserRoleDataSet.reset();
+      dataSet.query();
+      return true;
+    }
+    message.error(result.message);
+    return false;
+  });
+
+  return (
+    <>
+      <p>{`确认删除用户"${record.get('realName')}"在组织"${orgName}"下的全部角色吗?`}</p>
+      <Radio
+        name="options"
+        value="onlyOrg"
+        onChange={handleChangeDeleteOption}
+      >
+        仅删除该用户在组织层的所有角色
+      </Radio>
+      <Radio
+        style={{ marginTop: 10 }}
+        name="options"
+        value="all"
+        onChange={handleChangeDeleteOption}
+      >
+        删除该用户在组织层及组织下所有项目中的角色
+      </Radio>
+    </>
+  );
+});
+
 export default withRouter(observer((props) => {
   const {
     intlPrefix,
@@ -210,22 +277,26 @@ export default withRouter(observer((props) => {
   function handleImportRole() {
     openModal('importRole');
   }
+
   function handleDeleteUser(record) {
-    OldModal.confirm({
+    const orgName = AppState.currentMenuType.name;
+    Modal.open({
       className: 'c7n-iam-confirm-modal',
       title: '删除用户',
-      content: `确认删除用户"${record.get('realName')}"在本组织下的全部角色吗?`,
-      // eslint-disable-next-line consistent-return
-      onOk: async () => {
-        const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${record.toData().id}/assign_roles`, []);
-        if (!result.failed) {
-          await orgUserRoleDataSet.reset();
-          dataSet.query();
-        } else {
-          message.error(result.message);
-          return false;
-        }
+      children: (
+        <DeleteChildren
+          organizationId={organizationId}
+          record={record}
+          orgName={orgName}
+          orgUserRoleDataSet={orgUserRoleDataSet}
+          dataSet={dataSet}
+        />
+      ),
+      okProps: {
+        disabled: true,
       },
+      okText: '删除',
+      // eslint-disable-next-line consistent-return
     });
   }
 
