@@ -1,4 +1,3 @@
-
 export default ({ organizationId }) => ({
   autoQuery: true,
   autoCreate: false,

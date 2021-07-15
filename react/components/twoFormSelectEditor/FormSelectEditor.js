@@ -17,6 +17,7 @@ export default observer(({
   record,
   children,
   addButton,
+  onlyMember
 }) => {
   const formElement = useRef(null);
 
@@ -78,9 +79,11 @@ export default observer(({
   }
 
   function addDisabled() {
-    const someEmpty = record[0].get(name[0]).some((value) => !value) || record[1].get(name[1]).some((value) => !value);
-    return someEmpty;
-    // record[0].get(name[0]).length
+    if (onlyMember) {
+      return record[0].get(name[0]).some((value) => !value)
+    } else {
+      return record[0].get(name[0]).some((value) => !value) || record[1].get(name[1]).some((value) => !value);
+    }
   }
 
   return (
@@ -120,6 +123,14 @@ export default observer(({
               required: record[1].fields.get(name[1]).get('required'),
             }),
             <Button
+            {
+              ...onlyMember ? {
+                style: {
+                  position: 'relative',
+                  right: 120,
+                }
+              } : {}
+            }
               colSpan={2}
               className="two-form-select-editor-button"
               disabled={(record[0].get(name[0]) || []).length <= 1}
@@ -135,7 +146,10 @@ export default observer(({
         colSpan={12}
         // color={addDisabled() ? 'gray' : 'blue'}
         onClick={handleCreatOther}
-        style={{ textAlign: 'left', marginTop: '-0.04rem' }}
+        style={{ 
+          textAlign: 'left',
+          marginTop: '-0.04rem'
+        }}
         icon="add"
         disabled={addDisabled()}
         funcType="flat"

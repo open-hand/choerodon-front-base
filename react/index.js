@@ -61,7 +61,6 @@ const heroPage = React.lazy(() => import('./routes/hzero-page'));
 
 // 收集企业信息
 const enterpriseInfo = React.lazy(() => import('./routes/enterprises-info'));
-
 @inject('AppState')
 class IAMIndex extends React.Component {
   render() {
@@ -89,7 +88,10 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
             <Route path={`${match.url}/org-role`} component={orgRole} />
             <Route path={`${match.url}/root-user`} component={rootUser} />
-            <Route path={`${match.url}/team-member`} component={projectUser} />
+            <Route
+              path={`${match.url}/team-member`}
+              component={projectUser}
+            />
             <Route path={`${match.url}/org-user`} component={orgUser} />
             <Route path={`${match.url}/project-setting/info`} component={generalSetting} />
             <Route path={`${match.url}/user-info`} component={userInfo} />

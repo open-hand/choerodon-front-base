@@ -2,35 +2,85 @@ import React, {
   useContext, useState, useEffect,
 } from 'react';
 import { observer } from 'mobx-react-lite';
+import { axios } from '@choerodon/master';
 import {
-  Spin, SelectBox, Password, Select, Tooltip, Icon,
+  Spin,
+  SelectBox,
+  Password,
+  Select,
+  Tooltip,
+  Icon,
+  TextField,
+  Form,
 } from 'choerodon-ui/pro';
 import { useDebounceFn } from 'ahooks';
 import Store from './stores';
 import UserOptionDataSet from './stores/UserOptionDataSet';
 import './index.less';
 import TwoFormSelectEditor from '../../../../components/twoFormSelectEditor';
+import { mapping, wayOptions } from './stores/addWayDataSet';
+
+const { Option } = Select;
 
 export default observer((props) => {
   const {
-    prefixCls, intlPrefix, intl, modal, onOk, dsStore, roleAssignDataSet, projectId, orgRoleDataSet,
+    prefixCls,
+    intlPrefix,
+    intl,
+    modal,
+    onOk,
+    dsStore,
+    roleAssignDataSet,
+    projectId,
+    orgRoleDataSet,
+    AddWayDataSet,
+    AppState: {
+      currentMenuType: {
+        id,
+      },
+    },
   } = useContext(Store);
   useEffect(() => {
     if (roleAssignDataSet.length === 0) { roleAssignDataSet.create({ memberId: [''], roleId: [''] }); }
   });
+
+  useEffect(() => {
+    roleAssignDataSet.reset();
+  }, [AddWayDataSet.current.get(mapping.way.name)]);
+
   function handleCancel() {
     roleAssignDataSet.reset();
   }
   async function handleOk() {
-    try {
-      await roleAssignDataSet.validate();
-      if (await roleAssignDataSet.submit()) {
-        await roleAssignDataSet.reset();
-        await onOk();
-      } else {
+    if (AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value) {
+      try {
+        await roleAssignDataSet.validate();
+        if (await roleAssignDataSet.submit()) {
+          await roleAssignDataSet.reset();
+          await onOk();
+          return true;
+        }
+        return false;
+      } catch (err) {
         return false;
       }
-    } catch (err) {
+    } else {
+      const res = await roleAssignDataSet.validate();
+      if (res) {
+        const { memberId, roleId } = roleAssignDataSet.toData()[0];
+        try {
+          await axios.post(`/iam/choerodon/v1/projects/${id}/users/assign_roles`,
+            memberId.map((i) => ({
+              memberId: i,
+              roleId,
+            })));
+          await roleAssignDataSet.reset();
+          await onOk();
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
       return false;
     }
   }
@@ -94,43 +144,120 @@ export default observer((props) => {
     <div
       className={`${prefixCls} ${prefixCls}-modal`}
     >
-      <TwoFormSelectEditor
-        record={[roleAssignDataSet.current, roleAssignDataSet.current]}
-        optionDataSetConfig={[UserOptionDataSet({ id: projectId }), undefined]}
-        optionDataSet={[undefined, orgRoleDataSet]}
-        name={['memberId', 'roleId']}
-        addButton="添加其他用户"
-        dsStore={[dsStore]}
-      >
-        {[(itemProps) => (
-          <Select
-            {...itemProps}
-            labelLayout="float"
-            searchable
-            searchMatcher={() => true}
-            onInput={(e) => handleFilterChange(e, itemProps.options)}
-            onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
-            onKeyDown={(e) => {
-              if (e.keyCode === 13) {
-                cancel();
-              }
-            }}
-            style={{ width: '100%' }}
-            optionRenderer={getOption}
-            addonAfter={(
-              <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
-                <Icon type="help" className={`${prefixCls}-help-icon`} />
-              </Tooltip>
-            )}
-          />
-        ), (itemProps) => (
-          <Select
-            {...itemProps}
-            labelLayout="float"
-            style={{ width: '100%' }}
-          />
-        )]}
-      </TwoFormSelectEditor>
+      <Form dataSet={AddWayDataSet}>
+        <SelectBox name={mapping.way.name}>
+          <Option value={wayOptions[0].value}>{wayOptions[0].text}</Option>
+          <Option value={wayOptions[1].value}>{wayOptions[1].text}</Option>
+        </SelectBox>
+      </Form>
+      {
+        AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value ? (
+          <TwoFormSelectEditor
+            record={[roleAssignDataSet.current, roleAssignDataSet.current]}
+            optionDataSetConfig={[UserOptionDataSet({ id: projectId }), undefined]}
+            optionDataSet={[undefined, orgRoleDataSet]}
+            name={['memberId', 'roleId']}
+            addButton="添加其他用户"
+            dsStore={[dsStore]}
+          >
+            {[(itemProps) => (
+              <Select
+                {...itemProps}
+                labelLayout="float"
+                searchable
+                searchMatcher={() => true}
+                onInput={(e) => handleFilterChange(e, itemProps.options)}
+                onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    cancel();
+                  }
+                }}
+                style={{ width: '100%' }}
+                optionRenderer={getOption}
+                addonAfter={(
+                  <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
+                    <Icon type="help" className={`${prefixCls}-help-icon`} />
+                  </Tooltip>
+              )}
+              />
+            ), (itemProps) => (
+              <Select
+                {...itemProps}
+                labelLayout="float"
+                style={{ width: '100%' }}
+              />
+            )]}
+          </TwoFormSelectEditor>
+        ) : (
+          <>
+            <Form
+              columns={2}
+              dataSet={roleAssignDataSet}
+            >
+              <Select
+                colSpan={1}
+                label="选择角色"
+                name="roleId"
+                options={orgRoleDataSet}
+                valueField="id"
+                required="true"
+                textField="name"
+              />
+              {/* 只是用于占位 */}
+              <TextField
+                style={{
+                  visibility: 'hidden',
+                }}
+                colSpan={1}
+              />
+            </Form>
+            <TwoFormSelectEditor
+              record={[roleAssignDataSet.current, roleAssignDataSet.current]}
+              optionDataSetConfig={[UserOptionDataSet({ id: projectId }), undefined]}
+              optionDataSet={[undefined, orgRoleDataSet]}
+              name={['memberId', 'roleId']}
+              addButton="添加其他用户"
+              onlyMember
+              dsStore={[dsStore]}
+            >
+              {[(itemProps) => {
+                console.log(itemProps);
+                return (
+                  <Select
+                    {...itemProps}
+                    labelLayout="float"
+                    searchable
+                    searchMatcher={() => true}
+                    onInput={(e) => handleFilterChange(e, itemProps.options)}
+                    onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        cancel();
+                      }
+                    }}
+                    style={{ width: '100%' }}
+                    optionRenderer={getOption}
+                    addonAfter={(
+                      <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
+                        <Icon type="help" className={`${prefixCls}-help-icon`} />
+                      </Tooltip>
+              )}
+                  />
+                );
+              }, (itemProps) => (
+                <TextField
+                  {...itemProps}
+                  style={{
+                    visibility: 'hidden',
+                  }}
+                />
+              )]}
+            </TwoFormSelectEditor>
+          </>
+        )
+      }
+
     </div>
   );
 });
