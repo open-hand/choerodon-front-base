@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -13,15 +14,15 @@ import EditPassword from './editPassword';
 const editModalKey = Modal.key();
 
 export default observer(() => {
-  const { passwordPolicyDataSet } = useContext(Store);
+  const { passwordPolicyDataSet, orgId } = useContext(Store);
   const [visible, setVisible] = useState(false);
   function openPasswordModal() {
     Modal.open({
       key: editModalKey,
       title: '修改密码策略',
-      children: <EditPassword dataSet={passwordPolicyDataSet} />,
+      children: <EditPassword dataSet={passwordPolicyDataSet} organizationId={orgId} />,
       style: {
-        width: 380,
+        width: 680,
       },
       drawer: true,
       okText: '保存',
@@ -58,6 +59,10 @@ export default observer(() => {
               </Row>
               {passwordPolicyDataSet.current && passwordPolicyDataSet.current.getPristineValue('enablePassword') ? [
                 <Row>
+                  <label>是否开启随机密码</label>
+                  <Output name="enableRandomPassword" renderer={renderBoolean} />
+                </Row>,
+                <Row>
                   <label>登录时强制修改默认密码</label>
                   <Output name="forceModifyPassword" renderer={renderBoolean} />
                 </Row>,
@@ -93,6 +98,14 @@ export default observer(() => {
                   <label>密码正则</label>
                   <Output name="regularExpression" />
                 </Row>,
+                <Row>
+                  <label>密码更新频率</label>
+                  <Output name="passwordUpdateRate" />
+                </Row>,
+                <Row>
+                  <label>密码到期提醒</label>
+                  <Output name="passwordReminderPeriod" />
+                </Row>,
               ] : null}
             </Col>
           </Row>
@@ -125,6 +138,14 @@ export default observer(() => {
                 <Row>
                   <label>锁定时长</label>
                   <Output name="lockedExpireTime" />
+                </Row>,
+                <Row>
+                  <label>PC端允许多处登录</label>
+                  <Output name="enableWebMultipleLogin" renderer={renderBoolean} />
+                </Row>,
+                <Row>
+                  <label>移动端允许多处登录</label>
+                  <Output name="enableAppMultipleLogin" renderer={renderBoolean} />
                 </Row>,
               ] : null}
 
