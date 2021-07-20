@@ -51,11 +51,23 @@ export function getSecondCheckModalDataSet(organizationId: number) {
         name: 'secCheckPhoneFlag',
         label: '启用手机验证码',
         type: FieldType.boolean,
+        options: new DataSet({
+          data: [
+            { value: true, meaning: '是' },
+            { value: false, meaning: '否' },
+          ],
+        }),
       },
       {
         name: 'secCheckEmailFlag',
         label: '启用邮箱验证码',
         type: FieldType.boolean,
+        options: new DataSet({
+          data: [
+            { value: true, meaning: '是' },
+            { value: false, meaning: '否' },
+          ],
+        }),
       },
     ],
   });
