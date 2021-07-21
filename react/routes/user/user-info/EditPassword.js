@@ -1,11 +1,19 @@
-import React, { Component, useEffect, useState, useImperativeHandle } from 'react';
-import { Button, Col, Form, Input, Row } from 'choerodon-ui';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { withRouter } from 'react-router-dom';
+import React, {
+  useRef, useEffect, useState, useImperativeHandle,
+} from 'react';
+import { message as C7nMessage } from 'choerodon-ui/pro';
+import {
+  Form, Input, Select, Button, Row, Col,
+} from 'choerodon-ui';
+import { FormattedMessage } from 'react-intl';
 import { observer } from 'mobx-react-lite';
-import { axios, Permission, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/boot';
+
+import { sendCaptcha } from '../services/password';
 
 const FormItem = Form.Item;
+const { Option } = Select;
+
 const intlPrefix = 'user.changepwd';
 const formItemLayout = {
   labelCol: {
@@ -18,18 +26,55 @@ const formItemLayout = {
   },
 };
 
+// 倒计时按钮
+const CountdownButton = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { onClick = () => {}, ...rest } = props;
+  const [countdown, setCountdown] = useState({
+    run: false,
+    time: -1,
+  });
+  const endTime = useRef(); // 倒计时结束时间
+
+  const dida = () => {
+    const remainTime = Math.round(((endTime.current - Date.now()) / 1000));
+    const nextCount = {
+      run: remainTime > 0,
+      time: remainTime,
+    };
+
+    setCountdown(nextCount);
+
+    if (remainTime > 0) setTimeout(() => dida(), 1000);
+  };
+
+  const handleClick = async () => {
+    const time = await onClick();
+
+    endTime.current = Date.now() + 1000 * (time || 60);
+
+    dida();
+  };
+
+  if (!countdown.run) return <Button {...rest} onClick={handleClick} />;
+
+  return <Button disabled {...rest}>{`${countdown.time}s`}</Button>;
+};
+
 let editFocusInput = React.createRef();
 function EditPassword(props) {
   const [enablePwd, setEnablePwd] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [confirmDirty, setConfirmDirty] = useState(undefined);
-  const { UserInfoStore } = props;
+  const { UserInfoStore, passwordPolicies } = props;
+  const [captchaType, setCaptchaType] = useState(() => (UserInfoStore.getUserInfo?.phone ? 'phone' : 'email'));
+  const { forceCodeVerify } = passwordPolicies; // 启用了强制验证码验证
+
   // state = {
   //     submitting: false,
   //     confirmDirty: null,
   //     res: {},
   // };
-
 
   const loadEnablePwd = () => {
     axios.get('/iam/choerodon/v1/system/setting/enable_resetPassword')
@@ -37,7 +82,6 @@ function EditPassword(props) {
         setEnablePwd(response);
       });
   };
-
 
   const compareToFirstPassword = (rule, value, callback) => {
     const { intl, form } = props;
@@ -70,7 +114,16 @@ function EditPassword(props) {
     const body = {
       originalPassword: getFieldValue('oldpassword'),
       password: getFieldValue('confirm'),
+      businessScope: 'UPDATE_PASSWORD',
     };
+
+    if (forceCodeVerify) {
+      body.veryfyType = captchaType;
+      body.email = getFieldValue('email');
+      body.phone = getFieldValue('phone');
+      body.captcha = getFieldValue('captcha');
+    }
+
     props.form.validateFields((err, values) => {
       if (!err) {
         setSubmitting(true);
@@ -90,6 +143,7 @@ function EditPassword(props) {
       }
     });
   };
+
   useImperativeHandle(props.forwardref, () => (
     {
       handleSubmit,
@@ -128,6 +182,27 @@ function EditPassword(props) {
     const { getFieldDecorator } = form;
 
     const user = UserInfoStore.getUserInfo;
+    const { phone, email } = user;
+
+    // eslint-disable-next-line consistent-return
+    const handleGainValidCodeBtnClick = async ({ type }) => {
+      try {
+        const res = await sendCaptcha({
+          type,
+          phone,
+          email,
+        });
+
+        C7nMessage.success(res.message);
+      } catch (error) {
+        // C7nMessage[error?.type ?? 'error'](error?.message ?? '发送校验码失败');
+
+        // 返回倒计时时间
+        const matchCountDownTime = error?.message?.match(/请(\d+)秒后再发送验证码/)?.[1];
+        if (matchCountDownTime) return matchCountDownTime;
+      }
+    };
+
     return (
       //   <Page
       //     service={[
@@ -205,6 +280,114 @@ function EditPassword(props) {
               />,
             )}
           </FormItem>
+          {forceCodeVerify && phone && email && (
+            <FormItem
+              required
+              {...formItemLayout}
+            >
+              {getFieldDecorator('type', {
+                initialValue: 'phone',
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],
+              })(
+                <Select
+                      // disabled={validCodeSendLimitFlag}
+                  onChange={setCaptchaType}
+                  style={{ width: '100%' }}
+                  label="选择验证类型"
+                >
+                  <Option value="phone">
+                    手机号码
+                  </Option>
+                  <Option value="email">邮箱</Option>
+                </Select>,
+              )}
+            </FormItem>
+          )}
+          {forceCodeVerify && captchaType === 'phone' && (
+            <FormItem
+              required
+              {...formItemLayout}
+            >
+              {getFieldDecorator('phone', {
+                initialValue: phone,
+              })(<Input disabled label="手机号码" />)}
+            </FormItem>
+          )}
+          {forceCodeVerify && captchaType === 'phone' && (
+            <FormItem
+              required
+              {...formItemLayout}
+            >
+              <Row gutter={8}>
+                <Col span={18}>
+                  {getFieldDecorator('captcha', {
+                    validateTrigger: 'onBlur',
+                    rules: [
+                      {
+                        required: true,
+                        message: '短信验证码',
+                      },
+                    ],
+                  })(<Input label="短信验证码" />)}
+                </Col>
+                <Col span={6}>
+                  <CountdownButton
+                    style={{ width: 90 }}
+                    funcType="raised"
+                    onClick={() => handleGainValidCodeBtnClick({
+                      type: 'phone',
+                    })}
+                  >
+                    获取验证码
+                  </CountdownButton>
+                </Col>
+              </Row>
+            </FormItem>
+          )}
+          {forceCodeVerify && captchaType === 'email' && (
+            <FormItem required {...formItemLayout}>
+              {getFieldDecorator('email', {
+                initialValue: email,
+              })(<Input label="邮箱" disabled />)}
+            </FormItem>
+          )}
+          {
+            forceCodeVerify && captchaType === 'email' && (
+              <FormItem
+                required
+                {...formItemLayout}
+              >
+                <Row gutter={8}>
+                  <Col span={18}>
+                    {getFieldDecorator('captcha', {
+                      validateTrigger: 'onBlur',
+                      rules: [
+                        {
+                          required: true,
+                          message: '邮箱验证码',
+                        },
+                      ],
+                    })(<Input label="邮箱验证码" style={{ width: 257, marginRight: 10 }} />)}
+                  </Col>
+                  <Col span={6}>
+                    <CountdownButton
+                      style={{ width: 90 }}
+                      funcType="raised"
+                      onClick={() => handleGainValidCodeBtnClick({
+                        type: 'email',
+                      })}
+                    >
+                      获取验证码
+                    </CountdownButton>
+                  </Col>
+                </Row>
+              </FormItem>
+            )
+          }
         </Form>
       </div>
     );

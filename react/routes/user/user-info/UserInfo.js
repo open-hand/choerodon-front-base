@@ -1,21 +1,21 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Button, Form, Icon, Input, Select, Modal as OldModal, Tooltip,
+  Form, Icon, Modal as OldModal,
 } from 'choerodon-ui';
 import { Modal, Spin } from 'choerodon-ui/pro';
-import { FormattedMessage } from 'react-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
-  Content, Header, Page, Permission, axios, Breadcrumb, Choerodon, HeaderButtons,
+  Content, Header, Page, axios, Breadcrumb, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
 import './Userinfo.less';
 import TextEditToggle from './textEditToggle';
 import EditUserInfo from './EditUserInfo';
 import { useStore } from './stores';
 import EditPassword from './EditPassword';
+import { fetchPasswordPolicies } from '../services/password';
 
-const { Text, Edit } = TextEditToggle;
+const { Text } = TextEditToggle;
 
 const createKey = Modal.key();
 const resetGitlabKey = Modal.key();
@@ -186,8 +186,15 @@ function UserInfo(props) {
     });
   }
 
-  function handleUpdatePassword() {
+  async function handleUpdatePassword() {
     const user = UserInfoStore.getUserInfo;
+    let passwordPolicies;
+    try {
+      passwordPolicies = await fetchPasswordPolicies(AppState.currentMenuType?.organizationId);
+    } catch (err) {
+      return false;
+    }
+
     Modal.open({
       key: createKey,
       title: '修改登录密码',
@@ -202,6 +209,7 @@ function UserInfo(props) {
           intlPrefix={intlPrefix}
           forwardref={modalRef}
           UserInfoStore={UserInfoStore}
+          passwordPolicies={passwordPolicies}
         />
       ),
       okText: '保存',
@@ -217,6 +225,8 @@ function UserInfo(props) {
       )
       ,
     });
+
+    return true;
   }
 
   function handleCopy() {
