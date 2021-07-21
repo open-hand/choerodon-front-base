@@ -71,6 +71,10 @@ export default observer(() => {
                   <Output name="notUsername" renderer={renderBoolean} />
                 </Row>,
                 <Row>
+                  <label>强制验证码校验</label>
+                  <Output name="forceCodeVerify" renderer={renderBoolean} />
+                </Row>,
+                <Row>
                   <label>新用户默认密码</label>
                   <Output name="originalPassword" />
                 </Row>,
@@ -101,10 +105,12 @@ export default observer(() => {
                 <Row>
                   <label>密码更新频率</label>
                   <Output name="passwordUpdateRate" />
+                  天
                 </Row>,
                 <Row>
                   <label>密码到期提醒</label>
                   <Output name="passwordReminderPeriod" />
+                  天前
                 </Row>,
               ] : null}
             </Col>

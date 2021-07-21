@@ -3,7 +3,7 @@ import {
   DataSet, Table, Button, message,
 } from 'choerodon-ui/pro';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
-import { TableQueryBarType } from 'choerodon-ui/pro/lib/table/enum';
+import TableProfessionalBar from 'choerodon-ui/pro/lib/table/query-bar/TableProfessionalBar';
 
 import {
   addUserPhoneCheckList, deleteUserPhoneCheckList, addUserEmailCheckList, deleteUserEmailCheckList,
@@ -114,7 +114,9 @@ export default function SecondCheckModal(props: { dataSet: DataSet, organization
       dataSet={dataSet}
       columns={columns}
       buttons={headerButtons}
-      queryBar={TableQueryBarType.professionalBar}
+      queryBar={(queryBarProps) => (
+        <TableProfessionalBar {...queryBarProps} queryBarProps={{ labelWidth: 120 }} />
+      )}
       queryFieldsLimit={2}
     />
   );
