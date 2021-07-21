@@ -59,7 +59,7 @@ export default observer(({
       if (current.get('enableCaptcha')) {
         ret.push(
           (
-            <NumberField name="maxCheckCaptcha" label="输错次数" colSpan={6} />
+            <NumberField name="maxCheckCaptcha" label="输错次数" colSpan={6} help="登录时密码错误超过开启验证码的密码错误次数将显示图像验证码" showHelp="tooltip" />
           ),
         );
       }
@@ -74,8 +74,8 @@ export default observer(({
       if (current.get('enableLock')) {
         ret.push(
           [
-            <NumberField name="maxErrorTime" label="输错次数" colSpan={6} />,
-            <NumberField name="lockedExpireTime" label="锁定时长" suffix="秒" colSpan={6} />,
+            <NumberField name="maxErrorTime" label="输错次数" colSpan={6} help="登录时密码错误超过最大密码错误次数将锁定用户" showHelp="tooltip" />,
+            <NumberField name="lockedExpireTime" label="锁定时长" suffix="秒" colSpan={6} help="用户锁定时间超过锁定时长将自动解锁" showHelp="tooltip" />,
           ],
         );
       }
@@ -83,6 +83,7 @@ export default observer(({
       ret.push(...[
         <SelectBox name="enableWebMultipleLogin" colSpan={6} />,
         <SelectBox name="enableAppMultipleLogin" colSpan={6} />,
+        <SelectBox name="loginAgain" colSpan={6} />,
         <div colSpan={6}>
           <div style={{ color: '#4A5C90' }}>
             用户登录二次校验
@@ -146,7 +147,7 @@ export default observer(({
               <NumberField name="lowercaseCount" label="最少小写字母数" colSpan={2} />,
               <NumberField name="uppercaseCount" label="最少大写字母数" colSpan={2} />,
               <NumberField name="specialCharCount" label="最少特殊字符" colSpan={3} />,
-              <NumberField name="notRecentCount" label="最大近期密码" colSpan={3} />,
+              <NumberField name="notRecentCount" label="最大近期密码" colSpan={3} help="近期密码不能作为更新密码" showHelp="tooltip" />,
               <TextField name="regularExpression" label="密码正则" colSpan={6} />,
               <NumberField name="passwordUpdateRate" label="密码更新频率" suffix="天" colSpan={3} />,
               <NumberField

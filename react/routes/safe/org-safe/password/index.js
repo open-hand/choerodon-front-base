@@ -153,6 +153,10 @@ export default observer(() => {
                   <label>移动端允许多处登录</label>
                   <Output name="enableAppMultipleLogin" renderer={renderBoolean} />
                 </Row>,
+                <Row>
+                  <label>修改密码后重新登录</label>
+                  <Output name="loginAgain" renderer={renderBoolean} />
+                </Row>,
               ] : null}
 
             </Col>
