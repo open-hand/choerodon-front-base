@@ -59,7 +59,7 @@ export default observer(({
       if (current.get('enableCaptcha')) {
         ret.push(
           (
-            <NumberField name="maxCheckCaptcha" label="输错次数" colSpan={6} help="登录时密码错误超过开启验证码的密码错误次数将显示图像验证码" showHelp="tooltip" />
+            <NumberField name="maxCheckCaptcha" label="验证码错误次数" colSpan={6} help="登录时密码错误超过开启验证码的密码错误次数将显示图像验证码" showHelp="tooltip" />
           ),
         );
       }
@@ -74,7 +74,7 @@ export default observer(({
       if (current.get('enableLock')) {
         ret.push(
           [
-            <NumberField name="maxErrorTime" label="输错次数" colSpan={6} help="登录时密码错误超过最大密码错误次数将锁定用户" showHelp="tooltip" />,
+            <NumberField name="maxErrorTime" label="最大密码错误次数" colSpan={6} help="登录时密码错误超过最大密码错误次数将锁定用户" showHelp="tooltip" />,
             <NumberField name="lockedExpireTime" label="锁定时长" suffix="秒" colSpan={6} help="用户锁定时间超过锁定时长将自动解锁" showHelp="tooltip" />,
           ],
         );
