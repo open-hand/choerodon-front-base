@@ -130,7 +130,7 @@ export default observer(() => {
                   <Output name="enableCaptcha" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>输错次数</label>
+                  <label>验证码错误次数</label>
                   <Output name="maxCheckCaptcha" />
                 </Row>,
                 <Row>
@@ -138,7 +138,7 @@ export default observer(() => {
                   <Output name="enableLock" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>输错次数</label>
+                  <label>最大密码错误次数</label>
                   <Output name="maxErrorTime" />
                 </Row>,
                 <Row>

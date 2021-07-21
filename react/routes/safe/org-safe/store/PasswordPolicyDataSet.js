@@ -87,11 +87,11 @@ export default function passwordPoliciesDataSet(organizationId, id, intl, intlPr
     { name: 'enableSecurity', type: 'boolean', label: '是否启用' },
     { name: 'enableCaptcha', type: 'boolean', label: '是否开启验证码' },
     {
-      name: 'maxCheckCaptcha', type: 'number', step: 1, min: 0, max: 65535, label: '输错次数', defaultValue: 0,
+      name: 'maxCheckCaptcha', type: 'number', step: 1, min: 0, max: 65535, label: '验证码错误次数', defaultValue: 0,
     },
     { name: 'enableLock', type: 'boolean', label: '是否开启锁定' },
     {
-      name: 'maxErrorTime', type: 'number', step: 1, min: 0, max: 65535, label: '输错次数', defaultValue: 0,
+      name: 'maxErrorTime', type: 'number', step: 1, min: 0, max: 65535, label: '最大密码错误次数', defaultValue: 0,
     },
     {
       name: 'lockedExpireTime', type: 'number', min: 0, label: '锁定时长', defaultValue: 0,
