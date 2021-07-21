@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import {
   DataSet, Table, Button, message,
 } from 'choerodon-ui/pro';
@@ -83,11 +84,11 @@ const getBatchRequest = (
     message.success('操作成功');
     dataSet.query(dataSet.currentPage);
   } catch (err) {
-    message.error(err?.message ?? '操作失败');
+    window.console.error(err?.message ?? '操作失败');
   }
 };
 
-export default function SecondCheckModal(props: { dataSet: DataSet, organizationId:number }) {
+function SecondCheckModal(props: { dataSet: DataSet, organizationId:number }) {
   const { dataSet, organizationId } = props;
 
   const columns = [
@@ -102,11 +103,17 @@ export default function SecondCheckModal(props: { dataSet: DataSet, organization
   const handleAddEmail = getBatchRequest(dataSet, organizationId, addUserEmailCheckList);
   const handleDeleteEmail = getBatchRequest(dataSet, organizationId, deleteUserEmailCheckList);
 
+  const noSelected = dataSet.selected.length === 0;
+  const disabledAddPhone = noSelected || dataSet.selected.every((record) => record.get('secCheckPhoneFlag'));
+  const disabledDeletePhone = noSelected || dataSet.selected.every((record) => !record.get('secCheckPhoneFlag'));
+  const disabledAddEmail = noSelected || dataSet.selected.every((record) => record.get('secCheckEmailFlag'));
+  const disabledDeleteEmail = noSelected || dataSet.selected.every((record) => !record.get('secCheckEmailFlag'));
+
   const headerButtons = [
-    <Button icon="playlist_add" onClick={handleAddPhone}>启用手机</Button>,
-    <Button icon="delete" onClick={handleDeletePhone}>禁用手机</Button>,
-    <Button icon="playlist_add" onClick={handleAddEmail}>启用邮箱</Button>,
-    <Button icon="delete" onClick={handleDeleteEmail}>禁用邮箱</Button>,
+    <Button disabled={disabledAddPhone} icon="playlist_add" onClick={handleAddPhone}>启用手机</Button>,
+    <Button disabled={disabledDeletePhone} icon="delete" onClick={handleDeletePhone}>禁用手机</Button>,
+    <Button disabled={disabledAddEmail} icon="playlist_add" onClick={handleAddEmail}>启用邮箱</Button>,
+    <Button disabled={disabledDeleteEmail} icon="delete" onClick={handleDeleteEmail}>禁用邮箱</Button>,
   ];
 
   return (
@@ -121,3 +128,5 @@ export default function SecondCheckModal(props: { dataSet: DataSet, organization
     />
   );
 }
+
+export default observer(SecondCheckModal);
