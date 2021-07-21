@@ -156,6 +156,18 @@ export default function passwordPoliciesDataSet(organizationId, id, intl, intlPr
       }),
     },
     {
+      name: 'loginAgain',
+      type: 'boolean',
+      label: '修改密码后重新登录',
+      defaultValue: false,
+      options: new DataSet({
+        data: [
+          { value: true, meaning: '是' },
+          { value: false, meaning: '否' },
+        ],
+      }),
+    },
+    {
       name: 'userLoginSecondCheck',
       label: 'xxx',
     },
