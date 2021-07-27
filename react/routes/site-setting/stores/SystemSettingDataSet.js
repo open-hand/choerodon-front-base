@@ -1,3 +1,14 @@
+const mapping = {
+  openAppMarket: {
+    name: 'openAppMarket',
+    type: 'boolean',
+    label: '是否启用开放平台应用市场',
+    defaultValue: true,
+  },
+};
+
+export { mapping };
+
 export default ({ id = 0, hasRegister }) => {
   const fields = hasRegister ? [
     { name: 'registerEnabled', type: 'boolean', label: '是否启用注册' },
@@ -71,6 +82,9 @@ export default ({ id = 0, hasRegister }) => {
       },
     },
     fields: [
+      {
+        ...mapping.openAppMarket,
+      },
       {
         name: 'systemName', type: 'string', label: '平台简称', defaultValue: 'Choerodon', required: true,
       },

@@ -8,6 +8,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import { mapping as systemMapping } from '../stores/SystemSettingDataSet';
 import GitlabSync from './components/gitlab-sync';
 import SketchPicker from './components/sketchPicker';
 import { mapping } from '../stores/FuncModeDataSet';
@@ -169,6 +170,7 @@ const basicInfo = withRouter(observer(() => {
             {hasRegister && dataSet.current && dataSet.current.getPristineValue('registerEnabled') && (
               <Output renderer={() => (dataSet.current && dataSet.current.getPristineValue('registerUrl')) || '无'} name="registerUrl" />
             )}
+            <Output renderer={renderBoolean} name={systemMapping.openAppMarket.name} />
             <Output renderer={renderBoolean} name="autoCleanEmailRecord" newLine label="是否自动清理邮件日志" />
             <Output renderer={renderBoolean} name="autoCleanWebhookRecord" newLine label="是否自动清理webhook日志" />
             <Output renderer={renderBoolean} name="autoCleanSagaInstance" newLine label="是否自动清理事务记录" />
