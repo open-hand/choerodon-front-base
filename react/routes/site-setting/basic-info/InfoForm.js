@@ -6,6 +6,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { Button, Icon, Tooltip } from 'choerodon-ui';
+import { mapping } from '../stores/SystemSettingDataSet';
 import './index.less';
 import AvatarUploader from '../../../components/avatarUploader';
 import Tips from '../../../components/new-tips';
@@ -96,6 +97,10 @@ const InfoForm = observer(({
         {hasRegister && dataSet.current && dataSet.current.get('registerEnabled') && (
           <TextArea resize="vertical" name="registerUrl" />
         )}
+        <SelectBox name={mapping.openAppMarket.name}>
+          <SelectBox.Option value>是</SelectBox.Option>
+          <SelectBox.Option value={false}>否</SelectBox.Option>
+        </SelectBox>
         <Tips
           title="是否自动清理邮件日志"
           helpText="若选择自动清理平台中邮件日志后，系统将在每天凌晨2点自动清理超出“保留时间”的邮件日志"
