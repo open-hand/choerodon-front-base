@@ -1,6 +1,6 @@
 const mapping = {
   openAppMarket: {
-    name: 'enableOpenplatformMarket',
+    name: 'enableOpenPlatformMarket',
     type: 'boolean',
     label: '是否启用开放平台应用市场',
     defaultValue: true,
@@ -41,7 +41,7 @@ export default ({ id = 0, hasRegister }) => {
             autoCleanWebhookRecord,
             autoCleanSagaInstance,
             retainFailedSagaInstance,
-            enableOpenplatformMarket,
+            enableOpenPlatformMarket,
           } = parseData || {};
           const dft = {
             systemName: systemName || 'Choerodon',
@@ -53,7 +53,7 @@ export default ({ id = 0, hasRegister }) => {
             autoCleanWebhookRecord: autoCleanWebhookRecord || false,
             autoCleanSagaInstance: autoCleanSagaInstance || false,
             retainFailedSagaInstance: retainFailedSagaInstance !== false,
-            enableOpenplatformMarket,
+            enableOpenPlatformMarket,
           };
           if (data === '{}') {
             return ({ new: true, ...dft });
