@@ -10,7 +10,16 @@ import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
 import { StatusTag } from '@choerodon/components';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons, checkPermission,
+  Action,
+  Content,
+  Header,
+  axios,
+  Permission,
+  Breadcrumb,
+  Page,
+  HeaderButtons,
+  checkPermission,
+  BrowserAdapter,
 } from '@choerodon/boot';
 import {
   Spin, Button, Modal as OldModal, Icon,
@@ -28,7 +37,7 @@ const modalKey = Modal.key();
 // eslint-disable-next-line no-undef
 const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user');
 
-export default observer((props) => {
+export default BrowserAdapter(observer((props) => {
   const {
     cRef,
     breadCrumb,
@@ -292,7 +301,7 @@ export default observer((props) => {
       return '';
     }
     return (
-      <div className={styles['theme4-c7n-memberItem-action']}>
+      <div className={`${styles['theme4-c7n-memberItem-action']} c7ncd-projectUser-action`}>
         <Action data={actionDatas} />
       </div>
     );
@@ -461,4 +470,6 @@ export default observer((props) => {
       </Content>
     </Page>
   );
+}))({
+  FF: () => import('./styles/ff.less'),
 });
