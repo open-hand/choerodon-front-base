@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { Table, Form, TextField, TextArea, Select, Button } from 'choerodon-ui/pro';
+import {
+  Table, Form, TextField, TextArea, Select, Button,
+} from 'choerodon-ui/pro';
 import { axios } from '@choerodon/boot';
 import _ from 'lodash';
 import Store from './stores';
@@ -7,11 +9,13 @@ import '../index.less';
 
 const { Column } = Table;
 export default function CreateView() {
-  const { intlPrefix, permissions, intl, context, prefixCls, appServiceVersionDataSet, modal, history, projectId, applicationId } = useContext(Store);
+  const {
+    intlPrefix, permissions, intl, context, prefixCls, appServiceVersionDataSet, modal, history, projectId, applicationId,
+  } = useContext(Store);
   const { versionCreateDataSet } = context;
 
   async function handleOk(noQuery) {
-    versionCreateDataSet.current.set('appServiceDetailsVOS', appServiceVersionDataSet.selected.map(record => ({
+    versionCreateDataSet.current.set('appServiceDetailsVOS', appServiceVersionDataSet.selected.map((record) => ({
       id: record.get('id'),
       appServiceVersions: [
         {
@@ -45,8 +49,8 @@ export default function CreateView() {
   useEffect(() => {
     modal.update({
       footer: (okBtn, cancelBtn) => (
-        <React.Fragment>
-          {okBtn}
+        <>
+          {cancelBtn}
           <Button
             onClick={() => createAndGoToPublish()}
             funcType="raised"
@@ -54,8 +58,8 @@ export default function CreateView() {
           >
             创建并发布
           </Button>
-          {cancelBtn}
-        </React.Fragment>
+          {okBtn}
+        </>
       ),
     });
   }, []);
@@ -101,19 +105,23 @@ export default function CreateView() {
 
   function renderService() {
     return (
-      <React.Fragment>
+      <>
         <div className="table-content">
           <div className="service-title-small">选择应用服务</div>
           {getServiceTable(appServiceVersionDataSet)}
         </div>
-      </React.Fragment>
+      </>
     );
   }
 
   return (
-    <React.Fragment>
-      <div style={{ padding: '0 .2rem' }} className="form-content"> {getForm()} </div>
+    <>
+      <div style={{ padding: '0 .2rem' }} className="form-content">
+        {' '}
+        {getForm()}
+        {' '}
+      </div>
       {renderService()}
-    </React.Fragment>
+    </>
   );
 }

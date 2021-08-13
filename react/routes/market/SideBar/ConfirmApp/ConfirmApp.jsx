@@ -1,4 +1,6 @@
-import React, { Component, useState, useContext, useEffect, useReducer } from 'react';
+import React, {
+  Component, useState, useContext, useEffect, useReducer,
+} from 'react';
 import {
   DataSet,
   Table,
@@ -95,7 +97,8 @@ const ConfirmApp = observer((props) => {
   useEffect(() => {
     modal.update({
       footer: (okBtn, cancelBtn) => (
-        <React.Fragment>
+        <>
+          {cancelBtn}
           {okBtn}
           <Button
             onClick={() => handleSubmit()}
@@ -104,8 +107,7 @@ const ConfirmApp = observer((props) => {
           >
             发布
           </Button>
-          {cancelBtn}
-        </React.Fragment>
+        </>
       ),
     });
   }, []);

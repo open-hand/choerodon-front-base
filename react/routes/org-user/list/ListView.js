@@ -329,6 +329,7 @@ export default withRouter(observer((props) => {
       cancelText: '关闭',
       footer: (okBtn, cancelBtn) => (
         <div>
+          {cancelBtn}
           {okBtn}
           <ProButton
             color="primary"
@@ -337,7 +338,6 @@ export default withRouter(observer((props) => {
           >
             转至LDAP设置
           </ProButton>
-          {cancelBtn}
         </div>
       ),
     });

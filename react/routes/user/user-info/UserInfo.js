@@ -219,8 +219,8 @@ function UserInfo(props) {
       },
       footer: (okBtn, cancelBtn) => (
         <div>
-          {!user.ldap ? okBtn : React.cloneElement(okBtn, { disabled: true })}
           {cancelBtn}
+          {!user.ldap ? okBtn : React.cloneElement(okBtn, { disabled: true })}
         </div>
       )
       ,

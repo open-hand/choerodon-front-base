@@ -158,8 +158,6 @@ const GeneralSetting = observer(() => {
         children: <ModalContent />,
         okProps,
         okText: '我已经知道后果，停用此项目',
-        // closable: true,
-        // footer: (okBtn: any) => okBtn,
         onOk: handleOk,
       });
     } else {
