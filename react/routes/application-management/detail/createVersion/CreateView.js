@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { Table, Form, TextField, TextArea, Icon, Select, Button } from 'choerodon-ui/pro';
+import {
+  Table, Form, TextField, TextArea, Icon, Select, Button,
+} from 'choerodon-ui/pro';
 import { axios } from '@choerodon/boot';
 import _ from 'lodash';
 import Store from './stores';
@@ -9,12 +11,14 @@ import FixVersionAdder from './FixVersionAdder';
 const { Column } = Table;
 const { Option } = Select;
 export default function CreateView() {
-  const { intl, context, appServiceVersionDataSet, modal, status, history, projectId, applicationId } = useContext(Store);
+  const {
+    intl, context, appServiceVersionDataSet, modal, status, history, projectId, applicationId,
+  } = useContext(Store);
   const { versionCreateDataSet, versionDataSet } = context;
 
   async function handleOk() {
     if (status !== 'published') {
-      versionCreateDataSet.current.set('appServiceDetailsVOS', appServiceVersionDataSet.selected.map(record => ({
+      versionCreateDataSet.current.set('appServiceDetailsVOS', appServiceVersionDataSet.selected.map((record) => ({
         id: record.get('id'),
         appServiceVersions: [
           {
@@ -47,8 +51,8 @@ export default function CreateView() {
   useEffect(() => {
     modal.update({
       footer: (okBtn, cancelBtn) => (
-        <React.Fragment>
-          {okBtn}
+        <>
+          {cancelBtn}
           <Button
             onClick={() => createAndGoToPublish()}
             funcType="raised"
@@ -56,8 +60,8 @@ export default function CreateView() {
           >
             {`${okBtn.props.children}并发布`}
           </Button>
-          {cancelBtn}
-        </React.Fragment>
+          {okBtn}
+        </>
       ),
     });
   }, []);
@@ -108,12 +112,12 @@ export default function CreateView() {
 
   function renderService() {
     return (
-      <React.Fragment>
+      <>
         <div className="table-content">
           <div className="service-title-small">选择应用服务</div>
           {getServiceTable(appServiceVersionDataSet)}
         </div>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -131,10 +135,14 @@ export default function CreateView() {
   }
 
   return (
-    <React.Fragment>
-      <div style={{ padding: '0 .2rem' }} className="form-content"> {getForm()} </div>
+    <>
+      <div style={{ padding: '0 .2rem' }} className="form-content">
+        {' '}
+        {getForm()}
+        {' '}
+      </div>
       {(status === 'unpublished' || status === 'create') && renderService()}
       {status === 'published' && renderAddFixVersion()}
-    </React.Fragment>
+    </>
   );
 }

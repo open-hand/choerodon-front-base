@@ -1,5 +1,9 @@
-import React, { Component, useState, useContext, useEffect, useReducer } from 'react';
-import { DataSet, Table, Form, Output, TextField, TextArea, Modal, Button, CheckBox, Tooltip, Icon } from 'choerodon-ui/pro';
+import React, {
+  Component, useState, useContext, useEffect, useReducer,
+} from 'react';
+import {
+  DataSet, Table, Form, Output, TextField, TextArea, Modal, Button, CheckBox, Tooltip, Icon,
+} from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import { Collapse, message, Badge } from 'choerodon-ui';
 import { Link } from 'react-router-dom';
@@ -23,7 +27,9 @@ const versionStatusMap = {
 };
 
 const ViewVersionDetail = observer((props) => {
-  const { updateReleasedVersionDataSet, serviceTableDataSet, mobxStore, modal, status, projectId, organizationId, history } = useContext(Store);
+  const {
+    updateReleasedVersionDataSet, serviceTableDataSet, mobxStore, modal, status, projectId, organizationId, history,
+  } = useContext(Store);
   const getCustomValidateMsg = (name) => {
     const currentField = updateReleasedVersionDataSet.current.getField(name);
     return currentField.isValid() ? '' : currentField.getValidationMessage();
@@ -49,10 +55,10 @@ const ViewVersionDetail = observer((props) => {
   useEffect(() => {
     modal.update({
       footer: (okBtn, cancelBtn) => (
-        <React.Fragment>
-          {okBtn}
+        <>
           {cancelBtn}
-        </React.Fragment>
+          {okBtn}
+        </>
       ),
     });
   }, []);
@@ -70,7 +76,11 @@ const ViewVersionDetail = observer((props) => {
         <Panel header={(<span style={{ marginLeft: '0.1rem' }}>包含的应用服务</span>)} key="1">
           <p className={`${cssPrefix}-serviceInfo`}>
             <Icon type="info" className={`${cssPrefix}-service-serviceInfo-icon`} />
-            <span>如果您想修改应用服务及应用服务版本，请前去<Link to={`/iam/application-management${history.location.search}`}>应用管理</Link>进行编辑，修改后的数据将会在此同步更新</span>
+            <span>
+              如果您想修改应用服务及应用服务版本，请前去
+              <Link to={`/iam/application-management${history.location.search}`}>应用管理</Link>
+              进行编辑，修改后的数据将会在此同步更新
+            </span>
           </p>
           <Table dataSet={serviceTableDataSet} queryBar="none" className={`${cssPrefix}-serviceTable`}>
             <Column name="name" width={150} />

@@ -40,6 +40,7 @@ const ldapSetting = withRouter(observer((props) => {
       modal.update({
         footer: (okBtn, cancelBtn) => (
           <div>
+            {cancelBtn}
             <Button
               color="primary"
               funcType="raised"
@@ -47,7 +48,6 @@ const ldapSetting = withRouter(observer((props) => {
             >
               转至LDAP设置
             </Button>
-            {cancelBtn}
           </div>
         ),
       });

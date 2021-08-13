@@ -1,5 +1,9 @@
-import React, { Component, useState, useContext, useEffect, useReducer } from 'react';
-import { Table, Form, TextField, Button, Tabs, Select, Tooltip, Icon, SelectBox, TextArea } from 'choerodon-ui/pro';
+import React, {
+  Component, useState, useContext, useEffect, useReducer,
+} from 'react';
+import {
+  Table, Form, TextField, Button, Tabs, Select, Tooltip, Icon, SelectBox, TextArea,
+} from 'choerodon-ui/pro';
 import { Collapse, message, Spin } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { axios, StatusTag } from '@choerodon/boot';
@@ -18,7 +22,6 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 const cssPrefix = 'c7n-market-releaseNewVersion';
-
 
 const AppVersionContainer = ({ record }) => (record.get('appServiceVersions') ? (
   <span>{record.get('appServiceVersions')[0].version}</span>
@@ -51,7 +54,15 @@ const DocumentField = observer((versionDataSet) => {
   return (
     <div style={{ width: '5.12rem', marginTop: '-0.12rem' }}>
       <p className={`${cssPrefix}-document-title`} style={{ marginBottom: 0 }}>
-        <span>文档<p style={{ display: 'inline-block', marginLeft: '0.04rem', color: '#d50000', fontSize: '0.14rem' }}>*</p></span>
+        <span>
+          文档
+          <p style={{
+            display: 'inline-block', marginLeft: '0.04rem', color: '#d50000', fontSize: '0.14rem',
+          }}
+          >
+            *
+          </p>
+        </span>
       </p>
       <Editor
         prefix="document"
@@ -65,7 +76,15 @@ const DocumentField = observer((versionDataSet) => {
 
 const ChangeLogField = observer((versionDataSet) => (
   <div className={`${cssPrefix}-changelog`} name="changeLog" style={{ width: 512, marginTop: '-0.12rem' }}>
-    <p>ChangeLog<p style={{ display: 'inline-block', marginLeft: '0.04rem', marginBottom: 0, color: '#d50000', fontSize: '0.14rem' }}>*</p></p>
+    <p>
+      ChangeLog
+      <p style={{
+        display: 'inline-block', marginLeft: '0.04rem', marginBottom: 0, color: '#d50000', fontSize: '0.14rem',
+      }}
+      >
+        *
+      </p>
+    </p>
     <ChangeLogEditor current={versionDataSet.current} />
   </div>
 ));
@@ -73,7 +92,9 @@ const ChangeLogField = observer((versionDataSet) => (
 const ReleaseNewVersion = observer((props) => {
   const context = useContext(Store);
 
-  const { versionDataSet, serviceTableDataSet, selectVersionsDataSet, allServiceTableDataSet } = context;
+  const {
+    versionDataSet, serviceTableDataSet, selectVersionsDataSet, allServiceTableDataSet,
+  } = context;
 
   const apiReducer = (action) => {
     const whetherToCreate = versionDataSet.current.get('whetherToCreate');
@@ -91,22 +112,20 @@ const ReleaseNewVersion = observer((props) => {
     const validateFunc = () => {
       if (whetherToCreate) {
         return versionDataSet.validate();
-      } else {
-        return serviceTableDataSet.queryDataSet.validate();
       }
+      return serviceTableDataSet.queryDataSet.validate();
     };
     return validateFunc().then((validatePass) => {
       if (!validatePass) {
         return Promise.reject(Error('校验未通过'));
-      } else {
-        switch (action) {
-          case 'submit':
-            return axios.post(`iam/choerodon/v1/projects/${context.projectId}/publish_applications/${context.publishAppId}/new_version?apply=true&organization_id=${context.organizationId}`, updateObj);
-          case 'save':
-            return axios.post(`iam/choerodon/v1/projects/${context.projectId}/publish_applications/${context.publishAppId}/new_version?apply=false&organization_id=${context.organizationId}`, updateObj);
-          default:
-            Promise.reject(Error('非预设定 Action'));
-        }
+      }
+      switch (action) {
+        case 'submit':
+          return axios.post(`iam/choerodon/v1/projects/${context.projectId}/publish_applications/${context.publishAppId}/new_version?apply=true&organization_id=${context.organizationId}`, updateObj);
+        case 'save':
+          return axios.post(`iam/choerodon/v1/projects/${context.projectId}/publish_applications/${context.publishAppId}/new_version?apply=false&organization_id=${context.organizationId}`, updateObj);
+        default:
+          Promise.reject(Error('非预设定 Action'));
       }
     }).then((res) => {
       if (res.failed) {
@@ -125,6 +144,8 @@ const ReleaseNewVersion = observer((props) => {
     context.modal.update({
       footer: (okBtn, cancelBtn) => (
         <div>
+          {cancelBtn}
+
           {okBtn}
           <Button
             onClick={() => apiReducer('submit')}
@@ -133,7 +154,6 @@ const ReleaseNewVersion = observer((props) => {
           >
             申请
           </Button>
-          {cancelBtn}
         </div>
       ),
     });
@@ -144,11 +164,10 @@ const ReleaseNewVersion = observer((props) => {
   const renderStatusTag = (status) => {
     if (status === 'released') {
       return <StatusTag name="已发布" color={colorMap(status)} />;
-    } else if (status === 'publishing') {
+    } if (status === 'publishing') {
       return <StatusTag name="发布中" color={colorMap(status)} />;
-    } else {
-      return null;
     }
+    return null;
   };
 
   const renderVersionOption = ({ record, text, value }) => (
@@ -185,7 +204,7 @@ const ReleaseNewVersion = observer((props) => {
   };
 
   const AdditionInfo = observer(() => (
-    <React.Fragment>
+    <>
       <Form dataSet={versionDataSet} className={`${cssPrefix}-form`}>
         <TextField name="notificationEmail" help="该邮箱用于接收消息通知" showHelp="tooltip" />
       </Form>
@@ -211,7 +230,7 @@ const ReleaseNewVersion = observer((props) => {
       <Form dataSet={versionDataSet} className={`${cssPrefix}-form`}>
         <TextArea name="remark" resize="vertical" />
       </Form>
-    </React.Fragment>
+    </>
   ));
 
   const AppInfo = observer(() => (

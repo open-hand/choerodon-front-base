@@ -1,7 +1,13 @@
-import React, { Component, useState, useContext, useEffect } from 'react';
+import React, {
+  Component, useState, useContext, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Icon, Input, Modal, Select } from 'choerodon-ui';
-import { axios, Content, Header, TabPage as Page, Breadcrumb, Permission, stores, Choerodon } from '@choerodon/boot';
+import {
+  Button, Form, Icon, Input, Modal, Select,
+} from 'choerodon-ui';
+import {
+  axios, Content, Header, TabPage as Page, Breadcrumb, Permission, stores, Choerodon,
+} from '@choerodon/boot';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import classnames from 'classnames';
 import ApplicationSettingContext from '../../stores';
@@ -12,7 +18,7 @@ const { Sidebar } = Modal;
 const FormItem = Form.Item;
 
 const Edit = Form.create({})(observer(({
-  onCancel, 
+  onCancel,
   form: {
     getFieldDecorator,
     validateFields,
@@ -24,11 +30,15 @@ const Edit = Form.create({})(observer(({
 }) => {
   const [submitting, setSubmitting] = useState(false);
   const [isShowAvatar, setIsShowAvatar] = useState(false);
-  const { store, AppState, intl: { formatMessage }, intlPrefix, prefixCls } = useContext(ApplicationSettingContext);
+  const {
+    store, AppState, intl: { formatMessage }, intlPrefix, prefixCls,
+  } = useContext(ApplicationSettingContext);
   const { id: projectId } = AppState.currentMenuType;
   useEffect(() => {
     if (visible) {
-      const { enabled, name, code, agileApplicationCode, categories, applicationVO = {} } = store.getApplicationInfo;
+      const {
+        enabled, name, code, agileApplicationCode, categories, applicationVO = {},
+      } = store.getApplicationInfo;
       setFieldsValue({
         name,
         agileApplicationCode,
@@ -40,7 +50,7 @@ const Edit = Form.create({})(observer(({
    * 打开上传图片模态框
    */
   const openAvatarUploader = () => {
-    setIsShowAvatar(true);    
+    setIsShowAvatar(true);
   };
 
   /**
@@ -48,12 +58,12 @@ const Edit = Form.create({})(observer(({
    * @param visible 模态框是否可见
    */
   const closeAvatarUploader = () => {
-    setIsShowAvatar(false);  
+    setIsShowAvatar(false);
   };
 
   const handleUploadOk = (res) => {
     store.setImageUrl(res);
-    setIsShowAvatar(false); 
+    setIsShowAvatar(false);
   };
   const getAvatar = () => {
     const { name } = store.getApplicationInfo;
@@ -104,9 +114,8 @@ const Edit = Form.create({})(observer(({
     onCancel();
   };
 
-
   const handleSave = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
     validateFields((err, value, modify) => {
       if (!err) {
         if (store.getApplicationInfo.imageUrl !== store.getImageUrl) modify = true;
@@ -114,10 +123,10 @@ const Edit = Form.create({})(observer(({
           Choerodon.prompt(formatMessage({ id: 'save.success' }));
           onCancel();
           return;
-        }    
+        }
         const { id } = store.getApplicationInfo;
-        const body = {     
-          ...value,          
+        const body = {
+          ...value,
           imageUrl: store.getImageUrl,
         };
         if (body.category) {
@@ -128,11 +137,11 @@ const Edit = Form.create({})(observer(({
         store.axiosSaveApplicationInfo(projectId, id, body)
           .then(() => {
             setSubmitting(false);
-            Choerodon.prompt(formatMessage({ id: 'save.success' }));            
+            Choerodon.prompt(formatMessage({ id: 'save.success' }));
             store.axiosGetApplicationInfo(projectId).then((data) => {
               store.setImageUrl(data.imageUrl);
-              store.setApplicationInfo(data);              
-            }).catch(Choerodon.handleResponseError);            
+              store.setApplicationInfo(data);
+            }).catch(Choerodon.handleResponseError);
             onCancel();
             // history.replace(`${location.pathname}?type=project&id=${id}&name=${encodeURIComponent(data.name)}&organizationId=${organizationId}`);
           })
@@ -144,8 +153,9 @@ const Edit = Form.create({})(observer(({
     });
   };
 
-
-  const { enabled, name, code, agileApplicationCode, categories, applicationVO = {} } = store.getApplicationInfo;
+  const {
+    enabled, name, code, agileApplicationCode, categories, applicationVO = {},
+  } = store.getApplicationInfo;
   return (
     <Sidebar
       title={formatMessage({ id: `${intlPrefix}.modal.title` })}
@@ -156,16 +166,17 @@ const Edit = Form.create({})(observer(({
         <div className="btnGroup">
           <Button
             funcType="raised"
-            type="primary"
-            onClick={handleSave}
-            loading={submitting}       
-          ><FormattedMessage id="save" />
+            onClick={cancelValue}
+          >
+            <FormattedMessage id="cancel" />
           </Button>
           <Button
             funcType="raised"
-            onClick={cancelValue}       
+            type="primary"
+            onClick={handleSave}
+            loading={submitting}
           >
-            <FormattedMessage id="cancel" />
+            <FormattedMessage id="save" />
           </Button>
         </div>
       )}
@@ -193,12 +204,12 @@ const Edit = Form.create({})(observer(({
           })(
             <Input
               autoComplete="off"
-              label={<FormattedMessage id={`${intlPrefix}.name`} />}            
+              label={<FormattedMessage id={`${intlPrefix}.name`} />}
               maxLength={32}
               showLengthInfo={false}
             />,
           )}
-        </FormItem>        
+        </FormItem>
       </Form>
     </Sidebar>
   );
