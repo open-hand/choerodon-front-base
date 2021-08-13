@@ -92,8 +92,6 @@ const ListView = () => {
       title: formatMessage({ id: `${intlPrefix}.delete.title` }),
       children: formatMessage({ id: `${intlPrefix}.delete.des` }, { name: record.get('name') }),
       okText: formatMessage({ id: 'delete' }),
-      okProps: { color: 'red' },
-      cancelProps: { color: 'dark' },
     };
     dataSet.delete(record, modalProps);
   }

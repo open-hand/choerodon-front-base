@@ -64,7 +64,7 @@ const LdapLoadClient = observer(() => {
         setDelay(3000);
         if (new Date() - new Date(ldapLoadClientDataSet.current.get('syncBeginTime')) > 3600000) {
           changeIsStop(true);
-          modal.update({ okProps: { color: 'red' }, okText: '终止同步' });
+          modal.update({ okText: '终止同步' });
         } else {
           changeIsStop(false);
           modal.update({ okProps: { color: 'primary', loading: true }, okText: '同步中' });
