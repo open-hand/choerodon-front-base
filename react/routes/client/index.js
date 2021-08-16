@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Table, Icon, Button, message, Modal, Row, Col,
 } from 'choerodon-ui/pro';
-import { Modal as OldModal } from 'choerodon-ui';
+// import { Modal as OldModal } from 'choerodon-ui/pro';
 import {
   Content, Header, Page, axios, Action, Permission, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
@@ -99,8 +99,7 @@ const Client = withRouter(observer((props) => {
     openEditRecordModal(record);
   }
   async function handleDelete(record) {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.open({
       title: '删除客户端',
       content: `确认删除客户端"${record.get('name')}"吗？`,
       maskClosable: false,
