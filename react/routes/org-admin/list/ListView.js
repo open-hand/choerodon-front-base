@@ -19,8 +19,8 @@ export default function ListView() {
   } = useContext(Store);
 
   async function handleDelete({ record }) {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.open({
+      key: Modal.key(),
       title: '确认删除组织管理员',
       content: `确认删除组织管理员"${record.get('userName')}"吗？`,
       onOk: async () => {

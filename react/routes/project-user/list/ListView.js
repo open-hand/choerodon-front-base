@@ -177,8 +177,8 @@ export default BrowserAdapter(observer((props) => {
     if (InviteModal && some(categories || [], ['code', 'N_PROGRAM'])) {
       setDeleteRoleRecord(record);
     } else {
-      OldModal.confirm({
-        className: 'c7n-iam-confirm-modal',
+      Modal.confirm({
+        key: Modal.key(),
         title: '删除用户',
         content: `确认删除用户"${record.get('realName')}"在本项目下的全部角色吗?`,
         onOk: async () => {

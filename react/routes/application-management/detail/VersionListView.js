@@ -26,8 +26,8 @@ export default function ListView() {
     });
   }
   function handleDelete(record) {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.open({
+      key: Modal.key(),
       title: '确认删除应用版本',
       content: `确认删除应用版本"${record.get('version')}"吗？`,
       onOk: async () => {
