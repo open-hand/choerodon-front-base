@@ -1,12 +1,11 @@
-import React, { useContext, Fragment, useState } from 'react';
+import React, { useContext, Fragment } from 'react';
 import {
-  axios, Content, Header, Page, Permission, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
+  axios, Content, Header, Page, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
 } from '@choerodon/boot';
 import {
-  Form, Output, Modal, message,
+  Form, Output, Modal,
 } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
-import { Button, Modal as OldModal } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import { mapping as systemMapping } from '../stores/SystemSettingDataSet';
 import GitlabSync from './components/gitlab-sync';
@@ -83,8 +82,8 @@ const basicInfo = withRouter(observer(() => {
     });
   }
   function handleReset() {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.open({
+      key: Modal.key(),
       title: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.title` }),
       content: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.content` }),
       onOk: async () => {
