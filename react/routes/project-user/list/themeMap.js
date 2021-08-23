@@ -1,6 +1,7 @@
 import { Table, TextField } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import React, { useContext } from 'react';
+import FilterTextField from '@/components/filter-textField';
 import theme4Style from './theme4.module.less';
 
 const { Column } = Table;
@@ -15,15 +16,41 @@ export default (cRef) => ({
       origin: {},
       theme4: {
         extraNode: (
-          <TextField
+          <FilterTextField
+            filterMap={[{
+              field: 'realName',
+              label: '用户名',
+            }, {
+              field: 'roleName',
+              label: '角色',
+            }, {
+              field: 'enable',
+              label: '状态',
+              options: [{
+                value: true,
+                name: '启用',
+              }, {
+                value: false,
+                name: '未启用',
+              }],
+            }, {
+              field: 'phone',
+              label: '手机',
+            }, {
+              field: 'email',
+              label: '邮箱',
+            }]}
             className="theme4-c7n-member-search"
             placeholder="搜索成员"
             style={{ marginLeft: 32 }}
-            suffix={(
+            prefix={(
               <Icon type="search" />
               )}
-            onEnterDown={(e) => cRef?.current?.handleChangeSearch(e.target.value)}
-            onChange={cRef?.current?.handleChangeSearch}
+            onSearch={(value) => {
+              cRef.current.handleChangeSearch(value);
+            }}
+            // onEnterDown={(e) => cRef?.current?.handleChangeSearch(e.target.value)}
+            // onChange={cRef?.current?.handleChangeSearch}
           />),
       },
     },
