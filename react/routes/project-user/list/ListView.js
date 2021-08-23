@@ -414,8 +414,18 @@ export default BrowserAdapter(observer((props) => {
     );
   }
 
-  const handleChangeSearch = (value) => {
-    dataSet.setQueryParameter('params', value);
+  const handleChangeSearch = (data) => {
+    dataSet.queryParameter = {};
+    if (data && data.length > 0) {
+      data.forEach((item) => {
+        if (item.field) {
+          dataSet.setQueryParameter(item.field, item.value?.value || item.value);
+        } else {
+          dataSet.setQueryParameter('params', item.value);
+        }
+      });
+    }
+    // dataSet.setQueryParameter('params', value);
     dataSet.query();
   };
 

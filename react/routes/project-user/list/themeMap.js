@@ -18,14 +18,21 @@ export default (cRef) => ({
         extraNode: (
           <FilterTextField
             filterMap={[{
-              field: 'user',
+              field: 'realName',
               label: '用户名',
             }, {
-              field: 'role',
+              field: 'roleName',
               label: '角色',
             }, {
-              field: 'status',
+              field: 'enable',
               label: '状态',
+              options: [{
+                value: true,
+                name: '启用',
+              }, {
+                value: false,
+                name: '未启用',
+              }],
             }, {
               field: 'phone',
               label: '手机',
@@ -39,8 +46,11 @@ export default (cRef) => ({
             prefix={(
               <Icon type="search" />
               )}
-            onEnterDown={(e) => cRef?.current?.handleChangeSearch(e.target.value)}
-            onChange={cRef?.current?.handleChangeSearch}
+            onSearch={(value) => {
+              cRef.current.handleChangeSearch(value);
+            }}
+            // onEnterDown={(e) => cRef?.current?.handleChangeSearch(e.target.value)}
+            // onChange={cRef?.current?.handleChangeSearch}
           />),
       },
     },

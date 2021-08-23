@@ -7,19 +7,26 @@ import _ from 'lodash';
 
 import './index.less';
 
+type option = {
+  value: any,
+  name: string,
+}
+
 type filterMapItemType = {
   field?: string,
   label?: string
+  options?: option[],
 }
 
 type filterMapType = filterMapItemType[]
 
 interface propsType extends TextFieldProps {
   filterMap: filterMapType,
+  onSearch(data: filterDataType[]): void,
 }
 
 interface filterDataType extends filterMapItemType {
-  value: string,
+  value: string | option | undefined,
 }
 
 const FilterTextField = (props: propsType) => {
@@ -29,10 +36,12 @@ const FilterTextField = (props: propsType) => {
   const [filterLabel, setFilterLabel] = useState('');
   const [filterData, setFilterData] = useState<filterDataType[]>([]);
   const [textValue, setTextValue] = useState('');
+  const [optionsDisplay, setOptionsDisplay] = useState<filterMapItemType | ''>('');
 
   const {
     filterMap,
     prefix,
+    onSearch,
   } = props;
 
   useClickAway(() => {
@@ -47,33 +56,77 @@ const FilterTextField = (props: propsType) => {
   const handleClickPopItem = (item: filterMapItemType) => {
     if (item.label) {
       setFilterLabel(item.label);
+      if (item.options) {
+        setOptionsDisplay(item);
+      }
     }
     (textRef?.current as any)?.focus();
   };
 
+  const renderOptionsDisplay = () => (
+    <div
+      className="c7ncd-filterTextField-popContent__options"
+    >
+      {
+        optionsDisplay && optionsDisplay?.options?.map((i: option) => (
+          <p role="none" onClick={() => handleOnEnterDown(i, filterData, true)}>
+            {i.name}
+          </p>
+        ))
+      }
+    </div>
+  );
+
   /**
    * 回车事件
    */
-  const handleOnEnterDown = (e: string, data: filterDataType[]) => {
-    if (e) {
-      // 如果有过滤label
-      if (filterLabel) {
-        const item = filterMap.find((i) => i.label === filterLabel);
-        if (item) {
+  const handleOnEnterDown = (
+    e: string | option,
+    data: filterDataType[],
+    isOption = false,
+  ) => {
+    if (!isOption) {
+      if (e && typeof (e) == 'string') {
+        // 如果有过滤label
+        if (filterLabel) {
+          const item = filterMap.find((i) => i.label === filterLabel);
+          if (item) {
+            data.push({
+              ...item,
+              value: e,
+            });
+            setFilterLabel('');
+          }
+        } else {
           data.push({
-            ...item,
             value: e,
           });
-          setFilterLabel('');
         }
-      } else {
+        setFilterData([...data]);
+        setTextValue('');
+        if (onSearch) {
+          onSearch([...data]);
+        }
+      }
+    } else {
+      const item = filterMap.find((i) => i.label === filterLabel);
+      if (item) {
         data.push({
+          ...item,
           value: e,
         });
+        setFilterLabel('');
       }
       setFilterData([...data]);
       setTextValue('');
+      if (onSearch) {
+        onSearch([...data]);
+      }
     }
+    if (onSearch) {
+      onSearch(filterData);
+    }
+    setPopContentDisplay(false);
   };
 
   const renderPopContent = (map: filterMapType): any => {
@@ -100,17 +153,20 @@ const FilterTextField = (props: propsType) => {
   /**
    * 渲染tag
    */
-  const renderFilterData = (data: filterDataType[]) => data.map((i, index) => (
-    <Tag
-      color="geekblue"
-      closable
-      onClose={() => handleDeleteItemFilterData(index, filterData)}
-    >
-      {
-        i.label ? `${i.label}:${i.value}` : i.value
-      }
-    </Tag>
-  ));
+  const renderFilterData = (data: filterDataType[]) => data.map((i, index) => {
+    const value = typeof (i.value) === 'string' ? i.value : i?.value?.name;
+    return (
+      <Tag
+        color="geekblue"
+        closable
+        onClose={() => handleDeleteItemFilterData(index, filterData)}
+      >
+        {
+          i.label ? `${i.label}:${value}` : value
+        }
+      </Tag>
+    );
+  });
 
   const handleKeyUp = (e: any) => {
     if (e.keyCode === 8) {
@@ -125,18 +181,35 @@ const FilterTextField = (props: propsType) => {
     }
   };
 
+  const handleFocus = () => {
+    if (!filterLabel) {
+      setPopContentDisplay(true);
+    }
+    if (!optionsDisplay && filterLabel) {
+      const item = filterMap.find((i) => i.label === filterLabel);
+      if (item && item.options) {
+        setOptionsDisplay(item);
+      }
+    }
+  };
+
+  const handleBlur = () => {
+    if (optionsDisplay) {
+      setOptionsDisplay('');
+    }
+  };
+
   return (
     <div className="c7ncd-filterTextField">
       <TextField
         // @ts-ignore
         ref={textRef}
         {...props}
-        onFocus={() => {
-          setPopContentDisplay(true);
-        }}
+        onFocus={handleFocus}
         value={textValue}
         onKeyUp={handleKeyUp}
         onInput={(e) => setTextValue((e.target as any).value)}
+        onBlur={handleBlur}
         prefix={(
           <>
             {
@@ -146,7 +219,18 @@ const FilterTextField = (props: propsType) => {
               renderFilterData(filterData)
             }
             {
-              filterLabel && <span>{`${filterLabel}:`}</span>
+              filterLabel && (
+                <span
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  {`${filterLabel}:`}
+                  {
+                    optionsDisplay && renderOptionsDisplay()
+                  }
+                </span>
+              )
             }
           </>
         )}
