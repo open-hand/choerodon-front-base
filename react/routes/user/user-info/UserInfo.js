@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { Form, Icon, Modal as OldModal } from 'choerodon-ui';
 import {
-  Form, Icon, Modal as OldModal,
-} from 'choerodon-ui';
-import { Modal, Spin } from 'choerodon-ui/pro';
+  Modal,
+  Spin,
+  Button,
+  DataSet,
+  Form as ProForm,
+  TextField,
+} from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
-  Content, Header, Page, axios, Breadcrumb, Choerodon, HeaderButtons,
+  Content,
+  Header,
+  Page,
+  axios,
+  Breadcrumb,
+  Choerodon,
+  HeaderButtons,
 } from '@choerodon/boot';
 import './Userinfo.less';
 import TextEditToggle from './textEditToggle';
@@ -14,6 +25,7 @@ import EditUserInfo from './EditUserInfo';
 import { useStore } from './stores';
 import EditPassword from './EditPassword';
 import { fetchPasswordPolicies } from '../services/password';
+import { userInfoApi } from '@/api';
 
 const { Text } = TextEditToggle;
 
@@ -23,7 +35,12 @@ const resetGitlabKey = Modal.key();
 function UserInfo(props) {
   const context = useStore();
   const {
-    AppState, UserInfoStore, intl, intlPrefix, prefixCls, userId,
+    AppState,
+    UserInfoStore,
+    intl,
+    intlPrefix,
+    prefixCls,
+    userId,
   } = context;
   const [enablePwd, setEnablePwd] = useState({});
   const [avatar, setAvatar] = useState('');
@@ -37,7 +54,8 @@ function UserInfo(props) {
   };
 
   const loadEnablePwd = () => {
-    axios.get('/iam/choerodon/v1/system/setting/enable_resetPassword')
+    axios
+      .get('/iam/choerodon/v1/system/setting/enable_resetPassword')
       .then((response) => {
         setEnablePwd(response);
       });
@@ -49,10 +67,7 @@ function UserInfo(props) {
     };
     return (
       <div className={`${prefixCls}-avatar-wrap`}>
-        <div
-          className={`${prefixCls}-avatar`}
-          style={image || {}}
-        >
+        <div className={`${prefixCls}-avatar`} style={image || {}}>
           {!avatar && realName && realName.charAt(0)}
         </div>
       </div>
@@ -71,7 +86,101 @@ function UserInfo(props) {
       organizationName,
       organizationCode,
       internationalTelCode,
+      phoneCheckFlag,
     } = user;
+
+    let captchaKey;
+    let getVerificationCodeSuccess = false;
+
+    const aaa = new DataSet({
+      autoCreate: true,
+      fields: [
+        {
+          name: 'phone',
+          type: 'string',
+          label: '手机号',
+          required: true,
+          disabled: true,
+        },
+        {
+          name: 'password',
+          type: 'string',
+          label: '短信验证码',
+          required: true,
+        },
+      ],
+    });
+
+    const VerifyModalContent = (p) => {
+      // console.log(p.phoneNum, 'phoneNum');
+      aaa.current.set('phone', p.phoneNum);
+      // aaa.setState('phone', p.phoneNum);
+      const [btnContent, setBtnContent] = useState('获取验证码');
+      useEffect(() => {
+        if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
+          setTimeout(() => {
+            setBtnContent(btnContent - 1);
+          }, 1000);
+        } else {
+          setBtnContent('获取验证码');
+        }
+      }, [btnContent]);
+      const btnClick = async () => {
+        if (typeof btnContent === 'string') {
+          setBtnContent(5);
+          // 发送请求
+          const res = await userInfoApi.getVerificationCode(
+            aaa.current.get('phone'),
+          );
+          // console.log(res);
+          captchaKey = res.captchaKey;
+          getVerificationCodeSuccess = res.success;
+        }
+      };
+      const addonAfter = (
+        <span role="none" onClick={btnClick} style={{ cursor: 'pointer' }}>
+          {btnContent}
+        </span>
+      );
+      const content = (
+        <div className={`${prefixCls}-vetifyForm-container`}>
+          <ProForm labelLayout="horizontal" labelAlign="left" dataSet={aaa}>
+            <TextField name="phone" />
+            <TextField name="password" addonAfter={addonAfter} />
+          </ProForm>
+        </div>
+      );
+      return content;
+    };
+
+    const verifyModalOk = async () => {
+      if (!getVerificationCodeSuccess) {
+        return;
+      }
+      // const res = await userInfoApi.goVerify({
+      //   phone,
+      //   captcha: aaa.current.get('password'),
+      //   captchaKey,
+      // });
+      userInfoApi.goVerify({
+        phone,
+        captcha: aaa.current.get('password'),
+        captchaKey,
+      });
+      // console.log(res);
+      // return false;
+    };
+
+    const openVerifyModal = () => {
+      Modal.open({
+        key: createKey,
+        title: '手机号码验证',
+        children: <VerifyModalContent phoneNum={phone} />,
+        okText: '完成',
+        onOk: verifyModalOk,
+      });
+    };
+
     return (
       <>
         <div className={`${prefixCls}-top-container`}>
@@ -83,7 +192,9 @@ function UserInfo(props) {
             <div>
               {intl.formatMessage({ id: `${intlPrefix}.source` })}
               :
-              {ldap ? intl.formatMessage({ id: `${intlPrefix}.ldap` }) : intl.formatMessage({ id: `${intlPrefix}.notldap` })}
+              {ldap
+                ? intl.formatMessage({ id: `${intlPrefix}.ldap` })
+                : intl.formatMessage({ id: `${intlPrefix}.notldap` })}
             </div>
             <div>
               <span>
@@ -97,41 +208,97 @@ function UserInfo(props) {
           </div>
         </div>
         <div className={`${prefixCls}-info-container`}>
-
           <div className={`${prefixCls}-info-container-account`}>
-            <div>{intl.formatMessage({ id: `${intlPrefix}.account.info` })}</div>
+            <div>
+              {intl.formatMessage({ id: `${intlPrefix}.account.info` })}
+            </div>
             <div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.email` })}</span>
-                <span className={`${prefixCls}-info-container-account-content`}>{email}</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.email` })}
+                </span>
+                <span className={`${prefixCls}-info-container-account-content`}>
+                  {email}
+                </span>
               </div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.phone` })}</span>
-                <span className={`${prefixCls}-info-container-account-content`}>{phone === null ? '无' : phone}</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.phone` })}
+                </span>
+                <span className={`${prefixCls}-info-container-account-content`}>
+                  {phoneCheckFlag === 1 && (
+                    <span
+                      className={`${prefixCls}-info-container-account-content-success`}
+                    >
+                      <Icon type="check_circle" style={{ marginRight: 6 }} />
+                      {phone}
+                      <span style={{ marginLeft: 6 }}>已验证</span>
+                    </span>
+                  )}
+                  {phoneCheckFlag === 0 && (
+                  <div>
+                    <span>
+                      {phone === null ? '无' : phone}
+                    </span>
+                    {phone !== null && (
+                    <Button
+                      onClick={openVerifyModal}
+                      style={{ marginLeft: 10 }}
+                      type="dashed"
+                    >
+                      验证手机号码
+                    </Button>
+                    )}
+                  </div>
+                  )}
+                </span>
               </div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.language` })}</span>
-                <span className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}>简体中文</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.language` })}
+                </span>
+                <span
+                  className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}
+                >
+                  简体中文
+                </span>
               </div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.timezone` })}</span>
-                <span className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}>中国</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.timezone` })}
+                </span>
+                <span
+                  className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}
+                >
+                  中国
+                </span>
               </div>
             </div>
           </div>
         </div>
         <div className={`${prefixCls}-info-container`}>
-
           <div className={`${prefixCls}-info-container-account`}>
             <div>{intl.formatMessage({ id: `${intlPrefix}.orginfo` })}</div>
             <div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.org.name` })}</span>
-                <span className={`${prefixCls}-info-container-account-content `}>{organizationName}</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.org.name` })}
+                </span>
+                <span
+                  className={`${prefixCls}-info-container-account-content `}
+                >
+                  {organizationName}
+                </span>
               </div>
               <div>
-                <span className={`${prefixCls}-info-container-account-title`}>{intl.formatMessage({ id: `${intlPrefix}.org.code` })}</span>
-                <span className={`${prefixCls}-info-container-account-content `}>{organizationCode}</span>
+                <span className={`${prefixCls}-info-container-account-title`}>
+                  {intl.formatMessage({ id: `${intlPrefix}.org.code` })}
+                </span>
+                <span
+                  className={`${prefixCls}-info-container-account-content `}
+                >
+                  {organizationCode}
+                </span>
               </div>
             </div>
           </div>
@@ -179,7 +346,8 @@ function UserInfo(props) {
     OldModal.confirm({
       className: 'c7n-iam-confirm-modal',
       title: '修改GitLab密码',
-      content: '确定要修改您的gitlab仓库密码吗？确定修改后，您将跳转至GitLab仓库密码的修改页面。',
+      content:
+        '确定要修改您的gitlab仓库密码吗？确定修改后，您将跳转至GitLab仓库密码的修改页面。',
       okText: '修改',
       width: 560,
       onOk: goToGitlab,
@@ -190,7 +358,9 @@ function UserInfo(props) {
     const user = UserInfoStore.getUserInfo;
     let passwordPolicies;
     try {
-      passwordPolicies = await fetchPasswordPolicies(AppState.currentMenuType?.organizationId);
+      passwordPolicies = await fetchPasswordPolicies(
+        AppState.currentMenuType?.organizationId,
+      );
     } catch (err) {
       return false;
     }
@@ -222,8 +392,7 @@ function UserInfo(props) {
           {cancelBtn}
           {!user.ldap ? okBtn : React.cloneElement(okBtn, { disabled: true })}
         </div>
-      )
-      ,
+      ),
     });
 
     return true;
@@ -245,13 +414,15 @@ function UserInfo(props) {
           <div className={`${prefixCls}-reset-content`}>
             <span>您的GitLab密码已被重置为：</span>
             <span className={`${prefixCls}-reset-content-password`}>{res}</span>
-            <CopyToClipboard
-              text={res}
-              onCopy={handleCopy}
-            >
-              <Icon type="content_copy" className={`${prefixCls}-reset-content-icon`} />
+            <CopyToClipboard text={res} onCopy={handleCopy}>
+              <Icon
+                type="content_copy"
+                className={`${prefixCls}-reset-content-icon`}
+              />
             </CopyToClipboard>
-            <div>为了您的账号安全，请复制以上密码，并尽快前往GitLab修改重置后的密码。</div>
+            <div>
+              为了您的账号安全，请复制以上密码，并尽快前往GitLab修改重置后的密码。
+            </div>
           </div>
         );
         modal.update({
@@ -284,7 +455,8 @@ function UserInfo(props) {
     const resetModal = Modal.open({
       key: resetGitlabKey,
       title: '重置GitLab密码',
-      children: '确定要重置您当前的gitlab仓库密码吗？密码重置后，为了您的账号安全，请务必尽快修改重置后的密码。',
+      children:
+        '确定要重置您当前的gitlab仓库密码吗？密码重置后，为了您的账号安全，请务必尽快修改重置后的密码。',
       okText: '重置',
       movable: false,
       onOk: () => handleResetGitlab(resetModal),
@@ -303,23 +475,28 @@ function UserInfo(props) {
         <Header className={`${prefixCls}-header`}>
           <HeaderButtons
             showClassName={false}
-            items={([{
-              name: '修改信息',
-              icon: 'edit-o',
-              display: true,
-              permissions: [],
-              handler: handleUpdateInfo.bind(this),
-            }, {
-              name: '修改登录密码',
-              icon: 'edit-o',
-              display: true,
-              permissions: [],
-              handler: handleUpdatePassword.bind(this),
-              disabled: AppState.getUserInfo.ldap,
-              tooltipsConfig: {
-                title: AppState.getUserInfo.ldap ? 'LDAP用户无法修改登录密码' : '',
+            items={[
+              {
+                name: '修改信息',
+                icon: 'edit-o',
+                display: true,
+                permissions: [],
+                handler: handleUpdateInfo.bind(this),
               },
-            }])}
+              {
+                name: '修改登录密码',
+                icon: 'edit-o',
+                display: true,
+                permissions: [],
+                handler: handleUpdatePassword.bind(this),
+                disabled: AppState.getUserInfo.ldap,
+                tooltipsConfig: {
+                  title: AppState.getUserInfo.ldap
+                    ? 'LDAP用户无法修改登录密码'
+                    : '',
+                },
+              },
+            ]}
           />
         </Header>
         <Breadcrumb />
