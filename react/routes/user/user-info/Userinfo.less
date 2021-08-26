@@ -3,12 +3,18 @@
 @baseFont65Black: PingFangSC-Regular;
 
 .user-info {
+  &-loginName {
+    input {
+      color: rgba(15, 19, 88, 0.25);
+      background: rgba(158, 173, 190, 0.04);
+    }
+  }
   &-container {
-    padding: 0 0 .2rem 0;
+    padding: 0 0 0.2rem 0;
 
     .page-content-header {
       .title {
-        margin: .2rem .24rem;
+        margin: 0.2rem 0.24rem;
         color: var(--text-color2);
       }
     }
@@ -24,7 +30,7 @@
     }
 
     &-btn {
-      margin-right: .4rem;
+      margin-right: 0.4rem;
     }
   }
 
@@ -52,7 +58,8 @@
     height: 100px;
     border-radius: 50%;
     background: #fff;
-    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
 
   &-avatar {
@@ -81,7 +88,7 @@
         color: var(--text-color4);
         text-align: center;
         line-height: 20px;
-        margin-top: .06rem;
+        margin-top: 0.06rem;
       }
     }
 
@@ -190,7 +197,7 @@
         line-height: 28px;
         margin-top: 24px;
 
-        >span {
+        > span {
           vertical-align: middle;
         }
 
@@ -320,29 +327,29 @@
   }
 
   &-info-container {
-    padding: .24rem 0 0 1.94rem;
+    padding: 0.24rem 0 0 1.94rem;
 
     &-account {
       overflow: hidden;
 
-      >div:first-child {
-        font-size: .16rem;
+      > div:first-child {
+        font-size: 0.16rem;
         font-family: @baseFontAllBlack;
-        line-height: .24rem;
+        line-height: 0.24rem;
         color: var(--text-color);
-        margin-bottom: .16rem;
+        margin-bottom: 0.16rem;
       }
 
-      >div:last-child {
+      > div:last-child {
         float: left;
-        line-height: .2rem;
-        font-size: .14rem;
+        line-height: 0.2rem;
+        font-size: 0.14rem;
         font-family: @baseFont65Black;
 
-        >div {
+        > div {
           display: flex;
           flex-direction: row;
-          margin-bottom: .16rem;
+          margin-bottom: 0.16rem;
 
           &:last-child {
             margin-bottom: 0;
@@ -353,7 +360,7 @@
       &-title {
         color: var(--text-color3);
         vertical-align: middle;
-        margin-right: .75rem;
+        margin-right: 0.75rem;
       }
 
       &-content {
@@ -366,7 +373,7 @@
         }
 
         &-short {
-          margin-left: .28rem;
+          margin-left: 0.28rem;
         }
       }
 
@@ -392,20 +399,20 @@
     height: inherit;
     padding: 30px 0;
 
-    >div:first-child {
+    > div:first-child {
       font-size: 20px;
       color: var(--text-color);
       font-family: @baseFontAllBlack;
     }
 
-    >div:nth-child(2) {
+    > div:nth-child(2) {
       font-size: 12px;
       font-family: @baseFont65Black;
       color: var(--text-color3);
       margin: 4px 0 10px;
     }
 
-    >div:last-child {
+    > div:last-child {
       font-size: 13px;
       font-family: @baseFontAllBlack;
       color: var(--text-color);
@@ -432,14 +439,13 @@
   //}
 
   &-reset-content {
-
     &-password {
       color: rgba(0, 0, 0, 0.65);
     }
 
     &-icon {
       color: #3f51b5;
-      margin-left: .05rem;
+      margin-left: 0.05rem;
       cursor: pointer;
     }
   }

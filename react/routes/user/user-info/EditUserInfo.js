@@ -254,6 +254,7 @@ function EditUserInfo(props) {
             <Input
               defaultValue={loginName}
               disabled
+              className="user-info-loginName"
               placeholder={intl.formatMessage({ id: `${intlPrefix}.loginname` })}
               label={intl.formatMessage({ id: `${intlPrefix}.loginname` })}
             />,
