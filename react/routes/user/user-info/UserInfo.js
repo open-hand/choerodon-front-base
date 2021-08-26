@@ -170,6 +170,10 @@ function UserInfo(props) {
     };
 
     const verifyModalOk = async () => {
+      if (!captchaKey) {
+        message.warning('请先获取验证码');
+        return false;
+      }
       const res = await userInfoApi.goVerify({
         phone,
         captcha: verifyFormDataSet.current.get('password'),
