@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Form, Icon, Modal as OldModal } from 'choerodon-ui';
+import {
+  Form, Icon, Modal as OldModal, message,
+} from 'choerodon-ui';
 import {
   Modal,
   Spin,
@@ -90,9 +92,9 @@ function UserInfo(props) {
     } = user;
 
     let captchaKey;
-    let getVerificationCodeSuccess = false;
+    let timer = null;
 
-    const aaa = new DataSet({
+    const verifyFormDataSet = new DataSet({
       autoCreate: true,
       fields: [
         {
@@ -107,34 +109,48 @@ function UserInfo(props) {
           type: 'string',
           label: '短信验证码',
           required: true,
+          validator: (value) => {
+            const reg = /^\d{6}$/;
+            if (reg.test(value)) {
+              return true;
+            }
+            return '验证码应为6位数字';
+          },
         },
       ],
     });
 
     const VerifyModalContent = (p) => {
       // console.log(p.phoneNum, 'phoneNum');
-      aaa.current.set('phone', p.phoneNum);
-      // aaa.setState('phone', p.phoneNum);
+      verifyFormDataSet.current.set('phone', p.phoneNum);
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
-          setTimeout(() => {
+          timer = setTimeout(() => {
             setBtnContent(btnContent - 1);
           }, 1000);
         } else {
           setBtnContent('获取验证码');
         }
       }, [btnContent]);
+      useEffect(() => () => {
+        clearInterval(timer);
+      });
       const btnClick = async () => {
         if (typeof btnContent === 'string') {
-          setBtnContent(5);
+          setBtnContent(60);
           // 发送请求
           const res = await userInfoApi.getVerificationCode(
-            aaa.current.get('phone'),
+            verifyFormDataSet.current.get('phone'),
           );
-          // console.log(res);
-          captchaKey = res.captchaKey;
-          getVerificationCodeSuccess = res.success;
+          if (res.success) {
+            captchaKey = res.captchaKey;
+            message.success(res.message);
+          } else {
+            clearInterval(timer);
+            setBtnContent(res.interval);
+            message.warning(res.message);
+          }
         }
       };
       const addonAfter = (
@@ -144,7 +160,7 @@ function UserInfo(props) {
       );
       const content = (
         <div className={`${prefixCls}-vetifyForm-container`}>
-          <ProForm labelLayout="horizontal" labelAlign="left" dataSet={aaa}>
+          <ProForm labelLayout="horizontal" labelAlign="left" dataSet={verifyFormDataSet}>
             <TextField name="phone" />
             <TextField name="password" addonAfter={addonAfter} />
           </ProForm>
@@ -154,21 +170,20 @@ function UserInfo(props) {
     };
 
     const verifyModalOk = async () => {
-      if (!getVerificationCodeSuccess) {
-        return;
-      }
-      // const res = await userInfoApi.goVerify({
-      //   phone,
-      //   captcha: aaa.current.get('password'),
-      //   captchaKey,
-      // });
-      userInfoApi.goVerify({
+      const res = await userInfoApi.goVerify({
         phone,
-        captcha: aaa.current.get('password'),
+        captcha: verifyFormDataSet.current.get('password'),
         captchaKey,
       });
-      // console.log(res);
-      // return false;
+      let boolean;
+      if (res.status) {
+        loadUserInfo();
+        boolean = true;
+      } else {
+        message.warning(res.message);
+        boolean = false;
+      }
+      return boolean;
     };
 
     const openVerifyModal = () => {
@@ -226,7 +241,7 @@ function UserInfo(props) {
                   {intl.formatMessage({ id: `${intlPrefix}.phone` })}
                 </span>
                 <span className={`${prefixCls}-info-container-account-content`}>
-                  {phoneCheckFlag === 1 && (
+                  {phoneCheckFlag === 1 && ( // 已验证
                     <span
                       className={`${prefixCls}-info-container-account-content-success`}
                     >
@@ -235,15 +250,19 @@ function UserInfo(props) {
                       <span style={{ marginLeft: 6 }}>已验证</span>
                     </span>
                   )}
-                  {phoneCheckFlag === 0 && (
-                  <div>
+                  {phoneCheckFlag === 0 && ( // 未验证
+                  <div style={{ display: 'flex' }}>
                     <span>
                       {phone === null ? '无' : phone}
                     </span>
-                    {phone !== null && (
+                    {phone !== null && ldap === false && (
                     <Button
                       onClick={openVerifyModal}
-                      style={{ marginLeft: 10 }}
+                      style={{
+                        marginLeft: 10,
+                        position: 'relative',
+                        top: -5,
+                      }}
                       type="dashed"
                     >
                       验证手机号码
