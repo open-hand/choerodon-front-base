@@ -1,7 +1,6 @@
-import React, { PureComponent, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Content, Page, Header, Breadcrumb, Action, axios } from '@choerodon/boot';
-import { DataSet, Table, TextField, Icon, Tooltip, message, Modal } from 'choerodon-ui/pro';
-import { Button, Modal as OldModal } from 'choerodon-ui';
+import { Table, message, Modal } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import Store from '../../stores';
 import Sider from './sider';
@@ -27,9 +26,9 @@ export default observer(() => {
   }
   async function handleDelete(record) {
     try {
-      OldModal.confirm({
-        className: 'c7n-iam-confirm-modal',
+      Modal.open({
         title: '确认删除组织类型',
+        key: Modal.key(),
         content: `确认删除组织类型"${record.get('name')}"吗？`,
         onOk: async () => {
           try {

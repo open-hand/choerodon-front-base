@@ -16,15 +16,13 @@ export default function ListView() {
     intlPrefix, permissions, intl, adminListDataSet, adminCreateDataSet, prefixCls,
   } = context;
   async function handleDelete({ record }) {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.open({
       title: '删除root用户',
       content: `确认删除root用户"${record.get('realName')}"吗?`,
-      // eslint-disable-next-line consistent-return
       onOk: async () => {
         try {
           await axios.delete(`/iam/choerodon/v1/users/admin/${record.get('id')}`);
-          await adminListDataSet.query();
+          return await adminListDataSet.query();
         } catch (e) {
           return false;
         }

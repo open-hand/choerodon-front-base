@@ -366,13 +366,12 @@ function UserInfo(props) {
   }
 
   function handleUpdateStore() {
-    OldModal.confirm({
-      className: 'c7n-iam-confirm-modal',
+    Modal.confirm({
+      key: Modal.key(),
       title: '修改GitLab密码',
       content:
         '确定要修改您的gitlab仓库密码吗？确定修改后，您将跳转至GitLab仓库密码的修改页面。',
       okText: '修改',
-      width: 560,
       onOk: goToGitlab,
     });
   }
