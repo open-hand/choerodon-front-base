@@ -1,7 +1,7 @@
 import React, {
   useRef, useEffect, useState, useImperativeHandle,
 } from 'react';
-import { message as C7nMessage } from 'choerodon-ui/pro';
+import { message as C7nMessage, Modal } from 'choerodon-ui/pro';
 import {
   Form, Input, Select, Button, Row, Col,
 } from 'choerodon-ui';
@@ -37,7 +37,7 @@ const CountdownButton = (props) => {
   const endTime = useRef(); // 倒计时结束时间
 
   const dida = () => {
-    const remainTime = Math.round(((endTime.current - Date.now()) / 1000));
+    const remainTime = Math.round((endTime.current - Date.now()) / 1000);
     const nextCount = {
       run: remainTime > 0,
       time: remainTime,
@@ -65,11 +65,11 @@ let editFocusInput = React.createRef();
 function EditPassword(props) {
   const [enablePwd, setEnablePwd] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [captchaKey, setCaptchaKey] = useState('');
   const [confirmDirty, setConfirmDirty] = useState(undefined);
   const { UserInfoStore, passwordPolicies } = props;
   const [captchaType, setCaptchaType] = useState(() => (UserInfoStore.getUserInfo?.phone ? 'phone' : 'email'));
-  const { forceCodeVerify } = passwordPolicies; // 启用了强制验证码验证
-
+  const { forceCodeVerify, loginAgain } = passwordPolicies; // 启用了强制验证码验证
   // state = {
   //     submitting: false,
   //     confirmDirty: null,
@@ -77,10 +77,9 @@ function EditPassword(props) {
   // };
 
   const loadEnablePwd = () => {
-    axios.get('/iam/choerodon/v1/system/setting/enable_resetPassword')
-      .then((response) => {
-        setEnablePwd(response);
-      });
+    axios.get('/iam/choerodon/v1/system/setting/enable_resetPassword').then((response) => {
+      setEnablePwd(response);
+    });
   };
 
   const compareToFirstPassword = (rule, value, callback) => {
@@ -122,6 +121,7 @@ function EditPassword(props) {
       body.email = getFieldValue('email');
       body.phone = getFieldValue('phone');
       body.captcha = getFieldValue('captcha');
+      body.captchaKey = captchaKey;
     }
 
     props.form.validateFields((err, values) => {
@@ -130,10 +130,19 @@ function EditPassword(props) {
         UserInfoStore.updatePassword(user.id, body)
           .then(({ failed, message }) => {
             setSubmitting(false);
-            if (failed) {
-              Choerodon.prompt(message);
-            } else {
+            // if (failed) {
+            //   Choerodon.prompt(message);
+            // } else {
+            //   Choerodon.logout();
+            // }
+            if (!failed && loginAgain) {
+              Modal.confirm({
+                title: '修改密码后需要重新登录，是否确认？',
+                onOK: Choerodon.logout(),
+              });
               Choerodon.logout();
+            } else {
+              Choerodon.prompt(message);
             }
           })
           .catch((error) => {
@@ -144,15 +153,14 @@ function EditPassword(props) {
     });
   };
 
-  useImperativeHandle(props.forwardref, () => (
-    {
-      handleSubmit,
-    }));
+  useImperativeHandle(props.forwardref, () => ({
+    handleSubmit,
+  }));
 
-  const reload = () => {
-    const { resetFields } = props.form;
-    resetFields();
-  };
+  //   const reload = () => {
+  //     const { resetFields } = props.form;
+  //     resetFields();
+  //   };
   /** 仓库密码修改
       const showModal = () => {
           setState({
@@ -192,11 +200,10 @@ function EditPassword(props) {
           phone,
           email,
         });
-
+        setCaptchaKey(res.captchaKey);
         C7nMessage.success(res.message);
       } catch (error) {
         // C7nMessage[error?.type ?? 'error'](error?.message ?? '发送校验码失败');
-
         // 返回倒计时时间
         const matchCountDownTime = error?.message?.match(/请(\d+)秒后再发送验证码/)?.[1];
         if (matchCountDownTime) return matchCountDownTime;
@@ -211,16 +218,17 @@ function EditPassword(props) {
       //   >
       <div className="ldapContainer">
         <Form layout="vertical">
-          <FormItem
-            {...formItemLayout}
-          >
+          <FormItem {...formItemLayout}>
             {getFieldDecorator('oldpassword', {
-              rules: [{
-                required: true,
-                message: intl.formatMessage({ id: `${intlPrefix}.oldpassword.require.msg` }),
-              }, {
-                validator: validateToNextPassword,
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: `${intlPrefix}.oldpassword.require.msg` }),
+                },
+                {
+                  validator: validateToNextPassword,
+                },
+              ],
               validateTrigger: 'onBlur',
             })(
               <Input
@@ -235,16 +243,17 @@ function EditPassword(props) {
               />,
             )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-          >
+          <FormItem {...formItemLayout}>
             {getFieldDecorator('password', {
-              rules: [{
-                required: true,
-                message: intl.formatMessage({ id: `${intlPrefix}.newpassword.require.msg` }),
-              }, {
-                validator: validateToNextPassword,
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: `${intlPrefix}.newpassword.require.msg` }),
+                },
+                {
+                  validator: validateToNextPassword,
+                },
+              ],
               validateTrigger: 'onBlur',
               validateFirst: true,
             })(
@@ -257,16 +266,17 @@ function EditPassword(props) {
               />,
             )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-          >
+          <FormItem {...formItemLayout}>
             {getFieldDecorator('confirm', {
-              rules: [{
-                required: true,
-                message: intl.formatMessage({ id: `${intlPrefix}.confirmpassword.require.msg` }),
-              }, {
-                validator: compareToFirstPassword,
-              }],
+              rules: [
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: `${intlPrefix}.confirmpassword.require.msg` }),
+                },
+                {
+                  validator: compareToFirstPassword,
+                },
+              ],
               validateTrigger: 'onBlur',
               validateFirst: true,
             })(
@@ -281,10 +291,7 @@ function EditPassword(props) {
             )}
           </FormItem>
           {forceCodeVerify && phone && email && (
-            <FormItem
-              required
-              {...formItemLayout}
-            >
+            <FormItem required {...formItemLayout}>
               {getFieldDecorator('type', {
                 initialValue: 'phone',
                 rules: [
@@ -294,34 +301,26 @@ function EditPassword(props) {
                 ],
               })(
                 <Select
-                      // disabled={validCodeSendLimitFlag}
+                  // disabled={validCodeSendLimitFlag}
                   onChange={setCaptchaType}
                   style={{ width: '100%' }}
                   label="选择验证类型"
                 >
-                  <Option value="phone">
-                    手机号码
-                  </Option>
+                  <Option value="phone">手机号码</Option>
                   <Option value="email">邮箱</Option>
                 </Select>,
               )}
             </FormItem>
           )}
           {forceCodeVerify && captchaType === 'phone' && (
-            <FormItem
-              required
-              {...formItemLayout}
-            >
+            <FormItem required {...formItemLayout}>
               {getFieldDecorator('phone', {
                 initialValue: phone,
               })(<Input disabled label="手机号码" />)}
             </FormItem>
           )}
           {forceCodeVerify && captchaType === 'phone' && (
-            <FormItem
-              required
-              {...formItemLayout}
-            >
+            <FormItem required {...formItemLayout}>
               <Row gutter={8}>
                 <Col span={18}>
                   {getFieldDecorator('captcha', {
@@ -355,39 +354,34 @@ function EditPassword(props) {
               })(<Input label="邮箱" disabled />)}
             </FormItem>
           )}
-          {
-            forceCodeVerify && captchaType === 'email' && (
-              <FormItem
-                required
-                {...formItemLayout}
-              >
-                <Row gutter={8}>
-                  <Col span={18}>
-                    {getFieldDecorator('captcha', {
-                      validateTrigger: 'onBlur',
-                      rules: [
-                        {
-                          required: true,
-                          message: '邮箱验证码',
-                        },
-                      ],
-                    })(<Input label="邮箱验证码" style={{ width: 257, marginRight: 10 }} />)}
-                  </Col>
-                  <Col span={6}>
-                    <CountdownButton
-                      style={{ width: 90 }}
-                      funcType="raised"
-                      onClick={() => handleGainValidCodeBtnClick({
-                        type: 'email',
-                      })}
-                    >
-                      获取验证码
-                    </CountdownButton>
-                  </Col>
-                </Row>
-              </FormItem>
-            )
-          }
+          {forceCodeVerify && captchaType === 'email' && (
+            <FormItem required {...formItemLayout}>
+              <Row gutter={8}>
+                <Col span={18}>
+                  {getFieldDecorator('captcha', {
+                    validateTrigger: 'onBlur',
+                    rules: [
+                      {
+                        required: true,
+                        message: '邮箱验证码',
+                      },
+                    ],
+                  })(<Input label="邮箱验证码" style={{ width: 257, marginRight: 10 }} />)}
+                </Col>
+                <Col span={6}>
+                  <CountdownButton
+                    style={{ width: 90 }}
+                    funcType="raised"
+                    onClick={() => handleGainValidCodeBtnClick({
+                      type: 'email',
+                    })}
+                  >
+                    获取验证码
+                  </CountdownButton>
+                </Col>
+              </Row>
+            </FormItem>
+          )}
         </Form>
       </div>
     );

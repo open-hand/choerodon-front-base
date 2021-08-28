@@ -1,11 +1,11 @@
 import React, {
-  useContext, useEffect, useMemo,
+  useContext, useEffect, useMemo, useRef,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import NewTips from '@/components/new-tips';
 import {
   Form, TextField, Password, Select,
 } from 'choerodon-ui/pro';
+import NewTips from '@/components/new-tips';
 import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 
@@ -24,10 +24,17 @@ export default observer(() => {
     orgRoleDataSet,
     onOk,
     userStore,
+    password,
   } = useContext(Store);
-  const addonAfterObj = useMemo(() => ({
-    suffix: userStore.getEmailSuffix || undefined,
-  }), [userStore.getEmailSuffix]);
+
+  const passwordRef = useRef();
+
+  const addonAfterObj = useMemo(
+    () => ({
+      suffix: userStore.getEmailSuffix || undefined,
+    }),
+    [userStore.getEmailSuffix],
+  );
 
   useEffect(() => {
     if (hasRegister) {
@@ -39,6 +46,9 @@ export default observer(() => {
   }, []);
 
   async function handleOk() {
+    if (passwordRef.current.value === undefined) {
+      orgUserCreateDataSet.current.set('password', password);
+    }
     try {
       if (await orgUserCreateDataSet.submit()) {
         orgUserCreateDataSet.reset();
@@ -49,6 +59,7 @@ export default observer(() => {
     } catch (err) {
       return false;
     }
+    return true;
   }
 
   modal.handleOk(() => handleOk());
@@ -67,7 +78,11 @@ export default observer(() => {
           className={`${prefixCls}-modal-email`}
           {...addonAfterObj}
         />
-        <Password name="password" />
+        <Password
+          ref={passwordRef}
+          name="password"
+          addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />}
+        />
       </Form>
       <FormSelectEditor
         record={orgUserCreateDataSet.current}
@@ -78,13 +93,7 @@ export default observer(() => {
         canDeleteAll={false}
         maxDisable
       >
-        {((itemProps) => (
-          <Select
-            {...itemProps}
-            labelLayout="float"
-            style={{ width: '100%' }}
-          />
-        ))}
+        {(itemProps) => <Select {...itemProps} labelLayout="float" style={{ width: '100%' }} />}
       </FormSelectEditor>
     </div>
   );
