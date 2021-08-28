@@ -140,7 +140,7 @@ function EditPassword(props) {
                 title: '修改密码后需要重新登录，是否确认？',
                 onOK: Choerodon.logout(),
               });
-              Choerodon.logout();
+            //   Choerodon.logout();
             } else {
               Choerodon.prompt(message);
             }
