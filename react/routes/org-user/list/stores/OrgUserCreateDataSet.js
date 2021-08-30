@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { axios } from '@choerodon/boot';
 
-const OrgUserCreateDataSet = ({
+export default ({
   id = 0, intl, orgRoleDataSet, userStore,
 }) => {
   const username = intl.formatMessage({ id: 'username' });
@@ -68,4 +68,4 @@ const OrgUserCreateDataSet = ({
   };
 };
 
-export default { OrgUserCreateDataSet };
+// export default { OrgUserCreateDataSet };

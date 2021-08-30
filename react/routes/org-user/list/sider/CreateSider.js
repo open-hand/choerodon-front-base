@@ -1,6 +1,4 @@
-import React, {
-  useContext, useEffect, useMemo, useRef,
-} from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, TextField, Password, Select,
@@ -27,8 +25,6 @@ export default observer(() => {
     password,
   } = useContext(Store);
 
-  const passwordRef = useRef();
-
   const addonAfterObj = useMemo(
     () => ({
       suffix: userStore.getEmailSuffix || undefined,
@@ -46,7 +42,7 @@ export default observer(() => {
   }, []);
 
   async function handleOk() {
-    if (passwordRef.current.value === undefined) {
+    if (orgUserCreateDataSet.current.get('password') === undefined) {
       orgUserCreateDataSet.current.set('password', password);
     }
     try {
@@ -78,11 +74,7 @@ export default observer(() => {
           className={`${prefixCls}-modal-email`}
           {...addonAfterObj}
         />
-        <Password
-          ref={passwordRef}
-          name="password"
-          addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />}
-        />
+        <Password name="password" addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />} />
       </Form>
       <FormSelectEditor
         record={orgUserCreateDataSet.current}
