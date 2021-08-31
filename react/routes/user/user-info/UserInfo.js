@@ -88,7 +88,7 @@ function UserInfo(props) {
       organizationName,
       organizationCode,
       internationalTelCode,
-      phoneCheckFlag,
+      phoneBind,
     } = user;
 
     let captchaKey;
@@ -264,7 +264,7 @@ function UserInfo(props) {
                   <span
                     className={`${prefixCls}-info-container-account-content`}
                   >
-                    {phoneCheckFlag === 1 && ( // 已验证
+                    {phoneBind === 1 && ( // 已验证
                       <span
                         className={`${prefixCls}-info-container-account-content-success`}
                       >
@@ -273,7 +273,7 @@ function UserInfo(props) {
                         <span style={{ marginLeft: 6 }}>已验证</span>
                       </span>
                     )}
-                    {phoneCheckFlag === 0 && ( // 未验证
+                    {phoneBind === 0 && ( // 未验证
                       <div style={{ display: 'flex' }}>
                         <span>{phone === null ? '无' : phone}</span>
                         {phone !== null && (
