@@ -175,24 +175,33 @@ function UserInfo(props) {
     };
 
     const verifyModalOk = async () => {
-      if (!captchaKey) {
-        message.warning('请先获取验证码');
-        return false;
-      }
-      const res = await userInfoApi.goVerify({
-        phone,
-        captcha: verifyFormDataSet.current.get('password'),
-        captchaKey,
+      // console.log(verifyFormDataSet.current.validate());
+      verifyFormDataSet.current.validate().then(async (value) => {
+        let boolean;
+        if (!value) {
+          return false;
+        }
+        if (value && !captchaKey) {
+          message.warning('请先获取验证码');
+          return false;
+        }
+        if (value && captchaKey) {
+          const res = await userInfoApi.goVerify({
+            phone,
+            captcha: verifyFormDataSet.current.get('password'),
+            captchaKey,
+          });
+          if (res.status) {
+            loadUserInfo();
+            boolean = true;
+          } else {
+            message.warning(res.message);
+            boolean = false;
+          }
+        }
+        return boolean;
       });
-      let boolean;
-      if (res.status) {
-        loadUserInfo();
-        boolean = true;
-      } else {
-        message.warning(res.message);
-        boolean = false;
-      }
-      return boolean;
+      return false;
     };
 
     const openVerifyModal = () => {
