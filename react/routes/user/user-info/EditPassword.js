@@ -140,7 +140,7 @@ function EditPassword(props) {
                 title: '修改密码后需要重新登录，是否确认？',
                 onOK: Choerodon.logout(),
               });
-            //   Choerodon.logout();
+              //   Choerodon.logout();
             } else {
               Choerodon.prompt(message);
             }
@@ -233,7 +233,8 @@ function EditPassword(props) {
             })(
               <Input
                 autoComplete="off"
-                label={<FormattedMessage id={`${intlPrefix}.oldpassword`} />}
+                // label={<FormattedMessage id={`${intlPrefix}.oldpassword`} />}
+                label="原密码"
                 type="password"
                 ref={(e) => {
                   editFocusInput = e;
@@ -259,7 +260,8 @@ function EditPassword(props) {
             })(
               <Input
                 autoComplete="off"
-                label={<FormattedMessage id={`${intlPrefix}.newpassword`} />}
+                // label={<FormattedMessage id={`${intlPrefix}.newpassword`} />}
+                label="新密码"
                 type="password"
                 showPasswordEye
                 disabled={user.ldap}
@@ -282,7 +284,8 @@ function EditPassword(props) {
             })(
               <Input
                 autoComplete="off"
-                label={<FormattedMessage id={`${intlPrefix}.confirmpassword`} />}
+                // label={<FormattedMessage id={`${intlPrefix}.confirmpassword`} />}
+                label="确认密码"
                 type="password"
                 onBlur={handleConfirmBlur}
                 showPasswordEye
