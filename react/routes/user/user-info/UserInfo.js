@@ -109,6 +109,7 @@ function UserInfo(props) {
           type: 'string',
           label: '短信验证码',
           required: true,
+          maxLength: 6,
           validator: (value) => {
             const reg = /^\d{6}$/;
             if (reg.test(value)) {
@@ -123,6 +124,7 @@ function UserInfo(props) {
     const VerifyModalContent = (p) => {
       // console.log(p.phoneNum, 'phoneNum');
       verifyFormDataSet.current.set('phone', p.phoneNum);
+      verifyFormDataSet.current.set('captcha', '');
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
@@ -160,7 +162,11 @@ function UserInfo(props) {
       );
       const content = (
         <div className={`${prefixCls}-vetifyForm-container`}>
-          <ProForm labelLayout="horizontal" labelAlign="left" dataSet={verifyFormDataSet}>
+          <ProForm
+            labelLayout="horizontal"
+            labelAlign="left"
+            dataSet={verifyFormDataSet}
+          >
             <TextField name="phone" />
             <TextField name="password" addonAfter={addonAfter} />
           </ProForm>
@@ -244,37 +250,48 @@ function UserInfo(props) {
                 <span className={`${prefixCls}-info-container-account-title`}>
                   {intl.formatMessage({ id: `${intlPrefix}.phone` })}
                 </span>
-                <span className={`${prefixCls}-info-container-account-content`}>
-                  {phoneCheckFlag === 1 && ( // 已验证
-                    <span
-                      className={`${prefixCls}-info-container-account-content-success`}
-                    >
-                      <Icon type="check_circle" style={{ marginRight: 6 }} />
-                      {phone}
-                      <span style={{ marginLeft: 6 }}>已验证</span>
-                    </span>
-                  )}
-                  {phoneCheckFlag === 0 && ( // 未验证
-                  <div style={{ display: 'flex' }}>
-                    <span>
-                      {phone === null ? '无' : phone}
-                    </span>
-                    {phone !== null && ldap === false && (
-                    <Button
-                      onClick={openVerifyModal}
-                      style={{
-                        marginLeft: 10,
-                        position: 'relative',
-                        top: -5,
-                      }}
-                      type="dashed"
-                    >
-                      验证手机号码
-                    </Button>
+
+                {ldap && (
+                  <span
+                    className={`${prefixCls}-info-container-account-content`}
+                  >
+                    {phone === null ? '无' : phone}
+                  </span>
+                )}
+
+                {!ldap && (
+                  <span
+                    className={`${prefixCls}-info-container-account-content`}
+                  >
+                    {phoneCheckFlag === 1 && ( // 已验证
+                      <span
+                        className={`${prefixCls}-info-container-account-content-success`}
+                      >
+                        <Icon type="check_circle" style={{ marginRight: 6 }} />
+                        {phone}
+                        <span style={{ marginLeft: 6 }}>已验证</span>
+                      </span>
                     )}
-                  </div>
-                  )}
-                </span>
+                    {phoneCheckFlag === 0 && ( // 未验证
+                      <div style={{ display: 'flex' }}>
+                        <span>{phone === null ? '无' : phone}</span>
+                        {phone !== null && (
+                          <Button
+                            onClick={openVerifyModal}
+                            style={{
+                              marginLeft: 10,
+                              position: 'relative',
+                              top: -5,
+                            }}
+                            type="dashed"
+                          >
+                            验证手机号码
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </span>
+                )}
               </div>
               <div>
                 <span className={`${prefixCls}-info-container-account-title`}>
