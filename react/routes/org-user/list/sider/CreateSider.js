@@ -42,9 +42,9 @@ export default observer(() => {
   }, []);
 
   async function handleOk() {
-    if (orgUserCreateDataSet.current.get('password') === undefined) {
-      orgUserCreateDataSet.current.set('password', password);
-    }
+    // if (orgUserCreateDataSet.current.get('password') === undefined) {
+    //   orgUserCreateDataSet.current.set('password', '');
+    // }
     try {
       if (await orgUserCreateDataSet.submit()) {
         orgUserCreateDataSet.reset();

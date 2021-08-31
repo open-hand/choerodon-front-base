@@ -12,8 +12,7 @@ import {
   Page,
   HeaderButtons,
 } from '@choerodon/boot';
-// import { Modal as OldModal, Tooltip, Button } from 'choerodon-ui';
-import { Tooltip } from 'choerodon-ui';
+import { Modal as OldModal, Tooltip, Button } from 'choerodon-ui';
 import {
   Select,
   SelectBox,
