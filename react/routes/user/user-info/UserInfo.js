@@ -88,7 +88,7 @@ function UserInfo(props) {
       organizationName,
       organizationCode,
       internationalTelCode,
-      phoneCheckFlag,
+      phoneBind,
     } = user;
 
     let captchaKey;
@@ -122,9 +122,8 @@ function UserInfo(props) {
     });
 
     const VerifyModalContent = (p) => {
-      // console.log(p.phoneNum, 'phoneNum');
+      verifyFormDataSet.current.reset();
       verifyFormDataSet.current.set('phone', p.phoneNum);
-      verifyFormDataSet.current.set('captcha', '');
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
@@ -176,33 +175,44 @@ function UserInfo(props) {
     };
 
     const verifyModalOk = async () => {
-      if (!captchaKey) {
-        message.warning('请先获取验证码');
-        return false;
-      }
-      const res = await userInfoApi.goVerify({
-        phone,
-        captcha: verifyFormDataSet.current.get('password'),
-        captchaKey,
+      // console.log(verifyFormDataSet.current.validate());
+      verifyFormDataSet.current.validate().then(async (value) => {
+        let boolean;
+        if (!value) {
+          return false;
+        }
+        if (value && !captchaKey) {
+          message.warning('请先获取验证码');
+          return false;
+        }
+        if (value && captchaKey) {
+          const res = await userInfoApi.goVerify({
+            phone,
+            captcha: verifyFormDataSet.current.get('password'),
+            captchaKey,
+          });
+          if (res.status) {
+            loadUserInfo();
+            boolean = true;
+          } else {
+            message.warning(res.message);
+            boolean = false;
+          }
+        }
+        return boolean;
       });
-      let boolean;
-      if (res.status) {
-        loadUserInfo();
-        boolean = true;
-      } else {
-        message.warning(res.message);
-        boolean = false;
-      }
-      return boolean;
+      return false;
     };
 
     const openVerifyModal = () => {
       Modal.open({
-        key: createKey,
+        // key: createKey,
+        key: Math.random(),
         title: '手机号码验证',
         children: <VerifyModalContent phoneNum={phone} />,
         okText: '完成',
         onOk: verifyModalOk,
+        destroyOnClose: true,
       });
     };
 
@@ -263,7 +273,7 @@ function UserInfo(props) {
                   <span
                     className={`${prefixCls}-info-container-account-content`}
                   >
-                    {phoneCheckFlag === 1 && ( // 已验证
+                    {phoneBind && ( // 已验证
                       <span
                         className={`${prefixCls}-info-container-account-content-success`}
                       >
@@ -272,7 +282,7 @@ function UserInfo(props) {
                         <span style={{ marginLeft: 6 }}>已验证</span>
                       </span>
                     )}
-                    {phoneCheckFlag === 0 && ( // 未验证
+                    {!phoneBind && ( // 未验证
                       <div style={{ display: 'flex' }}>
                         <span>{phone === null ? '无' : phone}</span>
                         {phone !== null && (
