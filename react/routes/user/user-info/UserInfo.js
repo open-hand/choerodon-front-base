@@ -122,9 +122,8 @@ function UserInfo(props) {
     });
 
     const VerifyModalContent = (p) => {
-      // console.log(p.phoneNum, 'phoneNum');
+      verifyFormDataSet.current.reset();
       verifyFormDataSet.current.set('phone', p.phoneNum);
-      verifyFormDataSet.current.set('captcha', '');
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
@@ -198,11 +197,13 @@ function UserInfo(props) {
 
     const openVerifyModal = () => {
       Modal.open({
-        key: createKey,
+        // key: createKey,
+        key: Math.random(),
         title: '手机号码验证',
         children: <VerifyModalContent phoneNum={phone} />,
         okText: '完成',
         onOk: verifyModalOk,
+        destroyOnClose: true,
       });
     };
 
