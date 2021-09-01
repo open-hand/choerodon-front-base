@@ -155,7 +155,16 @@ function UserInfo(props) {
         }
       };
       const addonAfter = (
-        <span role="none" onClick={btnClick} style={{ cursor: 'pointer' }}>
+        <span
+          role="none"
+          onClick={btnClick}
+          style={{
+            cursor: 'pointer',
+            display: 'inline-block',
+            width: 60,
+            textAlign: 'center',
+          }}
+        >
           {btnContent}
         </span>
       );
@@ -176,32 +185,28 @@ function UserInfo(props) {
 
     const verifyModalOk = async () => {
       // console.log(verifyFormDataSet.current.validate());
-      verifyFormDataSet.current.validate().then(async (value) => {
-        let boolean;
-        if (!value) {
-          return false;
-        }
-        if (value && !captchaKey) {
-          message.warning('请先获取验证码');
-          return false;
-        }
-        if (value && captchaKey) {
-          const res = await userInfoApi.goVerify({
-            phone,
-            captcha: verifyFormDataSet.current.get('password'),
-            captchaKey,
-          });
-          if (res.status) {
-            loadUserInfo();
-            boolean = true;
-          } else {
-            message.warning(res.message);
-            boolean = false;
-          }
-        }
+      let boolean = false;
+      const result = await verifyFormDataSet.current.validate();
+      if (!result) {
         return boolean;
+      }
+      if (result && !captchaKey) {
+        message.warning('请先获取验证码');
+        return boolean;
+      }
+      const res = await userInfoApi.goVerify({
+        phone,
+        captcha: verifyFormDataSet.current.get('password'),
+        captchaKey,
       });
-      return false;
+      if (res.status) {
+        loadUserInfo();
+        boolean = true;
+      } else {
+        message.warning(res.message);
+        boolean = false;
+      }
+      return boolean;
     };
 
     const openVerifyModal = () => {
