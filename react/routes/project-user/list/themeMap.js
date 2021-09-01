@@ -1,7 +1,7 @@
 import { Table, TextField } from 'choerodon-ui/pro';
 import { Icon } from 'choerodon-ui';
 import React, { useContext } from 'react';
-import FilterTextField from '@/components/filter-textField';
+import { FilterTextField } from '@choerodon/components';
 import theme4Style from './theme4.module.less';
 
 const { Column } = Table;
