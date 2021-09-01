@@ -161,11 +161,13 @@ function UserInfo(props) {
           style={{
             cursor: 'pointer',
             display: 'inline-block',
-            width: 60,
+            width: 90,
             textAlign: 'center',
           }}
         >
           {btnContent}
+          {' '}
+          {typeof btnContent === 'number' ? 's后重新获取' : ''}
         </span>
       );
       const content = (
