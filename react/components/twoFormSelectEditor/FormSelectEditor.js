@@ -135,7 +135,7 @@ export default observer(({
               className="two-form-select-editor-button"
               disabled={(record[0].get(name[0]) || []).length <= 1}
               onClick={() => handleDeleteItem(index)}
-              icon="delete"
+              icon="delete_black-o"
               funcType="flat"
             />,
           ];
