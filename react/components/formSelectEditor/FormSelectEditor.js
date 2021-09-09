@@ -171,7 +171,7 @@ export default observer(({
                     funcType="flat"
                     disabled={(itemDisabledFunc && itemDisabledFunc(orgUserListDataSet, v, optionDataSet || dsStore.get(index))) || (!canDeleteAll && (record.get(name) || []).length <= 1) || checkCanDisabled(record, v)}
                     onClick={() => handleDeleteItem(index)}
-                    icon="delete"
+                    icon="delete_black-o"
                   />
                 </div>
               </Tooltip>
