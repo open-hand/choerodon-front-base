@@ -141,7 +141,7 @@ const LdapView = observer(() => {
           }, {
             name: '启用',
             icon: 'finished',
-            display: currentRecord && currentRecord.getPristineValue('enabled'),
+            display: currentRecord && !currentRecord.getPristineValue('enabled'),
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.enable'],
             handler: handleEnableLdap,
           }, {
