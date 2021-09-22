@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useContext, useState } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {

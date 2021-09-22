@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useContext, Fragment } from 'react';
 import {
   axios, Content, Header, Page, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
