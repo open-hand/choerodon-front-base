@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { FormattedMessage } from 'react-intl';
@@ -67,8 +68,7 @@ const DeleteChildren = observer((props) => {
 
   modal.handleOk(async () => {
     const result = await axios.delete(
-      `/iam/choerodon/v1/organizations/${organizationId}/users/${
-        record.toData().id
+      `/iam/choerodon/v1/organizations/${organizationId}/users/${record.toData().id
       }/delete?onlyOrganization=${deleteOption === 'onlyOrg'}`,
     );
     if (!result.failed) {
@@ -314,17 +314,22 @@ export default withRouter(
       });
     }
 
-    function linkToLDAP() {
-      const {
-        history,
-        location: { search },
-      } = props;
-      history.push(`/iam/organization-setting/ldap${search}`);
+    function linkToLDAP(modalInstance) {
+      setTimeout(() => {
+        const {
+          history,
+          location: { search },
+        } = props;
+        history.push(`/iam/organization-setting/ldap${search}`);
+      }, 500);
+      if (modalInstance) {
+        modalInstance.close();
+      }
     }
 
     async function handleSyncSetting() {
       const res = await axios.get(`/iam/v1/${organizationId}/ldaps`);
-      Modal.open({
+      const syncSetting = Modal.open({
         key: syncModalKey,
         style: modalStyle,
         drawer: true,
@@ -336,14 +341,14 @@ export default withRouter(
             </Tooltip>
           </div>
         ),
-        children: <LdapModal ldapId={res.id} />,
+        children: <LdapModal linkLDAP={(instance) => linkToLDAP(instance)} ldapId={res.id} />,
         okText: '手动同步',
         cancelText: '关闭',
         footer: (okBtn, cancelBtn) => (
           <div>
             {cancelBtn}
             {okBtn}
-            <ProButton color="primary" funcType="raised" onClick={linkToLDAP}>
+            <ProButton color="primary" funcType="raised" onClick={() => linkToLDAP(syncSetting)}>
               转至LDAP设置
             </ProButton>
           </div>

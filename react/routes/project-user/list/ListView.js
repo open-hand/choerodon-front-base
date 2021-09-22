@@ -135,6 +135,7 @@ export default BrowserAdapter(observer((props) => {
         orgUserRoleDataSet={orgUserRoleDataSet}
         orgUserCreateDataSet={orgUserCreateDataSet}
         orgUserListDataSet={dataSet}
+        // eslint-disable-next-line react/jsx-no-bind
         onOk={handleSave}
       />,
       key: modalKey,
@@ -180,7 +181,7 @@ export default BrowserAdapter(observer((props) => {
       Modal.confirm({
         key: Modal.key(),
         title: '删除用户',
-        content: `确认删除用户"${record.get('realName')}"在本项目下的全部角色吗?`,
+        children: `确认删除用户"${record.get('realName')}"在本项目下的全部角色吗?`,
         onOk: async () => {
           const result = await axios.post(`/iam/choerodon/v1/projects/${projectId}/users/${record.get('id')}/role_members/delete`, JSON.stringify(postData));
           if (!result.failed) {
@@ -261,6 +262,7 @@ export default BrowserAdapter(observer((props) => {
           orgUserRoleDataSet={orgUserRoleDataSet}
           orgUserCreateDataSet={orgUserCreateDataSet}
           orgUserListDataSet={dataSet}
+          // eslint-disable-next-line react/jsx-no-bind
           onOk={handleSave}
         />
       );
@@ -340,7 +342,7 @@ export default BrowserAdapter(observer((props) => {
                     <span
                       role="none"
                       className={styles['theme4-c7n-memberItem-line-name-realName-text']}
-                      // onClick={() => handleUserRole(item, true)}
+                    // onClick={() => handleUserRole(item, true)}
                     >
                       {item.realName}
                     </span>
@@ -454,7 +456,7 @@ export default BrowserAdapter(observer((props) => {
       </Header>
       <Breadcrumb
         {
-          ...breadCrumb
+        ...breadCrumb
         }
       />
       <DeleteRoleModal

@@ -80,17 +80,17 @@ export default observer(({
 
   function addDisabled() {
     if (onlyMember) {
-      return record[0].get(name[0]).some((value) => !value)
+      return record[0]?.get(name[0])?.some((value) => !value)
     } else {
-      return record[0].get(name[0]).some((value) => !value) || record[1].get(name[1]).some((value) => !value);
+      return record[0]?.get(name[0])?.some((value) => !value) || record[1]?.get(name[1])?.some((value) => !value);
     }
   }
 
   return (
     <>
       <Form ref={formElement} className="two-form-select-editor" columns={13}>
-        {(record[0].get(name[0]) || []).map((v, index) => {
-          const value = [v, record[1].get(name[1])[index]];
+        {(record[0]?.get(name[0]) || []).map((v, index) => {
+          const value = [v, record[1]?.get(name[1])?.[index] || ''];
           if (!dsStore[0][index]) {
             dsStore[0][index] = optionDataSet[0] || new DataSet(optionDataSetConfig[0]);
           }
@@ -123,14 +123,14 @@ export default observer(({
               required: record[1].fields.get(name[1]).get('required'),
             }),
             <Button
-            {
+              {
               ...onlyMember ? {
                 style: {
                   position: 'relative',
                   right: 120,
                 }
               } : {}
-            }
+              }
               colSpan={2}
               className="two-form-select-editor-button"
               disabled={(record[0].get(name[0]) || []).length <= 1}
@@ -146,7 +146,7 @@ export default observer(({
         colSpan={12}
         // color={addDisabled() ? 'gray' : 'blue'}
         onClick={handleCreatOther}
-        style={{ 
+        style={{
           textAlign: 'left',
           marginTop: '-0.04rem'
         }}

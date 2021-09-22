@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon, Button as ProButton,
 } from '@choerodon/boot';
 import { Button, Modal, Upload } from 'choerodon-ui';
 import {
@@ -170,9 +170,9 @@ export default observer(() => {
       <>
 
         <h3>下载模板</h3>
-        <p>您必须使用模版文件，录入团队成员信息</p>
+        <p>您必须使用模板文件，录入团队成员信息</p>
 
-        <Button onClick={handleDownLoad} type="primary" funcType="flat" icon="get_app">
+        <Button onClick={() => handleDownLoad()} type="primary" funcType="flat" icon="get_app">
           下载模板
           <a style={{ display: 'none' }} label=" " id="c7n-user-download-template" href="a" onClick={(event) => { event.stopPropagation(); }} download="roleAssignment.xlsx" />
         </Button>

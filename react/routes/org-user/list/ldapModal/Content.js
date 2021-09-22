@@ -21,6 +21,7 @@ const ldapSetting = withRouter(observer((props) => {
       setTabKey,
     },
     recordTableDs,
+    linkLDAP,
   } = useLdapStore();
 
   function linkToLDAP() {
@@ -44,7 +45,7 @@ const ldapSetting = withRouter(observer((props) => {
             <Button
               color="primary"
               funcType="raised"
-              onClick={linkToLDAP}
+              onClick={() => linkLDAP(modal)}
             >
               转至LDAP设置
             </Button>
@@ -55,9 +56,29 @@ const ldapSetting = withRouter(observer((props) => {
       modal.update({
         okText: '保存',
         cancelText: '取消',
+        footer: (okBtn, cancelBtn) => (
+          <div>
+            {cancelBtn}
+            {okBtn}
+            <Button color="primary" funcType="raised" onClick={() => linkLDAP(modal)}>
+              转至LDAP设置
+            </Button>
+          </div>
+        ),
       });
     } else {
-      modal.update({ okText: '手动同步' });
+      modal.update({
+        okText: '手动同步',
+        footer: (okBtn, cancelBtn) => (
+          <div>
+            {cancelBtn}
+            {okBtn}
+            <Button color="primary" funcType="raised" onClick={() => linkLDAP(modal)}>
+              转至LDAP设置
+            </Button>
+          </div>
+        ),
+      });
     }
   }
 
@@ -65,6 +86,7 @@ const ldapSetting = withRouter(observer((props) => {
     <div className={`${prefixCls}-content`}>
       <Tabs
         activeKey={getTabKey}
+        // eslint-disable-next-line react/jsx-no-bind
         onChange={handleTabChange}
       >
         <TabPane tab="手动同步" key="manual">
