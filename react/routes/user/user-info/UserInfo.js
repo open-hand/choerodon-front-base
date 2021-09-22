@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Icon, Modal as OldModal, message,
+  Form, Icon, Modal as OldModal, message, Tag,
 } from 'choerodon-ui';
 import {
   Modal,
@@ -9,6 +9,7 @@ import {
   Button,
   DataSet,
   Form as ProForm,
+  Output,
   TextField,
 } from 'choerodon-ui/pro';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -43,7 +44,9 @@ function UserInfo(props) {
     intlPrefix,
     prefixCls,
     userId,
+    testDs,
   } = context;
+  const [inEdit, setInEdit] = useState(false);
   const [enablePwd, setEnablePwd] = useState({});
   const [avatar, setAvatar] = useState('');
   const modalRef = React.createRef();
@@ -102,7 +105,9 @@ function UserInfo(props) {
           type: 'string',
           label: '手机号',
           required: true,
-          disabled: true,
+          computedProps: {
+            disabled: ({ dataSet }) => dataSet.current.get('phone'),
+          },
         },
         {
           name: 'password',
@@ -223,6 +228,39 @@ function UserInfo(props) {
       });
     };
 
+    const renderPhone = ({ value }) => {
+      if (value) {
+        // return <span>{value}</span>;
+        if (!inEdit) {
+          return <Tag color="orange">orange</Tag>;
+        }
+        return (
+          <div>
+            {/* <Tag color="orange">orange</Tag> */}
+            <TextField name="phone" />
+            {testDs
+            && testDs.originalData
+            && testDs.originalData.data
+            && testDs.originalData.data[0].phoneBind ? (
+              <span>修改手机号</span>
+              ) : (
+                <span role="none" onClick={openVerifyModal}>
+                  绑定
+                </span>
+              )}
+          </div>
+        );
+      }
+      return <Tag color="orange">orange</Tag>;
+    };
+
+    const editPersonInfo = async () => {
+      await testDs.submit();
+      testDs.query();
+      setInEdit(false);
+      console.log('go');
+    };
+
     return (
       <>
         <div className={`${prefixCls}-top-container`}>
@@ -230,7 +268,17 @@ function UserInfo(props) {
             {renderAvatar(user)}
           </div>
           <div className={`${prefixCls}-login-info`}>
-            <div>{realName}</div>
+            <div>
+              {realName}
+              <span
+                role="none"
+                onClick={() => {
+                  setInEdit(!inEdit);
+                }}
+              >
+                编辑
+              </span>
+            </div>
             <div>
               {intl.formatMessage({ id: `${intlPrefix}.source` })}
               :
@@ -250,6 +298,68 @@ function UserInfo(props) {
           </div>
         </div>
         <div className={`${prefixCls}-info-container`}>
+          <ProForm
+            dataSet={testDs}
+            labelLayout="horizontal"
+            labelAlign="left"
+            style={{ width: '3.5rem' }}
+          >
+            <Output
+              label={(
+                <span className={`${prefixCls}-info-container-info-title`}>
+                  账号信息
+                </span>
+              )}
+            />
+            {!inEdit && <Output name="email" />}
+            {inEdit && (
+              <TextField
+                name="email"
+                suffix={(
+                  <span
+                    role="none"
+                    className={`${prefixCls}-info-container-fix-text`}
+                    onClick={editPersonInfo}
+                  >
+                    修改
+                  </span>
+                )}
+              />
+            )}
+            {!inEdit && <Output name="phone" renderer={renderPhone} />}
+            {inEdit && (
+              <Output
+                name="phone"
+                renderer={renderPhone}
+                // suffix={(
+                //   <span className={`${prefixCls}-info-container-fix-text`}>
+                //     {testDs
+                //     && testDs.originalData
+                //     && testDs.originalData.data
+                //     && testDs.originalData.data[0].phoneBind ? (
+                //       <span>修改手机号</span>
+                //       ) : (
+                //         <span role="none" onClick={openVerifyModal}>
+                //           绑定
+                //         </span>
+                //       )}
+                //   </span>
+                // )
+              // }
+              />
+            )}
+            <Output name="language" />
+            <Output name="timeZone" />
+            <Output
+              label={(
+                <span className={`${prefixCls}-info-container-info-title`}>
+                  组织信息
+                </span>
+              )}
+            />
+            <Output name="organizationName" />
+            <Output name="organizationCode" />
+          </ProForm>
           <div className={`${prefixCls}-info-container-account`}>
             <div>
               {intl.formatMessage({ id: `${intlPrefix}.account.info` })}

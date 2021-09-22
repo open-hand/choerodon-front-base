@@ -1,3 +1,4 @@
+/* stylelint-disable */
 @baseFontAllBlack: PingFangSC-Medium;
 
 @baseFont65Black: PingFangSC-Regular;
@@ -62,10 +63,8 @@
     height: 100px;
     border-radius: 50%;
     background: #fff;
-    box-shadow:
-      0 3px 1px -2px rgba(0, 0, 0, 0.2),
-      0 2px 2px 0 rgba(0, 0, 0, 0.14),
-      0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   }
 
   &-avatar {
@@ -334,6 +333,34 @@
 
   &-info-container {
     padding: 0.24rem 0 0 1.94rem;
+
+    .c7n-pro-field-label label {
+      color: red;
+      font-size: 0.14rem;
+      color: var(--text-color3);
+    }
+    .c7n-pro-output-wrapper {
+      font-size: 0.14rem;
+      color: var(--text-color);
+      font-family: PingFangSC-Regular;
+    }
+    &-info-title {
+      font-size: 0.16rem;
+      font-family: PingFangSC-Medium;
+      line-height: 0.24rem;
+      color: var(--text-color);
+      margin-bottom: 0.16rem;
+      position: relative;
+      left: -6px;
+    }
+    &-fix-text {
+      position: absolute;
+      left: 35px;
+      top: 3px;
+      display: inline-block;
+      width: 40px;
+      color: #5365ea !important;
+    }
 
     &-account {
       overflow: hidden;
