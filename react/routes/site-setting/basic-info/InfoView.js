@@ -85,7 +85,7 @@ const basicInfo = withRouter(observer(() => {
     Modal.open({
       key: Modal.key(),
       title: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.title` }),
-      content: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.content` }),
+      children: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.content` }),
       onOk: async () => {
         try {
           await axios.delete('/iam/choerodon/v1/system/setting');

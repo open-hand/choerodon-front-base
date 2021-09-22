@@ -18,7 +18,7 @@ export default function ListView() {
   async function handleDelete({ record }) {
     Modal.open({
       title: '删除root用户',
-      content: `确认删除root用户"${record.get('realName')}"吗?`,
+      children: `确认删除root用户"${record.get('realName')}"吗?`,
       onOk: async () => {
         try {
           await axios.delete(`/iam/choerodon/v1/users/admin/${record.get('id')}`);
