@@ -1,35 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Icon, message, Tag,
 } from 'choerodon-ui';
 import {
   Modal,
-  Spin,
-  Button,
   DataSet,
   Form as ProForm,
   Output,
   TextField,
   Password,
+  Tooltip,
 } from 'choerodon-ui/pro';
 import {
   Content,
   Header,
   Page,
-  axios,
   Breadcrumb,
   Choerodon,
-  HeaderButtons,
   Permission,
 } from '@choerodon/boot';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
 import TextEditToggle from './textEditToggle';
-import EditUserInfo from './EditUserInfo';
 import { useStore } from './stores';
-import EditPassword from './EditPassword';
-import { fetchPasswordPolicies } from '../services/password';
 import { userInfoApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
@@ -47,7 +41,13 @@ function UserInfo(props) {
     intlPrefix,
     prefixCls,
     userId,
-    testDs,
+    organizationId,
+    userInfoDs,
+    verifyFormDataSet,
+    pswModifyPhoneDataSet,
+    modifyNameDataSet,
+    newPhoneDataSet,
+    modifyPswFormDataSet,
   } = context;
   const [editObj, seEditObj] = useState({});
   const [visible, setVisible] = useState(false);
@@ -59,9 +59,9 @@ function UserInfo(props) {
     setVisible(newVisible);
   };
   const filishUpAvatar = async (res) => {
-    testDs.current.set('imageUrl', res);
-    await testDs.submit();
-    testDs.query();
+    userInfoDs.current.set('imageUrl', res);
+    await userInfoDs.submit();
+    userInfoDs.query();
   };
 
   const toSetEdit = (params) => {
@@ -71,8 +71,8 @@ function UserInfo(props) {
   };
 
   const renderAvatar = () => {
-    const avatar = testDs?.current?.get('imageUrl');
-    const realName = testDs?.current?.get('realName');
+    const avatar = userInfoDs?.current?.get('imageUrl');
+    const realName = userInfoDs?.current?.get('realName');
     return (
       <div
         className="user-info-avatar user-info-avatar-modal-edit"
@@ -110,61 +110,8 @@ function UserInfo(props) {
     let key; // 校验验证码之后得到
     let timer = null;
 
-    const ldap = testDs?.current?.get('ldap');
-    const phoneBind = testDs?.current?.get('phoneBind');
-
-    const verifyFormDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'phone',
-          type: 'string',
-          label: '手机号',
-          required: true,
-          computedProps: {
-            disabled: ({ dataSet }) => dataSet.current.get('phone'),
-          },
-        },
-        {
-          name: 'password',
-          type: 'string',
-          label: '短信验证码',
-          required: true,
-          maxLength: 6,
-          validator: (value) => {
-            const reg = /^\d{6}$/;
-            if (reg.test(value)) {
-              return true;
-            }
-            return '验证码应为6位数字';
-          },
-        },
-      ],
-    });
-
-    const pswModifyPhoneDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'password',
-          type: 'string',
-          label: '密码',
-          required: true,
-        },
-      ],
-    });
-
-    const modifyNameDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'realName',
-          type: 'string',
-          label: '请输入新用户名',
-          required: true,
-        },
-      ],
-    });
+    const ldap = userInfoDs?.current?.get('ldap');
+    const phoneBind = userInfoDs?.current?.get('phoneBind');
 
     const ModifyNameContent = () => (
       <ProForm labelLayout="float" dataSet={modifyNameDataSet}>
@@ -175,7 +122,10 @@ function UserInfo(props) {
     const modifyNameOk = () => {
       modifyNameDataSet.validate().then(async (bool) => {
         if (bool) {
-          testDs.current.set('realName', modifyNameDataSet.current.get('realName'));
+          userInfoDs.current.set(
+            'realName',
+            modifyNameDataSet.current.get('realName'),
+          );
           editPersonInfo();
           return true;
         }
@@ -187,9 +137,7 @@ function UserInfo(props) {
       Modal.open({
         key: Math.random(),
         title: '修改用户名',
-        children: (
-          <ModifyNameContent />
-        ),
+        children: <ModifyNameContent />,
         okText: '确定',
         onOk: modifyNameOk,
         destroyOnClose: true,
@@ -210,6 +158,9 @@ function UserInfo(props) {
         onText = '下一步';
         onOk = modifyOk;
       }
+      if (userInfoDs.current.get('phone')) {
+        verifyFormDataSet.current.set('phone', userInfoDs.current.get('phone'));
+      }
       Modal.open({
         // key: createKey,
         key: Math.random(),
@@ -217,7 +168,6 @@ function UserInfo(props) {
         children: (
           <VerifyModalContent
             type={type}
-            phoneNum={testDs.current.get('phone')}
           />
         ),
         okText: onText,
@@ -237,30 +187,47 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await userInfoApi.goVerify({
-        phone: testDs.current.get('phone'),
-        captcha: verifyFormDataSet.current.get('password'),
-        captchaKey,
+      const checkResult = await userInfoApi.checkPhoneExit({
+        id: userId,
+        phone: verifyFormDataSet.current.get('phone'),
       });
-      if (res.status) {
-        boolean = true;
-      } else {
-        message.warning(res.message);
-        boolean = false;
+
+      if (checkResult && checkResult.failed) {
+        message.error(checkResult.message);
+        return false;
+      } if (!checkResult) { // 验证成功
+        const res = await userInfoApi.goVerify({
+          phone: verifyFormDataSet.current.get('phone'),
+          captcha: verifyFormDataSet.current.get('password'),
+          captchaKey,
+        });
+        if (res.status) {
+          boolean = true;
+        } else {
+          message.warning(res.message);
+        }
       }
       return boolean;
     };
 
     // 用短信验证的方式更换手机号的ok
     const modifyOk = async () => {
-      // 调确定验证码的接口
+      let boolean = false;
+      const result = await verifyFormDataSet.current.validate();
+      if (!result) {
+        return boolean;
+      }
+      if (result && !captchaKey) {
+        message.warning('请先获取验证码');
+        return boolean;
+      }
       const res = await userInfoApi.goCheckCode({
         phone: verifyFormDataSet.current.get('phone'),
         captcha: verifyFormDataSet.current.get('password'),
         captchaKey,
       });
-      console.log(res, 'res');
       if (res.status) {
+        boolean = true;
         key = res.key;
         setTimeout(() => {
           Modal.open({
@@ -272,9 +239,10 @@ function UserInfo(props) {
             destroyOnClose: true,
           });
         }, 300);
+      } if (!res.status) {
+        message.warning(res.message);
       }
-      message.error(res.message);
-      return false;
+      return boolean;
     };
 
     // 密码修改已经绑定的手机号
@@ -285,28 +253,30 @@ function UserInfo(props) {
     );
     // 密码修改已经绑定的手机号提交密码
     const PswModifyPhoneSubmitPsw = async (p) => {
+      let boolean = false;
       const res = await userInfoApi.goCheckPsw({
-        loginName: testDs.current.get('loginName'),
+        loginName: userInfoDs.current.get('loginName'),
         passWord: pswModifyPhoneDataSet.current.get('password'),
       });
-      console.log(res, 'xxxxxxx');
       if (res.status) {
         key = res.key;
-        p.modal.close();
+        boolean = true;
         setTimeout(() => {
           Modal.open({
             key: Math.random(),
             title: '请输入新手机号',
             children: <NewPhoneContent />,
             okText: '确定',
-            onOk: () => { submitNewPhone('PSW'); },
+            onOk: () => {
+              submitNewPhone('PSW');
+            },
             destroyOnClose: true,
           });
         }, 300);
-        return true;
+      } else if (!res.status) {
+        message.error(res.message);
       }
-      message.error(res.message);
-      return false;
+      return boolean;
     };
 
     const openPswModifyPhone = (p) => {
@@ -324,7 +294,6 @@ function UserInfo(props) {
     };
 
     const VerifyModalContent = (p) => {
-      verifyFormDataSet.current.set('phone', p.phoneNum);
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
@@ -358,11 +327,12 @@ function UserInfo(props) {
       const content = (
         <div className={`${prefixCls}-vetifyForm-container`}>
           <ProForm
+            style={{ position: 'relative' }}
             labelLayout="horizontal"
             labelAlign="left"
             dataSet={verifyFormDataSet}
           >
-            <TextField name="phone" />
+            <TextField name="phone" disabled={userInfoDs.current.get('phone')} />
             <TextField name="password" />
           </ProForm>
           <span
@@ -371,7 +341,7 @@ function UserInfo(props) {
             style={{
               color: '#5365EA',
               position: 'absolute',
-              bottom: 27,
+              top: 70,
               right: 26,
               display: 'inline-block',
               height: 30,
@@ -403,19 +373,6 @@ function UserInfo(props) {
       return content;
     };
 
-    const newPhoneDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'phone',
-          type: 'string',
-          label: '新手机号码',
-          required: true,
-          pattern: /^1[3-9]\d{9}$/,
-        },
-      ],
-    });
-
     const NewPhoneContent = () => (
       <ProForm dataSet={newPhoneDataSet} labelLayout="float">
         <TextField name="phone" maxLength={11} />
@@ -423,62 +380,63 @@ function UserInfo(props) {
     );
 
     // 新手机号提交
-    const submitNewPhone = (submitType) => {
+    const submitNewPhone = async (submitType) => {
       let type;
       if (submitType === 'SMS') {
         type = 'captcha';
       } else if (submitType === 'PSW') {
         type = 'password';
       }
-      newPhoneDataSet.validate().then(async (bool) => {
-        console.log(bool);
-        if (bool) {
+      const result = await newPhoneDataSet.validate();
+      if (result) {
+        const checkResult = await userInfoApi.checkPhoneExit({
+          id: userId,
+          phone: newPhoneDataSet.current.get('phone'),
+        });
+        if (checkResult && checkResult.failed) {
+          message.error(checkResult.message);
+          return false;
+        } if (!checkResult) {
           await userInfoApi.goNewPhoneSubmit({
             phone: newPhoneDataSet.current.get('phone'),
             verifyKey: key,
             type,
+            loginName: userInfoDs.current.get('loginName'),
           });
-          testDs.query();
+          userInfoDs.query();
           return true;
         }
-        return false;
-      });
+      }
+      return false;
     };
 
     // ----------  修改密码
-    const modifyPswFormDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'oldPassword',
-          type: 'string',
-          label: '原密码',
-          required: true,
-        },
-        {
-          name: 'newPassword',
-          type: 'string',
-          label: '新密码',
-          required: true,
-        },
-        {
-          name: 'ggg',
-          type: 'string',
-          label: '确认密码',
-          required: true,
-        },
-      ],
-    });
-
     const ModifyPswContent = () => (
       <ProForm dataSet={modifyPswFormDataSet} labelLayout="float">
-        <Password name="oldPassword" autoComplete="new-password" />
-        <Password name="newPassword" autoComplete="new-password" />
+        <Password name="originPassword" autoComplete="new-password" />
+        <Password name="password" autoComplete="new-password" />
         <Password name="ggg" autoComplete="new-password" />
       </ProForm>
     );
 
-    const submitModifyPsw = () => {};
+    const submitModifyPsw = async () => {
+      const result = await modifyPswFormDataSet.current.validate();
+      if (result) {
+        const modifyResult = await userInfoApi.modifyPsw({
+          organizationId,
+          originPassword: modifyPswFormDataSet.current.get('originPassword'),
+          password: modifyPswFormDataSet.current.get('password'),
+        });
+        if (modifyResult.failed) {
+          message.error(modifyResult.message);
+          return false;
+        } if (!modifyResult.failed) {
+          message.success(modifyResult.message);
+          return true;
+        }
+      }
+      return false;
+    };
 
     const openModifyPsw = () => {
       if (ldap) {
@@ -494,6 +452,7 @@ function UserInfo(props) {
       });
       return false;
     };
+
     // --------render
 
     const renderEmail = ({ value }) => {
@@ -518,6 +477,12 @@ function UserInfo(props) {
           <TextField
             name="email"
             onBlur={() => {
+              // console.log(userInfoDs.status);
+              // if (userInfoDs.status !== 'update') {
+              //   toSetEdit('email');
+              // } else {
+              //   editPersonInfo('email');
+              // }
               editPersonInfo('email');
             }}
           />
@@ -584,10 +549,21 @@ function UserInfo(props) {
         <span>*********</span>
         <span
           className={`${prefixCls}-info-container-fix-text`}
-          role="none"
-          onClick={openModifyPsw}
         >
-          <span>修改</span>
+          {!ldap && (
+          <span
+            role="none"
+            onClick={openModifyPsw}
+          >
+            修改
+          </span>
+          )}
+          {ldap
+          && (
+          <Tooltip title="ldap用户不支持修改密码">
+            <span style={{ color: '#9EADBE' }}>修改</span>
+          </Tooltip>
+          )}
         </span>
       </div>
     );
@@ -596,9 +572,8 @@ function UserInfo(props) {
     const renderTimeZone = ({ text }) => <span>中国</span>;
 
     const editPersonInfo = async (params) => {
-      await testDs.submit();
-      testDs.query();
-      console.log('go');
+      await userInfoDs.submit();
+      userInfoDs.query();
       if (params) {
         toSetEdit(params);
       }
@@ -612,8 +587,12 @@ function UserInfo(props) {
           </div>
           <div className={`${prefixCls}-login-info`}>
             <div>
-              {testDs?.current?.get('realName')}
-              <span onClick={openModifyNameModal} role="none" style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}>
+              {userInfoDs?.current?.get('realName')}
+              <span
+                onClick={openModifyNameModal}
+                role="none"
+                style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
+              >
                 <Icon type="edit-o" />
               </span>
             </div>
@@ -630,14 +609,14 @@ function UserInfo(props) {
                 ：
               </span>
               <Text style={{ fontSize: '13px' }}>
-                <span>{testDs?.current?.get('loginName')}</span>
+                <span>{userInfoDs?.current?.get('loginName')}</span>
               </Text>
             </div>
           </div>
         </div>
         <div className={`${prefixCls}-info-container`}>
           <ProForm
-            dataSet={testDs}
+            dataSet={userInfoDs}
             labelLayout="horizontal"
             labelAlign="left"
             style={{ width: '3.5rem' }}
