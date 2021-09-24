@@ -6,7 +6,7 @@ class UserInfoApi extends Api<UserInfoApi> {
     return this.request({
       method: 'get',
       // url: '/oauth/public/send-phone-captcha',
-      url: '/choerodon/public/new/send-phone-captcha',
+      url: '/oauth/choerodon/public/new/send-phone-captcha',
       params: {
         phone,
       },
@@ -59,13 +59,14 @@ class UserInfoApi extends Api<UserInfoApi> {
   }
 
   // 修改密码
-  modifyPsw(data:{organizationId:string, password:string, originPassword:string}) {
+  modifyPsw(data:{ password:string, originalPassword:string, userId:string}) {
     return this.request({
       method: 'put',
-      url: `/iam/choerodon/v1/users/${data.organizationId}/password`,
+      url: `/iam/choerodon/v1/users/${data.userId}/password`,
       data: {
         password: data.password,
-        originPassword: data.originPassword,
+        originalPassword: data.originalPassword,
+        businessScope: 'UPDATE_PASSWORD',
       },
     });
   }
