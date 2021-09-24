@@ -1,7 +1,9 @@
+/*eslint-disable*/
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
-import { Button, Icon, Modal, Upload } from 'choerodon-ui';
+import { Icon, Modal, Upload } from 'choerodon-ui';
+import { Button } from 'choerodon-ui/pro';
 import { axios, Choerodon } from '@choerodon/boot';
 import querystring from 'query-string';
 
@@ -39,10 +41,13 @@ export default class AvatarUploader extends Component {
     rotate: 0,
   };
 
-
   handleOk = () => {
-    const { id, intl, AppState, setAvatar } = this.props;
-    const { x, y, size, rotate, file, imageStyle: { width, height }, img: { naturalWidth, naturalHeight } } = this.state;
+    const {
+      id, intl, AppState, setAvatar,
+    } = this.props;
+    const {
+      x, y, size, rotate, file, imageStyle: { width, height }, img: { naturalWidth, naturalHeight },
+    } = this.state;
     const flag = rotateFlag(rotate);
     const scale = naturalWidth / width;
     const startX = flag ? x - ((width - height) / 2) : x;
@@ -226,7 +231,9 @@ export default class AvatarUploader extends Component {
   }
 
   getPreviewProps(previewSize) {
-    const { size, x, y, img: { src }, rotate, imageStyle: { width, height } } = this.state;
+    const {
+      size, x, y, img: { src }, rotate, imageStyle: { width, height },
+    } = this.state;
     const previewScale = previewSize / size;
     let radius = (rotate % 360) / 90;
     let px = -x;
@@ -264,7 +271,9 @@ export default class AvatarUploader extends Component {
   }
 
   renderEditor(props) {
-    const { img, imageStyle, file, size, x, y, rotate } = this.state;
+    const {
+      img, imageStyle, file, size, x, y, rotate,
+    } = this.state;
     const { src } = img;
     const { left, top } = imageStyle;
     const style = {
@@ -384,7 +393,7 @@ export default class AvatarUploader extends Component {
       <Button disabled={submitting} key="cancel" onClick={this.handleCancel}>
         <FormattedMessage id="cancel" />
       </Button>,
-      <Button key="save" type="primary" disabled={!img} loading={submitting} onClick={this.handleOk}>
+      <Button key="save" color="primary" disabled={!img} loading={submitting} onClick={this.handleOk}>
         <FormattedMessage id="save" />
       </Button>,
     ];
