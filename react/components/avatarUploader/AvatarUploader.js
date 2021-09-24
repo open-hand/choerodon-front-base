@@ -1,11 +1,12 @@
 /**
  * 裁剪头像上传
  */
-
+/*eslint-disable*/ 
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
-import { Button, Icon, Modal, Upload } from 'choerodon-ui';
+import { Icon, Modal, Upload } from 'choerodon-ui';
+import { Button } from 'choerodon-ui/pro';
 import { axios, Choerodon } from '@choerodon/boot';
 import PropTypes from 'prop-types';
 import querystring from 'query-string';
@@ -52,9 +53,10 @@ export default class AvatarUploader extends Component {
     };
   }
 
-
   handleOk = () => {
-    const { x, y, size, rotate, file, imageStyle: { width, height }, img: { naturalWidth, naturalHeight } } = this.state;
+    const {
+      x, y, size, rotate, file, imageStyle: { width, height }, img: { naturalWidth, naturalHeight },
+    } = this.state;
     const flag = rotateFlag(rotate);
     const scale = naturalWidth / width;
     const startX = flag ? x - ((width - height) / 2) : x;
@@ -242,7 +244,9 @@ export default class AvatarUploader extends Component {
   }
 
   getPreviewProps(previewSize) {
-    const { size, x, y, img: { src }, rotate, imageStyle: { width, height } } = this.state;
+    const {
+      size, x, y, img: { src }, rotate, imageStyle: { width, height },
+    } = this.state;
     const previewScale = previewSize / size;
     let radius = (rotate % 360) / 90;
     let px = -x;
@@ -280,7 +284,9 @@ export default class AvatarUploader extends Component {
   }
 
   renderEditor(props) {
-    const { img, imageStyle, file, size, x, y, rotate } = this.state;
+    const {
+      img, imageStyle, file, size, x, y, rotate,
+    } = this.state;
     const { intlPrefix, intl } = this.props;
     const { src } = img;
     const { left, top } = imageStyle;
@@ -403,14 +409,16 @@ export default class AvatarUploader extends Component {
   }
 
   render() {
-    const { visible, intlPrefix, intl, title } = this.props;
+    const {
+      visible, intlPrefix, intl, title,
+    } = this.props;
     const { img, submitting } = this.state;
     const modalFooter = [
       <Button disabled={submitting} key="cancel" onClick={this.handleCancel}>
         {/* <FormattedMessage id="cancel" /> */}
         {intl.formatMessage({ id: 'cancel' })}
       </Button>,
-      <Button key="save" type="primary" disabled={!img} loading={submitting} onClick={this.handleOk}>
+      <Button key="save" color="primary" disabled={!img} loading={submitting} onClick={this.handleOk}>
         {/* <FormattedMessage id="save" /> */}
         {intl.formatMessage({ id: 'save' })}
       </Button>,
