@@ -61,9 +61,14 @@ function UserInfo(props) {
     userInfoDs.query();
   };
 
-  const toSetEdit = (params) => {
+  const toSetEdit = (params, bool) => {
     const clone = cloneDeep(editObj);
-    clone[params] = !clone[params];
+    if (bool === undefined) {
+      clone[params] = !clone[params];
+    } else {
+      clone[params] = bool;
+    }
+
     seEditObj(clone);
   };
 
@@ -155,6 +160,7 @@ function UserInfo(props) {
         onText = '下一步';
         onOk = modifyOk;
       }
+      verifyFormDataSet.current.reset();
       if (userInfoDs.current.get('phone')) {
         verifyFormDataSet.current.set('phone', userInfoDs.current.get('phone'));
       }
@@ -180,28 +186,34 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const checkResult = await userInfoApi.checkPhoneExit({
-        id: userId,
-        phone: verifyFormDataSet.current.get('phone'),
-      });
-
-      if (checkResult && checkResult.failed) {
-        message.error(checkResult.message);
-        return false;
+      let checkResult;
+      if (!userInfoDs.current.get('phone')) {
+        // 之前有手机
+        checkResult = await userInfoApi.checkPhoneExit({
+          phone: verifyFormDataSet.current.get('phone'),
+        });
+        if (checkResult && checkResult.failed) {
+          message.error(checkResult.message);
+          return false;
+        }
       }
-      if (!checkResult) {
+      if (userInfoDs.current.get('phone') && !checkResult) {
+        // 之前没有手机
         // 验证成功
         const res = await userInfoApi.goVerify({
           phone: verifyFormDataSet.current.get('phone'),
+          loginName: userInfoDs.current.get('loginName'),
           captcha: verifyFormDataSet.current.get('password'),
           captchaKey,
         });
         if (res.status) {
           boolean = true;
+          userInfoDs.query();
         } else {
           message.warning(res.message);
         }
       }
+
       return boolean;
     };
 
@@ -247,8 +259,8 @@ function UserInfo(props) {
         <Password name="password" autoComplete="new-password" />
       </ProForm>
     );
-    // 密码修改已经绑定的手机号提交密码
-    const PswModifyPhoneSubmitPsw = async (p) => {
+    // 提交密码----密码修改已经绑定的手机号
+    const PswModifyPhoneSubmitPsw = async () => {
       let boolean = false;
       const res = await userInfoApi.goCheckPsw({
         loginName: userInfoDs.current.get('loginName'),
@@ -283,7 +295,7 @@ function UserInfo(props) {
           title: '密码修改手机号',
           children: <PswModifyPhoneContent />,
           okText: '下一步',
-          onOk: () => PswModifyPhoneSubmitPsw(p),
+          onOk: () => PswModifyPhoneSubmitPsw(),
           destroyOnClose: true,
         });
       }, 300);
@@ -389,7 +401,6 @@ function UserInfo(props) {
       const result = await newPhoneDataSet.validate();
       if (result) {
         const checkResult = await userInfoApi.checkPhoneExit({
-          id: userId,
           phone: newPhoneDataSet.current.get('phone'),
         });
         if (checkResult && checkResult.failed) {
@@ -448,6 +459,7 @@ function UserInfo(props) {
       if (ldap) {
         return false;
       }
+      modifyPswFormDataSet.current.reset();
       Modal.open({
         key: Math.random(),
         title: '修改密码',
@@ -479,16 +491,10 @@ function UserInfo(props) {
         );
       }
       return (
-        <div>
+        <div className={`${prefixCls}-info-container-email-invalid`}>
           <TextField
             name="email"
             onBlur={() => {
-              // console.log(userInfoDs.status);
-              // if (userInfoDs.status !== 'update') {
-              //   toSetEdit('email');
-              // } else {
-              //   editPersonInfo('email');
-              // }
               editPersonInfo('email');
             }}
           />
@@ -572,6 +578,10 @@ function UserInfo(props) {
     const renderTimeZone = ({ text }) => <span>中国</span>;
 
     const editPersonInfo = async (params) => {
+      const result = await userInfoDs.current.validate();
+      if (!result) {
+        return;
+      }
       await userInfoDs.submit();
       userInfoDs.query();
       if (params) {
