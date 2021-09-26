@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -176,7 +177,7 @@ export default observer(() => {
         <h3 className="import-user-title">导入团队成员</h3>
         <span>{renderUploadPanel()}</span>
         <Upload {...getUploadProps()}>
-          <Button disabled={uploading || (syncData.id && !syncData.endTime)} type="primary" funcType="flat" icon="file_upload">上传文件</Button>
+          <Button style={{ marginLeft: 0 }} disabled={uploading || (syncData.id && !syncData.endTime)} type="primary" funcType="flat" icon="file_upload">上传文件</Button>
         </Upload>
       </>
     );

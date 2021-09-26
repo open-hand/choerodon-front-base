@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Form, Icon, message, Tag,
 } from 'choerodon-ui';
 import {
   Modal,
-  DataSet,
   Form as ProForm,
   Output,
   TextField,
@@ -22,6 +21,7 @@ import {
 } from '@choerodon/boot';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
+// import JSEncrypt from '@/utils/jsencrypt.min';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
 import { userInfoApi } from '@/api';
@@ -29,19 +29,16 @@ import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
 
-const createKey = Modal.key();
-const resetGitlabKey = Modal.key();
-
 function UserInfo(props) {
   const context = useStore();
   const {
-    AppState,
-    UserInfoStore,
+    // AppState,
+    // UserInfoStore,
     intl,
     intlPrefix,
     prefixCls,
     userId,
-    organizationId,
+    // organizationId,
     userInfoDs,
     verifyFormDataSet,
     pswModifyPhoneDataSet,
@@ -64,9 +61,14 @@ function UserInfo(props) {
     userInfoDs.query();
   };
 
-  const toSetEdit = (params) => {
+  const toSetEdit = (params, bool) => {
     const clone = cloneDeep(editObj);
-    clone[params] = !clone[params];
+    if (bool === undefined) {
+      clone[params] = !clone[params];
+    } else {
+      clone[params] = bool;
+    }
+
     seEditObj(clone);
   };
 
@@ -158,6 +160,7 @@ function UserInfo(props) {
         onText = '下一步';
         onOk = modifyOk;
       }
+      verifyFormDataSet.current.reset();
       if (userInfoDs.current.get('phone')) {
         verifyFormDataSet.current.set('phone', userInfoDs.current.get('phone'));
       }
@@ -165,11 +168,7 @@ function UserInfo(props) {
         // key: createKey,
         key: Math.random(),
         title,
-        children: (
-          <VerifyModalContent
-            type={type}
-          />
-        ),
+        children: <VerifyModalContent type={type} />,
         okText: onText,
         onOk,
         destroyOnClose: true,
@@ -187,26 +186,34 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const checkResult = await userInfoApi.checkPhoneExit({
-        id: userId,
-        phone: verifyFormDataSet.current.get('phone'),
-      });
-
-      if (checkResult && checkResult.failed) {
-        message.error(checkResult.message);
-        return false;
-      } if (!checkResult) { // 验证成功
+      let checkResult;
+      if (!userInfoDs.current.get('phone')) {
+        // 之前有手机
+        checkResult = await userInfoApi.checkPhoneExit({
+          phone: verifyFormDataSet.current.get('phone'),
+        });
+        if (checkResult && checkResult.failed) {
+          message.error(checkResult.message);
+          return false;
+        }
+      }
+      if (userInfoDs.current.get('phone') && !checkResult) {
+        // 之前没有手机
+        // 验证成功
         const res = await userInfoApi.goVerify({
           phone: verifyFormDataSet.current.get('phone'),
+          loginName: userInfoDs.current.get('loginName'),
           captcha: verifyFormDataSet.current.get('password'),
           captchaKey,
         });
         if (res.status) {
           boolean = true;
+          userInfoDs.query();
         } else {
           message.warning(res.message);
         }
       }
+
       return boolean;
     };
 
@@ -239,7 +246,8 @@ function UserInfo(props) {
             destroyOnClose: true,
           });
         }, 300);
-      } if (!res.status) {
+      }
+      if (!res.status) {
         message.warning(res.message);
       }
       return boolean;
@@ -251,8 +259,8 @@ function UserInfo(props) {
         <Password name="password" autoComplete="new-password" />
       </ProForm>
     );
-    // 密码修改已经绑定的手机号提交密码
-    const PswModifyPhoneSubmitPsw = async (p) => {
+    // 提交密码----密码修改已经绑定的手机号
+    const PswModifyPhoneSubmitPsw = async () => {
       let boolean = false;
       const res = await userInfoApi.goCheckPsw({
         loginName: userInfoDs.current.get('loginName'),
@@ -287,7 +295,7 @@ function UserInfo(props) {
           title: '密码修改手机号',
           children: <PswModifyPhoneContent />,
           okText: '下一步',
-          onOk: () => PswModifyPhoneSubmitPsw(p),
+          onOk: () => PswModifyPhoneSubmitPsw(),
           destroyOnClose: true,
         });
       }, 300);
@@ -332,7 +340,10 @@ function UserInfo(props) {
             labelAlign="left"
             dataSet={verifyFormDataSet}
           >
-            <TextField name="phone" disabled={userInfoDs.current.get('phone')} />
+            <TextField
+              name="phone"
+              disabled={userInfoDs.current.get('phone')}
+            />
             <TextField name="password" />
           </ProForm>
           <span
@@ -390,13 +401,13 @@ function UserInfo(props) {
       const result = await newPhoneDataSet.validate();
       if (result) {
         const checkResult = await userInfoApi.checkPhoneExit({
-          id: userId,
           phone: newPhoneDataSet.current.get('phone'),
         });
         if (checkResult && checkResult.failed) {
           message.error(checkResult.message);
           return false;
-        } if (!checkResult) {
+        }
+        if (!checkResult) {
           await userInfoApi.goNewPhoneSubmit({
             phone: newPhoneDataSet.current.get('phone'),
             verifyKey: key,
@@ -419,19 +430,25 @@ function UserInfo(props) {
       </ProForm>
     );
 
+    // eslint-disable-next-line max-len
+    // const publicKey = 'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJL0JkqsUoK6kt3JyogsgqNp9VDGDp+t3ZAGMbVoMPdHNT2nfiIVh9ZMNHF7g2XiAa8O8AQWyh2PjMR0NiUSVQMCAwEAAQ==';
+
     const submitModifyPsw = async () => {
+      // const encrypt = new JSEncrypt();
+      // encrypt.setPublicKey(publicKey); // 加密
       const result = await modifyPswFormDataSet.current.validate();
       if (result) {
         const modifyResult = await userInfoApi.modifyPsw({
-          organizationId,
-          originPassword: modifyPswFormDataSet.current.get('originPassword'),
+          userId,
+          originalPassword: modifyPswFormDataSet.current.get('originPassword'),
           password: modifyPswFormDataSet.current.get('password'),
         });
         if (modifyResult.failed) {
           message.error(modifyResult.message);
           return false;
-        } if (!modifyResult.failed) {
-          message.success(modifyResult.message);
+        }
+        if (!modifyResult.failed) {
+          message.success('修改密码成功');
           return true;
         }
       }
@@ -442,6 +459,7 @@ function UserInfo(props) {
       if (ldap) {
         return false;
       }
+      modifyPswFormDataSet.current.reset();
       Modal.open({
         key: Math.random(),
         title: '修改密码',
@@ -473,16 +491,10 @@ function UserInfo(props) {
         );
       }
       return (
-        <div>
+        <div className={`${prefixCls}-info-container-email-invalid`}>
           <TextField
             name="email"
             onBlur={() => {
-              // console.log(userInfoDs.status);
-              // if (userInfoDs.status !== 'update') {
-              //   toSetEdit('email');
-              // } else {
-              //   editPersonInfo('email');
-              // }
               editPersonInfo('email');
             }}
           />
@@ -547,22 +559,16 @@ function UserInfo(props) {
     const renderPassword = ({ value }) => (
       <div style={{ position: 'relative' }}>
         <span>*********</span>
-        <span
-          className={`${prefixCls}-info-container-fix-text`}
-        >
+        <span className={`${prefixCls}-info-container-fix-text`}>
           {!ldap && (
-          <span
-            role="none"
-            onClick={openModifyPsw}
-          >
-            修改
-          </span>
+            <span role="none" onClick={openModifyPsw}>
+              修改
+            </span>
           )}
-          {ldap
-          && (
-          <Tooltip title="ldap用户不支持修改密码">
-            <span style={{ color: '#9EADBE' }}>修改</span>
-          </Tooltip>
+          {ldap && (
+            <Tooltip title="ldap用户不支持修改密码">
+              <span style={{ color: '#9EADBE' }}>修改</span>
+            </Tooltip>
           )}
         </span>
       </div>
@@ -572,6 +578,10 @@ function UserInfo(props) {
     const renderTimeZone = ({ text }) => <span>中国</span>;
 
     const editPersonInfo = async (params) => {
+      const result = await userInfoDs.current.validate();
+      if (!result) {
+        return;
+      }
       await userInfoDs.submit();
       userInfoDs.query();
       if (params) {
@@ -647,6 +657,7 @@ function UserInfo(props) {
       </>
     );
   }
+
   const render = () => (
     <Page>
       <Header className={`${prefixCls}-header`} />

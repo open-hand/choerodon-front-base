@@ -6,6 +6,7 @@ const testDsConfig = () => ({
       name: 'email',
       type: 'string',
       label: '邮箱地址',
+      pattern: /^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/,
     },
     {
       name: 'phone',
