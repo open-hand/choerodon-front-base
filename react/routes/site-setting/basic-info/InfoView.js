@@ -73,7 +73,7 @@ const basicInfo = withRouter(observer(() => {
           presetColors={presetColors}
           colorMap={colorMap}
           dataSet={dataSet}
-          themeColor={(themeColor && themeColor.split(',')[0]) || '#3f51b5'}
+          themeColor={(themeColor && themeColor.split(',')[0]) || '#5365EA'}
         />
       ),
       fullScreen: true,
