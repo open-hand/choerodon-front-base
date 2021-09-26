@@ -3,7 +3,7 @@ import React, { Component, useEffect, useState } from 'react';
 import { Upload, Icon, message } from 'choerodon-ui';
 import { Choerodon } from '@choerodon/boot';
 import { injectIntl, FormattedMessage, IntlProvider } from 'react-intl';
-import './UploadLogo.scss';
+import './UploadLogo.less';
 
 const limitSize = 1024;
 

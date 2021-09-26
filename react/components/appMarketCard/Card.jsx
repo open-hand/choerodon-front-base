@@ -1,5 +1,5 @@
 import React from 'react';
-import './Card.scss';
+import './Card.less';
 import { Tooltip } from 'choerodon-ui/pro';
 import { Badge, Icon } from 'choerodon-ui';
 import { strLength } from '../../common/util';

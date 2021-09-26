@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
 import _ from 'lodash';
-import './YamlAce.scss';
+import './YamlAce.less';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/yaml/yaml';
 import 'codemirror/theme/neat.css';

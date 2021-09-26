@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-image-lightbox';
 
-import './EasyImg.scss';
+import './EasyImg.less';
 
 
 export default class EasyImg extends Component {

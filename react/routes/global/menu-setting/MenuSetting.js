@@ -8,8 +8,8 @@ import { axios, Content, Header, Page, Permission, stores, Action, Breadcrumb, C
 import { FormattedMessage, injectIntl } from 'react-intl';
 import _ from 'lodash';
 import { adjustSort, canDelete, defineLevel, deleteNode, findParent, hasDirChild, isChild, normalizeMenus } from './util';
-import './MenuSetting.scss';
-import '../../../common/ConfirmModal.scss';
+import './MenuSetting.less';
+import '../../../common/ConfirmModal.less';
 import MouseOverWrapper from '../../../components/mouseOverWrapper';
 
 const { MenuStore } = stores;

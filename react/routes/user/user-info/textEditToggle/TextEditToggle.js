@@ -4,7 +4,7 @@ import { Form, Icon } from 'choerodon-ui';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import './TextEditToggle.scss';
+import './TextEditToggle.less';
 // 防止提交前变回原值
 const Text = props => (typeof (props.children) === 'function' ? props.children(props.newData || props.originData) : props.children);
 const Edit = props => props.children;
