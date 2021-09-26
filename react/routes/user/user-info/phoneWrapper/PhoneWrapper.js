@@ -3,7 +3,7 @@ import { Form, Icon, Input } from 'choerodon-ui';
 import { inject, observer } from 'mobx-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { findDOMNode } from 'react-dom';
-import './PhoneWrapper.scss';
+import './PhoneWrapper.less';
 
 const FormItem = Form.Item;
 const intlPrefix = 'user.userinfo';
