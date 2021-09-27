@@ -186,32 +186,17 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      let checkResult;
-      if (!userInfoDs.current.get('phone')) {
-        // 之前有手机
-        checkResult = await userInfoApi.checkPhoneExit({
-          phone: verifyFormDataSet.current.get('phone'),
-        });
-        if (checkResult && checkResult.failed) {
-          message.error(checkResult.message);
-          return false;
-        }
-      }
-      if (userInfoDs.current.get('phone') && !checkResult) {
-        // 之前没有手机
-        // 验证成功
-        const res = await userInfoApi.goVerify({
-          phone: verifyFormDataSet.current.get('phone'),
-          loginName: userInfoDs.current.get('loginName'),
-          captcha: verifyFormDataSet.current.get('password'),
-          captchaKey,
-        });
-        if (res.status) {
-          boolean = true;
-          userInfoDs.query();
-        } else {
-          message.warning(res.message);
-        }
+      const res = await userInfoApi.goVerify({
+        phone: verifyFormDataSet.current.get('phone'),
+        loginName: userInfoDs.current.get('loginName'),
+        captcha: verifyFormDataSet.current.get('password'),
+        captchaKey,
+      });
+      if (res.status) {
+        boolean = true;
+        userInfoDs.query();
+      } else {
+        message.warning(res.message);
       }
 
       return boolean;
@@ -318,6 +303,15 @@ function UserInfo(props) {
       const btnClick = async () => {
         if (typeof btnContent === 'string') {
           setBtnContent(60);
+          if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
+            const checkResult = await userInfoApi.checkPhoneExit({
+              phone: verifyFormDataSet.current.get('phone'),
+            });
+            if (checkResult && checkResult.failed) {
+              message.error(checkResult.message);
+              return;
+            }
+          }
           // 发送请求
           const res = await userInfoApi.getVerificationCode(
             verifyFormDataSet.current.get('phone'),
