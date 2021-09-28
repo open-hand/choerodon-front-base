@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useContext, Fragment } from 'react';
 import {
   axios, Content, Header, Page, Breadcrumb, TabPage, PageWrap, PageTab, HeaderButtons,
@@ -72,7 +73,7 @@ const basicInfo = withRouter(observer(() => {
           presetColors={presetColors}
           colorMap={colorMap}
           dataSet={dataSet}
-          themeColor={(themeColor && themeColor.split(',')[0]) || '#3f51b5'}
+          themeColor={(themeColor && themeColor.split(',')[0]) || '#5365EA'}
         />
       ),
       fullScreen: true,
@@ -85,7 +86,7 @@ const basicInfo = withRouter(observer(() => {
     Modal.open({
       key: Modal.key(),
       title: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.title` }),
-      content: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.content` }),
+      children: intl.formatMessage({ id: `${intlPrefix}.reset.confirm.content` }),
       onOk: async () => {
         try {
           await axios.delete('/iam/choerodon/v1/system/setting');

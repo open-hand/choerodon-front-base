@@ -1,129 +1,292 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Icon, Modal as OldModal, message,
+  Form, Icon, message, Tag,
 } from 'choerodon-ui';
 import {
   Modal,
-  Spin,
-  Button,
-  DataSet,
   Form as ProForm,
+  Output,
   TextField,
+  Password,
+  Tooltip,
 } from 'choerodon-ui/pro';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   Content,
   Header,
   Page,
-  axios,
   Breadcrumb,
   Choerodon,
-  HeaderButtons,
+  Permission,
 } from '@choerodon/boot';
 import './Userinfo.less';
+import { cloneDeep } from 'lodash';
+// import JSEncrypt from '@/utils/jsencrypt.min';
 import TextEditToggle from './textEditToggle';
-import EditUserInfo from './EditUserInfo';
 import { useStore } from './stores';
-import EditPassword from './EditPassword';
-import { fetchPasswordPolicies } from '../services/password';
 import { userInfoApi } from '@/api';
+import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
-
-const createKey = Modal.key();
-const resetGitlabKey = Modal.key();
 
 function UserInfo(props) {
   const context = useStore();
   const {
-    AppState,
-    UserInfoStore,
+    // AppState,
+    // UserInfoStore,
     intl,
     intlPrefix,
     prefixCls,
     userId,
+    // organizationId,
+    userInfoDs,
+    verifyFormDataSet,
+    pswModifyPhoneDataSet,
+    modifyNameDataSet,
+    newPhoneDataSet,
+    modifyPswFormDataSet,
   } = context;
-  const [enablePwd, setEnablePwd] = useState({});
-  const [avatar, setAvatar] = useState('');
-  const modalRef = React.createRef();
-  const loadUserInfo = () => {
-    UserInfoStore.loadUserInfo().then((data) => {
-      // AppState.setUserInfo(data);
-      UserInfoStore.setUserInfo(data);
-      setAvatar(UserInfoStore.getAvatar);
-    });
+  const [editObj, seEditObj] = useState({});
+  const [visible, setVisible] = useState(false);
+
+  const openAvatorUploader = () => {
+    setVisible(true);
+  };
+  const handleVisibleChange = (newVisible) => {
+    setVisible(newVisible);
+  };
+  const filishUpAvatar = async (res) => {
+    userInfoDs.current.set('imageUrl', res);
+    await userInfoDs.submit();
+    userInfoDs.query();
   };
 
-  const loadEnablePwd = () => {
-    axios
-      .get('/iam/choerodon/v1/system/setting/enable_resetPassword')
-      .then((response) => {
-        setEnablePwd(response);
-      });
+  const toSetEdit = (params, bool) => {
+    const clone = cloneDeep(editObj);
+    if (bool === undefined) {
+      clone[params] = !clone[params];
+    } else {
+      clone[params] = bool;
+    }
+
+    seEditObj(clone);
   };
 
-  function renderAvatar({ id, realName }) {
-    const image = avatar && {
-      backgroundImage: `url('${Choerodon.fileServer(avatar)}')`,
-    };
+  const renderAvatar = () => {
+    const avatar = userInfoDs?.current?.get('imageUrl');
+    const realName = userInfoDs?.current?.get('realName');
     return (
-      <div className={`${prefixCls}-avatar-wrap`}>
-        <div className={`${prefixCls}-avatar`} style={image || {}}>
-          {!avatar && realName && realName.charAt(0)}
-        </div>
+      <div
+        className="user-info-avatar user-info-avatar-modal-edit"
+        style={
+          avatar && {
+            backgroundImage: `url('${Choerodon.fileServer(avatar)}')`,
+          }
+        }
+      >
+        {!avatar && realName && realName.charAt(0)}
+        <Permission service={[]} type="site">
+          <div
+            role="none"
+            className="user-info-avatar-button"
+            onClick={openAvatorUploader}
+          >
+            <div className="user-info-avatar-button-icon">
+              <Icon type="photo_camera" />
+            </div>
+          </div>
+
+          <AvatarUploader
+            id={userId}
+            visible={visible}
+            onVisibleChange={handleVisibleChange}
+            setAvatar={filishUpAvatar}
+          />
+        </Permission>
       </div>
     );
-  }
+  };
 
-  function renderUserInfo(user) {
-    const {
-      loginName,
-      realName,
-      email,
-      language,
-      timeZone,
-      phone,
-      ldap,
-      organizationName,
-      organizationCode,
-      internationalTelCode,
-      phoneBind,
-    } = user;
-
-    let captchaKey;
+  function renderUserInfo() {
+    let captchaKey; // 获取验证码之后得到
+    let key; // 校验验证码之后得到
     let timer = null;
 
-    const verifyFormDataSet = new DataSet({
-      autoCreate: true,
-      fields: [
-        {
-          name: 'phone',
-          type: 'string',
-          label: '手机号',
-          required: true,
-          disabled: true,
-        },
-        {
-          name: 'password',
-          type: 'string',
-          label: '短信验证码',
-          required: true,
-          maxLength: 6,
-          validator: (value) => {
-            const reg = /^\d{6}$/;
-            if (reg.test(value)) {
-              return true;
-            }
-            return '验证码应为6位数字';
-          },
-        },
-      ],
-    });
+    const ldap = userInfoDs?.current?.get('ldap');
+    const phoneBind = userInfoDs?.current?.get('phoneBind');
+
+    const ModifyNameContent = () => (
+      <ProForm labelLayout="float" dataSet={modifyNameDataSet}>
+        <TextField name="realName" />
+      </ProForm>
+    );
+
+    const modifyNameOk = () => {
+      modifyNameDataSet.validate().then(async (bool) => {
+        if (bool) {
+          userInfoDs.current.set(
+            'realName',
+            modifyNameDataSet.current.get('realName'),
+          );
+          editPersonInfo();
+          return true;
+        }
+        return false;
+      });
+    };
+
+    const openModifyNameModal = () => {
+      Modal.open({
+        key: Math.random(),
+        title: '修改用户名',
+        children: <ModifyNameContent />,
+        okText: '确定',
+        onOk: modifyNameOk,
+        destroyOnClose: true,
+      });
+    };
+
+    // 绑定手机号码 或  修改手机号第一步
+    const openVerifyCodeModal = (type) => {
+      let title;
+      let onText;
+      let onOk;
+      if (type === 'bind') {
+        title = '手机号码验证';
+        onText = '完成';
+        onOk = verifyOk;
+      } else if (type === 'modify') {
+        title = '更换手机号码';
+        onText = '下一步';
+        onOk = modifyOk;
+      }
+      verifyFormDataSet.current.reset();
+      if (userInfoDs.current.get('phone')) {
+        verifyFormDataSet.current.set('phone', userInfoDs.current.get('phone'));
+      }
+      Modal.open({
+        // key: createKey,
+        key: Math.random(),
+        title,
+        children: <VerifyModalContent type={type} />,
+        okText: onText,
+        onOk,
+        destroyOnClose: true,
+      });
+    };
+
+    // 绑定手机号确定
+    const verifyOk = async () => {
+      let boolean = false;
+      const result = await verifyFormDataSet.current.validate();
+      if (!result) {
+        return boolean;
+      }
+      if (result && !captchaKey) {
+        message.warning('请先获取验证码');
+        return boolean;
+      }
+      const res = await userInfoApi.goVerify({
+        phone: verifyFormDataSet.current.get('phone'),
+        loginName: userInfoDs.current.get('loginName'),
+        captcha: verifyFormDataSet.current.get('password'),
+        captchaKey,
+      });
+      if (res.status) {
+        boolean = true;
+        userInfoDs.query();
+      } else {
+        message.warning(res.message);
+      }
+
+      return boolean;
+    };
+
+    // 用短信验证的方式更换手机号的ok
+    const modifyOk = async () => {
+      let boolean = false;
+      const result = await verifyFormDataSet.current.validate();
+      if (!result) {
+        return boolean;
+      }
+      if (result && !captchaKey) {
+        message.warning('请先获取验证码');
+        return boolean;
+      }
+      const res = await userInfoApi.goCheckCode({
+        phone: verifyFormDataSet.current.get('phone'),
+        captcha: verifyFormDataSet.current.get('password'),
+        captchaKey,
+      });
+      if (res.status) {
+        boolean = true;
+        key = res.key;
+        setTimeout(() => {
+          Modal.open({
+            key: Math.random(),
+            title: '请输入新手机号',
+            children: <NewPhoneContent />,
+            okText: '确定',
+            onOk: () => submitNewPhone('SMS'),
+            destroyOnClose: true,
+          });
+        }, 300);
+      }
+      if (!res.status) {
+        message.warning(res.message);
+      }
+      return boolean;
+    };
+
+    // 密码修改已经绑定的手机号
+    const PswModifyPhoneContent = () => (
+      <ProForm labelLayout="float" dataSet={pswModifyPhoneDataSet}>
+        <Password name="password" autoComplete="new-password" />
+      </ProForm>
+    );
+    // 提交密码----密码修改已经绑定的手机号
+    const PswModifyPhoneSubmitPsw = async () => {
+      let boolean = false;
+      const res = await userInfoApi.goCheckPsw({
+        loginName: userInfoDs.current.get('loginName'),
+        passWord: pswModifyPhoneDataSet.current.get('password'),
+      });
+      if (res.status) {
+        key = res.key;
+        boolean = true;
+        setTimeout(() => {
+          Modal.open({
+            key: Math.random(),
+            title: '请输入新手机号',
+            children: <NewPhoneContent />,
+            okText: '确定',
+            onOk: () => {
+              submitNewPhone('PSW');
+            },
+            destroyOnClose: true,
+          });
+        }, 300);
+      } else if (!res.status) {
+        message.error(res.message);
+      }
+      return boolean;
+    };
+
+    const openPswModifyPhone = (p) => {
+      p.modal.close();
+      setTimeout(() => {
+        Modal.open({
+          key: Math.random(),
+          title: '密码修改手机号',
+          children: <PswModifyPhoneContent />,
+          okText: '下一步',
+          onOk: () => PswModifyPhoneSubmitPsw(),
+          destroyOnClose: true,
+        });
+      }, 300);
+    };
 
     const VerifyModalContent = (p) => {
-      verifyFormDataSet.current.reset();
-      verifyFormDataSet.current.set('phone', p.phoneNum);
       const [btnContent, setBtnContent] = useState('获取验证码');
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
@@ -140,6 +303,15 @@ function UserInfo(props) {
       const btnClick = async () => {
         if (typeof btnContent === 'string') {
           setBtnContent(60);
+          if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
+            const checkResult = await userInfoApi.checkPhoneExit({
+              phone: verifyFormDataSet.current.get('phone'),
+            });
+            if (checkResult && checkResult.failed) {
+              message.error(checkResult.message);
+              return;
+            }
+          }
           // 发送请求
           const res = await userInfoApi.getVerificationCode(
             verifyFormDataSet.current.get('phone'),
@@ -154,83 +326,280 @@ function UserInfo(props) {
           }
         }
       };
-      const addonAfter = (
-        <span
-          role="none"
-          onClick={btnClick}
-          style={{
-            cursor: 'pointer',
-            display: 'inline-block',
-            width: 90,
-            textAlign: 'center',
-          }}
-        >
-          {btnContent}
-          {' '}
-          {typeof btnContent === 'number' ? 's后重新获取' : ''}
-        </span>
-      );
       const content = (
         <div className={`${prefixCls}-vetifyForm-container`}>
           <ProForm
+            style={{ position: 'relative' }}
             labelLayout="horizontal"
             labelAlign="left"
             dataSet={verifyFormDataSet}
           >
-            <TextField name="phone" />
-            <TextField name="password" addonAfter={addonAfter} />
+            <TextField
+              name="phone"
+              disabled={userInfoDs.current.get('phone')}
+            />
+            <TextField name="password" />
           </ProForm>
+          <span
+            role="none"
+            onClick={btnClick}
+            style={{
+              color: '#5365EA',
+              position: 'absolute',
+              top: 70,
+              right: 26,
+              display: 'inline-block',
+              height: 30,
+              cursor: 'pointer',
+              zIndex: 100,
+            }}
+          >
+            {btnContent}
+            {' '}
+            {typeof btnContent === 'number' ? 's后重新获取' : ''}
+          </span>
+          {p.type === 'modify' ? (
+            <div style={{ textAlign: 'right' }}>
+              <span
+                role="none"
+                onClick={() => {
+                  openPswModifyPhone(p);
+                }}
+                style={{ color: '#415BC9', cursor: 'pointer' }}
+              >
+                手机无法接收验证码?
+              </span>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       );
       return content;
     };
 
-    const verifyModalOk = async () => {
-      // console.log(verifyFormDataSet.current.validate());
-      let boolean = false;
-      const result = await verifyFormDataSet.current.validate();
-      if (!result) {
-        return boolean;
+    const NewPhoneContent = () => (
+      <ProForm dataSet={newPhoneDataSet} labelLayout="float">
+        <TextField name="phone" maxLength={11} />
+      </ProForm>
+    );
+
+    // 新手机号提交
+    const submitNewPhone = async (submitType) => {
+      let type;
+      if (submitType === 'SMS') {
+        type = 'captcha';
+      } else if (submitType === 'PSW') {
+        type = 'password';
       }
-      if (result && !captchaKey) {
-        message.warning('请先获取验证码');
-        return boolean;
+      const result = await newPhoneDataSet.validate();
+      if (result) {
+        const checkResult = await userInfoApi.checkPhoneExit({
+          phone: newPhoneDataSet.current.get('phone'),
+        });
+        if (checkResult && checkResult.failed) {
+          message.error(checkResult.message);
+          return false;
+        }
+        if (!checkResult) {
+          await userInfoApi.goNewPhoneSubmit({
+            phone: newPhoneDataSet.current.get('phone'),
+            verifyKey: key,
+            type,
+            loginName: userInfoDs.current.get('loginName'),
+          });
+          userInfoDs.query();
+          return true;
+        }
       }
-      const res = await userInfoApi.goVerify({
-        phone,
-        captcha: verifyFormDataSet.current.get('password'),
-        captchaKey,
-      });
-      if (res.status) {
-        loadUserInfo();
-        boolean = true;
-      } else {
-        message.warning(res.message);
-        boolean = false;
-      }
-      return boolean;
+      return false;
     };
 
-    const openVerifyModal = () => {
+    // ----------  修改密码
+    const ModifyPswContent = () => (
+      <ProForm dataSet={modifyPswFormDataSet} labelLayout="float">
+        <Password name="originPassword" autoComplete="new-password" />
+        <Password name="password" autoComplete="new-password" />
+        <Password name="ggg" autoComplete="new-password" />
+      </ProForm>
+    );
+
+    // eslint-disable-next-line max-len
+    // const publicKey = 'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJL0JkqsUoK6kt3JyogsgqNp9VDGDp+t3ZAGMbVoMPdHNT2nfiIVh9ZMNHF7g2XiAa8O8AQWyh2PjMR0NiUSVQMCAwEAAQ==';
+
+    const submitModifyPsw = async () => {
+      // const encrypt = new JSEncrypt();
+      // encrypt.setPublicKey(publicKey); // 加密
+      const result = await modifyPswFormDataSet.current.validate();
+      if (result) {
+        const modifyResult = await userInfoApi.modifyPsw({
+          userId,
+          originalPassword: modifyPswFormDataSet.current.get('originPassword'),
+          password: modifyPswFormDataSet.current.get('password'),
+        });
+        if (modifyResult.failed) {
+          message.error(modifyResult.message);
+          return false;
+        }
+        if (!modifyResult.failed) {
+          message.success('修改密码成功');
+          return true;
+        }
+      }
+      return false;
+    };
+
+    const openModifyPsw = () => {
+      if (ldap) {
+        return false;
+      }
+      modifyPswFormDataSet.current.reset();
       Modal.open({
-        // key: createKey,
         key: Math.random(),
-        title: '手机号码验证',
-        children: <VerifyModalContent phoneNum={phone} />,
-        okText: '完成',
-        onOk: verifyModalOk,
+        title: '修改密码',
+        children: <ModifyPswContent />,
+        okText: '确定',
+        onOk: submitModifyPsw,
         destroyOnClose: true,
       });
+      return false;
+    };
+
+    // --------render
+
+    const renderEmail = ({ value }) => {
+      if (!editObj.email) {
+        return (
+          <div style={{ position: 'relative' }}>
+            <span>{value}</span>
+            <span
+              className={`${prefixCls}-info-container-fix-text`}
+              role="none"
+              onClick={() => {
+                toSetEdit('email');
+              }}
+            >
+              修改
+            </span>
+          </div>
+        );
+      }
+      return (
+        <div className={`${prefixCls}-info-container-email-invalid`}>
+          <TextField
+            name="email"
+            onBlur={() => {
+              editPersonInfo('email');
+            }}
+          />
+        </div>
+      );
+    };
+
+    const renderPhone = ({ value }) => {
+      let text = '';
+      // ldap 用户不支持手机绑定
+      if (ldap) {
+        text = '';
+      } else if (!ldap) {
+        if (phoneBind) {
+          text = '修改';
+        } else {
+          text = '绑定';
+        }
+      }
+
+      if (!editObj.phone) {
+        return (
+          <div style={{ position: 'relative' }}>
+            <span style={{ marginRight: 12 }}>{value}</span>
+            {phoneBind ? (
+              <Tag size="small" color="#87d068">
+                已绑定
+              </Tag>
+            ) : (
+              <Tag size="small" color="orange">
+                未绑定
+              </Tag>
+            )}
+            {phoneBind && (
+              <span
+                role="none"
+                className={`${prefixCls}-info-container-fix-text`}
+                onClick={() => {
+                  openVerifyCodeModal('modify');
+                }}
+              >
+                {text}
+              </span>
+            )}
+            {!phoneBind && (
+              <span
+                role="none"
+                className={`${prefixCls}-info-container-fix-text`}
+                onClick={() => {
+                  openVerifyCodeModal('bind');
+                }}
+              >
+                {text}
+              </span>
+            )}
+          </div>
+        );
+      }
+      return null;
+    };
+
+    const renderPassword = ({ value }) => (
+      <div style={{ position: 'relative' }}>
+        <span>*********</span>
+        <span className={`${prefixCls}-info-container-fix-text`}>
+          {!ldap && (
+            <span role="none" onClick={openModifyPsw}>
+              修改
+            </span>
+          )}
+          {ldap && (
+            <Tooltip title="ldap用户不支持修改密码">
+              <span style={{ color: '#9EADBE' }}>修改</span>
+            </Tooltip>
+          )}
+        </span>
+      </div>
+    );
+
+    const renderLanguage = ({ text }) => <span>简体中文</span>;
+    const renderTimeZone = ({ text }) => <span>中国</span>;
+
+    const editPersonInfo = async (params) => {
+      const result = await userInfoDs.current.validate();
+      if (!result) {
+        return;
+      }
+      await userInfoDs.submit();
+      userInfoDs.query();
+      if (params) {
+        toSetEdit(params);
+      }
     };
 
     return (
       <>
         <div className={`${prefixCls}-top-container`}>
           <div className={`${prefixCls}-avatar-wrap-container`}>
-            {renderAvatar(user)}
+            {renderAvatar()}
           </div>
           <div className={`${prefixCls}-login-info`}>
-            <div>{realName}</div>
+            <div>
+              {userInfoDs?.current?.get('realName')}
+              <span
+                onClick={openModifyNameModal}
+                role="none"
+                style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
+              >
+                <Icon type="edit-o" />
+              </span>
+            </div>
             <div>
               {intl.formatMessage({ id: `${intlPrefix}.source` })}
               :
@@ -244,324 +613,52 @@ function UserInfo(props) {
                 ：
               </span>
               <Text style={{ fontSize: '13px' }}>
-                <span>{loginName}</span>
+                <span>{userInfoDs?.current?.get('loginName')}</span>
               </Text>
             </div>
           </div>
         </div>
         <div className={`${prefixCls}-info-container`}>
-          <div className={`${prefixCls}-info-container-account`}>
-            <div>
-              {intl.formatMessage({ id: `${intlPrefix}.account.info` })}
-            </div>
-            <div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.email` })}
+          <ProForm
+            dataSet={userInfoDs}
+            labelLayout="horizontal"
+            labelAlign="left"
+            style={{ width: '3.5rem' }}
+          >
+            <Output
+              label={(
+                <span className={`${prefixCls}-info-container-info-title`}>
+                  账号信息
                 </span>
-                <span className={`${prefixCls}-info-container-account-content`}>
-                  {email}
+              )}
+            />
+            <Output name="email" renderer={renderEmail} />
+            <Output name="phone" renderer={renderPhone} />
+            <Output name="password" renderer={renderPassword} />
+            <Output name="language" renderer={renderLanguage} />
+            <Output name="timeZone" renderer={renderTimeZone} />
+            <Output
+              label={(
+                <span className={`${prefixCls}-info-container-info-title`}>
+                  组织信息
                 </span>
-              </div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.phone` })}
-                </span>
-
-                {ldap && (
-                  <span
-                    className={`${prefixCls}-info-container-account-content`}
-                  >
-                    {phone === null ? '无' : phone}
-                  </span>
-                )}
-
-                {!ldap && (
-                  <span
-                    className={`${prefixCls}-info-container-account-content`}
-                  >
-                    {phoneBind && ( // 已验证
-                      <span
-                        className={`${prefixCls}-info-container-account-content-success`}
-                      >
-                        <Icon type="check_circle" style={{ marginRight: 6 }} />
-                        {phone}
-                        <span style={{ marginLeft: 6 }}>已验证</span>
-                      </span>
-                    )}
-                    {!phoneBind && ( // 未验证
-                      <div style={{ display: 'flex' }}>
-                        <span>{phone === null ? '无' : phone}</span>
-                        {phone !== null && (
-                          <Button
-                            onClick={openVerifyModal}
-                            style={{
-                              marginLeft: 10,
-                              position: 'relative',
-                              top: -5,
-                            }}
-                            type="dashed"
-                          >
-                            验证手机号码
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </span>
-                )}
-              </div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.language` })}
-                </span>
-                <span
-                  className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}
-                >
-                  简体中文
-                </span>
-              </div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.timezone` })}
-                </span>
-                <span
-                  className={`${prefixCls}-info-container-account-content ${prefixCls}-info-container-account-content-short`}
-                >
-                  中国
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={`${prefixCls}-info-container`}>
-          <div className={`${prefixCls}-info-container-account`}>
-            <div>{intl.formatMessage({ id: `${intlPrefix}.orginfo` })}</div>
-            <div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.org.name` })}
-                </span>
-                <span
-                  className={`${prefixCls}-info-container-account-content `}
-                >
-                  {organizationName}
-                </span>
-              </div>
-              <div>
-                <span className={`${prefixCls}-info-container-account-title`}>
-                  {intl.formatMessage({ id: `${intlPrefix}.org.code` })}
-                </span>
-                <span
-                  className={`${prefixCls}-info-container-account-content `}
-                >
-                  {organizationCode}
-                </span>
-              </div>
-            </div>
-          </div>
+              )}
+            />
+            <Output name="organizationName" />
+            <Output name="organizationCode" />
+          </ProForm>
         </div>
       </>
     );
   }
 
-  function handleUpdateInfo() {
-    Modal.open({
-      key: createKey,
-      title: '修改信息',
-      style: {
-        width: 380,
-      },
-      drawer: true,
-      children: (
-        <EditUserInfo
-          // {...props}
-          intl={intl}
-          AppState={AppState}
-          resetAvatar={setAvatar}
-          intlPrefix={intlPrefix}
-          forwardref={modalRef}
-          UserInfoStore={UserInfoStore}
-          loadUserInfo={loadUserInfo}
-        />
-      ),
-      okText: '保存',
-      onOk: () => {
-        modalRef.current.handleSubmit();
-        return false;
-      },
-    });
-  }
-
-  function goToGitlab() {
-    const { resetGitlabPasswordUrl } = enablePwd;
-    if (enablePwd.enable_reset) {
-      window.open(resetGitlabPasswordUrl);
-    }
-  }
-
-  function handleUpdateStore() {
-    Modal.confirm({
-      key: Modal.key(),
-      title: '修改GitLab密码',
-      content:
-        '确定要修改您的gitlab仓库密码吗？确定修改后，您将跳转至GitLab仓库密码的修改页面。',
-      okText: '修改',
-      onOk: goToGitlab,
-    });
-  }
-
-  async function handleUpdatePassword() {
-    const user = UserInfoStore.getUserInfo;
-    let passwordPolicies;
-    try {
-      passwordPolicies = await fetchPasswordPolicies(
-        AppState.currentMenuType?.organizationId,
-      );
-    } catch (err) {
-      return false;
-    }
-
-    Modal.open({
-      key: createKey,
-      title: '修改登录密码',
-      style: {
-        width: 380,
-      },
-      drawer: true,
-      children: (
-        <EditPassword
-          // {...props}
-          intl={intl}
-          intlPrefix={intlPrefix}
-          forwardref={modalRef}
-          UserInfoStore={UserInfoStore}
-          passwordPolicies={passwordPolicies}
-        />
-      ),
-      okText: '保存',
-      onOk: () => {
-        modalRef.current.handleSubmit();
-        return false;
-      },
-      footer: (okBtn, cancelBtn) => (
-        <div>
-          {cancelBtn}
-          {!user.ldap ? okBtn : React.cloneElement(okBtn, { disabled: true })}
-        </div>
-      ),
-    });
-
-    return true;
-  }
-
-  function handleCopy() {
-    Choerodon.prompt('复制成功');
-  }
-
-  async function handleResetGitlab(modal) {
-    modal.update({
-      children: <Spin spinning />,
-      footer: null,
-    });
-    try {
-      const res = await UserInfoStore.resetPassword(userId);
-      if (res && !res.falied) {
-        const children = (
-          <div className={`${prefixCls}-reset-content`}>
-            <span>您的GitLab密码已被重置为：</span>
-            <span className={`${prefixCls}-reset-content-password`}>{res}</span>
-            <CopyToClipboard text={res} onCopy={handleCopy}>
-              <Icon
-                type="content_copy"
-                className={`${prefixCls}-reset-content-icon`}
-              />
-            </CopyToClipboard>
-            <div>
-              为了您的账号安全，请复制以上密码，并尽快前往GitLab修改重置后的密码。
-            </div>
-          </div>
-        );
-        modal.update({
-          children,
-          okText: '前往修改密码',
-          onOk: goToGitlab,
-          footer: (okBtn, cancelBtn) => (
-            <div>
-              {cancelBtn}
-              {okBtn}
-            </div>
-          ),
-        });
-      } else {
-        modal.update({
-          children: <Spin spinning />,
-          footer: (okBtn, cancelBtn) => cancelBtn,
-        });
-      }
-    } catch (e) {
-      modal.update({
-        children: <Spin spinning />,
-        footer: (okBtn, cancelBtn) => cancelBtn,
-      });
-    }
-    return false;
-  }
-
-  function openResetGitlab() {
-    const resetModal = Modal.open({
-      key: resetGitlabKey,
-      title: '重置GitLab密码',
-      children:
-        '确定要重置您当前的gitlab仓库密码吗？密码重置后，为了您的账号安全，请务必尽快修改重置后的密码。',
-      okText: '重置',
-      movable: false,
-      onOk: () => handleResetGitlab(resetModal),
-    });
-  }
-
-  useEffect(() => {
-    loadUserInfo();
-    loadEnablePwd();
-  }, []);
-
-  const render = () => {
-    const user = UserInfoStore.getUserInfo;
-    return (
-      <Page>
-        <Header className={`${prefixCls}-header`}>
-          <HeaderButtons
-            showClassName={false}
-            items={[
-              {
-                name: '修改信息',
-                icon: 'edit-o',
-                display: true,
-                permissions: [],
-                handler: handleUpdateInfo.bind(this),
-              },
-              {
-                name: '修改登录密码',
-                icon: 'edit-o',
-                display: true,
-                permissions: [],
-                handler: handleUpdatePassword.bind(this),
-                disabled: AppState.getUserInfo.ldap,
-                tooltipsConfig: {
-                  title: AppState.getUserInfo.ldap
-                    ? 'LDAP用户无法修改登录密码'
-                    : '',
-                },
-              },
-            ]}
-          />
-        </Header>
-        <Breadcrumb />
-        <Content className={`${prefixCls}-container`}>
-          {renderUserInfo(user)}
-        </Content>
-      </Page>
-    );
-  };
+  const render = () => (
+    <Page>
+      <Header className={`${prefixCls}-header`} />
+      <Breadcrumb />
+      <Content className={`${prefixCls}-container`}>{renderUserInfo()}</Content>
+    </Page>
+  );
   return render();
 }
 export default Form.create({})(observer(UserInfo));
