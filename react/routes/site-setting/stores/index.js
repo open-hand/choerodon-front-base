@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { createContext } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
@@ -26,6 +32,7 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     '#3b5a97': '#2d4a85',
     '#1a73e8': '#3367d6',
     '#3f51b5': '#303f9f',
+    '#5365ea': '#5365ea',
   };
   const presetColors = Object.keys(colorMap);
   const value = {
