@@ -2,14 +2,14 @@ import Api from './Api';
 
 class IamApi extends Api<IamApi> {
   get prefix() {
-    return '';
+    return '/iam/choerodon/v1/users';
   }
 
   // 看手机存不存在
   checkPhoneExit(data:object) {
     return this.request({
       method: 'post',
-      url: '/iam/choerodon/v1/users/check',
+      url: `${this.prefix}/check`,
       data,
     });
   }
@@ -18,7 +18,7 @@ class IamApi extends Api<IamApi> {
   modifyPsw(data:{ password:string, originalPassword:string, userId:string}) {
     return this.request({
       method: 'put',
-      url: `/iam/choerodon/v1/users/${data.userId}/password`,
+      url: `${this.prefix}/${data.userId}/password`,
       data: {
         password: data.password,
         originalPassword: data.originalPassword,

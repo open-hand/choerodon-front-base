@@ -2,7 +2,7 @@ import Api from './Api';
 
 class OauthApi extends Api<OauthApi> {
   get prefix() {
-    return '';
+    return '/oauth/choerodon';
   }
 
   // 获取验证码
@@ -10,7 +10,7 @@ class OauthApi extends Api<OauthApi> {
     return this.request({
       method: 'get',
       // url: '/oauth/public/send-phone-captcha',
-      url: '/oauth/choerodon/public/new/send-phone-captcha',
+      url: `${this.prefix}/public/new/send-phone-captcha`,
       params: {
         phone,
       },
@@ -21,7 +21,7 @@ class OauthApi extends Api<OauthApi> {
   goVerify(data:object) {
     return this.request({
       method: 'post',
-      url: '/oauth/choerodon/bind/user/phone',
+      url: `${this.prefix}/bind/user/phone`,
       params: data,
     });
   }
@@ -30,7 +30,7 @@ class OauthApi extends Api<OauthApi> {
   goCheckCode(data:object) {
     return this.request({
       method: 'post',
-      url: '/oauth/choerodon/verify/captcha',
+      url: `${this.prefix}/verify/captcha`,
       params: data,
     });
   }
@@ -39,7 +39,7 @@ class OauthApi extends Api<OauthApi> {
   goCheckPsw(data:object) {
     return this.request({
       method: 'post',
-      url: '/oauth/choerodon/verify/password',
+      url: `${this.prefix}/verify/password`,
       params: data,
     });
   }
@@ -48,7 +48,7 @@ class OauthApi extends Api<OauthApi> {
   goNewPhoneSubmit(data: object) {
     return this.request({
       method: 'post',
-      url: '/oauth/choerodon/update/user/phone',
+      url: `${this.prefix}/update/user/phone`,
       params: data,
     });
   }
