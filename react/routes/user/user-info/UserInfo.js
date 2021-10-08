@@ -24,7 +24,7 @@ import { cloneDeep } from 'lodash';
 // import JSEncrypt from '@/utils/jsencrypt.min';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
-import { userInfoApi } from '@/api';
+import { iamApi, oauthApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
@@ -186,7 +186,7 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await userInfoApi.goVerify({
+      const res = await oauthApi.goVerify({
         phone: verifyFormDataSet.current.get('phone'),
         loginName: userInfoDs.current.get('loginName'),
         captcha: verifyFormDataSet.current.get('password'),
@@ -213,7 +213,7 @@ function UserInfo(props) {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await userInfoApi.goCheckCode({
+      const res = await oauthApi.goCheckCode({
         phone: verifyFormDataSet.current.get('phone'),
         captcha: verifyFormDataSet.current.get('password'),
         captchaKey,
@@ -247,7 +247,7 @@ function UserInfo(props) {
     // 提交密码----密码修改已经绑定的手机号
     const PswModifyPhoneSubmitPsw = async () => {
       let boolean = false;
-      const res = await userInfoApi.goCheckPsw({
+      const res = await oauthApi.goCheckPsw({
         loginName: userInfoDs.current.get('loginName'),
         passWord: pswModifyPhoneDataSet.current.get('password'),
       });
@@ -304,7 +304,7 @@ function UserInfo(props) {
         if (typeof btnContent === 'string') {
           setBtnContent(60);
           if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
-            const checkResult = await userInfoApi.checkPhoneExit({
+            const checkResult = await iamApi.checkPhoneExit({
               phone: verifyFormDataSet.current.get('phone'),
             });
             if (checkResult && checkResult.failed) {
@@ -313,7 +313,7 @@ function UserInfo(props) {
             }
           }
           // 发送请求
-          const res = await userInfoApi.getVerificationCode(
+          const res = await oauthApi.getVerificationCode(
             verifyFormDataSet.current.get('phone'),
           );
           if (res.success) {
@@ -394,7 +394,7 @@ function UserInfo(props) {
       }
       const result = await newPhoneDataSet.validate();
       if (result) {
-        const checkResult = await userInfoApi.checkPhoneExit({
+        const checkResult = await iamApi.checkPhoneExit({
           phone: newPhoneDataSet.current.get('phone'),
         });
         if (checkResult && checkResult.failed) {
@@ -402,7 +402,7 @@ function UserInfo(props) {
           return false;
         }
         if (!checkResult) {
-          await userInfoApi.goNewPhoneSubmit({
+          await oauthApi.goNewPhoneSubmit({
             phone: newPhoneDataSet.current.get('phone'),
             verifyKey: key,
             type,
@@ -432,7 +432,7 @@ function UserInfo(props) {
       // encrypt.setPublicKey(publicKey); // 加密
       const result = await modifyPswFormDataSet.current.validate();
       if (result) {
-        const modifyResult = await userInfoApi.modifyPsw({
+        const modifyResult = await iamApi.modifyPsw({
           userId,
           originalPassword: modifyPswFormDataSet.current.get('originPassword'),
           password: modifyPswFormDataSet.current.get('password'),

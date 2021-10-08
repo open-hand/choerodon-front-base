@@ -1,6 +1,10 @@
 import Api from './Api';
 
-class UserInfoApi extends Api<UserInfoApi> {
+class OauthApi extends Api<OauthApi> {
+  get prefix() {
+    return '';
+  }
+
   // 获取验证码
   getVerificationCode(phone: string) {
     return this.request({
@@ -48,30 +52,8 @@ class UserInfoApi extends Api<UserInfoApi> {
       params: data,
     });
   }
-
-  // 看手机存不存在
-  checkPhoneExit(data:object) {
-    return this.request({
-      method: 'post',
-      url: '/iam/choerodon/v1/users/check',
-      data,
-    });
-  }
-
-  // 修改密码
-  modifyPsw(data:{ password:string, originalPassword:string, userId:string}) {
-    return this.request({
-      method: 'put',
-      url: `/iam/choerodon/v1/users/${data.userId}/password`,
-      data: {
-        password: data.password,
-        originalPassword: data.originalPassword,
-        businessScope: 'UPDATE_PASSWORD',
-      },
-    });
-  }
 }
 
-const userInfoApi = new UserInfoApi();
-const userInfoApiConfig = new UserInfoApi(true);
-export { userInfoApi, userInfoApiConfig };
+const oauthApi = new OauthApi();
+const oauthApiConfig = new OauthApi(true);
+export { oauthApi, oauthApiConfig };
