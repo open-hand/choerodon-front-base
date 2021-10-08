@@ -336,7 +336,7 @@ function UserInfo(props) {
           >
             <TextField
               name="phone"
-              disabled={userInfoDs.current.get('phone')}
+              disabled={userInfoDs.current.get('phoneBind')}
             />
             <TextField name="password" />
           </ProForm>
