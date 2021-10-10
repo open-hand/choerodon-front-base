@@ -28,6 +28,7 @@ import { userInfoApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
+let recordValue = '';
 
 function UserInfo(props) {
   const context = useStore();
@@ -70,6 +71,13 @@ function UserInfo(props) {
     }
 
     seEditObj(clone);
+  };
+
+  const cancelSetEdit = (params) => {
+    const clone = cloneDeep(editObj);
+    clone[params] = false;
+    seEditObj(clone);
+    userInfoDs.current.set('email', recordValue);
   };
 
   const renderAvatar = () => {
@@ -336,6 +344,7 @@ function UserInfo(props) {
           >
             <TextField
               name="phone"
+              maxLength={11}
               disabled={userInfoDs.current.get('phone')}
             />
             <TextField name="password" />
@@ -476,6 +485,7 @@ function UserInfo(props) {
               className={`${prefixCls}-info-container-fix-text`}
               role="none"
               onClick={() => {
+                recordValue = userInfoDs.current.get('email');
                 toSetEdit('email');
               }}
             >
@@ -485,7 +495,16 @@ function UserInfo(props) {
         );
       }
       return (
-        <div className={`${prefixCls}-info-container-email-invalid`}>
+        <div style={{ position: 'relative' }} className={`${prefixCls}-info-container-email-invalid`}>
+          <span
+            className={`${prefixCls}-info-container-fix-text`}
+            role="none"
+            onMouseDown={() => {
+              cancelSetEdit('email');
+            }}
+          >
+            取消
+          </span>
           <TextField
             name="email"
             onBlur={() => {

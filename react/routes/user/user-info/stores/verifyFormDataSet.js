@@ -6,6 +6,7 @@ const verifyFormDataSetConfig = {
       type: 'string',
       label: '手机号',
       required: true,
+      pattern: /^1[3-9]\d{9}$/,
     //   computedProps: {
     //     disabled: ({ dataSet }) => {
     //       console.log(dataSet.originData[0].phone);
