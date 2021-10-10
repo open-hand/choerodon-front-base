@@ -296,6 +296,16 @@ function UserInfo(props) {
 
     const VerifyModalContent = (p) => {
       const [btnContent, setBtnContent] = useState('获取验证码');
+      const [phoneValidateSuccess, setPhoneValidateSuccess] = useState(false);
+      useEffect(() => {
+        async function a() {
+          const result = await verifyFormDataSet.current.getField('phone').checkValidity();
+          if (result) {
+            setPhoneValidateSuccess(true);
+          }
+        }
+        a();
+      }, []);
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
           timer = setTimeout(() => {
@@ -308,7 +318,15 @@ function UserInfo(props) {
       useEffect(() => () => {
         clearInterval(timer);
       });
+      const phoneBlur = async () => {
+        const result = await verifyFormDataSet.current.getField('phone').checkValidity();
+        setPhoneValidateSuccess(result);
+      };
       const btnClick = async () => {
+        const result = await verifyFormDataSet.current.getField('phone').checkValidity();
+        if (!result) {
+          return;
+        }
         if (typeof btnContent === 'string') {
           setBtnContent(60);
           if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
@@ -317,6 +335,7 @@ function UserInfo(props) {
             });
             if (checkResult && checkResult.failed) {
               message.error(checkResult.message);
+              setBtnContent('获取验证码');
               return;
             }
           }
@@ -345,23 +364,36 @@ function UserInfo(props) {
             <TextField
               name="phone"
               maxLength={11}
-              disabled={userInfoDs.current.get('phone')}
+              disabled={userInfoDs.current.get('phoneBind')}
+              onBlur={phoneBlur}
             />
             <TextField name="password" />
           </ProForm>
           <span
             role="none"
             onClick={btnClick}
-            style={{
-              color: '#5365EA',
-              position: 'absolute',
-              top: 70,
-              right: 26,
-              display: 'inline-block',
-              height: 30,
-              cursor: 'pointer',
-              zIndex: 100,
-            }}
+            style={
+              phoneValidateSuccess
+                ? {
+                  color: '#5365EA',
+                  position: 'absolute',
+                  top: 70,
+                  right: 26,
+                  display: 'inline-block',
+                  height: 30,
+                  cursor: 'pointer',
+                  zIndex: 100,
+                } : {
+                  color: 'rgb(217, 217, 217)',
+                  position: 'absolute',
+                  top: 70,
+                  right: 26,
+                  display: 'inline-block',
+                  height: 30,
+                  cursor: 'not-allowed',
+                  zIndex: 100,
+                }
+}
           >
             {btnContent}
             {' '}
