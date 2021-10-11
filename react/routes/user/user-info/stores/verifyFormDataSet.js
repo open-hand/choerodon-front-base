@@ -6,7 +6,12 @@ const verifyFormDataSetConfig = {
       type: 'string',
       label: '手机号',
       required: true,
-      pattern: /^1[3-9]\d{9}$/,
+      validator: (value) => {
+        if (!/^1[3-9]\d{9}$/.test(value)) {
+          return '手机格式不正确';
+        }
+        return true;
+      },
     //   computedProps: {
     //     disabled: ({ dataSet }) => {
     //       console.log(dataSet.originData[0].phone);

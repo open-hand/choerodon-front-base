@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
-import './LoadingBar.scss';
+import './LoadingBar.less';
 
 @observer
 export default class LoadingBar extends Component {

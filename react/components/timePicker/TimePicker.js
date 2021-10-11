@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Button, DatePicker, message } from 'choerodon-ui';
 import classnames from 'classnames';
 import moment from 'moment';
-import './TimePicker.scss';
+import './TimePicker.less';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 const { RangePicker } = DatePicker;

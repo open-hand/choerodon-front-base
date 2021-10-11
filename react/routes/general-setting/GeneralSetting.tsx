@@ -22,7 +22,7 @@ import EditProject from './components/edit-project';
 import GeneralSettingServices from './services';
 
 import './GeneralSetting.less';
-import '../../common/ConfirmModal.scss';
+import '../../common/ConfirmModal.less';
 
 const GeneralSetting = observer(() => {
   const {

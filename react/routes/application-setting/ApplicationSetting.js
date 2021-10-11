@@ -5,7 +5,7 @@ import { Content, Header, Page, Breadcrumb, Choerodon } from '@choerodon/boot';
 import { FormattedMessage } from 'react-intl';
 import ApplicationSettingContext, { ContextProvider } from './stores';
 import './ApplicationSetting.less';
-import '../../common/ConfirmModal.scss';
+import '../../common/ConfirmModal.less';
 import Edit from './components/edit';
 
 const ApplicationSetting = observer(() => {
