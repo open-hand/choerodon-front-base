@@ -299,6 +299,9 @@ function UserInfo(props) {
     // 绑定、修改手机或新手机号模态窗内容
     const VerifyOrNewPhoneModalContent = (p) => {
       const DS = p.ds;
+      if (!p.type) { // 新手机号
+        DS.current.reset();
+      }
       const [btnContent, setBtnContent] = useState('获取验证码');
       const [phoneValidateSuccess, setPhoneValidateSuccess] = useState(false);
       useEffect(() => {
