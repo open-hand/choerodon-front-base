@@ -24,9 +24,11 @@ const ModeList = [{
 const Index = observer(({
   cRef,
   onSearchCallback,
+  handelModeCallback,
 }: {
  cRef?: any,
  onSearchCallback(v: any): void,
+ handelModeCallback?(m: any): void,
 }) => {
   const [mode, setMode] = useState(ModeList[0].value);
 
@@ -35,8 +37,10 @@ const Index = observer(({
   }));
 
   const handleChange = (e: any, name: string, value: string, number: number) => {
-    console.log(value);
     setMode(value);
+    if (handelModeCallback) {
+      handelModeCallback(value);
+    }
   };
   return (
     <div className={cssPrefix}>
