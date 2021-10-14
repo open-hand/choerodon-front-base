@@ -339,7 +339,7 @@ function UserInfo(props) {
           // 绑定手机号并且之前没有手机 看输入的手机存不存在
           if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
             try {
-              await userInfoApi.checkPhoneExit({
+              await iamApi.checkPhoneExit({
                 phone: DS.current.get('phone'),
               });
             } catch (error) {
@@ -352,7 +352,7 @@ function UserInfo(props) {
           //  新手机号验证这个手机存不存在
           if (!p.type) {
             try {
-              await userInfoApi.checkPhoneExit({
+              await iamApi.checkPhoneExit({
                 phone: DS.current.get('phone'),
               });
             } catch (error) {
@@ -448,7 +448,7 @@ function UserInfo(props) {
       }
       const result = await newPhoneDataSet.validate();
       if (result) {
-        await userInfoApi.goNewPhoneSubmit({
+        await oauthApi.goNewPhoneSubmit({
           phone: newPhoneDataSet.current.get('phone'),
           verifyKey: key,
           type,
@@ -569,19 +569,26 @@ function UserInfo(props) {
         }
       }
 
+      let tag;
+      if (ldap) {
+        tag = (<span />);
+      } else {
+        tag = phoneBind ? (
+          <Tag size="small" color="#87d068">
+            已绑定
+          </Tag>
+        ) : (
+          <Tag size="small" color="orange">
+            未绑定
+          </Tag>
+        );
+      }
+
       if (!editObj.phone) {
         return (
           <div style={{ position: 'relative' }}>
             <span style={{ marginRight: 12 }}>{value}</span>
-            {phoneBind ? (
-              <Tag size="small" color="#87d068">
-                已绑定
-              </Tag>
-            ) : (
-              <Tag size="small" color="orange">
-                未绑定
-              </Tag>
-            )}
+            {tag}
             {phoneBind && (
               <span
                 role="none"
