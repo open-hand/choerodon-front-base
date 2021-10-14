@@ -1,5 +1,5 @@
 import React, {
-  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect,
+  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect, useRef,
 } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
@@ -25,6 +25,7 @@ import {
   Spin, Button, Modal as OldModal, Icon,
 } from 'choerodon-ui';
 import some from 'lodash/some';
+import FilterPage from './components/FilterPage';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import Store from './stores';
@@ -44,6 +45,9 @@ export default BrowserAdapter(observer((props) => {
     styles,
     render,
   } = props;
+
+  const filterPageRef = useRef();
+
   const {
     intlPrefix,
     orgUserListDataSet: dataSet,
@@ -463,6 +467,10 @@ export default BrowserAdapter(observer((props) => {
         deleteRoleRecord={deleteRoleRecord}
         handleCancel={handleCancel}
         projectId={projectId}
+      />
+      <FilterPage
+        cRef={filterPageRef}
+        onSearchCallback={(value) => cRef.current.handleChangeSearch(value)}
       />
       <Content
         className="project-user"
