@@ -5,6 +5,7 @@ import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
 // Form label labellayout的枚举类型
 import { LabelLayoutType, LabelAlignType } from 'choerodon-ui/pro/lib/form/Form';
+import { FieldProps } from 'choerodon-ui/pro/lib/data-set/Field';
 
 // 大小枚举
 import { Size } from 'choerodon-ui/lib/_util/enum';
@@ -38,6 +39,7 @@ interface ActionProps {
 }
 
 export {
+  FieldProps,
   DataSetProps,
   FieldType,
   Record,
