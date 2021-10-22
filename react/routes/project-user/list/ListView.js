@@ -8,7 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
-import { StatusTag, CustomSelect } from '@choerodon/components';
+import { StatusTag, NewTips } from '@choerodon/components';
 import {
   Action,
   Content,
@@ -212,7 +212,13 @@ export default BrowserAdapter(observer((props) => {
           外部人员
         </span>
       </div>
-    ) : null;
+    ) : (
+      <div className="project-user-external-user">
+        <span className="project-user-external-user-text">
+          内部人员
+        </span>
+      </div>
+    );
   }
   function programLabel(record) {
     return record.get('programOwner') ? (
@@ -321,13 +327,9 @@ export default BrowserAdapter(observer((props) => {
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
         {mode === ModeList[0].value ? (
           <div className={styles['theme4-c7n-member']}>
-            <CustomSelect
-              mode="multiple"
-              data={dataSet.toData()}
-              identity="id"
-              className={styles['theme4-c7n-memberItem']}
-              customChildren={(item) => (
-                <div>
+            {
+              dataSet.toData().map((item) => (
+                <div className={styles['theme4-c7n-memberItem']}>
                   {
                     handleRenderActionDom(permissions, {
                       get: (params) => item[params],
@@ -404,8 +406,8 @@ export default BrowserAdapter(observer((props) => {
                     </p>
                   </div>
                 </div>
-              )}
-            />
+              ))
+            }
             {/* {dataSet.toData().map((item) => )} */}
             <div className={styles['theme4-c7n-member-page']}>
               <span
@@ -447,12 +449,30 @@ export default BrowserAdapter(observer((props) => {
         dataSet={ds}
         queryBar="none"
       >
-        <Table.Column name="realName" />
+        <Table.Column
+          name="realName"
+        />
+        <Table.Column
+          width={50}
+          renderer={({ record }) => handleRenderActionDom(permissions, record, record.toData())}
+        />
         <Table.Column name="loginName" />
         <Table.Column name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
         <Table.Column name="roles" renderer={(params) => expandMoreColumn(params)} />
         <Table.Column
-          title="来源"
+          title={(
+            <span>
+              来源
+              <NewTips
+                helpText={(
+                  <>
+                    <p>【外部人员】指该成员账号注册时所属的组织不是当前组织。</p>
+                    <p>【项目群人员】指该成员来自当前项目所属的项目群。</p>
+                  </>
+                )}
+              />
+            </span>
+          )}
           renderer={({ record }) => (
             <>
               {label(record)}

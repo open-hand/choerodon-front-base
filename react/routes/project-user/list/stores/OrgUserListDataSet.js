@@ -37,8 +37,10 @@ export default ({
   }
   return {
     autoQuery: true,
-    selection: false,
+    selection: 'multiple',
     pageSize: 15,
+    primaryKey: 'id',
+    cacheSelection: true,
     transport: {
       read: {
         url: `/iam/choerodon/v1/projects/${id}/users/search`,

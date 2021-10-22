@@ -110,7 +110,7 @@ export default observer((props) => {
     }
   }
 
-  function getOption({ record }) {
+  const getOption = ({ record }) => {
     const isLdap = record.get('ldap');
     const email = record.get('email');
     const imgUrl = record.get('imageUrl');
@@ -138,7 +138,7 @@ export default observer((props) => {
         </div>
       </Tooltip>
     );
-  }
+  };
 
   return (
     <div
@@ -221,31 +221,28 @@ export default observer((props) => {
               onlyMember
               dsStore={[dsStore]}
             >
-              {[(itemProps) => {
-                console.log(itemProps);
-                return (
-                  <Select
-                    {...itemProps}
-                    labelLayout="float"
-                    searchable
-                    searchMatcher={() => true}
-                    onInput={(e) => handleFilterChange(e, itemProps.options)}
-                    onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
-                    onKeyDown={(e) => {
-                      if (e.keyCode === 13) {
-                        cancel();
-                      }
-                    }}
-                    style={{ width: '100%' }}
-                    optionRenderer={getOption}
-                    addonAfter={(
-                      <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
-                        <Icon type="help" className={`${prefixCls}-help-icon`} />
-                      </Tooltip>
+              {[(itemProps) => (
+                <Select
+                  {...itemProps}
+                  labelLayout="float"
+                  searchable
+                  searchMatcher={() => true}
+                  onInput={(e) => handleFilterChange(e, itemProps.options)}
+                  onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      cancel();
+                    }
+                  }}
+                  style={{ width: '100%' }}
+                  optionRenderer={getOption}
+                  addonAfter={(
+                    <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
+                      <Icon type="help" className={`${prefixCls}-help-icon`} />
+                    </Tooltip>
               )}
-                  />
-                );
-              }, (itemProps) => (
+                />
+              ), (itemProps) => (
                 <TextField
                   {...itemProps}
                   style={{

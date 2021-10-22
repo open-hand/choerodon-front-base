@@ -1,3 +1,9 @@
+/*
+ * @Author: isaac
+ * @LastEditors: isaac
+ * @Description:
+ * i made my own lucky
+ */
 import React, { createContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
@@ -7,6 +13,7 @@ import OrgRoleDataSet from './OrgRoleDataSet';
 import OrgUserCreateDataSet from './OrgUserCreateDataSet';
 import OrgUserRoleDataSet from './OrgUserRoleDataSet';
 import AllRoleDataSet from './AllRoleDataSet';
+import filterDataSet from './filterDataSet';
 
 const Store = createContext();
 
@@ -32,11 +39,22 @@ export const StoreProvider = injectIntl(inject('AppState')(
       data: safeOptionData,
       selection: 'single',
     }));
-    const orgRoleDataSet = useMemo(() => new DataSet(OrgRoleDataSet({ id, intl, intlPrefix })), [id]);
-    const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({ id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet })), [id]);
-    const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({ id, intl, intlPrefix, orgRoleDataSet })), [id]);
-    const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({ id, intl, intlPrefix, orgRoleDataSet })), [id]);
+    const orgRoleDataSet = useMemo(() => new DataSet(OrgRoleDataSet({
+      id,
+      intl,
+      intlPrefix,
+    })), [id]);
+    const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
+      id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet,
+    })), [id]);
+    const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
+      id, intl, intlPrefix, orgRoleDataSet,
+    })), [id]);
+    const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
+      id, intl, intlPrefix, orgRoleDataSet,
+    })), [id]);
     const allRoleDataSet = useMemo(() => new DataSet(AllRoleDataSet({ id })), [id]);
+    const FilterDataSet = useMemo(() => new DataSet(filterDataSet()), []);
 
     const value = {
       ...props,
@@ -52,6 +70,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       ],
       projectId: id,
       organizationId,
+      FilterDataSet,
     };
     return (
       <Store.Provider value={value}>
