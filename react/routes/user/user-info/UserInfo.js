@@ -18,6 +18,7 @@ import {
   Breadcrumb,
   Choerodon,
   Permission,
+  logout,
 } from '@choerodon/boot';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
@@ -28,6 +29,8 @@ import { iamApi, oauthApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
+
+console.log(logout);
 
 function UserInfo(props) {
   const context = useStore();
@@ -443,6 +446,9 @@ function UserInfo(props) {
         }
         if (!modifyResult.failed) {
           message.success('修改密码成功');
+          setTimeout(() => {
+            logout();
+          }, 1500);
           return true;
         }
       }
