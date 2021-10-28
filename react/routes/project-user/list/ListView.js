@@ -20,6 +20,7 @@ import {
   HeaderButtons,
   checkPermission,
   BrowserAdapter,
+  CONSTANTS,
 } from '@choerodon/boot';
 import {
   Spin, Button, Modal as OldModal, Icon,
@@ -30,8 +31,15 @@ import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import Store from './stores';
 import Sider from './sider';
+import BatchAddRole from './components/batch-addRole';
 
 import './index.less';
+
+const {
+  MODAL_WIDTH: {
+    MIN,
+  },
+} = CONSTANTS;
 
 const cssPrefix = 'c7ncd-projectUser';
 
@@ -521,6 +529,36 @@ export default BrowserAdapter(observer((props) => {
             display: true,
             permissions: ['choerodon.code.project.cooperation.team-member.ps.import'],
             handler: handleImportRole,
+          }, {
+            name: '批量操作',
+            groupBtnItems: [{
+              name: '批量添加角色',
+              service: [],
+              handler: () => {
+                Modal.open({
+                  key: Modal.key(),
+                  title: '批量添加角色',
+                  children: (
+                    <BatchAddRole
+                      orgUserRoleDataSet={orgUserRoleDataSet}
+                      orgRoleDataSet={orgRoleDataSet}
+                      dataSet={dataSet}
+                    />
+                  ),
+                  drawer: true,
+                  style: {
+                    width: MIN,
+                  },
+                });
+              },
+            }, {
+              name: '批量删除',
+              service: [],
+              handler: () => {},
+            }],
+            disabled: !(dataSet.selected && dataSet.selected.length > 1),
+            display: mode === ModeList[1].value,
+            permissions: [],
           }])}
         />
       </Header>
