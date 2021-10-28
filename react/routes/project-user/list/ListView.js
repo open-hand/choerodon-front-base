@@ -1,5 +1,5 @@
 import React, {
-  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect,
+  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect, useRef,
 } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import {
@@ -8,7 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
-import { StatusTag } from '@choerodon/components';
+import { StatusTag, NewTips } from '@choerodon/components';
 import {
   Action,
   Content,
@@ -25,12 +25,15 @@ import {
   Spin, Button, Modal as OldModal, Icon,
 } from 'choerodon-ui';
 import some from 'lodash/some';
+import FilterPage, { ModeList } from './components/FilterPage';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import Store from './stores';
 import Sider from './sider';
 
 import './index.less';
+
+const cssPrefix = 'c7ncd-projectUser';
 
 const modalKey = Modal.key();
 
@@ -44,6 +47,9 @@ export default BrowserAdapter(observer((props) => {
     styles,
     render,
   } = props;
+
+  const filterPageRef = useRef();
+
   const {
     intlPrefix,
     orgUserListDataSet: dataSet,
@@ -64,6 +70,7 @@ export default BrowserAdapter(observer((props) => {
     code: 'choerodon.code.project.cooperation.team-member.ps.delete',
     approve: false,
   }]);
+  const [mode, setMode] = useState(ModeList[0].value);
 
   useEffect(() => {
     function handleCheckPermission() {
@@ -205,7 +212,13 @@ export default BrowserAdapter(observer((props) => {
           外部人员
         </span>
       </div>
-    ) : null;
+    ) : (
+      <div className="project-user-external-user">
+        <span className="project-user-external-user-text">
+          内部人员
+        </span>
+      </div>
+    );
   }
   function programLabel(record) {
     return record.get('programOwner') ? (
@@ -312,109 +325,166 @@ export default BrowserAdapter(observer((props) => {
   function renderNewContent() {
     return (
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
-        <div className={styles['theme4-c7n-member']}>
-          {dataSet.toData().map((item) => (
-            <div className={styles['theme4-c7n-memberItem']}>
-              {
-                handleRenderActionDom(permissions, {
-                  get: (params) => item[params],
-                }, item)
-              }
-              <div className={styles['theme4-c7n-memberItem-line']}>
-                <div
-                  className={styles['theme4-c7n-memberItem-line-icon']}
-                  style={{
-                    ...item.imageUrl ? {
-                      backgroundImage: `url(${item.imageUrl})`,
-                    } : {
-                      background: '#F0F5FF',
-                    },
-                  }}
-                >
+        {mode === ModeList[0].value ? (
+          <div className={styles['theme4-c7n-member']}>
+            {
+              dataSet.toData().map((item) => (
+                <div className={styles['theme4-c7n-memberItem']}>
                   {
-                    !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
+                    handleRenderActionDom(permissions, {
+                      get: (params) => item[params],
+                    }, item)
                   }
-                </div>
-                <div
-                  className={styles['theme4-c7n-memberItem-line-name']}
-                >
-                  <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
-                    <span
-                      role="none"
-                      className={styles['theme4-c7n-memberItem-line-name-realName-text']}
-                    // onClick={() => handleUserRole(item, true)}
+                  <div className={styles['theme4-c7n-memberItem-line']}>
+                    <div
+                      className={styles['theme4-c7n-memberItem-line-icon']}
+                      style={{
+                        ...item.imageUrl ? {
+                          backgroundImage: `url(${item.imageUrl})`,
+                        } : {
+                          background: '#F0F5FF',
+                        },
+                      }}
                     >
-                      {item.realName}
-                    </span>
-                    <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
-                  </p>
-                  <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
+                      {
+                        !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
+                      }
+                    </div>
+                    <div
+                      className={styles['theme4-c7n-memberItem-line-name']}
+                    >
+                      <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
+                        <span
+                          role="none"
+                          className={styles['theme4-c7n-memberItem-line-name-realName-text']}
+                        >
+                          {item.realName}
+                        </span>
+                        <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
+                      </p>
+                      <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
+                    </div>
+                  </div>
+                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 16 }}>
+                    <p className={styles['theme4-c7n-memberItem-line-key']}>
+                      角色:
+                    </p>
+                    <p className={styles['theme4-c7n-memberItem-line-value']}>
+                      {expandMoreColumn({
+                        value: '',
+                        record: {
+                          getPristineValue: (key) => item.roles,
+                        },
+                      })}
+                    </p>
+                  </div>
+                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                      手机:
+                    </p>
+                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                      {item.phone}
+                    </p>
+                  </div>
+                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                      邮箱:
+                    </p>
+                    <Tooltip title={item.email}>
+                      <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                        {item.email}
+                      </p>
+                    </Tooltip>
+                  </div>
+                  <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
+                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                      来源:
+                    </p>
+                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                      {label({ get: (key) => item[key] })}
+                      {programLabel({ get: (key) => item[key] })}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 16 }}>
-                <p className={styles['theme4-c7n-memberItem-line-key']}>
-                  角色:
-                </p>
-                <p className={styles['theme4-c7n-memberItem-line-value']}>
-                  {expandMoreColumn({
-                    value: '',
-                    record: {
-                      getPristineValue: (key) => item.roles,
-                    },
-                  })}
-                </p>
-              </div>
-              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
-                  手机:
-                </p>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                  {item.phone}
-                </p>
-              </div>
-              <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
-                  邮箱:
-                </p>
-                <Tooltip title={item.email}>
-                  <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                    {item.email}
-                  </p>
-                </Tooltip>
-              </div>
-              <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
-                {label({ get: (key) => item[key] })}
-                {programLabel({ get: (key) => item[key] })}
-              </div>
+              ))
+            }
+            {/* {dataSet.toData().map((item) => )} */}
+            <div className={styles['theme4-c7n-member-page']}>
+              <span
+                role="none"
+                onClick={() => handlePage(false)}
+                className={classNames({
+                  [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === 1,
+                  [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage > 1,
+                })}
+              >
+                <Icon type="keyboard_arrow_left" />
+              </span>
+              <span
+                role="none"
+                style={{ marginLeft: 24 }}
+                onClick={() => handlePage(true)}
+                className={classNames({
+                  [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === dataSet.totalPage,
+                  [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage < dataSet.totalPage,
+                })}
+              >
+                <Icon type="keyboard_arrow_right" />
+              </span>
             </div>
-          ))}
-          <div className={styles['theme4-c7n-member-page']}>
-            <span
-              role="none"
-              onClick={() => handlePage(false)}
-              className={classNames({
-                [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === 1,
-                [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage > 1,
-              })}
-            >
-              <Icon type="keyboard_arrow_left" />
-            </span>
-            <span
-              role="none"
-              style={{ marginLeft: 24 }}
-              onClick={() => handlePage(true)}
-              className={classNames({
-                [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === dataSet.totalPage,
-                [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage < dataSet.totalPage,
-              })}
-            >
-              <Icon type="keyboard_arrow_right" />
-            </span>
           </div>
-        </div>
+        ) : renderListPage(dataSet)}
       </Spin>
     );
   }
+
+  /**
+   * @description: 列表
+   * @param {*}
+   * @return {*}
+   */
+  const renderListPage = (ds) => (
+    <div className={`${cssPrefix}-listPage`}>
+      <Table
+        dataSet={ds}
+        queryBar="none"
+      >
+        <Table.Column
+          name="realName"
+        />
+        <Table.Column
+          width={50}
+          renderer={({ record }) => handleRenderActionDom(permissions, record, record.toData())}
+        />
+        <Table.Column name="loginName" />
+        <Table.Column name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
+        <Table.Column name="roles" renderer={(params) => expandMoreColumn(params)} />
+        <Table.Column
+          title={(
+            <span>
+              来源
+              <NewTips
+                helpText={(
+                  <>
+                    <p>【外部人员】指该成员账号注册时所属的组织不是当前组织。</p>
+                    <p>【项目群人员】指该成员来自当前项目所属的项目群。</p>
+                  </>
+                )}
+              />
+            </span>
+          )}
+          renderer={({ record }) => (
+            <>
+              {label(record)}
+              {programLabel(record)}
+            </>
+          )}
+        />
+        <Table.Column name="phone" />
+        <Table.Column name="email" />
+      </Table>
+    </div>
+  );
 
   const handleChangeSearch = (data) => {
     dataSet.queryParameter = {};
@@ -463,6 +533,11 @@ export default BrowserAdapter(observer((props) => {
         deleteRoleRecord={deleteRoleRecord}
         handleCancel={handleCancel}
         projectId={projectId}
+      />
+      <FilterPage
+        cRef={filterPageRef}
+        onSearchCallback={(value) => cRef.current.handleChangeSearch(value)}
+        handelModeCallback={(v) => setMode(v)}
       />
       <Content
         className="project-user"

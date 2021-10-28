@@ -10,7 +10,7 @@ import { Button } from 'choerodon-ui/pro';
 import { axios, Choerodon } from '@choerodon/boot';
 import PropTypes from 'prop-types';
 import querystring from 'query-string';
-import './AvatarUploader.scss';
+import './AvatarUploader.less';
 
 const { Dragger } = Upload;
 const { round } = Math;

@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage, IntlProvider } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
-import './ChangelogEditor.scss';
+import './ChangelogEditor.less';
 // @import (inline) './node_modules/codemirror/lib/codemirror.css';
 
 const { TabPane } = Tabs;

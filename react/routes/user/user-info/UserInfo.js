@@ -29,6 +29,7 @@ import { iamApi, oauthApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
 const { Text } = TextEditToggle;
+let recordValue = '';
 
 console.log(logout);
 
@@ -73,6 +74,13 @@ function UserInfo(props) {
     }
 
     seEditObj(clone);
+  };
+
+  const cancelSetEdit = (params) => {
+    const clone = cloneDeep(editObj);
+    clone[params] = false;
+    seEditObj(clone);
+    userInfoDs.current.set('email', recordValue);
   };
 
   const renderAvatar = () => {
@@ -171,7 +179,9 @@ function UserInfo(props) {
         // key: createKey,
         key: Math.random(),
         title,
-        children: <VerifyModalContent type={type} />,
+        children: (
+          <VerifyOrNewPhoneModalContent type={type} ds={verifyFormDataSet} />
+        ),
         okText: onText,
         onOk,
         destroyOnClose: true,
@@ -228,7 +238,7 @@ function UserInfo(props) {
           Modal.open({
             key: Math.random(),
             title: '请输入新手机号',
-            children: <NewPhoneContent />,
+            children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
             okText: '确定',
             onOk: () => submitNewPhone('SMS'),
             destroyOnClose: true,
@@ -261,7 +271,7 @@ function UserInfo(props) {
           Modal.open({
             key: Math.random(),
             title: '请输入新手机号',
-            children: <NewPhoneContent />,
+            children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
             okText: '确定',
             onOk: () => {
               submitNewPhone('PSW');
@@ -289,8 +299,23 @@ function UserInfo(props) {
       }, 300);
     };
 
-    const VerifyModalContent = (p) => {
+    // 绑定、修改手机或新手机号模态窗内容
+    const VerifyOrNewPhoneModalContent = (p) => {
+      const DS = p.ds;
+      if (!p.type) { // 新手机号
+        DS.current.reset();
+      }
       const [btnContent, setBtnContent] = useState('获取验证码');
+      const [phoneValidateSuccess, setPhoneValidateSuccess] = useState(false);
+      useEffect(() => {
+        async function go() {
+          const result = await DS.current.getField('phone').checkValidity();
+          if (result) {
+            setPhoneValidateSuccess(true);
+          }
+        }
+        go();
+      }, []);
       useEffect(() => {
         if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
           timer = setTimeout(() => {
@@ -303,15 +328,40 @@ function UserInfo(props) {
       useEffect(() => () => {
         clearInterval(timer);
       });
-      const btnClick = async () => {
+      const phoneBlur = async () => {
+        const result = await DS.current.getField('phone').checkValidity();
+        setPhoneValidateSuccess(result);
+      };
+      const getVerificationCode = async () => {
+        const result = await DS.current.getField('phone').checkValidity();
+        if (!result) {
+          return;
+        }
         if (typeof btnContent === 'string') {
           setBtnContent(60);
+          // 绑定手机号并且之前没有手机 看输入的手机存不存在
           if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
-            const checkResult = await iamApi.checkPhoneExit({
-              phone: verifyFormDataSet.current.get('phone'),
-            });
-            if (checkResult && checkResult.failed) {
-              message.error(checkResult.message);
+            try {
+              await iamApi.checkPhoneExit({
+                phone: DS.current.get('phone'),
+              });
+            } catch (error) {
+              message.error(error.message);
+              clearInterval(timer);
+              setBtnContent('获取验证码');
+              return;
+            }
+          }
+          //  新手机号验证这个手机存不存在
+          if (!p.type) {
+            try {
+              await iamApi.checkPhoneExit({
+                phone: DS.current.get('phone'),
+              });
+            } catch (error) {
+              message.error(error.message);
+              clearInterval(timer);
+              setBtnContent('获取验证码');
               return;
             }
           }
@@ -331,31 +381,41 @@ function UserInfo(props) {
       };
       const content = (
         <div className={`${prefixCls}-vetifyForm-container`}>
-          <ProForm
-            style={{ position: 'relative' }}
-            labelLayout="horizontal"
-            labelAlign="left"
-            dataSet={verifyFormDataSet}
-          >
+          <ProForm labelLayout="horizontal" labelAlign="left" dataSet={DS}>
             <TextField
               name="phone"
-              disabled={userInfoDs.current.get('phone')}
+              maxLength={11}
+              disabled={p.type ? userInfoDs.current.get('phoneBind') : false}
+              onBlur={phoneBlur}
             />
-            <TextField name="password" />
+            <TextField maxLength={6} name="password" />
           </ProForm>
           <span
             role="none"
-            onClick={btnClick}
-            style={{
-              color: '#5365EA',
-              position: 'absolute',
-              top: 70,
-              right: 26,
-              display: 'inline-block',
-              height: 30,
-              cursor: 'pointer',
-              zIndex: 100,
-            }}
+            onClick={getVerificationCode}
+            style={
+              phoneValidateSuccess
+                ? {
+                  color: '#5365EA',
+                  position: 'absolute',
+                  top: 70,
+                  right: 26,
+                  display: 'inline-block',
+                  height: 30,
+                  cursor: 'pointer',
+                  zIndex: 100,
+                }
+                : {
+                  color: 'rgb(217, 217, 217)',
+                  position: 'absolute',
+                  top: 70,
+                  right: 26,
+                  display: 'inline-block',
+                  height: 30,
+                  cursor: 'not-allowed',
+                  zIndex: 100,
+                }
+            }
           >
             {btnContent}
             {' '}
@@ -381,12 +441,6 @@ function UserInfo(props) {
       return content;
     };
 
-    const NewPhoneContent = () => (
-      <ProForm dataSet={newPhoneDataSet} labelLayout="float">
-        <TextField name="phone" maxLength={11} />
-      </ProForm>
-    );
-
     // 新手机号提交
     const submitNewPhone = async (submitType) => {
       let type;
@@ -397,23 +451,16 @@ function UserInfo(props) {
       }
       const result = await newPhoneDataSet.validate();
       if (result) {
-        const checkResult = await iamApi.checkPhoneExit({
+        await oauthApi.goNewPhoneSubmit({
           phone: newPhoneDataSet.current.get('phone'),
+          verifyKey: key,
+          type,
+          loginName: userInfoDs.current.get('loginName'),
+          captcha: newPhoneDataSet.current.get('password'),
+          captchaKey,
         });
-        if (checkResult && checkResult.failed) {
-          message.error(checkResult.message);
-          return false;
-        }
-        if (!checkResult) {
-          await oauthApi.goNewPhoneSubmit({
-            phone: newPhoneDataSet.current.get('phone'),
-            verifyKey: key,
-            type,
-            loginName: userInfoDs.current.get('loginName'),
-          });
-          userInfoDs.query();
-          return true;
-        }
+        userInfoDs.query();
+        return true;
       }
       return false;
     };
@@ -482,6 +529,7 @@ function UserInfo(props) {
               className={`${prefixCls}-info-container-fix-text`}
               role="none"
               onClick={() => {
+                recordValue = userInfoDs.current.get('email');
                 toSetEdit('email');
               }}
             >
@@ -491,7 +539,19 @@ function UserInfo(props) {
         );
       }
       return (
-        <div className={`${prefixCls}-info-container-email-invalid`}>
+        <div
+          style={{ position: 'relative' }}
+          className={`${prefixCls}-info-container-email-invalid`}
+        >
+          <span
+            className={`${prefixCls}-info-container-fix-text`}
+            role="none"
+            onMouseDown={() => {
+              cancelSetEdit('email');
+            }}
+          >
+            取消
+          </span>
           <TextField
             name="email"
             onBlur={() => {
@@ -515,19 +575,26 @@ function UserInfo(props) {
         }
       }
 
+      let tag;
+      if (ldap) {
+        tag = (<span />);
+      } else {
+        tag = phoneBind ? (
+          <Tag size="small" color="#87d068">
+            已绑定
+          </Tag>
+        ) : (
+          <Tag size="small" color="orange">
+            未绑定
+          </Tag>
+        );
+      }
+
       if (!editObj.phone) {
         return (
           <div style={{ position: 'relative' }}>
             <span style={{ marginRight: 12 }}>{value}</span>
-            {phoneBind ? (
-              <Tag size="small" color="#87d068">
-                已绑定
-              </Tag>
-            ) : (
-              <Tag size="small" color="orange">
-                未绑定
-              </Tag>
-            )}
+            {tag}
             {phoneBind && (
               <span
                 role="none"

@@ -4,7 +4,7 @@ import { Form, Select } from 'choerodon-ui';
 import { axios } from '@choerodon/boot';
 import { injectIntl } from 'react-intl';
 import classnames from 'classnames';
-import './MemberLabel.scss';
+import './MemberLabel.less';
 
 const FormItem = Form.Item;
 const FormItemNumLayout = {
