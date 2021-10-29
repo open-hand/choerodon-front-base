@@ -3,6 +3,8 @@ import { observer } from 'mobx-react-lite';
 import {
   DataSet, Form, Select, Button,
 } from 'choerodon-ui/pro';
+import { usersApi } from '@/api';
+import { Record } from '@/interface';
 
 import './index.less';
 
@@ -17,18 +19,43 @@ const Index = observer(({
   orgRoleDataSet,
   dataSet,
   modal,
+  afterAdd,
 }: {
     orgUserRoleDataSet:DataSet,
     orgRoleDataSet: DataSet
     dataSet: DataSet,
-    modal?: any
+    modal?: any,
+    afterAdd?(): void,
 }) => {
   useEffect(() => {
     orgUserRoleDataSet.reset();
     orgUserRoleDataSet.create();
   }, []);
 
-  const handleOK = () => false;
+  const handleOK = async () => {
+    const res = await orgUserRoleDataSet.validate();
+    if (res) {
+      const data: any[] = [];
+      dataSet.selected.forEach((itemSelect) => {
+        orgUserRoleDataSet.records.forEach((userRoleItem) => {
+          data.push({
+            roleId: userRoleItem.get('roles'),
+            memberId: itemSelect.get('id'),
+          });
+        });
+      });
+      try {
+        await usersApi.batchAddRoles(data);
+        if (afterAdd) {
+          afterAdd();
+        }
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  };
 
   if (modal) {
     modal.handleOk(handleOK);
@@ -48,7 +75,7 @@ const Index = observer(({
             <Select colSpan={7} name="roles">
               {
                 orgRoleDataSet.records.map((roleRecord) => (
-                  <Option value={roleRecord.get('id')}>{ roleRecord.get('name') }</Option>
+                  <Option disabled={orgUserRoleDataSet.records.some((r: Record) => r.get('roles') === roleRecord.get('id'))} value={roleRecord.get('id')}>{ roleRecord.get('name') }</Option>
                 ))
               }
             </Select>
