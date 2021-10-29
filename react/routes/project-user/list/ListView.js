@@ -533,6 +533,7 @@ export default BrowserAdapter(observer((props) => {
             name: '批量操作',
             groupBtnItems: [{
               name: '批量添加角色',
+              // 权限集
               service: [],
               handler: () => {
                 Modal.open({
@@ -543,6 +544,7 @@ export default BrowserAdapter(observer((props) => {
                       orgUserRoleDataSet={orgUserRoleDataSet}
                       orgRoleDataSet={orgRoleDataSet}
                       dataSet={dataSet}
+                      afterAdd={() => handleSave()}
                     />
                   ),
                   drawer: true,
@@ -552,9 +554,14 @@ export default BrowserAdapter(observer((props) => {
                 });
               },
             }, {
+              // 权限集
               name: '批量删除',
               service: [],
-              handler: () => {},
+              handler: () => {
+                Modal.confirm({
+                  title: '批量删除',
+                });
+              },
             }],
             disabled: !(dataSet.selected && dataSet.selected.length > 1),
             display: mode === ModeList[1].value,

@@ -5,7 +5,7 @@ export default ({ id = 0, intl, orgRoleDataSet }) => {
     selection: false,
     fields: [
       {
-        name: 'roles', type: 'string', label: '角色', textField: 'name', valueField: 'id',
+        name: 'roles', required: true, type: 'string', label: '角色', textField: 'name', valueField: 'id',
       },
     ],
   };
