@@ -101,7 +101,7 @@ export default function ListView() {
         />
       </Header>
       <Breadcrumb />
-      <Content className="c7ncd-page-content-padding">
+      <Content>
         <Table pristine dataSet={dataSet}>
           <Column renderer={renderUserName} name="userName" />
           <Column renderer={renderAction} width={60} align="right" />
