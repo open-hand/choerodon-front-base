@@ -16,6 +16,17 @@ class UsersApi extends Api<UsersApi> {
       data,
     });
   }
+
+  /**
+   * 批量删除角色
+   */
+  batchDelete(userIdList: string[]) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/role_members/batch_delete`,
+      data: userIdList,
+    });
+  }
 }
 
 const usersApi = new UsersApi();

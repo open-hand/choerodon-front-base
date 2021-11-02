@@ -54,6 +54,7 @@ const Index = observer(({
 
   useImperativeHandle(cRef, () => ({
     getMode: () => mode,
+    getQueryParameter: () => queryParameter,
   }));
 
   /**

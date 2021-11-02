@@ -26,6 +26,7 @@ import {
   Spin, Button, Modal as OldModal, Icon,
 } from 'choerodon-ui';
 import some from 'lodash/some';
+import { usersApi } from '@/api';
 import FilterPage, { ModeList } from './components/FilterPage';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
@@ -136,6 +137,13 @@ export default BrowserAdapter(observer((props) => {
     rednerEnabled,
     renderNewContent,
   }));
+
+  /**
+   * 刷新
+   */
+  function refresh() {
+    cRef.current.handleChangeSearch(filterPageRef.current.getQueryParameter());
+  }
 
   function handleSave() {
     dataSet.query();
@@ -560,12 +568,26 @@ export default BrowserAdapter(observer((props) => {
               handler: () => {
                 Modal.confirm({
                   title: '批量删除',
+                  children: `是否删除已选的${dataSet.selected.length}个用户在本项目下的所有角色`,
+                  okText: '删除',
+                }).then(async (button) => {
+                  if (button === 'ok') {
+                    const userIds = dataSet.selected.map((item) => item.get('id'));
+                    await usersApi.batchDelete(userIds);
+                    refresh();
+                  }
                 });
               },
             }],
             disabled: !(dataSet.selected && dataSet.selected.length > 1),
             display: mode === ModeList[1].value,
             permissions: [],
+          }, {
+            icon: 'refresh',
+            display: true,
+            handler: () => {
+              refresh();
+            },
           }])}
         />
       </Header>
