@@ -20,7 +20,7 @@ const verifyFormDataSetConfig = {
     //   },
     },
     {
-      name: 'password',
+      name: 'captcha',
       type: 'string',
       label: '短信验证码',
       required: true,

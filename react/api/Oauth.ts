@@ -6,16 +6,14 @@ class OauthApi extends Api<OauthApi> {
   }
 
   // 获取验证码
-  getVerificationCode(phone: string) {
-    return this.request({
-      method: 'get',
-      // url: '/oauth/public/send-phone-captcha',
-      url: `${this.prefix}/public/new/send-phone-captcha`,
-      params: {
-        phone,
-      },
-    });
-  }
+  getVerificationCode=(phone: string) => this.request({
+    method: 'get',
+    // url: '/oauth/public/send-phone-captcha',
+    url: `${this.prefix}/public/new/send-phone-captcha`,
+    params: {
+      phone,
+    },
+  })
 
   // 绑定
   goVerify(data:object) {

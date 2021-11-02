@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, Icon, message, Tag,
+  Icon, message, Tag,
 } from 'choerodon-ui';
 import {
   Modal,
@@ -23,15 +23,18 @@ import {
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
 // import JSEncrypt from '@/utils/jsencrypt.min';
+import { CaptchaField } from '@choerodon/components';
+import Cookies from 'universal-cookie';
+// import CaptchaField from './abc';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
 import { iamApi, oauthApi } from '@/api';
 import AvatarUploader from './AvatarUploader';
 
+const cookies = new Cookies();
+
 const { Text } = TextEditToggle;
 let recordValue = '';
-
-console.log(logout);
 
 function UserInfo(props) {
   const context = useStore();
@@ -119,9 +122,7 @@ function UserInfo(props) {
   };
 
   function renderUserInfo() {
-    let captchaKey; // 获取验证码之后得到
     let key; // 校验验证码之后得到
-    let timer = null;
 
     const ldap = userInfoDs?.current?.get('ldap');
     const phoneBind = userInfoDs?.current?.get('phoneBind');
@@ -179,9 +180,7 @@ function UserInfo(props) {
         // key: createKey,
         key: Math.random(),
         title,
-        children: (
-          <VerifyOrNewPhoneModalContent type={type} ds={verifyFormDataSet} />
-        ),
+        children: <VerifyOrNewPhoneModalContent type={type} ds={verifyFormDataSet} />,
         okText: onText,
         onOk,
         destroyOnClose: true,
@@ -195,6 +194,7 @@ function UserInfo(props) {
       if (!result) {
         return boolean;
       }
+      const captchaKey = cookies.get('captchaKey');
       if (result && !captchaKey) {
         message.warning('请先获取验证码');
         return boolean;
@@ -215,6 +215,14 @@ function UserInfo(props) {
       return boolean;
     };
 
+    async function checkPhoneExit(phone) {
+      const res = await iamApi.checkPhoneExit({
+        phone,
+      });
+      console.log(res, 'checkPhoneExit');
+      return res;
+    }
+
     // 用短信验证的方式更换手机号的ok
     const modifyOk = async () => {
       let boolean = false;
@@ -222,17 +230,19 @@ function UserInfo(props) {
       if (!result) {
         return boolean;
       }
+      const captchaKey = cookies.get('captchaKey');
       if (result && !captchaKey) {
         message.warning('请先获取验证码');
         return boolean;
       }
       const res = await oauthApi.goCheckCode({
         phone: verifyFormDataSet.current.get('phone'),
-        captcha: verifyFormDataSet.current.get('password'),
+        captcha: verifyFormDataSet.current.get('captcha'),
         captchaKey,
       });
       if (res.status) {
         boolean = true;
+        // cookies.set('captchaKey')
         key = res.key;
         setTimeout(() => {
           Modal.open({
@@ -301,127 +311,44 @@ function UserInfo(props) {
 
     // 绑定、修改手机或新手机号模态窗内容
     const VerifyOrNewPhoneModalContent = (p) => {
-      const DS = p.ds;
-      if (!p.type) { // 新手机号
+      const { ds: DS, type } = p;
+      if (!type) {
+        // 新手机号
         DS.current.reset();
       }
-      const [btnContent, setBtnContent] = useState('获取验证码');
-      const [phoneValidateSuccess, setPhoneValidateSuccess] = useState(false);
-      useEffect(() => {
-        async function go() {
-          const result = await DS.current.getField('phone').checkValidity();
-          if (result) {
-            setPhoneValidateSuccess(true);
-          }
-        }
-        go();
-      }, []);
-      useEffect(() => {
-        if (typeof btnContent === 'number' && btnContent - 1 >= 0) {
-          timer = setTimeout(() => {
-            setBtnContent(btnContent - 1);
-          }, 1000);
-        } else {
-          setBtnContent('获取验证码');
-        }
-      }, [btnContent]);
-      useEffect(() => () => {
-        clearInterval(timer);
-      });
-      const phoneBlur = async () => {
-        const result = await DS.current.getField('phone').checkValidity();
-        setPhoneValidateSuccess(result);
-      };
-      const getVerificationCode = async () => {
-        const result = await DS.current.getField('phone').checkValidity();
-        if (!result) {
-          return;
-        }
-        if (typeof btnContent === 'string') {
-          setBtnContent(60);
-          // 绑定手机号并且之前没有手机 看输入的手机存不存在
-          if (p.type === 'bind' && !userInfoDs.current.get('phone')) {
-            try {
-              await iamApi.checkPhoneExit({
-                phone: DS.current.get('phone'),
-              });
-            } catch (error) {
-              message.error(error.message);
-              clearInterval(timer);
-              setBtnContent('获取验证码');
-              return;
+      function go() {
+        // 新手机号验证、绑定手机号,手机号字段可编辑 看输入的手机存不存在
+        if (p.type !== 'modify') {
+          DS.current.getField('phone').set('validator', async (value) => {
+            if (!/^1[3-9]\d{9}$/.test(value)) {
+              return '手机格式不正确';
             }
-          }
-          //  新手机号验证这个手机存不存在
-          if (!p.type) {
-            try {
-              await iamApi.checkPhoneExit({
-                phone: DS.current.get('phone'),
-              });
-            } catch (error) {
-              message.error(error.message);
-              clearInterval(timer);
-              setBtnContent('获取验证码');
-              return;
+            const res = await checkPhoneExit(DS.current.get('phone'));
+            if (!res) {
+              return res.message;
             }
-          }
-          // 发送请求
-          const res = await oauthApi.getVerificationCode(
-            verifyFormDataSet.current.get('phone'),
-          );
-          if (res.success) {
-            captchaKey = res.captchaKey;
-            message.success(res.message);
-          } else {
-            clearInterval(timer);
-            setBtnContent(res.interval);
-            message.warning(res.message);
-          }
+            return true;
+          });
         }
-      };
-      const content = (
+      }
+      go();
+
+      return (
         <div className={`${prefixCls}-vetifyForm-container`}>
           <ProForm labelLayout="horizontal" labelAlign="left" dataSet={DS}>
             <TextField
               name="phone"
               maxLength={11}
-              disabled={p.type ? userInfoDs.current.get('phoneBind') : false}
-              onBlur={phoneBlur}
+              disabled={type === 'modify'}
             />
-            <TextField maxLength={6} name="password" />
+            <CaptchaField
+              name="captcha"
+              dataSet={DS}
+              type="phone"
+              ajaxRequest={oauthApi.getVerificationCode}
+            />
           </ProForm>
-          <span
-            role="none"
-            onClick={getVerificationCode}
-            style={
-              phoneValidateSuccess
-                ? {
-                  color: '#5365EA',
-                  position: 'absolute',
-                  top: 70,
-                  right: 26,
-                  display: 'inline-block',
-                  height: 30,
-                  cursor: 'pointer',
-                  zIndex: 100,
-                }
-                : {
-                  color: 'rgb(217, 217, 217)',
-                  position: 'absolute',
-                  top: 70,
-                  right: 26,
-                  display: 'inline-block',
-                  height: 30,
-                  cursor: 'not-allowed',
-                  zIndex: 100,
-                }
-            }
-          >
-            {btnContent}
-            {' '}
-            {typeof btnContent === 'number' ? 's后重新获取' : ''}
-          </span>
-          {p.type === 'modify' ? (
+          {type === 'modify' ? (
             <div style={{ textAlign: 'right' }}>
               <span
                 role="none"
@@ -438,7 +365,6 @@ function UserInfo(props) {
           )}
         </div>
       );
-      return content;
     };
 
     // 新手机号提交
@@ -457,7 +383,7 @@ function UserInfo(props) {
           type,
           loginName: userInfoDs.current.get('loginName'),
           captcha: newPhoneDataSet.current.get('password'),
-          captchaKey,
+          captchaKey: cookies.get('captchaKey'),
         });
         userInfoDs.query();
         return true;
@@ -577,7 +503,7 @@ function UserInfo(props) {
 
       let tag;
       if (ldap) {
-        tag = (<span />);
+        tag = <span />;
       } else {
         tag = phoneBind ? (
           <Tag size="small" color="#87d068">
@@ -734,4 +660,4 @@ function UserInfo(props) {
   );
   return render();
 }
-export default Form.create({})(observer(UserInfo));
+export default observer(UserInfo);

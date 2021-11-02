@@ -9,7 +9,7 @@ const newPhoneDataSetConfig = {
       pattern: /^1[3-9]\d{9}$/,
     },
     {
-      name: 'password',
+      name: 'captcha',
       type: 'string',
       label: '验证码',
       required: true,
