@@ -122,8 +122,6 @@ function UserInfo(props) {
   };
 
   function renderUserInfo() {
-    let key; // 校验验证码之后得到
-
     const ldap = userInfoDs?.current?.get('ldap');
     const phoneBind = userInfoDs?.current?.get('phoneBind');
 
@@ -134,7 +132,7 @@ function UserInfo(props) {
     );
 
     const modifyNameOk = () => {
-      modifyNameDataSet.validate().then(async (bool) => {
+      modifyNameDataSet.current.validate().then(async (bool) => {
         if (bool) {
           userInfoDs.current.set(
             'realName',
@@ -216,9 +214,13 @@ function UserInfo(props) {
     };
 
     async function checkPhoneExit(phone) {
+      console.log(phone);
       const res = await iamApi.checkPhoneExit({
         phone,
       });
+      if (res) {
+        message.error(res.message);
+      }
       console.log(res, 'checkPhoneExit');
       return res;
     }
@@ -242,8 +244,7 @@ function UserInfo(props) {
       });
       if (res.status) {
         boolean = true;
-        // cookies.set('captchaKey')
-        key = res.key;
+        cookies.set('verifyKey', res.key);
         setTimeout(() => {
           Modal.open({
             key: Math.random(),
@@ -275,7 +276,7 @@ function UserInfo(props) {
         passWord: pswModifyPhoneDataSet.current.get('password'),
       });
       if (res.status) {
-        key = res.key;
+        cookies.set('verifyKey', res.key);
         boolean = true;
         setTimeout(() => {
           Modal.open({
@@ -283,9 +284,7 @@ function UserInfo(props) {
             title: '请输入新手机号',
             children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
             okText: '确定',
-            onOk: () => {
-              submitNewPhone('PSW');
-            },
+            onOk: () => submitNewPhone('PSW'),
             destroyOnClose: true,
           });
         }, 300);
@@ -297,6 +296,7 @@ function UserInfo(props) {
 
     const openPswModifyPhone = (p) => {
       p.modal.close();
+      pswModifyPhoneDataSet.reset();
       setTimeout(() => {
         Modal.open({
           key: Math.random(),
@@ -324,8 +324,8 @@ function UserInfo(props) {
               return '手机格式不正确';
             }
             const res = await checkPhoneExit(DS.current.get('phone'));
-            if (!res) {
-              return res.message;
+            if (res) {
+              return false;
             }
             return true;
           });
@@ -375,18 +375,22 @@ function UserInfo(props) {
       } else if (submitType === 'PSW') {
         type = 'password';
       }
-      const result = await newPhoneDataSet.validate();
+      const result = await newPhoneDataSet.current.validate();
       if (result) {
-        await oauthApi.goNewPhoneSubmit({
+        const submitRes = await oauthApi.goNewPhoneSubmit({
           phone: newPhoneDataSet.current.get('phone'),
-          verifyKey: key,
+          verifyKey: cookies.get('verifyKey'),
           type,
           loginName: userInfoDs.current.get('loginName'),
-          captcha: newPhoneDataSet.current.get('password'),
+          captcha: newPhoneDataSet.current.get('captcha'),
           captchaKey: cookies.get('captchaKey'),
         });
-        userInfoDs.query();
-        return true;
+        if (submitRes.status) {
+          userInfoDs.query();
+          return true;
+        }
+        message.error(submitRes.message);
+        return false;
       }
       return false;
     };

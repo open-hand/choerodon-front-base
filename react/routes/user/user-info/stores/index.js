@@ -2,7 +2,6 @@ import React, { createContext, useMemo, useContext } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
-import UserInfoStoreObject from './UserInfoStore';
 import userInfoDsConfig from './userInfoDataSet';
 import verifyFormDataSetConfig from './verifyFormDataSet';
 import pswModifyPhoneDataSetConfig from './pswModifyPhoneDataSet';
@@ -27,7 +26,6 @@ export const StoreProvider = injectIntl(
       children,
     } = props;
     const intlPrefix = 'user.userinfo';
-    const UserInfoStore = useMemo(() => new UserInfoStoreObject(), []);
     const userInfoDs = useMemo(() => new DataSet(userInfoDsConfig()), [userId]);
     const verifyFormDataSet = useMemo(() => new DataSet(verifyFormDataSetConfig), [userId]);
     const pswModifyPhoneDataSet = useMemo(() => new DataSet(pswModifyPhoneDataSetConfig), [userId]);
@@ -49,7 +47,6 @@ export const StoreProvider = injectIntl(
       newPhoneDataSet,
       modifyPswFormDataSet,
       permissions: ['base-service.user.uploadPhoto'],
-      UserInfoStore,
     };
     return <Store.Provider value={value}>{children}</Store.Provider>;
   }),
