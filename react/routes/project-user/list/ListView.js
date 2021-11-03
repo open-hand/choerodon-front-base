@@ -307,7 +307,7 @@ export default BrowserAdapter(observer((props) => {
     }
   }
 
-  function handleRenderActionDom(selfPermissions, record, item) {
+  function handleRenderActionDom(selfPermissions, record, item, isList) {
     const actionDatas = [];
     let flag = false;
     // 如果是项目群成员也加上这个按钮
@@ -332,7 +332,12 @@ export default BrowserAdapter(observer((props) => {
       return '';
     }
     return (
-      <div className={`${styles['theme4-c7n-memberItem-action']} c7ncd-projectUser-action`}>
+      <div
+        className={`${styles['theme4-c7n-memberItem-action']} c7ncd-projectUser-action`}
+        style={{
+          background: isList ? 'unset' : 'rgba(83, 101, 234, 0.08)',
+        }}
+      >
         <Action data={actionDatas} />
       </div>
     );
@@ -387,6 +392,7 @@ export default BrowserAdapter(observer((props) => {
                     </p>
                     <p className={styles['theme4-c7n-memberItem-line-value']}>
                       {expandMoreColumn({
+                        customMaxTagCount: 1,
                         value: '',
                         record: {
                           getPristineValue: (key) => item.roles,
@@ -464,18 +470,39 @@ export default BrowserAdapter(observer((props) => {
       <Table
         dataSet={ds}
         queryBar="none"
+        showSelectionCachedButton={false}
       >
         <Table.Column
+          width={100}
           name="realName"
+          renderer={({ text }) => (
+            <Tooltip title={text}>
+              {text}
+            </Tooltip>
+          )}
         />
         <Table.Column
           width={50}
-          renderer={({ record }) => handleRenderActionDom(permissions, record, record.toData())}
+          renderer={({ record }) => handleRenderActionDom(
+            permissions,
+            record,
+            record.toData(),
+            true,
+          )}
         />
-        <Table.Column name="loginName" />
-        <Table.Column name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
-        <Table.Column name="roles" renderer={(params) => expandMoreColumn(params)} />
         <Table.Column
+          width={100}
+          name="loginName"
+          renderer={({ text }) => (
+            <Tooltip title={text}>
+              {text}
+            </Tooltip>
+          )}
+        />
+        <Table.Column width={100} name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
+        <Table.Column width={300} name="roles" renderer={(params) => expandMoreColumn(params)} />
+        <Table.Column
+          width={200}
           title={(
             <span>
               来源
@@ -496,8 +523,24 @@ export default BrowserAdapter(observer((props) => {
             </>
           )}
         />
-        <Table.Column name="phone" />
-        <Table.Column name="email" />
+        <Table.Column
+          width={100}
+          name="phone"
+          renderer={({ text }) => (
+            <Tooltip title={text}>
+              {text}
+            </Tooltip>
+          )}
+        />
+        <Table.Column
+          width={100}
+          name="email"
+          renderer={({ text }) => (
+            <Tooltip title={text}>
+              {text}
+            </Tooltip>
+          )}
+        />
       </Table>
     </div>
   );
@@ -572,9 +615,16 @@ export default BrowserAdapter(observer((props) => {
                   okText: '删除',
                 }).then(async (button) => {
                   if (button === 'ok') {
-                    const userIds = dataSet.selected.map((item) => item.get('id'));
-                    await usersApi.batchDelete(userIds);
-                    refresh();
+                    try {
+                      dataSet.status = 'loading';
+                      const userIds = dataSet.selected.map((item) => item.get('id'));
+                      await usersApi.batchDelete(userIds);
+                      refresh();
+                      dataSet.cachedSelected = [];
+                      dataSet.selected = [];
+                    } catch (e) {
+                      dataSet.status = 'ready';
+                    }
                   }
                 });
               },
