@@ -28,9 +28,6 @@ const basicInfo = withRouter(observer(() => {
   const favicon = dataSet.current && dataSet.current.getPristineValue('favicon');
   const systemLogo = dataSet.current && dataSet.current.getPristineValue('systemLogo');
   const themeColor = dataSet.current && dataSet.current.getPristineValue('themeColor');
-  function handleRefresh() {
-    dataSet.query();
-  }
   async function handleSave() {
     try {
       if ((await dataSet.submit())) {
@@ -139,10 +136,8 @@ const basicInfo = withRouter(observer(() => {
 
       <Breadcrumb />
 
-      <Content className="c7n-system-setting-page-content">
+      <Content>
         <div className="c7n-system-setting-form">
-          {/* <h3>平台信息</h3> */}
-          {/* <div className="divider" /> */}
           <Form
             pristine
             labelWidth={190}

@@ -11,9 +11,6 @@ import './style/index.less';
 
 // global 对应目录
 const siteSetting = React.lazy(() => import('./routes/site-setting'));
-// const menuSetting = asyncRouter(() => import('./routes/global/menu-setting'));
-// const role = asyncRouter(() => import('./routes/role'));
-// const siteUser = asyncRouter(() => import('./routes/site-user'));
 const rootUser = React.lazy(() => import('./routes/root-user'));
 
 // organization
@@ -71,20 +68,6 @@ class IAMIndex extends React.Component {
       <IntlProviderAsync>
         <div className="c7ncd-base-root">
           <Switch>
-            {/* <Route path={`${match.url}/menu-setting`} component={menuSetting} /> */}
-            {/* <Route path={`${match.url}/general-setting`} component={generalSetting} /> */}
-            {/* <Route path={`${match.url}/role`} component={role} /> */}
-            {/* <Route path={`${match.url}/user`} component={siteUser} /> */}
-            {/* <Route path={`${match.url}/application-setting`} component={applicationSetting} /> */}
-            {/* <Route path={`${match.url}/token-manager`} component={tokenManager} /> */}
-            {/* <Route path={`${match.url}/saga`} component={saga} /> */}
-            {/* <Route path={`${match.url}/saga-instance`} component={sagaInstance} /> */}
-            {/* <Route path={`${match.url}/market-publish`} component={AppRelease} /> */}
-            {/* <Route path={`${match.url}/app-market`} component={AppMarket} /> */}
-            {/* <Route path={`${match.url}/application-management`} component={applicationManagement} /> */}
-            {/* <Route path={`${match.url}/lookup-config`} component={lookupConfig} /> */}
-            {/* <Route path={`${match.url}/lang-config`} component={langConfig} /> */}
-            {/* <Route path={`${match.url}/lov-config`} component={lovConfig} /> */}
             <Route path={`${match.url}/system-setting`} component={siteSetting} />
             <Route path={`${match.url}/org-role`} component={orgRole} />
             <Route path={`${match.url}/root-user`} component={rootUser} />
