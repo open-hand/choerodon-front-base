@@ -199,28 +199,20 @@ function UserInfo(props) {
       const res = await oauthApi.goVerify({
         phone: verifyFormDataSet.current.get('phone'),
         loginName: userInfoDs.current.get('loginName'),
-        captcha: verifyFormDataSet.current.get('password'),
+        captcha: verifyFormDataSet.current.get('captcha'),
         captchaKey,
       });
       if (res.status) {
         boolean = true;
         userInfoDs.query();
-      } else {
-        message.warning(res.message);
       }
-
       return boolean;
     };
 
     async function checkPhoneExit(phone) {
-      console.log(phone);
       const res = await iamApi.checkPhoneExit({
         phone,
       });
-      if (res) {
-        message.error(res.message);
-      }
-      console.log(res, 'checkPhoneExit');
       return res;
     }
 
@@ -255,9 +247,6 @@ function UserInfo(props) {
           });
         }, 300);
       }
-      if (!res.status) {
-        message.warning(res.message);
-      }
       return boolean;
     };
 
@@ -287,8 +276,6 @@ function UserInfo(props) {
             destroyOnClose: true,
           });
         }, 300);
-      } else if (!res.status) {
-        message.error(res.message);
       }
       return boolean;
     };
@@ -322,12 +309,15 @@ function UserInfo(props) {
             if (!/^1[3-9]\d{9}$/.test(value)) {
               return '手机格式不正确';
             }
-            const res = await checkPhoneExit(DS.current.get('phone'));
-            if (res) {
-              return false;
+            try {
+              await checkPhoneExit(DS.current.get('phone'));
+              return true;
+            } catch (error) {
+              return error.message;
             }
-            return true;
           });
+        } else {
+          DS.current.getField('phone').set('validator', () => true);
         }
       }
       go();
@@ -388,7 +378,6 @@ function UserInfo(props) {
           userInfoDs.query();
           return true;
         }
-        message.error(submitRes.message);
         return false;
       }
       return false;
@@ -417,7 +406,6 @@ function UserInfo(props) {
           password: modifyPswFormDataSet.current.get('password'),
         });
         if (modifyResult.failed) {
-          message.error(modifyResult.message);
           return false;
         }
         if (!modifyResult.failed) {
