@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router';
 import { PermissionRoute } from '@choerodon/master';
-import { nomatch } from '@choerodon/boot';
+import { NoMatch } from '@choerodon/boot';
 import PlatformOverview from './PlatformOverview';
 import { StoreProvider } from './stores';
 
@@ -19,7 +19,7 @@ const Index = ({ match }) => (
       component={ContentIndex}
       service={['choerodon.code.site.manager.platform-overview.ps.default']}
     />
-    <Route path="*" component={nomatch} />
+    <Route path="*" component={NoMatch} />
   </Switch>
 );
 
