@@ -13,6 +13,7 @@ import {
   Form, Select, Button, TextField,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
+import { useDebounceFn } from 'ahooks';
 import { LabelLayoutType } from '@/interface';
 import { mapping } from '../../stores/filterDataSet';
 import Store from '../../stores';
@@ -43,6 +44,17 @@ const Index = observer(({
     field?: string,
     value: any,
   }[]>([]);
+  const { run } = useDebounceFn(
+    (value?: string) => {
+      changeQueryParameterAndQuery({
+        type: '',
+        value,
+      });
+    },
+    {
+      wait: 500,
+    },
+  );
 
   useEffect(() => {
     onSearchCallback(queryParameter);
@@ -111,6 +123,7 @@ const Index = observer(({
   return (
     <div className={cssPrefix}>
       <CustomTabs
+        className={`${cssPrefix}__tabs`}
         data={ModeList}
         onChange={handleChange}
       />
@@ -135,7 +148,7 @@ const Index = observer(({
         /> */}
         <Form
           labelLayout={'placeholder' as LabelLayoutType}
-          columns={5}
+          columns={7}
           dataSet={FilterDataSet}
         >
           <TextField
@@ -144,15 +157,13 @@ const Index = observer(({
                 )}
             name={mapping.params.name}
             placeholder="请输入搜索内容"
-            onBlur={(e) => {
-              changeQueryParameterAndQuery({
-                type: '',
-                value: e.target.value,
-              });
-            }}
-            colSpan={2}
+            onInput={(e: any) => run(e.target.value)}
+            colSpan={3}
+            clearButton
+            onClear={() => run()}
           />
           <Select
+            colSpan={2}
             name={mapping.role.name}
             onChange={(v) => {
               changeQueryParameterAndQuery({
@@ -167,8 +178,10 @@ const Index = observer(({
               type: (mapping.status.name) as string,
               value: v,
             })}
+            colSpan={1}
           />
-          <Button onClick={handleReset}>
+          {/* @ts-ignore */}
+          <Button colSpan={1} onClick={handleReset}>
             重置
           </Button>
         </Form>
