@@ -3,7 +3,7 @@ import JSONbig from 'json-bigint';
 export default ({ orgId, ProDeployStore }) => ({
   fields: [{
     name: 'proSelect',
-    type: 'auto',
+    type: 'string',
     textField: 'name',
     valueField: 'id',
     multiple: true,
@@ -16,7 +16,10 @@ export default ({ orgId, ProDeployStore }) => ({
         let parseData;
         const typeOf = Object.prototype.toString;
         if (typeOf.call(data) === '[object String]') {
-          parseData = JSONbig.parse(data);
+          parseData = JSONbig.parse(data).map((i) => ({
+            ...i,
+            id: i.id.toString(),
+          }));
         } else {
           parseData = data;
         }
