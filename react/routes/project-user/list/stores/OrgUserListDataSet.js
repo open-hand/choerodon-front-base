@@ -82,6 +82,12 @@ export default ({
       {
         name: 'roles', type: 'string', label: '角色', multiple: true, textField: 'name', valueField: 'id',
       },
+      // 这里加个role 是为了列表模式的角色 如果列表模式的角色用roles renderer会渲染多次
+      {
+        name: 'role',
+        type: 'string',
+        label: '角色',
+      },
       {
         name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs,
       },

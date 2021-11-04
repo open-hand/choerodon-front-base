@@ -500,7 +500,12 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column width={100} name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
-        <Table.Column width={300} name="roles" renderer={(params) => expandMoreColumn(params)} />
+        <Table.Column
+          width={150}
+          name="role"
+          // renderer={(params) => 1}
+          renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
+        />
         <Table.Column
           width={200}
           title={(
@@ -524,7 +529,7 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column
-          width={100}
+          width={150}
           name="phone"
           renderer={({ text }) => (
             <Tooltip title={text}>
