@@ -22,7 +22,8 @@ import {
 } from '@choerodon/master';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
-import { CaptchaField } from '@choerodon/components';
+// import JSEncrypt from '@/utils/jsencrypt.min';
+import { CaptchaField } from '@choerodon/components/lib/index.js';
 import Cookies from 'universal-cookie';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
