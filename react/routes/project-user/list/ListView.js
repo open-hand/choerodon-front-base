@@ -141,8 +141,8 @@ export default BrowserAdapter(observer((props) => {
   /**
    * 刷新
    */
-  function refresh() {
-    cRef.current.handleChangeSearch(filterPageRef.current.getQueryParameter());
+  async function refresh() {
+    await cRef.current.handleChangeSearch(filterPageRef.current.getQueryParameter());
   }
 
   function handleSave() {
@@ -545,7 +545,7 @@ export default BrowserAdapter(observer((props) => {
     </div>
   );
 
-  const handleChangeSearch = (data) => {
+  const handleChangeSearch = async (data) => {
     dataSet.queryParameter = {};
     if (data && data.length > 0) {
       data.forEach((item) => {
@@ -557,7 +557,7 @@ export default BrowserAdapter(observer((props) => {
       });
     }
     // dataSet.setQueryParameter('params', value);
-    dataSet.query();
+    await dataSet.query();
   };
 
   return (
@@ -619,9 +619,8 @@ export default BrowserAdapter(observer((props) => {
                       dataSet.status = 'loading';
                       const userIds = dataSet.selected.map((item) => item.get('id'));
                       await usersApi.batchDelete(userIds);
-                      refresh();
-                      dataSet.cachedSelected = [];
-                      dataSet.selected = [];
+                      await refresh();
+                      dataSet.clearCachedSelected();
                     } catch (e) {
                       dataSet.status = 'ready';
                     }
