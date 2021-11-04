@@ -22,7 +22,7 @@ export default function ListView() {
     Modal.open({
       key: Modal.key(),
       title: '确认删除组织管理员',
-      content: `确认删除组织管理员"${record.get('userName')}"吗？`,
+      children: `确认删除组织管理员"${record.get('userName')}"吗？`,
       onOk: async () => {
         try {
           const result = await axios.delete(`/iam/choerodon/v1/organizations/${organizationId}/org_administrator/${record.get('id')}`);
@@ -38,14 +38,14 @@ export default function ListView() {
     });
   }
 
-  function renderAction(record) {
+  const renderAction = (record) => {
     const actionDatas = [{
       service: ['choerodon.code.organization.manager.organization-admin.ps.delete'],
       text: <FormattedMessage id={`${intlPrefix}.action.delete`} />,
       action: () => handleDelete(record),
     }];
     return <Action data={actionDatas} />;
-  }
+  };
 
   function handleCreate() {
     orgAdminCreateDataSet.create({ userName: [''] });
@@ -67,7 +67,7 @@ export default function ListView() {
     });
   }
 
-  function renderUserName({ value, record }) {
+  const renderUserName = ({ value, record }) => {
     if (record.get('externalUser')) {
       return (
         <span>
@@ -81,7 +81,7 @@ export default function ListView() {
       );
     }
     return <span>{value}</span>;
-  }
+  };
   return (
     <Page
       service={permissions}
