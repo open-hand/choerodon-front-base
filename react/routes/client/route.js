@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router';
 import { PermissionRoute } from '@choerodon/master';
-import { asyncRouter, nomatch } from '@choerodon/boot';
+import { asyncRouter, NoMatch } from '@choerodon/boot';
 
 const Content = asyncRouter(() => import('./index'));
 
@@ -18,7 +18,7 @@ const Index = ({ match }) => (
       component={Content}
       service={(type) => service[type] || []}
     />
-    <Route path="*" component={nomatch} />
+    <Route path="*" component={NoMatch} />
   </Switch>
 );
 

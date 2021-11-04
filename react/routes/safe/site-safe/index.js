@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageWrap, PageTab, nomatch } from '@choerodon/boot';
+import { PageWrap, PageTab, NoMatch } from '@choerodon/boot';
 import { Route, Switch } from 'react-router';
 import { PermissionRoute } from '@choerodon/master';
 import { StoreProvider } from './store';
@@ -23,7 +23,7 @@ const Index = ({ match }) => (
       component={TabIndex}
       service={['choerodon.code.site.setting.security.ps.password-policy']}
     />
-    <Route path="*" component={nomatch} />
+    <Route path="*" component={NoMatch} />
   </Switch>
 );
 

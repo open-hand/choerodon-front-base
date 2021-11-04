@@ -1,5 +1,5 @@
 import React from 'react';
-import { nomatch, asyncRouter } from '@choerodon/boot';
+import { NoMatch, asyncRouter } from '@choerodon/boot';
 import { Route, Switch } from 'react-router-dom';
 import { StoreProvider } from './stores';
 
@@ -11,7 +11,7 @@ const HostConfigIndex = ({ match }: any) => (
     <Switch>
       <Route exact path={match.url} component={Content} />
       <Route exact path={`${match.url}/agreement`} component={agreement} />
-      <Route path="*" component={nomatch} />
+      <Route path="*" component={NoMatch} />
     </Switch>
   </StoreProvider>
 );
