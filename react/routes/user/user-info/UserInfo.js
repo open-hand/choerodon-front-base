@@ -19,11 +19,10 @@ import {
   Choerodon,
   Permission,
   logout,
-} from '@choerodon/boot';
+} from '@choerodon/master';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
-// import JSEncrypt from '@/utils/jsencrypt.min';
-import { CaptchaField } from '@choerodon/components/lib/index.js';
+import { CaptchaField } from '@choerodon/components';
 import Cookies from 'universal-cookie';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
@@ -38,8 +37,6 @@ let recordValue = '';
 function UserInfo(props) {
   const context = useStore();
   const {
-    // AppState,
-    // UserInfoStore,
     intl,
     intlPrefix,
     prefixCls,

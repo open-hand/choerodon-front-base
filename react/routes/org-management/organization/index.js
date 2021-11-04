@@ -1,7 +1,7 @@
 
 import React, { useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { asyncRouter, nomatch } from '@choerodon/boot';
+import { asyncRouter, NoMatch } from '@choerodon/boot';
 // import Organization from './Organization';
 import Store from '../stores';
 

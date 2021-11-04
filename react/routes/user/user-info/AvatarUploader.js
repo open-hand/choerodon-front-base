@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
 import { Icon, Modal, Upload } from 'choerodon-ui';
 import { Button } from 'choerodon-ui/pro';
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios, Choerodon } from '@choerodon/master';
 import querystring from 'query-string';
 
 const { Dragger } = Upload;

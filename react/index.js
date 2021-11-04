@@ -4,7 +4,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { inject } from 'mobx-react';
 import { ModalContainer } from 'choerodon-ui/pro';
-import { asyncLocaleProvider, asyncRouter, nomatch } from '@choerodon/boot';
+import { asyncLocaleProvider, asyncRouter, NoMatch } from '@choerodon/boot';
 import { PermissionRoute } from '@choerodon/master';
 
 import './style/index.less';
@@ -102,7 +102,7 @@ class IAMIndex extends React.Component {
             <Route path={`${match.url}/hzero/api-test`} component={heroPage} />
             <Route path={`${match.url}/hzero/api`} component={heroPage} />
             <Route path={`${match.url}/enterprise`} component={enterpriseInfo} />
-            <Route path="*" component={nomatch} />
+            <Route path="*" component={NoMatch} />
           </Switch>
           <ModalContainer />
         </div>

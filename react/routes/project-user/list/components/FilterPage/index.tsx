@@ -171,6 +171,7 @@ const Index = observer(({
                 value: v,
               });
             }}
+            dropdownMatchSelectWidth={false}
           />
           <Select
             name={mapping.status.name}
@@ -178,6 +179,10 @@ const Index = observer(({
               type: (mapping.status.name) as string,
               value: v,
             })}
+            // dropdownMenuStyle={{
+            //   width: 500,
+            // }}
+            dropdownMatchSelectWidth={false}
             colSpan={1}
           />
           {/* @ts-ignore */}
