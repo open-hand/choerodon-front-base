@@ -8,8 +8,7 @@ class OauthApi extends Api<OauthApi> {
   // 获取验证码
   getVerificationCode=(phone: string) => this.request({
     method: 'get',
-    // url: '/oauth/public/send-phone-captcha',
-    url: `${this.prefix}/public/new/send-phone-captcha`,
+    url: '/iam/choerodon/v1/users/check/user/phone/occupied',
     params: {
       phone,
     },
