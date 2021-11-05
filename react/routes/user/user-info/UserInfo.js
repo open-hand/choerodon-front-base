@@ -210,6 +210,7 @@ function UserInfo(props) {
     async function checkPhoneExit(phone) {
       const res = await iamApi.checkPhoneExit({
         phone,
+        user_id: userId,
       });
       return res;
     }
