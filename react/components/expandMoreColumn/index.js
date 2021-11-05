@@ -23,11 +23,11 @@ export default function renderRoles({
     }
   });
   const selfMaxTagCount = customMaxTagCount || maxTagCount;
-  const restRoles = record.getPristineValue('roles').slice(maxTagCount);
+  const restRoles = record.getPristineValue('roles').slice(selfMaxTagCount);
   return record.getPristineValue('roles').map((role, index) => {
     if (index < selfMaxTagCount) {
       return getTag(role);
-    } if (index === maxTagCount) {
+    } if (index === selfMaxTagCount) {
       return (
         <Popover
           trigger="hover"
