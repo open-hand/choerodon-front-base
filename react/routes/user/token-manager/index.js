@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { asyncRouter, nomatch } from '@choerodon/boot';
+import { asyncRouter } from '@choerodon/boot';
 import { StoreProvider } from './stores';
 
 // const index = asyncRouter(() => import('./TokenManager'), {

@@ -8,9 +8,9 @@ class IamApi extends Api<IamApi> {
   // 看手机存不存在
   checkPhoneExit(data:object) {
     return this.request({
-      method: 'post',
-      url: `${this.prefix}/check`,
-      data,
+      method: 'get',
+      url: `${this.prefix}/check/user/phone/occupied`,
+      params: data,
     });
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import {
-  asyncRouter, nomatch, PageWrap, PageTab,
+  asyncRouter, NoMatch, PageWrap, PageTab,
 } from '@choerodon/boot';
 import { PermissionRoute } from '@choerodon/master';
 
@@ -22,7 +22,7 @@ const Index = ({ match }) => (
       component={TabIndex}
       service={['choerodon.code.project.setting.general-setting.ps.info']}
     />
-    <Route path="*" component={nomatch} />
+    <Route path="*" component={NoMatch} />
   </Switch>
 );
 

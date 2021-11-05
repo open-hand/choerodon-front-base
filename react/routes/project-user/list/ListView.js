@@ -141,8 +141,8 @@ export default BrowserAdapter(observer((props) => {
   /**
    * 刷新
    */
-  function refresh() {
-    cRef.current.handleChangeSearch(filterPageRef.current.getQueryParameter());
+  async function refresh() {
+    await cRef.current.handleChangeSearch(filterPageRef.current.getQueryParameter());
   }
 
   function handleSave() {
@@ -500,7 +500,12 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column width={100} name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
-        <Table.Column width={300} name="roles" renderer={(params) => expandMoreColumn(params)} />
+        <Table.Column
+          width={150}
+          name="role"
+          // renderer={(params) => 1}
+          renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
+        />
         <Table.Column
           width={200}
           title={(
@@ -524,7 +529,7 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column
-          width={100}
+          width={150}
           name="phone"
           renderer={({ text }) => (
             <Tooltip title={text}>
@@ -545,7 +550,7 @@ export default BrowserAdapter(observer((props) => {
     </div>
   );
 
-  const handleChangeSearch = (data) => {
+  const handleChangeSearch = async (data) => {
     dataSet.queryParameter = {};
     if (data && data.length > 0) {
       data.forEach((item) => {
@@ -557,7 +562,7 @@ export default BrowserAdapter(observer((props) => {
       });
     }
     // dataSet.setQueryParameter('params', value);
-    dataSet.query();
+    await dataSet.query();
   };
 
   return (
@@ -619,9 +624,8 @@ export default BrowserAdapter(observer((props) => {
                       dataSet.status = 'loading';
                       const userIds = dataSet.selected.map((item) => item.get('id'));
                       await usersApi.batchDelete(userIds);
-                      refresh();
-                      dataSet.cachedSelected = [];
-                      dataSet.selected = [];
+                      await refresh();
+                      dataSet.clearCachedSelected();
                     } catch (e) {
                       dataSet.status = 'ready';
                     }

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input } from 'choerodon-ui';
 import { inject, observer } from 'mobx-react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { findDOMNode } from 'react-dom';
+import { injectIntl } from 'react-intl';
 import './PhoneWrapper.less';
 
 const FormItem = Form.Item;
