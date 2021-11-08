@@ -5,12 +5,21 @@ class IamApi extends Api<IamApi> {
     return '/iam/choerodon/v1/users';
   }
 
-  // 看手机存不存在
+  // 看手机存不存在(自己的手机校验也成功)
   checkPhoneExit(data:object) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check/user/phone/occupied`,
       params: data,
+    });
+  }
+
+  // 看手机存不存在(自己的手机校验不成功)
+  checkPhoneExitNoSelf(data:object) {
+    return this.request({
+      method: 'post',
+      url: `${this.prefix}/check`,
+      data,
     });
   }
 
