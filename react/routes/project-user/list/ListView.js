@@ -347,90 +347,92 @@ export default BrowserAdapter(observer((props) => {
     return (
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
         {mode === ModeList[0].value ? (
-          <div className={styles['theme4-c7n-member']}>
-            {
-              dataSet.toData().map((item) => (
-                <div className={styles['theme4-c7n-memberItem']}>
-                  {
-                    handleRenderActionDom(permissions, {
-                      get: (params) => item[params],
-                    }, item)
-                  }
-                  <div className={styles['theme4-c7n-memberItem-line']}>
-                    <div
-                      className={styles['theme4-c7n-memberItem-line-icon']}
-                      style={{
-                        ...item.imageUrl ? {
-                          backgroundImage: `url(${item.imageUrl})`,
-                        } : {
-                          background: '#F0F5FF',
-                        },
-                      }}
-                    >
-                      {
-                        !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
-                      }
+          <div>
+            <div className={styles['theme4-c7n-member']}>
+              {
+                dataSet.toData().map((item) => (
+                  <div className={styles['theme4-c7n-memberItem']}>
+                    {
+                      handleRenderActionDom(permissions, {
+                        get: (params) => item[params],
+                      }, item)
+                    }
+                    <div className={styles['theme4-c7n-memberItem-line']}>
+                      <div
+                        className={styles['theme4-c7n-memberItem-line-icon']}
+                        style={{
+                          ...item.imageUrl ? {
+                            backgroundImage: `url(${item.imageUrl})`,
+                          } : {
+                            background: '#F0F5FF',
+                          },
+                        }}
+                      >
+                        {
+                          !item.imageUrl && item?.realName?.substring(0, 1)?.toUpperCase()
+                        }
+                      </div>
+                      <div
+                        className={styles['theme4-c7n-memberItem-line-name']}
+                      >
+                        <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
+                          <span
+                            role="none"
+                            className={styles['theme4-c7n-memberItem-line-name-realName-text']}
+                          >
+                            {item.realName}
+                          </span>
+                          <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
+                        </p>
+                        <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
+                      </div>
                     </div>
-                    <div
-                      className={styles['theme4-c7n-memberItem-line-name']}
-                    >
-                      <p className={styles['theme4-c7n-memberItem-line-name-realName']}>
-                        <span
-                          role="none"
-                          className={styles['theme4-c7n-memberItem-line-name-realName-text']}
-                        >
-                          {item.realName}
-                        </span>
-                        <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
+                    <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 16 }}>
+                      <p className={styles['theme4-c7n-memberItem-line-key']}>
+                        角色:
                       </p>
-                      <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
+                      <p className={styles['theme4-c7n-memberItem-line-value']}>
+                        {expandMoreColumn({
+                          customMaxTagCount: 1,
+                          value: '',
+                          record: {
+                            getPristineValue: (key) => item.roles,
+                          },
+                        })}
+                      </p>
                     </div>
-                  </div>
-                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 16 }}>
-                    <p className={styles['theme4-c7n-memberItem-line-key']}>
-                      角色:
-                    </p>
-                    <p className={styles['theme4-c7n-memberItem-line-value']}>
-                      {expandMoreColumn({
-                        customMaxTagCount: 1,
-                        value: '',
-                        record: {
-                          getPristineValue: (key) => item.roles,
-                        },
-                      })}
-                    </p>
-                  </div>
-                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
-                      手机:
-                    </p>
-                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                      {item.phone}
-                    </p>
-                  </div>
-                  <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
-                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
-                      邮箱:
-                    </p>
-                    <Tooltip title={item.email}>
+                    <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                      <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                        手机:
+                      </p>
                       <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                        {item.email}
+                        {item.phone}
                       </p>
-                    </Tooltip>
+                    </div>
+                    <div className={styles['theme4-c7n-memberItem-line']} style={{ justifyContent: 'space-between', marginTop: 11 }}>
+                      <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                        邮箱:
+                      </p>
+                      <Tooltip title={item.email}>
+                        <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                          {item.email}
+                        </p>
+                      </Tooltip>
+                    </div>
+                    <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
+                      <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
+                        来源:
+                      </p>
+                      <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
+                        {label({ get: (key) => item[key] })}
+                        {programLabel({ get: (key) => item[key] })}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles['theme4-c7n-memberItem-line']} style={{ marginTop: 11 }}>
-                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-key']}>
-                      来源:
-                    </p>
-                    <p style={{ color: 'rgba(15, 19, 88, 0.45)' }} className={styles['theme4-c7n-memberItem-line-value']}>
-                      {label({ get: (key) => item[key] })}
-                      {programLabel({ get: (key) => item[key] })}
-                    </p>
-                  </div>
-                </div>
-              ))
-            }
-            {/* {dataSet.toData().map((item) => )} */}
+                ))
+              }
+              {/* {dataSet.toData().map((item) => )} */}
+            </div>
             <div className={styles['theme4-c7n-member-page']}>
               <span
                 role="none"
