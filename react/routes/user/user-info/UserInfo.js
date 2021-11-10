@@ -200,6 +200,7 @@ function UserInfo(props) {
         captcha: verifyFormDataSet.current.get('captcha'),
         captchaKey,
       });
+      cookies.set('captchaKey', '');
       if (res.status) {
         boolean = true;
         userInfoDs.query();
@@ -207,12 +208,21 @@ function UserInfo(props) {
       return boolean;
     };
 
-    async function checkPhoneExit(phone) {
-      const res = await iamApi.checkPhoneExit({
-        phone,
-        user_id: userId,
-      });
-      return res;
+    async function checkPhoneExit(phone, noSelf) {
+      if (noSelf) {
+        const res = await iamApi.checkPhoneExitNoSelf({
+          phone,
+          user_id: userId,
+        });
+        return res;
+      } if (!noSelf) {
+        const res = await iamApi.checkPhoneExit({
+          phone,
+          user_id: userId,
+        });
+        return res;
+      }
+      return false;
     }
 
     // 用短信验证的方式更换手机号的ok
@@ -232,6 +242,7 @@ function UserInfo(props) {
         captcha: verifyFormDataSet.current.get('captcha'),
         captchaKey,
       });
+      cookies.set('captchaKey', '');
       if (res.status) {
         boolean = true;
         cookies.set('verifyKey', res.key);
@@ -258,6 +269,10 @@ function UserInfo(props) {
     // 提交密码----密码修改已经绑定的手机号
     const PswModifyPhoneSubmitPsw = async () => {
       let boolean = false;
+      const checkRes = await pswModifyPhoneDataSet.current.validate();
+      if (!checkRes) {
+        return boolean;
+      }
       const res = await oauthApi.goCheckPsw({
         loginName: userInfoDs.current.get('loginName'),
         passWord: pswModifyPhoneDataSet.current.get('password'),
@@ -304,13 +319,19 @@ function UserInfo(props) {
       function go() {
         // 新手机号验证、绑定手机号,手机号字段可编辑 看输入的手机存不存在
         if (p.type !== 'modify') {
+          // eslint-disable-next-line consistent-return
           DS.current.getField('phone').set('validator', async (value) => {
             if (!/^1[3-9]\d{9}$/.test(value)) {
               return '手机格式不正确';
             }
             try {
-              await checkPhoneExit(DS.current.get('phone'));
-              return true;
+              if (p.type === 'bind') {
+                await checkPhoneExit(DS.current.get('phone'), false);
+                return true;
+              } if (!p.type) { // 新手机号
+                await checkPhoneExit(DS.current.get('phone'), true);
+                return true;
+              }
             } catch (error) {
               return error.message;
             }
@@ -365,6 +386,11 @@ function UserInfo(props) {
       }
       const result = await newPhoneDataSet.current.validate();
       if (result) {
+        const captchaKey = cookies.get('captchaKey');
+        if (result && !captchaKey) {
+          message.warning('请先获取验证码');
+          return false;
+        }
         const submitRes = await oauthApi.goNewPhoneSubmit({
           phone: newPhoneDataSet.current.get('phone'),
           verifyKey: cookies.get('verifyKey'),
@@ -373,6 +399,7 @@ function UserInfo(props) {
           captcha: newPhoneDataSet.current.get('captcha'),
           captchaKey: cookies.get('captchaKey'),
         });
+        cookies.set('captchaKey', '');
         if (submitRes.status) {
           userInfoDs.query();
           return true;
