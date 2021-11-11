@@ -8,7 +8,7 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import classNames from 'classnames';
-import { StatusTag, NewTips } from '@choerodon/components';
+import { StatusTag, NewTips, CardPagination } from '@choerodon/components';
 import {
   Action,
   Content,
@@ -433,29 +433,15 @@ export default BrowserAdapter(observer((props) => {
               }
               {/* {dataSet.toData().map((item) => )} */}
             </div>
-            <div className={styles['theme4-c7n-member-page']}>
-              <span
-                role="none"
-                onClick={() => handlePage(false)}
-                className={classNames({
-                  [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === 1,
-                  [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage > 1,
-                })}
-              >
-                <Icon type="keyboard_arrow_left" />
-              </span>
-              <span
-                role="none"
-                style={{ marginLeft: 24 }}
-                onClick={() => handlePage(true)}
-                className={classNames({
-                  [styles['theme4-c7n-member-page-disabled']]: dataSet.currentPage === dataSet.totalPage,
-                  [styles['theme4-c7n-member-page-enabled']]: dataSet.currentPage < dataSet.totalPage,
-                })}
-              >
-                <Icon type="keyboard_arrow_right" />
-              </span>
-            </div>
+            <CardPagination
+              style={{
+                textAlign: 'center',
+              }}
+              total={dataSet.totalCount}
+              page={dataSet.currentPage}
+              pageSize={dataSet.pageSize}
+              onChange={(page) => dataSet.page(page)}
+            />
           </div>
         ) : renderListPage(dataSet)}
       </Spin>
