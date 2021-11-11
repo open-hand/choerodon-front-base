@@ -9,12 +9,12 @@ import {
   message, Modal, TextField, Form, Output, Spin, Icon,
 } from 'choerodon-ui/pro';
 import {
-  Content, Header, TabPage as Page, Breadcrumb, Permission, Choerodon,
+  Content, Header, TabPage as Page, Breadcrumb, Choerodon,
 } from '@choerodon/boot';
 import { HeaderButtons } from '@choerodon/master';
 import queryString from 'query-string';
 import { map, some, compact } from 'lodash';
-import getSearchString from '@choerodon/master/lib/containers/components/c7n/util/gotoSome';
+import getSearchString from '@choerodon/master/lib/utils/gotoSome';
 import { FormattedMessage } from 'react-intl';
 import { LabelAlign, LabelLayoutType } from '@/interface';
 import { StoreProvider, useGeneralSettingContent } from './stores';
