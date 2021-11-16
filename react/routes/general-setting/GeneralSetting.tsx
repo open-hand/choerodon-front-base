@@ -11,10 +11,10 @@ import {
 import {
   Content, Header, TabPage as Page, Breadcrumb, Choerodon,
 } from '@choerodon/boot';
-import { HeaderButtons } from '@choerodon/master';
+import getSearchString, { HeaderButtons } from '@choerodon/master';
 import queryString from 'query-string';
 import { map, some, compact } from 'lodash';
-import getSearchString from '@choerodon/master/lib/utils/gotoSome';
+
 import { FormattedMessage } from 'react-intl';
 import { LabelAlign, LabelLayoutType } from '@/interface';
 import { StoreProvider, useGeneralSettingContent } from './stores';
