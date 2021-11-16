@@ -436,6 +436,8 @@ const pageDetail = {
   'organization.user.upload.description': '您可以在此将文件中的信息导入到组织中去。注：您必须使用用户上传模板，请在用户管理界面，点击“下载模板”下载模板。',
   'organization.user.upload.link': `${docServer}/user-guide/system-configuration/tenant/user/`,
 
+  'organization.user.add.user.tip': '添加系统其他组织用户作为当前组织用户',
+  'organization.user.import.user.tip': '批量添加系统其他组织用户作为当前组织用户',
   // 组织管理员
   'organization.admin.list.status': '启用状态',
   'organization.admin.list.safe-status': '安全状态',
