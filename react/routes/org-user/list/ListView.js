@@ -32,10 +32,10 @@ import StatusTag from '../../../components/statusTag';
 import Store from './stores';
 import Sider from './sider';
 import LdapModal from './ldapModal';
-import InviteModal from './invite-user';
 import './index.less';
 
 const modalKey = Modal.key();
+const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user-manage');
 const syncModalKey = Modal.key();
 const modalStyle = {
   width: 740,
