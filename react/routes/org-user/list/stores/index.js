@@ -36,11 +36,25 @@ export const StoreProvider = injectIntl(inject('AppState')(
     }));
     const userStore = useStore();
 
-    const orgRoleDataSet = useMemo(() => new DataSet(OrgRoleDataSet({ id, intl, intlPrefix })), [id]);
-    const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({ id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet })), [id]);
-    const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({ id, intl, intlPrefix, orgRoleDataSet, userStore })), [id]);
-    const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({ id, intl, intlPrefix, orgRoleDataSet })), [id]);
-    const passwordPolicyDataSet = useMemo(() => new DataSet(PasswordPolicyDataSet(id, id, intl, intlPrefix)), [id]);
+    const orgRoleDataSet = useMemo(() => new DataSet(
+      OrgRoleDataSet({
+        id,
+        intl,
+        intlPrefix,
+      }),
+    ), [id]);
+    const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
+      id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet,
+    })), [id]);
+    const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
+      id, intl, intlPrefix, orgRoleDataSet, userStore,
+    })), [id]);
+    const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
+      id, intl, intlPrefix, orgRoleDataSet,
+    })), [id]);
+    const passwordPolicyDataSet = useMemo(() => new DataSet(
+      PasswordPolicyDataSet(id, id, intl, intlPrefix),
+    ), [id]);
     const orgAllRoleDataSet = useMemo(() => new DataSet(OrgAllRoleDataSet({ id, intl })), [id]);
 
     useEffect(() => {
