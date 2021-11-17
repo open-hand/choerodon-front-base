@@ -6,7 +6,7 @@ class IamApi extends Api<IamApi> {
   }
 
   // 看手机存不存在(自己的手机校验也成功)
-  checkPhoneExit(data:object) {
+  checkPhoneExit(data: object) {
     return this.request({
       method: 'get',
       url: `${this.prefix}/check/user/phone/occupied`,
@@ -15,16 +15,17 @@ class IamApi extends Api<IamApi> {
   }
 
   // 看手机存不存在(自己的手机校验不成功)
-  checkPhoneExitNoSelf(data:object) {
+  checkPhoneExitNoSelf(data: object) {
     return this.request({
       method: 'post',
       url: `${this.prefix}/check`,
       data,
+      noPrompt: true,
     });
   }
 
   // 修改密码
-  modifyPsw(data:{ password:string, originalPassword:string, userId:string}) {
+  modifyPsw(data: { password: string, originalPassword: string, userId: string }) {
     return this.request({
       method: 'put',
       url: `${this.prefix}/${data.userId}/password`,

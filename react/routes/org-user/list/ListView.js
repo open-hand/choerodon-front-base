@@ -32,10 +32,10 @@ import StatusTag from '../../../components/statusTag';
 import Store from './stores';
 import Sider from './sider';
 import LdapModal from './ldapModal';
-
 import './index.less';
 
 const modalKey = Modal.key();
+const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user-manage');
 const syncModalKey = Modal.key();
 const modalStyle = {
   width: 740,
@@ -154,6 +154,18 @@ export default withRouter(
       } catch (err) {
         message.error(err);
       }
+    }
+    function getInitialButton() {
+      if (InviteModal) {
+        return (
+          <InviteModal
+            allRoleDataSet={orgAllRoleDataSet}
+            orgRoleDataSet={orgRoleDataSet}
+            onOk={handleSave}
+          />
+        );
+      }
+      return null;
     }
     // eslint-disable-next-line consistent-return
     async function handleEnable(record) {
@@ -356,10 +368,6 @@ export default withRouter(
       });
     }
 
-    // function renderLoginName({ value }) {
-    //   return <Tooltip title={value}>{value}</Tooltip>;
-    // }
-
     function renderLocked({ value }) {
       return value ? '锁定' : '未锁定';
     }
@@ -492,6 +500,7 @@ export default withRouter(
     return (
       <Page service={permissions}>
         <Header title={<FormattedMessage id={`${intlPrefix}.header.title`} />}>
+        {getInitialButton()}
           <HeaderButtons
             showClassName={false}
             items={[
