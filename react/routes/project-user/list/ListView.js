@@ -33,7 +33,6 @@ import DeleteRoleModal from '../DeleteRoleModal';
 import Store from './stores';
 import Sider from './sider';
 import BatchAddRole from './components/batch-addRole';
-import InviteModal from './invite-user';
 import './index.less';
 
 const {
@@ -47,7 +46,7 @@ const cssPrefix = 'c7ncd-projectUser';
 const modalKey = Modal.key();
 
 // eslint-disable-next-line no-undef
-// const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user');
+const InviteModal = C7NTryImport('@choerodon/base-business/lib/routes/invite-user');
 
 export default BrowserAdapter(observer((props) => {
   const {
