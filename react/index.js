@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { inject } from 'mobx-react';
+import { useRouteMatch } from 'react-router';
 import { ModalContainer } from 'choerodon-ui/pro';
-import { asyncLocaleProvider, asyncRouter, NoMatch } from '@choerodon/boot';
-import { PermissionRoute } from '@choerodon/master';
+import { asyncLocaleProvider, NoMatch } from '@choerodon/boot';
+import { PermissionRoute, useCurrentLanguage } from '@choerodon/master';
 
 import './style/index.less';
 
@@ -58,57 +58,54 @@ const heroPage = React.lazy(() => import('./routes/hzero-page'));
 
 // 收集企业信息
 const enterpriseInfo = React.lazy(() => import('./routes/enterprises-info'));
-@inject('AppState')
-class IAMIndex extends React.Component {
-  render() {
-    const { match, AppState } = this.props;
-    const langauge = AppState.currentLanguage;
-    const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`./locale/${langauge}`));
-    return (
-      <IntlProviderAsync>
-        <div className="c7ncd-base-root">
-          <Switch>
-            <Route path={`${match.url}/system-setting`} component={siteSetting} />
-            <Route path={`${match.url}/org-role`} component={orgRole} />
-            <Route path={`${match.url}/root-user`} component={rootUser} />
-            <Route
-              path={`${match.url}/team-member`}
-              component={projectUser}
-            />
-            <Route path={`${match.url}/org-user`} component={orgUser} />
-            <Route path={`${match.url}/project-setting/info`} component={generalSetting} />
-            <Route path={`${match.url}/user-info`} component={userInfo} />
-            <Route path={`${match.url}/permission-info`} component={permissionInfo} />
-            <PermissionRoute
-              path={`${match.url}/organization-setting`}
-              component={organizationSetting}
-              service={[
-                'choerodon.code.organization.setting.general-setting.ps.info',
-                'choerodon.code.organization.setting.general-setting.ps.ldap',
-                'choerodon.code.organization.setting.general-setting.ps.working-calendar',
-              ]}
-            />
-            <Route path={`${match.url}/org-safe`} component={orgSafe} />
-            <Route path={`${match.url}/safe`} component={siteSafe} />
-            <Route path={`${match.url}/client`} component={orgClient} />
-            <Route path={`${match.url}/pro-client`} component={orgClient} />
-            <Route path={`${match.url}/org-admin`} component={orgAdmin} />
-            <Route path={`${match.url}/org-overview`} component={orgOverview} />
-            <Route path={`${match.url}/platform-overview`} component={platformOverview} />
-            <Route path={`${match.url}/hzero/user`} component={heroPage} />
-            <Route path={`${match.url}/hzero/role`} component={heroPage} />
-            <Route path={`${match.url}/hzero/menu`} component={heroPage} />
-            <Route path={`${match.url}/hzero/instance`} component={heroPage} />
-            <Route path={`${match.url}/hzero/api-test`} component={heroPage} />
-            <Route path={`${match.url}/hzero/api`} component={heroPage} />
-            <Route path={`${match.url}/enterprise`} component={enterpriseInfo} />
-            <Route path="*" component={NoMatch} />
-          </Switch>
-          <ModalContainer />
-        </div>
-      </IntlProviderAsync>
-    );
-  }
-}
+const IAMIndex = () => {
+  const { match } = useRouteMatch();
+  const langauge = useCurrentLanguage();
+  const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`./locale/${langauge}`));
+  return (
+    <IntlProviderAsync>
+      <div className="c7ncd-base-root">
+        <Switch>
+          <Route path={`${match.url}/system-setting`} component={siteSetting} />
+          <Route path={`${match.url}/org-role`} component={orgRole} />
+          <Route path={`${match.url}/root-user`} component={rootUser} />
+          <Route
+            path={`${match.url}/team-member`}
+            component={projectUser}
+          />
+          <Route path={`${match.url}/org-user`} component={orgUser} />
+          <Route path={`${match.url}/project-setting/info`} component={generalSetting} />
+          <Route path={`${match.url}/user-info`} component={userInfo} />
+          <Route path={`${match.url}/permission-info`} component={permissionInfo} />
+          <PermissionRoute
+            path={`${match.url}/organization-setting`}
+            component={organizationSetting}
+            service={[
+              'choerodon.code.organization.setting.general-setting.ps.info',
+              'choerodon.code.organization.setting.general-setting.ps.ldap',
+              'choerodon.code.organization.setting.general-setting.ps.working-calendar',
+            ]}
+          />
+          <Route path={`${match.url}/org-safe`} component={orgSafe} />
+          <Route path={`${match.url}/safe`} component={siteSafe} />
+          <Route path={`${match.url}/client`} component={orgClient} />
+          <Route path={`${match.url}/pro-client`} component={orgClient} />
+          <Route path={`${match.url}/org-admin`} component={orgAdmin} />
+          <Route path={`${match.url}/org-overview`} component={orgOverview} />
+          <Route path={`${match.url}/platform-overview`} component={platformOverview} />
+          <Route path={`${match.url}/hzero/user`} component={heroPage} />
+          <Route path={`${match.url}/hzero/role`} component={heroPage} />
+          <Route path={`${match.url}/hzero/menu`} component={heroPage} />
+          <Route path={`${match.url}/hzero/instance`} component={heroPage} />
+          <Route path={`${match.url}/hzero/api-test`} component={heroPage} />
+          <Route path={`${match.url}/hzero/api`} component={heroPage} />
+          <Route path={`${match.url}/enterprise`} component={enterpriseInfo} />
+          <Route path="*" component={NoMatch} />
+        </Switch>
+        <ModalContainer />
+      </div>
+    </IntlProviderAsync>
+  );
+};
 
 export default IAMIndex;
