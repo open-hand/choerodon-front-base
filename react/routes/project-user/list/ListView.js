@@ -557,7 +557,6 @@ export default BrowserAdapter(observer((props) => {
       <Header
         title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
       >
-        {getInitialButton()}
         <HeaderButtons
           showClassName={false}
           items={([{
@@ -623,13 +622,15 @@ export default BrowserAdapter(observer((props) => {
             disabled: !(dataSet.selected && dataSet.selected.length > 1),
             display: mode === ModeList[1].value,
             permissions: [],
+          }, getInitialButton() && {
+            element: getInitialButton(),
           }, {
             icon: 'refresh',
             display: true,
             handler: () => {
               refresh();
             },
-          }])}
+          }].filter(Boolean))}
         />
       </Header>
       <Breadcrumb
