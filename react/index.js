@@ -59,7 +59,7 @@ const heroPage = React.lazy(() => import('./routes/hzero-page'));
 // 收集企业信息
 const enterpriseInfo = React.lazy(() => import('./routes/enterprises-info'));
 const IAMIndex = () => {
-  const { match } = useRouteMatch();
+  const match = useRouteMatch();
   const langauge = useCurrentLanguage();
   const IntlProviderAsync = asyncLocaleProvider(langauge, () => import(`./locale/${langauge}`));
   return (
