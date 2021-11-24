@@ -2023,6 +2023,6 @@ const zh_CN = {
 
 };
 /* eslint-disable-next-line */
-export {zh_CN};
+export {zh_CN as baseZH};
 
 export * from './guide';
