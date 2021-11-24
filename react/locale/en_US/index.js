@@ -247,6 +247,6 @@ const en_US = {
   'menu.createDir': 'Create Dir',
 };
 /* eslint-disable-next-line */
-export {en_US};
+export {en_US as baseEN};
 
 export * from './guide';
