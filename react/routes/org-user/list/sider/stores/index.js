@@ -13,7 +13,7 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
     const { AppState: { currentMenuType: { type, id, organizationId }, getUserId: userId }, intl, children } = props;
     const roleAssignDataSet = useMemo(() => new DataSet(RoleAssignDataSet({ id, intl })), [id]);
 
-    const intlPrefix = 'organization.user.sider';
+    const intlPrefix = 'c7ncd.orguser.sider';
     const dsStore = [];
     const value = {
       ...props,

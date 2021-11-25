@@ -15,14 +15,9 @@ import './index.less';
 export default observer(() => {
   const {
     prefixCls,
-    intlPrefix,
     intl,
-    modal,
-    onOk,
-    roleAssignDataSet,
     projectId,
     userId,
-    roleOptionDataSet,
   } = useContext(Store);
   const [syncData, setSyncData] = useState({});
   const [uploading, setUploading] = useState(false);

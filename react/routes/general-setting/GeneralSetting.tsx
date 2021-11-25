@@ -27,7 +27,6 @@ import '../../common/ConfirmModal.less';
 const GeneralSetting = observer(() => {
   const {
     store,
-    intl: { formatMessage },
     intlPrefix,
     prefixCls,
     history,
@@ -37,7 +36,10 @@ const GeneralSetting = observer(() => {
     isShowAgilePrefix,
     isShowTestPrefix,
     isWATERFALL,
+    formatCommon,
+    formatProjectInfo,
   } = useGeneralSettingContent();
+
   const record = useMemo(() => infoDs.current, [infoDs.current]);
 
   const handleOk = async () => {
@@ -81,7 +83,7 @@ const GeneralSetting = observer(() => {
       />,
       drawer: true,
       style: { width: 380 },
-      okText: formatMessage({ id: 'save' }),
+      okText: formatCommon({ id: 'save' }),
     });
   };
 
@@ -102,7 +104,7 @@ const GeneralSetting = observer(() => {
           <>
             <div className="c7n-projects-enable-tips">
               <Icon type="report" style={{ marginTop: -5, color: 'red' }} />
-              {formatMessage({ id: 'project.info.disable.program.tips' })}
+              {formatProjectInfo({ id: 'disable.program.tips' })}
             </div>
             <div style={{ marginTop: 14, fontWeight: 500 }}>
               请输入
@@ -130,7 +132,7 @@ const GeneralSetting = observer(() => {
         extraMessage = (
           <div className="c7n-projects-enable-tips">
             <Icon type="report" style={{ marginTop: -5, color: 'red' }} />
-            {formatMessage({ id: 'project.info.disable.subProject.tips' })}
+            {formatProjectInfo({ id: 'disable.subProject.tips' })}
           </div>
         );
       }
@@ -145,7 +147,7 @@ const GeneralSetting = observer(() => {
               请仔细阅读下列事项:
             </span>
           )}
-          <span>{formatMessage({ id: 'project.info.disable.content' }, { name })}</span>
+          <span>{formatProjectInfo({ id: 'disable.content' }, { name })}</span>
           {extraMessage}
         </div>
       );
@@ -154,7 +156,7 @@ const GeneralSetting = observer(() => {
     if (isProgram) {
       Modal.open({
         className: 'c7n-iam-confirm-modal',
-        title: formatMessage({ id: 'project.info.disable.program.title' }),
+        title: formatProjectInfo({ id: 'disable.program.title' }),
         children: <ModalContent />,
         okProps,
         okText: '我已经知道后果，停用此项目',
@@ -163,7 +165,7 @@ const GeneralSetting = observer(() => {
     } else {
       Modal.open({
         className: 'c7n-iam-confirm-modal',
-        title: formatMessage({ id: 'project.info.disable.title' }),
+        title: formatProjectInfo({ id: 'disable.title' }),
         children: <ModalContent />,
         onOk: handleOk,
       });
@@ -191,13 +193,13 @@ const GeneralSetting = observer(() => {
       <Header>
         <HeaderButtons
           items={([{
-            name: formatMessage({ id: 'modify' }),
+            name: formatCommon({ id: 'modify' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.project.setting.general-setting.ps.update'],
             handler: handleEditClick,
           }, {
-            name: formatMessage({ id: 'disable' }),
+            name: formatCommon({ id: 'disable' }),
             icon: 'remove_circle_outline',
             display: true,
             permissions: ['choerodon.code.project.setting.general-setting.ps.disable'],
@@ -224,7 +226,7 @@ const GeneralSetting = observer(() => {
           </Form>
           <section className={`${prefixCls}-logo`}>
             <div className={`${prefixCls}-logo-title`}>
-              {formatMessage({ id: `${intlPrefix}.avatar` })}
+              {formatProjectInfo({ id: 'avatar' })}
             </div>
             <div className={`${prefixCls}-logo-content`}>
               <div className={`${prefixCls}-avatar`}>
@@ -246,7 +248,7 @@ const GeneralSetting = observer(() => {
             <>
               <Divider style={{ backgroundColor: 'var(--divider)' }} />
               <div className={`${prefixCls}-section-title`}>
-                <FormattedMessage id={`${intlPrefix}.otherSetting`} />
+                {formatProjectInfo({ id: 'otherSetting' })}
               </div>
               <Form
                 dataSet={infoDs}

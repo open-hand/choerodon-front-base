@@ -419,25 +419,6 @@ const pageDetail = {
   'organization.ldap.record.detail.title': 'LDAP同步失败详情',
   'organization.ldap.record.detail.description': 'LDAP历史同步记录的详情。在这里您可以看到具体同步失败的LDAP用户和同步失败的原因。',
 
-  // 用户管理
-  'organization.user.title': '组织"{name}"的用户管理',
-  'organization.user.description': '用户是平台的使用者。您可以在组织下创建用户，则用户属于这个组织。',
-  'organization.user.link': `${docServer}/user-guide/system-configuration/tenant/user/`,
-
-  'organization.user.create.title': '在组织"{name}"中创建用户',
-  'organization.user.create.description': '用户是全平台唯一的。您创建的用户只属于这个组织，但在平台的其他组织中能被分配角色。',
-  'organization.user.create.link': `${docServer}/user-guide/system-configuration/tenant/user/`,
-
-  'organization.user.modify.title': '对用户"{name}"进行修改',
-  'organization.user.modify.description': '您可以在此修改用户名、邮箱、语言、时区。',
-  'organization.user.modify.link': `${docServer}/user-guide/system-configuration/tenant/user/`,
-
-  'organization.user.upload.title': '在组织"{name}"中导入用户',
-  'organization.user.upload.description': '您可以在此将文件中的信息导入到组织中去。注：您必须使用用户上传模板，请在用户管理界面，点击“下载模板”下载模板。',
-  'organization.user.upload.link': `${docServer}/user-guide/system-configuration/tenant/user/`,
-
-  'organization.user.add.user.tip': '添加系统其他组织用户作为当前组织用户',
-  'organization.user.import.user.tip': '批量添加系统其他组织用户作为当前组织用户',
   // 组织管理员
   'organization.admin.list.status': '启用状态',
   'organization.admin.list.safe-status': '安全状态',
@@ -447,15 +428,6 @@ const pageDetail = {
   'organization.admin.sider.user': '用户',
   'organization.admin.sider.button.add': '添加其他用户',
   'organization.admin.sider.notfound.msg': '没有符合条件的结果',
-
-  // 用户
-  'organization.user.status': '状态',
-  'organization.user.safe-status': '安全状态',
-  'organization.user.button.create-user': '创建用户',
-  'organization.user.button.import-user': '导入用户',
-  'organization.user.button.assign-roles': '添加组织用户',
-  'organization.user.button.create.disabled': '组织用户数量已达上限，无法创建更多用户',
-  'organization.user.button.invite.disabled': '组织用户数量已达上限，无法邀请更多用户',
 
   // 发送设置
   'organization.sendsetting.title': '组织"{name}"的发送设置',
@@ -568,19 +540,6 @@ const pageDetail = {
   'organization.application.add.title': '向组合应用"{name}"下添加应用',
   'organization.application.add.description': '您可以在此修改组合应用下的子应用信息。',
   'organization.application.sidebar.title': '添加子应用',
-
-  // 项目信息
-  'project.info.title': '对项目"{name}"进行项目设置',
-  'project.info.description': '您可以在此修改项目名称、停用项目。',
-  'project.info.link': `${docServer}/user-guide/system-configuration/project/pro_info/`,
-  'project.info.disabled.title': '项目"{name}"已被停用',
-  'project.info.disabled.description': '您可以在此修改项目名称、停用项目。',
-  'project.info.disabled.link': `${docServer}/user-guide/system-configuration/project/pro_info/`,
-
-  // 密码策略
-  'organization.pwdpolicy.title': '组织"{name}"的密码策略',
-  'organization.pwdpolicy.description': '密码策略包括密码安全策略、登录安全策略。密码安全策略是设置密码时的密码规则，登录安全策略是用户登录平台时的认证策略。选择启用并保存，策略将生效。',
-  'organization.pwdpolicy.link': `${docServer}/user-guide/system-configuration/tenant/secret_policy/`,
 
   // 项目角色分配
   'project.memberrole.title': '向成员分配项目"{name}"的角色',
@@ -1645,94 +1604,6 @@ const zh_CN = {
   'organization.ldap.record.failed.email': '邮箱',
   'organization.ldap.record.failed.reason': '失败原因',
 
-  // 密码策略
-  'organization.pwdpolicy.header.title': '密码策略',
-  'organization.pwdpolicy.password': '密码安全策略',
-  'organization.pwdpolicy.login': '登录安全策略',
-  'organization.pwdpolicy.enabled.security': '是否启用',
-  'organization.pwdpolicy.enabled.captcha': '是否开启验证码',
-  'organization.pwdpolicy.enabled.lock': '是否开启锁定',
-  'organization.pwdpolicy.maxerror.count': '输错次数',
-  'organization.pwdpolicy.enabled.password': '是否启用',
-  'organization.pwdpolicy.notusername': '是否允许与登录名相同',
-  'organization.pwdpolicy.originalpassword': '新用户默认密码',
-  'organization.pwdpolicy.number.pattern.msg': '请输入大于或等于0的整数',
-  'organization.pwdpolicy.minlength': '最小密码长度',
-  'organization.pwdpolicy.maxlength': '最大密码长度',
-  'organization.pwdpolicy.digitscount': '最少数字数',
-  'organization.pwdpolicy.lowercasecount': '最少小写字母数',
-  'organization.pwdpolicy.uppercasecount': '最少大写字母数',
-  'organization.pwdpolicy.specialcharcount': '最少特殊字符数',
-  'organization.pwdpolicy.notrecentcount': '最大近期密码数',
-  'organization.pwdpolicy.regularexpression': '密码正则',
-  'organization.pwdpolicy.locktime': '锁定时长',
-  'organization.pwdpolicy.max.length': '所有最少字数限制的总和须小于或等于最大密码长度',
-  'organization.pwdpolicy.min.length': '所有最少字数限制的总和须大于或等于最小密码长度',
-  'organization.pwdpolicy.min.lessthan.more': '最小密码长度须小于或等于最大密码长度',
-
-  // 用户管理
-  'organization.user.unlock': '解锁',
-  'organization.user.unlock.success': '解锁成功',
-  'organization.user.unlock.failed': '解锁失败',
-  'organization.user.reset': '重置密码',
-  'organization.user.reset.success': '重置密码成功',
-  'organization.user.reset.failed': '重置密码失败',
-  'organization.user.reset.title': '确认重置当前用户密码',
-  'organization.user.reset.content': '{loginName}用户的当前密码将失效。如果您启用组织密码策略，将重置为组织默认密码，否则将重置为平台密码。',
-  'organization.user.language': '语言',
-  'organization.user.create': '创建用户',
-  'organization.user.modify': '修改用户',
-  'organization.user.loginname': '登录名',
-  'organization.user.realname': '用户名',
-  'organization.user.source': '认证来源',
-  'organization.user.ldap': 'LDAP用户',
-  'organization.user.notldap': '非LDAP用户',
-  'organization.user.enabled': '启用状态',
-  'organization.user.locked': '安全状态',
-  'organization.user.lock': '锁定',
-  'organization.user.normal': '正常',
-  'organization.user.header.title': '用户管理',
-  'organization.user.name.space.msg': '输入存在空格，请检查',
-  'organization.user.name.samepwd.msg': '登录名不能与密码相同',
-  'organization.user.name.exist.msg': '已存在该登录名，请输入其他登录名',
-  'organization.user.password.unrepeat.msg': '两次密码输入不一致',
-  'organization.user.email.used.msg': '该邮箱已被使用，请输入其他邮箱',
-  'organization.user.addinfo.pattern.msg': '请输入json格式的数据',
-  'organization.user.loginname.require.msg': '请输入登录名',
-  'organization.user.loginname.pattern.msg': '登录名只能由字母、数字、"-"、"_"、"."组成，且不能以"-"开头，不能以"."、 ".git"或者".atom"结尾',
-  'organization.user.realname.require.msg': '请输入用户名',
-  'organization.user.email.require.msg': '请输入邮箱',
-  'organization.user.email.pattern.msg': '请输入正确的邮箱',
-  'organization.user.email': '邮箱',
-  'organization.user.password.require.msg': '请输入密码',
-  'organization.user.password': '密码',
-  'organization.user.repassword': '确认密码',
-  'organization.user.repassword.require.msg': '请确认密码',
-  'organization.user.timezone': '时区',
-  'organization.user.download.template': '下载模板',
-  'organization.user.upload.file': '上传',
-  'organization.user.upload': '导入用户',
-  'organization.user.upload.lasttime': '上次导入完成时间',
-  'organization.user.upload.norecord': '当前没有导入用户记录',
-  'organization.user.upload.time': '共导入{successCount}条数据成功，{failedCount}条数据失败',
-  'organization.user.upload.spendtime': '耗时',
-  'organization.user.uploading.text': '正在导入...',
-  'organization.user.fileloading.text': '正在上传...',
-  'organization.user.fileloading': '上传中',
-  'organization.user.uploading.tip': '（本次导入耗时较长，您可先返回进行其他操作）',
-  'organization.user.download.failed.detail': '点击下载失败详情',
-  'organization.user.download.failed.error': '失败详情文件丢失，无法下载',
-  'organization.user.action.enable': '启用',
-  'organization.user.action.disable': '停用',
-  'organization.user.action.unlock': '解锁',
-  'organization.user.action.lock': '锁定',
-  'organization.user.action.reset': '重置密码',
-  'organization.user.action.modify': '修改',
-  'organization.user.sider.create.title': '创建用户',
-  'organization.user.sider.modify.title': '修改用户',
-  'organization.user.sider.role-assignment.title': '角色分配',
-  'organization.user.sider.import.title': '导入用户',
-
   // 组织信息
   'organization.info.header.title': '组织信息',
   'organization.info.title': '对组织"{name}"进行组织设置',
@@ -1775,50 +1646,6 @@ const zh_CN = {
   // 应用管理
   'project.application-management.list.button.add': '创建应用',
   // 项目信息
-  'project.info.disable.title': '停用项目',
-  'project.info.disable.program.title': '停用项目群',
-  'project.info.disable.content': '确定要停用项目"{name}"吗？停用后，您和项目下其他成员将无法进入此项目。',
-  'project.info.disable.program.tips': ' 项目群停用后，ART将自动停止，子项目和项目群的关联也将自动停用，子项目的迭代节奏、迭代规划不再受到ART的统一管理。ART下进行中的PI将直接完成，未完成的PI将会删除，未完成的特性将会移动至待办。子项目进行中的迭代会直接完成，未开始的冲刺将会删除，未完成的问题将会移动至待办。请谨慎操作！',
-  'project.info.disable.subProject.tips': ' 子项目停用后，与项目群相关的冲刺将发生变动，进行中的冲刺会直接完成，未开始的冲刺将会删除，未完成的问题将会移动至待办。请谨慎操作！',
-  'project.info.header.title': '项目信息',
-  'project.info.setting': '项目设置',
-  'project.info.otherSetting': '其他设置',
-  'project.info.name': '项目名称',
-  'project.info.applicationName': '应用名称',
-  'project.info.agile.prefix': '敏捷问题前缀',
-  'project.info.test.prefix': '测试问题前缀',
-  'project.info.waterfall.startTime': '立项时间',
-  'project.info.waterfall.endTime': '结项时间',
-
-  'project.info.code': '项目编码',
-  'project.info.category': '项目类型',
-  'project.info.app': '应用名称',
-  'project.info.creationDate': '创建时间',
-  'project.info.creator': '创建人',
-  'project.info.namerequiredmsg': '请输入项目名称',
-  'project.info.appnamerequiredmsg': '请输入应用名称',
-  'project.info.agilePrefixrequiredmsg': '请输入问题前缀',
-  'project.info.agilePrefix.maxMsg': '问题前缀长度超过5',
-
-  'project.info.waterfall.startTime.requiredMsg': '请输入立项时间',
-  'project.info.waterfall.endTime.requiedMsg': '请输入结项时间',
-
-  'project.info.name.pattern.msg': '项目名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
-  'project.info.app.name.pattern.msg': '应用名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成',
-  'project.info.type': '项目类型',
-  'project.info.type.empty': '无项目类型',
-  'project.info.empty': '无',
-  'project.info.avatar': '项目Logo',
-  'project.info.description.title': '项目描述',
-
-  // 修改项目进度提示框
-  'project.info.failed.update': '更新失败',
-  'project.info.updating': '更新中',
-  'project.info.saga.title.updating.update': '修改项目',
-  'project.info.saga.title.success.update': '更新项目成功',
-  'project.info.saga.title.failed.update': '更新项目失败',
-  'project.info.saga.des.updating.update': '正在更新项目，该过程可能会持续几分钟。待修改成功，刷新页面后即可见到项目的新菜单。',
-  'project.info.saga.des.success.update': '项目更新成功，进入项目后刷新即可。',
 
   // 应用配置
   'application.setting.title': '应用配置',
@@ -2026,3 +1853,9 @@ const zh_CN = {
 export {zh_CN as baseZH};
 
 export * from './guide';
+
+export * from './project-setting';
+
+export * from './org-user';
+
+export * from './organization-pwdpolicy';

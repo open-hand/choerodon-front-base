@@ -1,11 +1,8 @@
-/*
- * @Author: isaac
- * @LastEditors: isaac
- * @Description:
- * i made my own lucky
- */
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { DataSet } from 'choerodon-ui/pro';
+import { C7NFormat } from '@choerodon/master';
 import { FieldProps, FieldType } from '@/interface';
 import { rolesApiConfig } from '@/api';
 
@@ -18,7 +15,6 @@ const mapping: {
   },
   role: {
     name: 'roles',
-    label: '角色',
     type: 'string' as FieldType,
     textField: 'name',
     valueField: 'id',
@@ -33,16 +29,15 @@ const mapping: {
   },
   status: {
     name: 'enabled',
-    label: '状态',
     type: 'boolean' as FieldType,
     textField: 'name',
     valueField: 'value',
     options: new DataSet({
       data: [{
-        name: '启用',
+        name: <C7NFormat intlPreifx="boot" id="enable" />,
         value: true,
       }, {
-        name: '停用',
+        name: <C7NFormat intlPreifx="boot" id="stop" />,
         value: false,
       }],
     }),

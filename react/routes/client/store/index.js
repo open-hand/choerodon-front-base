@@ -1,5 +1,6 @@
 import React, { createContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { useLocalStore } from 'mobx-react-lite';
@@ -23,13 +24,16 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       }, children, intl,
     } = props;
     const intlPrefix = 'organization.pwdpolicy';
+    const formatCommon = useFormatCommon();
+    const formatClient = useFormatMessage(intlPrefix);
+
     const orgId = type === 'organization' ? id : organizationId;
     const clientStore = useStore();
     const optionsDataSet = useMemo(
       () => new DataSet(OptionsDataSet(orgId, isProject, projectId)), [orgId, isProject, projectId],
     );
     const clientDataSet = useMemo(
-      () => new DataSet(ClientDataSet(orgId, optionsDataSet, isProject, projectId)), [orgId],
+      () => new DataSet(ClientDataSet(orgId, isProject, projectId, formatClient)), [orgId],
     );
 
     const remoteMobxStore = useLocalStore(() => ({
@@ -53,6 +57,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
       intlPrefix,
       clientStore,
       isProject,
+      formatCommon,
+      formatClient,
     };
     return (
       <Store.Provider value={value}>

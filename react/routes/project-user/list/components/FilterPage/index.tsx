@@ -7,11 +7,12 @@
 import React, {
   useState, useImperativeHandle, useContext, useEffect,
 } from 'react';
-import { CustomTabs, FilterTextField } from '@choerodon/components';
+import { CustomTabs } from '@choerodon/components';
 import { Icon } from 'choerodon-ui';
 import {
   Form, Select, Button, TextField,
 } from 'choerodon-ui/pro';
+import { C7NFormat } from '@choerodon/master';
 import { observer } from 'mobx-react-lite';
 import { useDebounceFn } from 'ahooks';
 import { LabelLayoutType } from '@/interface';
@@ -22,14 +23,6 @@ import './index.less';
 
 const cssPrefix = 'c7ncd-projectUser-filterPage';
 
-const ModeList = [{
-  value: 'card',
-  name: '卡片模式',
-}, {
-  value: 'list',
-  name: '列表模式',
-}];
-
 const Index = observer(({
   cRef,
   onSearchCallback,
@@ -39,6 +32,19 @@ const Index = observer(({
  onSearchCallback(v: any): void,
  handelModeCallback?(m: any): void,
 }) => {
+  const {
+    FilterDataSet,
+    formatCommon,
+    formatProjectUser,
+  } = useContext(Store);
+
+  const ModeList:any = [{
+    value: 'card',
+    name: formatProjectUser({ id: 'cardmode' }),
+  }, {
+    value: 'list',
+    name: formatProjectUser({ id: 'listmode' }),
+  }];
   const [mode, setMode] = useState(ModeList[0].value);
   const [queryParameter, setQueryParameter] = useState<{
     field?: string,
@@ -60,13 +66,10 @@ const Index = observer(({
     onSearchCallback(queryParameter);
   }, [queryParameter]);
 
-  const {
-    FilterDataSet,
-  } = useContext(Store);
-
   useImperativeHandle(cRef, () => ({
     getMode: () => mode,
     getQueryParameter: () => queryParameter,
+    ModeList,
   }));
 
   /**
@@ -128,24 +131,6 @@ const Index = observer(({
         onChange={handleChange}
       />
       <div className={`${cssPrefix}__formField`}>
-        {/* <FilterTextField
-          filterMap={[]}
-          className="theme4-c7n-member-search"
-          placeholder="搜索成员"
-          style={{
-            marginLeft: 32,
-            width: 200,
-          }}
-          prefix={(
-            <Icon type="search" />
-              )}
-          onSearch={(value) => {
-            changeQueryParameterAndQuery({
-              type: '',
-              value,
-            });
-          }}
-        /> */}
         <Form
           labelLayout={'placeholder' as LabelLayoutType}
           columns={7}
@@ -156,7 +141,7 @@ const Index = observer(({
               <Icon type="search" />
                 )}
             name={mapping.params.name}
-            placeholder="请输入搜索内容"
+            placeholder={formatCommon({ id: 'pleaseSearch' })}
             onInput={(e: any) => run(e.target.value)}
             colSpan={3}
             clearButton
@@ -165,6 +150,7 @@ const Index = observer(({
           <Select
             colSpan={2}
             name={mapping.role.name}
+            label={formatCommon({ id: 'role' })}
             onChange={(v) => {
               changeQueryParameterAndQuery({
                 type: (mapping.role.name) as string,
@@ -175,19 +161,17 @@ const Index = observer(({
           />
           <Select
             name={mapping.status.name}
+            label={formatCommon({ id: 'states' })}
             onChange={(v) => changeQueryParameterAndQuery({
               type: (mapping.status.name) as string,
               value: v,
             })}
-            // dropdownMenuStyle={{
-            //   width: 500,
-            // }}
             dropdownMatchSelectWidth={false}
             colSpan={1}
           />
           {/* @ts-ignore */}
           <Button colSpan={1} onClick={handleReset}>
-            重置
+            {formatCommon({ id: 'reset' })}
           </Button>
         </Form>
       </div>
@@ -200,5 +184,3 @@ Index.defaultProps = {
 };
 
 export default Index;
-
-export { ModeList };

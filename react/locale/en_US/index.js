@@ -250,3 +250,6 @@ const en_US = {
 export {en_US as baseEN};
 
 export * from './guide';
+export * from './project-setting';
+export * from './org-user';
+export * from './organization-pwdpolicy';

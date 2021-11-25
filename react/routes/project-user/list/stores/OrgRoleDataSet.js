@@ -1,4 +1,4 @@
-export default ({ id = 0, intl, intlPrefix }) => ({
+export default ({ id = 0 }) => ({
   autoQuery: true,
   selection: 'single',
   paging: false,
