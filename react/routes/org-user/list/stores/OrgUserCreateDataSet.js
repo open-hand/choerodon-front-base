@@ -1,11 +1,10 @@
 /* eslint-disable no-param-reassign */
-import { axios, Choerodon } from '@choerodon/boot';
+import { axios } from '@choerodon/boot';
 
 export default ({
-  id = 0, intl, orgRoleDataSet, userStore,
+  id = 0, formatCommon, formatProjectUser, userStore,
 }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
+  const username = formatCommon({ id: 'username' });
   const emailReg = /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/;
   async function checkEmail(email) {
     try {
@@ -51,7 +50,7 @@ export default ({
       },
       {
         name: 'roles',
-        label: '角色',
+        label: formatCommon({ id: 'role' }),
         textField: 'name',
         valueField: 'id',
         required: true,
@@ -59,11 +58,11 @@ export default ({
       {
         name: 'email',
         type: 'string',
-        label: '邮箱',
+        label: formatCommon({ id: 'email' }),
         required: true,
         validator: checkEmail,
       },
-      { name: 'password', type: 'string', label: '密码' },
+      { name: 'password', type: 'string', label: formatCommon({ id: 'password' }) },
     ],
   };
 };

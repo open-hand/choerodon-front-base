@@ -3,7 +3,7 @@ import { axios, Choerodon } from '@choerodon/boot';
 const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s+$/);
 
-export default ({ id = 0, intl, intlPrefix, safeOptionDs, statusOptionDs, orgRoleDataSet, organizationDataSet }) => {
+export default ({ id = 0, intl, intlPrefix, safeOptionDs, statusOptionDs, orgRoleDataSet }) => {
   const username = intl.formatMessage({ id: 'username' });
   const loginName = intl.formatMessage({ id: 'loginname' });
   const status = intl.formatMessage({ id: `${intlPrefix}.status` });

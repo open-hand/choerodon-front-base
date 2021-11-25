@@ -1,5 +1,5 @@
-export default function (orgId, optionsDataSet, isProject, projectId) {
-  function checkIsJson(value, name, record) {
+export default function (orgId, isProject, projectId, formatClient) {
+  function checkIsJson(value) {
     try {
       const obj = JSON.parse(value);
       if (typeof obj === 'object' && obj) {
@@ -37,9 +37,9 @@ export default function (orgId, optionsDataSet, isProject, projectId) {
       }),
     },
     fields: [
-      { name: 'id', label: '客户端ID' },
+      { name: 'id', label: formatClient({ id: 'clientId' }) },
       {
-        name: 'name', type: 'string', label: '客户端ID', required: true,
+        name: 'name', type: 'string', label: formatClient({ id: 'clientId' }), required: true,
       },
       {
         name: 'authorizedGrantTypes', type: 'string', label: '授权类型', required: true, multiple: ',',
@@ -72,7 +72,7 @@ export default function (orgId, optionsDataSet, isProject, projectId) {
       { name: 'apiEncryptFlag', type: 'number', defaultValue: 0 },
     ],
     queryFields: [
-      { name: 'name', type: 'string', label: '客户端ID' },
+      { name: 'name', type: 'string', label: formatClient({ id: 'clientId' }) },
     ],
     events: {
       update: ({ record, name, value }) => {

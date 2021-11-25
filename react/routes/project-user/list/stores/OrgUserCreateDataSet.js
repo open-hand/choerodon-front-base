@@ -1,8 +1,7 @@
 import { axios, Choerodon } from '@choerodon/boot';
 
-export default ({ id = 0, intl, orgRoleDataSet }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
+export default ({ id = 0, formatCommon }) => {
+  const username = formatCommon({ id: 'username' });
   async function checkEmail(email) {
     try {
       const result = await axios.post(`/iam/choerodon/v1/projects/${id}/users/check`, JSON.stringify({ projectId: id, email }));
@@ -26,10 +25,18 @@ export default ({ id = 0, intl, orgRoleDataSet }) => {
       },
     },
     fields: [
-      { name: 'realName', type: 'string', label: username, required: true },
-      { name: 'roles', type: 'string', label: '角色', textField: 'name', valueField: 'id', required: true },
-      { name: 'email', type: 'email', label: '邮箱', required: true, validator: checkEmail },
-      { name: 'password', type: 'string', label: '密码', required: true },
+      {
+        name: 'realName', type: 'string', label: username, required: true,
+      },
+      {
+        name: 'roles', type: 'string', label: formatCommon({ id: 'role' }), textField: 'name', valueField: 'id', required: true,
+      },
+      {
+        name: 'email', type: 'email', label: formatCommon({ id: 'email' }), required: true, validator: checkEmail,
+      },
+      {
+        name: 'password', type: 'string', label: formatCommon({ id: 'password' }), required: true,
+      },
     ],
   };
 };

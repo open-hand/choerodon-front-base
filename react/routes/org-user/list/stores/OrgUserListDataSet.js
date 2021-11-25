@@ -1,21 +1,24 @@
-import { axios, Choerodon } from '@choerodon/boot';
+/* eslint-disable import/no-anonymous-default-export */
+import { axios } from '@choerodon/boot';
 
 const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s*$/);
 
-export default ({ id = 0, intl, intlPrefix, safeOptionDs, statusOptionDs, orgRoleDataSet }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
-  const status = intl.formatMessage({ id: `${intlPrefix}.status` });
-  const safeStatus = intl.formatMessage({ id: `${intlPrefix}.safe-status` });
-  const source = intl.formatMessage({ id: `${intlPrefix}.source` });
+export default ({
+  id = 0, formatCommon, formatProjectUser, safeOptionDs, statusOptionDs, orgRoleDataSet,
+}) => {
+  const username = formatCommon({ id: 'username' });
+  const loginName = formatCommon({ id: 'account' });
+  const status = formatCommon({ id: 'states' });
+  const safeStatus = formatProjectUser({ id: 'safe-status' });
+  const source = formatProjectUser({ id: 'source' });
   async function check(value, name, record) {
     const organizationId = record.get('organizationId');
     if (value === record.getPristineValue(name) || !value) return;
     try {
       const result = await axios.post(`/iam/choerodon/v1/organizations/${organizationId}/users/check`, JSON.stringify({ organizationId, [name]: value }));
       if (result.failed) {
-        return intl.formatMessage({ id: result.message });
+        return formatProjectUser({ id: result.message });
       }
     } catch (e) {
       // Choerodon.prompt(e);
@@ -57,25 +60,49 @@ export default ({ id = 0, intl, intlPrefix, safeOptionDs, statusOptionDs, orgRol
       }),
     },
     fields: [
-      { name: 'realName', type: 'string', label: username, required: true, validator: checkRealname },
-      { name: 'loginName', type: 'string', label: loginName, unique: true },
-      { name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs },
-      { name: 'roles', type: 'object', label: '角色', maxTagTextLength: 1, multiple: true, textField: 'name', valueField: 'id' },
-      { name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs },
-      { name: 'email', type: 'email', label: '邮箱', validator: check, required: true },
+      {
+        name: 'realName', type: 'string', label: username, required: true, validator: checkRealname,
+      },
+      {
+        name: 'loginName', type: 'string', label: loginName, unique: true,
+      },
+      {
+        name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs,
+      },
+      {
+        name: 'roles', type: 'object', label: formatCommon({ id: 'role' }), maxTagTextLength: 1, multiple: true, textField: 'name', valueField: 'id',
+      },
+      {
+        name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs,
+      },
+      {
+        name: 'email', type: 'email', label: '邮箱', validator: check, required: true,
+      },
       { name: 'password', type: 'string', label: '密码' },
-      { name: 'phone', type: 'string', label: '手机', validator: checkPhone },
-      { name: 'language', type: 'string', label: '语言', defaultValue: 'zh_CN' },
-      { name: 'timeZone', type: 'string', label: '时区', defaultValue: 'CTT' },
-      { name: 'myRoles', type: 'string', label: '角色' },
+      {
+        name: 'phone', type: 'string', label: '手机', validator: checkPhone,
+      },
+      {
+        name: 'language', type: 'string', label: '语言', defaultValue: 'zh_CN',
+      },
+      {
+        name: 'timeZone', type: 'string', label: '时区', defaultValue: 'CTT',
+      },
+      { name: 'myRoles', type: 'string', label: formatCommon({ id: 'role' }) },
       { name: 'ldap', type: 'boolean', label: source },
     ],
     queryFields: [
-      { name: 'realName', type: 'string', label: '用户名' },
-      { name: 'loginName', type: 'string', label: '登录名' },
-      { name: 'roleName', type: 'string', label: '角色', textField: 'name', valueField: 'name', options: orgRoleDataSet },
-      { name: 'enabled', type: 'string', label: '启用状态', textField: 'text', valueField: 'value', options: statusOptionDs },
-      { name: 'locked', type: 'string', label: '安全状态', textField: 'text', valueField: 'value', options: safeOptionDs },
+      { name: 'realName', type: 'string', label: formatCommon({ id: 'username' }) },
+      { name: 'loginName', type: 'string', label: formatCommon({ id: 'account' }) },
+      {
+        name: 'roleName', type: 'string', label: formatCommon({ id: 'role' }), textField: 'name', valueField: 'name', options: orgRoleDataSet,
+      },
+      {
+        name: 'enabled', type: 'string', label: '启用状态', textField: 'text', valueField: 'value', options: statusOptionDs,
+      },
+      {
+        name: 'locked', type: 'string', label: '安全状态', textField: 'text', valueField: 'value', options: safeOptionDs,
+      },
     ],
   };
 };

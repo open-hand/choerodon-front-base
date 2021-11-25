@@ -1,11 +1,6 @@
-/*
- * @Author: isaac
- * @LastEditors: isaac
- * @Description:
- * i made my own lucky
- */
 import React, { createContext, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import OrgUserListDataSet from './OrgUserListDataSet';
@@ -21,19 +16,23 @@ export default Store;
 
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
-    const { AppState: { currentMenuType: { type, id, organizationId } }, intl, children } = props;
-    const intlPrefix = 'organization.user';
+    const { AppState: { currentMenuType: { id, organizationId } }, intl, children } = props;
+    const intlPrefix = 'c7ncd.orguser';
+
+    const formatCommon = useFormatCommon();
+    const formatProjectUser = useFormatMessage(intlPrefix);
+
     const statusOptionData = [
-      { text: '启用', value: 'true' },
-      { text: '停用', value: 'false' },
+      { text: formatCommon({ id: 'enable' }), value: 'true' },
+      { text: formatCommon({ id: 'stop' }), value: 'false' },
     ];
     const statusOptionDs = useMemo(() => new DataSet({
       data: statusOptionData,
       selection: 'single',
     }));
     const safeOptionData = [
-      { text: '正常', value: 'false' },
-      { text: '锁定', value: 'true' },
+      { text: formatCommon({ id: 'normal' }), value: 'false' },
+      { text: formatCommon({ id: 'locked' }), value: 'true' },
     ];
     const safeOptionDs = useMemo(() => new DataSet({
       data: safeOptionData,
@@ -41,23 +40,23 @@ export const StoreProvider = injectIntl(inject('AppState')(
     }));
     const orgRoleDataSet = useMemo(() => new DataSet(OrgRoleDataSet({
       id,
-      intl,
-      intlPrefix,
     })), [id]);
     const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
-      id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet,
+      id, formatProjectUser, formatCommon, statusOptionDs, safeOptionDs, orgRoleDataSet,
     })), [id]);
     const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
-      id, intl, intlPrefix, orgRoleDataSet,
+      id, formatProjectUser, formatCommon, orgRoleDataSet,
     })), [id]);
     const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
-      id, intl, intlPrefix, orgRoleDataSet,
+      id, formatProjectUser, formatCommon, orgRoleDataSet,
     })), [id]);
     const allRoleDataSet = useMemo(() => new DataSet(AllRoleDataSet({ id })), [id]);
     const FilterDataSet = useMemo(() => new DataSet(filterDataSet()), []);
 
     const value = {
       ...props,
+      formatCommon,
+      formatProjectUser,
       orgUserListDataSet,
       orgUserCreateDataSet,
       orgUserRoleDataSet,

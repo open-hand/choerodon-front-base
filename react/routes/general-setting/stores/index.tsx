@@ -4,7 +4,9 @@ import React, {
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { withRouter } from 'react-router-dom';
-import { axios, Choerodon } from '@choerodon/boot';
+import {
+  axios, Choerodon, useFormatMessage, useFormatCommon,
+} from '@choerodon/master';
 import {
   map, intersection, isEmpty, assign,
 } from 'lodash';
@@ -44,7 +46,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     intl: { formatMessage },
   } = props;
 
-  const intlPrefix = 'project.info';
+  const intlPrefix = 'c7ncd.project.setting.info';
 
   const store = useMemo(() => new MainStore(), []); // 防止update时创建多次store
   const infoDs = useMemo(
@@ -82,11 +84,16 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     }
   }, [projectId, isWATERFALL, isShowAgilePrefix, isShowTestPrefix]);
 
+  const formatProjectInfo = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon();
+
   const value = {
     ...props,
     prefixCls: 'c7n-iam-generalsetting',
     intlPrefix,
     infoDs,
+    formatProjectInfo,
+    formatCommon,
     store,
     loadProject,
     showProjectPrefixArr,

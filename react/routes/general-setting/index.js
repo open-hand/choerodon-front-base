@@ -1,19 +1,19 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import {
-  asyncRouter, NoMatch, PageWrap, PageTab,
-} from '@choerodon/boot';
-import { PermissionRoute } from '@choerodon/master';
+  NoMatch, PageWrap, PageTab, useFormatMessage, PermissionRoute,
+} from '@choerodon/master';
 
 import GeneralSetting from './GeneralSetting';
-import ApplicationSetting from '../application-setting/ApplicationSetting';
 
-const TabIndex = () => (
-  <PageWrap noHeader={[]} cache>
-    <PageTab title="项目信息" tabKey="choerodon.code.project.general-info" component={withRouter(GeneralSetting)} alwaysShow />
-    {/* <PageTab title="应用配置" tabKey="choerodon.code.project.general-application" component={withRouter(ApplicationSetting)} /> */}
-  </PageWrap>
-);
+const TabIndex = () => {
+  const formatProjectInfo = useFormatMessage('c7ncd.project.setting.info');
+  return (
+    <PageWrap noHeader={[]} cache>
+      <PageTab title={formatProjectInfo({ id: 'header.title' })} tabKey="choerodon.code.project.general-info" component={withRouter(GeneralSetting)} alwaysShow />
+    </PageWrap>
+  );
+};
 const Index = ({ match }) => (
   <Switch>
     <PermissionRoute

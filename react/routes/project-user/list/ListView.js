@@ -23,11 +23,11 @@ import {
   CONSTANTS,
 } from '@choerodon/boot';
 import {
-  Spin, Button, Modal as OldModal, Icon,
+  Spin,
 } from 'choerodon-ui';
 import some from 'lodash/some';
 import { usersApi } from '@/api';
-import FilterPage, { ModeList } from './components/FilterPage';
+import FilterPage from './components/FilterPage';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import DeleteRoleModal from '../DeleteRoleModal';
 import Store from './stores';
@@ -59,7 +59,6 @@ export default BrowserAdapter(observer((props) => {
   const filterPageRef = useRef();
 
   const {
-    intlPrefix,
     orgUserListDataSet: dataSet,
     projectId,
     orgUserCreateDataSet,
@@ -68,6 +67,8 @@ export default BrowserAdapter(observer((props) => {
     orgRoleDataSet,
     allRoleDataSet,
     AppState,
+    formatCommon,
+    formatProjectUser,
   } = useContext(Store);
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
@@ -78,7 +79,7 @@ export default BrowserAdapter(observer((props) => {
     code: 'choerodon.code.project.cooperation.team-member.ps.delete',
     approve: false,
   }]);
-  const [mode, setMode] = useState(ModeList[0].value);
+  const [mode, setMode] = useState(filterPageRef.current?.ModeList[0].value);
 
   useEffect(() => {
     function handleCheckPermission() {
@@ -110,21 +111,21 @@ export default BrowserAdapter(observer((props) => {
 
   const modalProps = {
     create: {
-      okText: '保存',
-      title: '添加团队成员',
+      okText: formatCommon({ id: 'save' }),
+      title: formatProjectUser({ id: 'addteammate' }),
     },
     addRole: {
-      okText: '保存',
-      title: '修改团队成员',
+      okText: formatCommon({ id: 'save' }),
+      title: formatProjectUser({ id: 'modifyteammate' }),
     },
     invite: {
-      okText: '发送邀请',
-      title: '邀请成员',
+      okText: formatProjectUser({ id: 'sendInvitation' }),
+      title: formatProjectUser({ id: 'inviteteammate' }),
     },
     importRole: {
-      okText: '返回',
+      okText: formatCommon({ id: 'return' }),
       okCancel: false,
-      title: '导入团队成员',
+      title: formatProjectUser({ id: 'importteammate' }),
     },
   };
 
@@ -298,14 +299,6 @@ export default BrowserAdapter(observer((props) => {
     return null;
   }
 
-  function handlePage(next) {
-    if (next) {
-      dataSet.nextPage();
-    } else {
-      dataSet.prePage();
-    }
-  }
-
   function handleRenderActionDom(selfPermissions, record, item, isList) {
     const actionDatas = [];
     let flag = false;
@@ -345,7 +338,7 @@ export default BrowserAdapter(observer((props) => {
   function renderNewContent() {
     return (
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
-        {mode === ModeList[0].value ? (
+        {mode === filterPageRef.current?.ModeList[0].value ? (
           <div>
             <div className={styles['theme4-c7n-member']}>
               {
@@ -490,14 +483,13 @@ export default BrowserAdapter(observer((props) => {
         <Table.Column
           width={150}
           name="role"
-          // renderer={(params) => 1}
           renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
         />
         <Table.Column
           width={200}
           title={(
             <span>
-              来源
+              {formatCommon({ id: 'source' })}
               <NewTips
                 helpText={(
                   <>
@@ -555,18 +547,20 @@ export default BrowserAdapter(observer((props) => {
   return (
     <Page service={['choerodon.code.project.cooperation.team-member.ps.default']}>
       <Header
-        title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
+        title={
+          formatProjectUser({ id: 'header.title' })
+        }
       >
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '添加团队成员',
+            name: formatProjectUser({ id: 'addteammate' }),
             icon: 'person_add-o',
             display: true,
             permissions: ['choerodon.code.project.cooperation.team-member.ps.add'],
             handler: handleCreate,
           }, {
-            name: '导入团队成员',
+            name: formatProjectUser({ id: 'importteammate' }),
             icon: 'archive-o',
             display: true,
             permissions: ['choerodon.code.project.cooperation.team-member.ps.import'],
@@ -603,7 +597,7 @@ export default BrowserAdapter(observer((props) => {
                 Modal.confirm({
                   title: '批量删除',
                   children: `是否删除已选的${dataSet.selected.length}个用户在本项目下的所有角色`,
-                  okText: '删除',
+                  okText: formatCommon({ id: 'delete' }),
                 }).then(async (button) => {
                   if (button === 'ok') {
                     try {
@@ -620,7 +614,7 @@ export default BrowserAdapter(observer((props) => {
               },
             }],
             disabled: !(dataSet.selected && dataSet.selected.length > 1),
-            display: mode === ModeList[1].value,
+            display: mode === filterPageRef.current?.ModeList[1].value,
             permissions: [],
           }, getInitialButton() && {
             element: getInitialButton(),
@@ -653,15 +647,6 @@ export default BrowserAdapter(observer((props) => {
       >
         {
           renderNewContent()
-          // render({
-          //   dataSet,
-          //   handleChangeSearch,
-          //   renderUserName,
-          //   renderAction,
-          //   expandMoreColumn,
-          //   rednerEnabled,
-          //   renderNewContent,
-          // })
         }
       </Content>
     </Page>

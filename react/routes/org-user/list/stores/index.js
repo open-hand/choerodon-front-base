@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useMemo } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import { useFormatCommon, useFormatMessage } from '@choerodon/master';
 import OrgUserListDataSet from './OrgUserListDataSet';
 import OrgRoleDataSet from './OrgRoleDataSet';
 import OrgUserCreateDataSet from './OrgUserCreateDataSet';
@@ -16,19 +17,23 @@ export default Store;
 
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
-    const { AppState: { currentMenuType: { type, id, organizationId } }, intl, children } = props;
-    const intlPrefix = 'organization.user';
+    const { AppState: { currentMenuType: { id, organizationId } }, intl, children } = props;
+    const intlPrefix = 'c7ncd.orguser';
+
+    const formatCommon = useFormatCommon();
+    const formatProjectUser = useFormatMessage(intlPrefix);
+
     const statusOptionData = [
-      { text: '启用', value: 'true' },
-      { text: '停用', value: 'false' },
+      { text: formatCommon({ id: 'enable' }), value: 'true' },
+      { text: formatCommon({ id: 'stop' }), value: 'false' },
     ];
     const statusOptionDs = useMemo(() => new DataSet({
       data: statusOptionData,
       selection: 'single',
     }));
     const safeOptionData = [
-      { text: '正常', value: 'false' },
-      { text: '锁定', value: 'true' },
+      { text: formatCommon({ id: 'normal' }), value: 'false' },
+      { text: formatCommon({ id: 'locked' }), value: 'true' },
     ];
     const safeOptionDs = useMemo(() => new DataSet({
       data: safeOptionData,
@@ -44,18 +49,18 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }),
     ), [id]);
     const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
-      id, intl, intlPrefix, statusOptionDs, safeOptionDs, orgRoleDataSet,
+      id, formatCommon, formatProjectUser, statusOptionDs, safeOptionDs, orgRoleDataSet,
     })), [id]);
     const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
-      id, intl, intlPrefix, orgRoleDataSet, userStore,
+      id, formatCommon, formatProjectUser, orgRoleDataSet, userStore,
     })), [id]);
     const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
-      id, intl, intlPrefix, orgRoleDataSet,
+      id, formatCommon, formatProjectUser, orgRoleDataSet,
     })), [id]);
     const passwordPolicyDataSet = useMemo(() => new DataSet(
-      PasswordPolicyDataSet(id, id, intl, intlPrefix),
+      PasswordPolicyDataSet(id, formatCommon, formatProjectUser),
     ), [id]);
-    const orgAllRoleDataSet = useMemo(() => new DataSet(OrgAllRoleDataSet({ id, intl })), [id]);
+    const orgAllRoleDataSet = useMemo(() => new DataSet(OrgAllRoleDataSet({ id })), [id]);
 
     useEffect(() => {
       userStore.checkCreate(organizationId);
@@ -63,6 +68,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const value = {
       ...props,
+      formatProjectUser,
+      formatCommon,
       orgUserListDataSet,
       orgUserCreateDataSet,
       orgUserRoleDataSet,

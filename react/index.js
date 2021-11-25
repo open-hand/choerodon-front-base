@@ -15,7 +15,7 @@ const rootUser = React.lazy(() => import('./routes/root-user'));
 
 // organization
 const orgRole = React.lazy(() => import('./routes/org-role'));
-const orgUser = React.lazy(() => import('./routes/org-user'));
+const orguser = React.lazy(() => import('./routes/org-user'));
 const organizationSetting = React.lazy(() => import('./routes/organization/organization-setting'));
 const orgSafe = React.lazy(() => import('./routes/safe/org-safe'));
 const siteSafe = React.lazy(() => import('./routes/safe/site-safe'));
@@ -73,7 +73,7 @@ const IAMIndex = () => {
             path={`${match.url}/team-member`}
             component={projectUser}
           />
-          <Route path={`${match.url}/org-user`} component={orgUser} />
+          <Route path={`${match.url}/org-user`} component={orguser} />
           <Route path={`${match.url}/project-setting/info`} component={generalSetting} />
           <Route path={`${match.url}/user-info`} component={userInfo} />
           <Route path={`${match.url}/permission-info`} component={permissionInfo} />

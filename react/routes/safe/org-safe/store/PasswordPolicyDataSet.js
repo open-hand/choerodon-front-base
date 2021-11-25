@@ -1,7 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { axios } from '@choerodon/boot';
 
-export default function passwordPoliciesDataSet(organizationId, id, intl, intlPrefix) {
+export default function passwordPoliciesDataSet(organizationId, formatCommon, formatProjectUser) {
   async function handleLoad({ dataSet }) {
     if (dataSet.current && !dataSet.current.get('code')) {
       const orgData = {};
@@ -47,13 +47,13 @@ export default function passwordPoliciesDataSet(organizationId, id, intl, intlPr
   // eslint-disable-next-line consistent-return
   function checkMinLength(value, name, record) {
     if (value > record.get('maxLength')) {
-      return intl.formatMessage({ id: `${intlPrefix}.min.lessthan.more` });
+      return formatProjectUser({ id: 'min.lessthan.more' });
     }
   }
   // eslint-disable-next-line consistent-return
   function checkMaxLength(value, name, record) {
     if (getAllCount(record) > value) {
-      return intl.formatMessage({ id: `${intlPrefix}.max.length` });
+      return formatProjectUser({ id: 'max.length' });
     }
   }
   const fields = [

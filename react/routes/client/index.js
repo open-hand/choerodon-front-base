@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Table, Icon, Button, message, Modal, Row, Col,
+  Table, message, Modal,
 } from 'choerodon-ui/pro';
-// import { Modal as OldModal } from 'choerodon-ui/pro';
 import {
   Content, Header, Page, axios, Action, Permission, Breadcrumb, HeaderButtons,
 } from '@choerodon/boot';
@@ -21,16 +20,18 @@ const createKey = Modal.key();
 const editKey = Modal.key();
 const roleKey = Modal.key();
 
-const Client = withRouter(observer((props) => {
+const Client = withRouter(observer(() => {
   const {
     clientDataSet, optionsDataSet, orgId, clientStore, isProject, projectId,
+    formatCommon,
+    formatClient,
   } = useContext(Store);
 
   function openEditRecordModal(record) {
     clientDataSet.current = record;
     Modal.open({
       key: editKey,
-      title: '修改客户端',
+      title: formatClient({ id: 'modifyClient' }),
       children: <EditRecord
         dataSet={clientDataSet}
         record={clientDataSet.current}
@@ -42,7 +43,7 @@ const Client = withRouter(observer((props) => {
         width: 380,
       },
       drawer: true,
-      okText: '保存',
+      okText: formatCommon({ id: 'save' }),
     });
   }
   async function openCreateRecordModal() {
@@ -62,13 +63,13 @@ const Client = withRouter(observer((props) => {
 
     Modal.open({
       key: createKey,
-      title: '添加客户端',
+      title: formatClient({ id: 'addClient' }),
       children: <CreateRecord isProject={isProject} dataSet={clientDataSet} />,
       style: {
         width: 380,
       },
       drawer: true,
-      okText: '添加',
+      okText: formatCommon({ id: 'add' }),
     });
   }
   async function openRoleManageModal(record) {
@@ -92,7 +93,7 @@ const Client = withRouter(observer((props) => {
         width: 380,
       },
       drawer: true,
-      okText: '保存',
+      okText: formatCommon({ id: 'save' }),
     });
   }
   function handleRowClick(record) {
@@ -100,10 +101,10 @@ const Client = withRouter(observer((props) => {
   }
   async function handleDelete(record) {
     Modal.open({
-      title: '删除客户端',
+      title: formatClient({ id: 'deleteClient' }),
       content: `确认删除客户端"${record.get('name')}"吗？`,
       maskClosable: false,
-      okText: '删除',
+      okText: formatCommon({ id: 'delete' }),
       onOk: async () => {
         try {
           await axios.delete(
@@ -155,7 +156,7 @@ const Client = withRouter(observer((props) => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '添加客户端',
+            name: formatClient({ id: 'modifyClient' }),
             icon: 'playlist_add',
             display: true,
             permissions: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`],

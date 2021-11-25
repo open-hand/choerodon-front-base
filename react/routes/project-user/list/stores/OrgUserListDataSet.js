@@ -5,19 +5,19 @@ const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s*$/);
 
 export default ({
-  id = 0, intl, intlPrefix, safeOptionDs, statusOptionDs, orgRoleDataSet,
+  id = 0, formatProjectUser, formatCommon, safeOptionDs, statusOptionDs, orgRoleDataSet,
 }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
-  const status = intl.formatMessage({ id: `${intlPrefix}.status` });
-  const safeStatus = intl.formatMessage({ id: `${intlPrefix}.safe-status` });
+  const username = formatCommon({ id: 'username' });
+  const loginName = formatCommon({ id: 'account' });
+  const status = formatCommon({ id: 'states' });
+  const safeStatus = formatProjectUser({ id: 'safe-status' });
   async function check(value, name, record) {
     const projectId = record.get('projectId');
     if (value === record.getPristineValue(name) || !value) return;
     try {
       const result = await axios.post(`/iam/choerodon/v1/projects/${projectId}/users/check`, JSON.stringify({ projectId, [name]: value }));
       if (result.failed) {
-        return intl.formatMessage({ id: result.message });
+        return formatProjectUser({ id: result.message });
       }
     } catch (e) {
       Choerodon.prompt(e);
@@ -80,37 +80,37 @@ export default ({
         name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs,
       },
       {
-        name: 'roles', type: 'string', label: '角色', multiple: true, textField: 'name', valueField: 'id',
+        name: 'roles', type: 'string', label: formatCommon({id:'role'}), multiple: true, textField: 'name', valueField: 'id',
       },
       // 这里加个role 是为了列表模式的角色 如果列表模式的角色用roles renderer会渲染多次
       {
         name: 'role',
         type: 'string',
-        label: '角色',
+        label: formatCommon({id:'role'}),
       },
       {
         name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs,
       },
       {
-        name: 'email', type: 'email', label: '邮箱', validator: check, required: true,
+        name: 'email', type: 'email', label: formatCommon({id:'email'}), validator: check, required: true,
       },
-      { name: 'password', type: 'string', label: '密码' },
+      { name: 'password', type: 'string', label: formatCommon({id:'password'}) },
       {
-        name: 'phone', type: 'string', label: '手机', validator: checkPhone, required: true,
+        name: 'phone', type: 'string', label: formatCommon({id:'mobilephone'}), validator: checkPhone, required: true,
       },
       {
-        name: 'language', type: 'string', label: '语言', defaultValue: 'zh_CN',
+        name: 'language', type: 'string', label: formatCommon({id:'language'}), defaultValue: 'zh_CN',
       },
       {
         name: 'timeZone', type: 'string', label: '时区', defaultValue: 'CTT',
       },
-      { name: 'myRoles', type: 'string', label: '角色' },
+      { name: 'myRoles', type: 'string', label: formatCommon({id:'role'}) },
     ],
     queryFields: [
-      { name: 'realName', type: 'string', label: '用户名' },
-      { name: 'loginName', type: 'string', label: '登录名' },
+      { name: 'realName', type: 'string', label: formatCommon({id:'username'}) },
+      { name: 'loginName', type: 'string', label: formatCommon({id:'account'}) },
       {
-        name: 'roleName', type: 'string', label: '角色', textField: 'name', valueField: 'name', options: orgRoleDataSet,
+        name: 'roleName', type: 'string', label: formatCommon({id:'role'}), textField: 'name', valueField: 'name', options: orgRoleDataSet,
       },
       {
         name: 'enabled', type: 'string', label: '启用状态', textField: 'text', valueField: 'value', options: statusOptionDs,
