@@ -2,20 +2,25 @@ import React, { useEffect } from 'react';
 import './index.less';
 import { Icon } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
+import { C7NFormat } from '@choerodon/master';
 import { usePlatformOverviewStore } from '../../stores';
-
 
 const clusterType = [
   {
     code: 'connectedClusters',
-    text: '运行中集群',
+    text: <C7NFormat
+      intlPrefix="c7n.platform"
+      id="connectedClusters"
+    />,
   },
   {
     code: 'unconnectedCluster',
-    text: '未连接集群',
+    text: <C7NFormat
+      intlPrefix="c7n.platform"
+      id="unconnectedCluster"
+    />,
   },
 ];
-
 
 export default observer(() => {
   const {

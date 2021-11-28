@@ -17,7 +17,8 @@ const DaysPicker = (props) => {
       handleChangeDays(i);
     }
   };
-
+  const intlPrefix = 'c7n.datePiker';
+  const format = useFormatMessage(intlPrefix);
   const getContent = () => [7, 15, 30].map((i, iIndex) => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div

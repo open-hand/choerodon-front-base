@@ -1,4 +1,4 @@
-export default () => ({
+export default ({ format, formatCommon }) => ({
   selection: false,
   transport: {
     read: ({ data: { date } }) => ({
@@ -9,14 +9,14 @@ export default () => ({
   fields: [{
     name: 'sagaCode',
     type: 'string',
-    label: '事务实例',
+    label: format({ id: 'thingInstance' }),
   }, {
     name: 'refType',
     type: 'string',
-    label: '关联业务类型',
+    label: format({ id: 'associatedServiceType' }),
   }, {
     name: 'startTime',
     type: 'string',
-    label: '开始时间',
+    label: formatCommon({ id: 'startTime' }),
   }],
 });

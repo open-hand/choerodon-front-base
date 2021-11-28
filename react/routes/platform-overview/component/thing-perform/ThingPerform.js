@@ -13,6 +13,8 @@ const ThingPerform = observer(() => {
   const {
     ThingPerformStore: { loading, ...ThingPerformStore },
     FailedStatisticsTableDataSet,
+    format,
+    formatCommon,
   } = useFailedStatisticsStore();
 
   const initData = (days) => {
@@ -33,7 +35,7 @@ const ThingPerform = observer(() => {
     <div className="c7n-overview-thingPerform">
       <ContainerBlock
         width="100%"
-        title="事务执行情况"
+        title={format({ id: 'situation' })}
         hasDaysPicker
         handleChangeDays={handleChangeDays}
         loading={loading}

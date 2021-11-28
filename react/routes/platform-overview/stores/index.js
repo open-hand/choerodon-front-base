@@ -3,6 +3,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import OnlineCurrentDataset from './OnlineCurrentDataset';
 import SystemNoticeDataset from './SystemNoticeDataset';
 import SystemOptsDataset from './SystemOptsDataset';
@@ -21,7 +22,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     children,
     AppState: { currentMenuType: { type, id, organizationId } }, intl,
   } = props;
-
+  const intlPrefix = 'c7n.platform';
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon();
   const platOverStores = useStore();
   const onlineNumDs = useMemo(() => new DataSet(OnlineCurrentDataset()), [id]); // 当前在线人数chart
   const onlineHourDs = useMemo(() => new DataSet(OnlineHourDataset()), [id]); // 当前每小时在线人数chart
@@ -56,6 +59,9 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     platOverStores,
     clusterDs,
     renderMonth,
+    intlPrefix,
+    format,
+    formatCommon,
   };
 
   return (

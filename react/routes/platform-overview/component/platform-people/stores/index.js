@@ -16,10 +16,11 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
   } = props;
 
   const PlatformPeopleStore = useStore();
-
+  const intlPrefix = 'c7n.platform.peopleStore';
   const value = {
     ...props,
     PlatformPeopleStore,
+    intlPrefix,
   };
 
   return (

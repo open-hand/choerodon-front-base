@@ -10,6 +10,7 @@ import 'echarts/lib/component/title';
 import 'echarts/lib/component/legend';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/markPoint';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import { usePlatformOverviewStore } from '../../stores';
 import ContainerBlock from '../../../org-overview/components/ContainerBlock';
 
@@ -17,10 +18,12 @@ const LineChart = observer(() => {
   const {
     onlineNumDs,
     onlineHourDs,
+    intlPrefix,
   } = usePlatformOverviewStore();
 
   const record = onlineHourDs.current && onlineHourDs.toData()[0];
-
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon();
   function renderY() {
     const yArr = [];
     const xArr = record && Object.keys(record).sort((a, b) => a.split(':')[0] - b.split(':')[0]);
@@ -33,7 +36,7 @@ const LineChart = observer(() => {
     const option = {
       tooltip: {
         trigger: 'item',
-        formatter: '时间：{b}<br/>在线人数：{c}',
+        formatter: `${formatCommon({ id: 'time' })}：{b}<br/>${format({ id: 'people' })}：{c}`,
         padding: 13,
         backgroundColor: 'rgba(0,0,0,0.75)',
         textStyle: {
@@ -82,14 +85,14 @@ const LineChart = observer(() => {
     <ContainerBlock
       width="100%"
       height="255px"
-      title="在线人数统计"
+      title={format({ id: 'people' }) + formatCommon({ id: 'statistical' })}
       titleMarginBottom="0"
       loading={onlineHourDs.status === 'loading' || onlineNumDs.status === 'loading'}
     >
       <div className="c7n-online-chart">
         <div className="c7n-online-number">
           <span>{onlineNumDs.current && onlineNumDs.current.get('OnlineCount')}</span>
-          <span>人</span>
+          <span>{formatCommon({ id: 'unit.people' })}</span>
         </div>
         <div className="c7n-online-mainChart">
           <ReactEchartsCore
@@ -100,8 +103,13 @@ const LineChart = observer(() => {
           />
         </div>
         <div className="c7n-online-daily">
-          <span>日访问量：</span>
-          <span>{onlineNumDs.current && onlineNumDs.current.get('NumberOfVisitorsToday')}次</span>
+          <span>
+            {format({ id: 'dailyVisits' })}
+            ：
+          </span>
+          <span>
+            {onlineNumDs.current && formatCommon({ id: 'unit.times' }, { number: onlineNumDs.current.get('NumberOfVisitorsToday') })}
+          </span>
         </div>
       </div>
     </ContainerBlock>

@@ -1,0 +1,23 @@
+const overview = {
+  'c7n.platform.connectedClusters': 'Connected cluster',
+  'c7n.platform.unconnectedCluster': 'Unconnected cluster',
+  'c7n.platform.peopleStore.people': 'The number of platform',
+  'c7n.platform.peopleStore.increaseToYesterday': 'New from yesterday',
+  'c7n.platform.dailyVisits': 'Daily visits',
+  'c7n.platform.people': 'The number of online',
+  'c7n.platform.emailSend.situation': 'Mail Sending Status',
+  'c7n.platform.emailSend.sendNumber': 'Number of deliveries',
+  'c7n.platform.emailSend.sendTotalNumber': 'Total number sent',
+  'c7n.platform.emailSend.sendSuccessRate': 'Send success rate',
+  'c7n.platform.thingPerform.situation': 'Transaction execution',
+  'c7n.platform.thingPerform.failedRate': 'Transaction failure rate',
+  'c7n.platform.thingPerform.failedThing': 'Failed transactions',
+  'c7n.platform.thingPerform.thingInstance': 'Transaction instance',
+  'c7n.platform.thingPerform.associatedServiceType': 'Associated service type',
+  'c7n.platform.systemAnnouncement': 'System of announcement',
+  'c7n.platform.noMoreRecods': 'No more records are available...',
+  'c7n.platform.operationRecords': 'Platform layer operation records',
+  'c7n.platform.editOrganizationInfo': 'The platform layer modifies organization information',
+  'c7n.platform.retryTransaction': 'Retry the transaction',
+};
+export { overview };
