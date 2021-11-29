@@ -6,6 +6,7 @@ import {
 } from '@choerodon/boot';
 import { Button, Modal as OldModal } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
+import { useFormatMessage } from '@choerodon/master';
 import Store from './stores';
 import Sider from './sider';
 import './index.less';
@@ -16,10 +17,11 @@ export default function ListView() {
   const {
     intlPrefix, permissions, intl, adminListDataSet, adminCreateDataSet, prefixCls,
   } = context;
+  const format = useFormatMessage(intlPrefix);
   async function handleDelete({ record }) {
     Modal.open({
-      title: '删除root用户',
-      children: `确认删除root用户"${record.get('realName')}"吗?`,
+      title: format({ id: 'deleteRootUser' }),
+      children: format({ id: 'confirm.deleteRootUser' }, { name: record.get('realName') }),
       onOk: async () => {
         try {
           await axios.delete(`/iam/choerodon/v1/users/admin/${record.get('id')}`);

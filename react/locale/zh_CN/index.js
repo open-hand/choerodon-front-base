@@ -80,6 +80,8 @@ const pageDetail = {
 
   // rootuser
   'global.root-user.sider.title': '添加root用户',
+  'global.root-user.list.deleteRootUser': '删除root用户',
+  'global.root-user.list.confirm.deleteRootUser': '确认删除root用户{name}吗?',
   'global.root-user.list.button.add': '添加',
   'global.root-user.list.status': '启用状态',
   'global.root-user.list.safe-status': '安全状态',

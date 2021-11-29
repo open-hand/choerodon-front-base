@@ -13,8 +13,14 @@ export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const { AppState: { currentMenuType: { type, id, organizationId } }, intl, children } = props;
     const intlPrefix = 'global.root-user.list';
-    const adminListDataSet = useMemo(() => new DataSet(AdminListDataSet({ id, intl, intlPrefix })), [id]);
-    const adminCreateDataSet = useMemo(() => new DataSet(AdminCreateDataSet({ id, organizationId, intl, intlPrefix })), [id]);
+    const adminListDataSet = useMemo(() => new DataSet(AdminListDataSet({
+      id,
+      intl,
+      intlPrefix,
+    })), [id]);
+    const adminCreateDataSet = useMemo(() => new DataSet(AdminCreateDataSet({
+      id, organizationId, intl, intlPrefix,
+    })), [id]);
     const permissions = ['choerodon.code.site.manager.root-user.ps.default'];
     const value = {
       ...props,
