@@ -2,6 +2,9 @@ import React, { createContext, useMemo, useContext } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import {
+  useFormatCommon, useFormatMessage,
+} from '@choerodon/master';
 import userInfoDsConfig from './userInfoDataSet';
 import verifyFormDataSetConfig from './verifyFormDataSet';
 import pswModifyPhoneDataSetConfig from './pswModifyPhoneDataSet';
@@ -19,14 +22,17 @@ export const StoreProvider = injectIntl(
   inject('AppState')((props) => {
     const {
       AppState: {
-        currentMenuType: { type, id, organizationId },
+        currentMenuType: { organizationId },
         getUserId: userId,
       },
-      intl,
       children,
     } = props;
-    const intlPrefix = 'user.userinfo';
-    const userInfoDs = useMemo(() => new DataSet(userInfoDsConfig()), [userId]);
+    const intlPrefix = 'c7ncd.user-info';
+    const formatClient = useFormatMessage(intlPrefix);
+    const formatCommon = useFormatCommon();
+    const userInfoDs = useMemo(() => new DataSet(userInfoDsConfig(
+      formatClient, formatCommon,
+    )), [userId]);
     const verifyFormDataSet = useMemo(() => new DataSet(verifyFormDataSetConfig), [userId]);
     const pswModifyPhoneDataSet = useMemo(() => new DataSet(pswModifyPhoneDataSetConfig), [userId]);
     const modifyNameDataSet = useMemo(() => new DataSet(modifyNameDataSetConfig), [userId]);

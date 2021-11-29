@@ -2,6 +2,9 @@ import React, { createContext, useMemo, useContext } from 'react';
 import { DataSet } from 'choerodon-ui/pro';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
+import {
+  useFormatCommon, useFormatMessage,
+} from '@choerodon/master';
 import PermissionInfoDataSet from './PermissionInfoDataSet';
 
 const Store = createContext();
@@ -12,9 +15,13 @@ export default Store;
 
 export const StoreProvider = injectIntl(inject('AppState', 'MenuStore')(
   (props) => {
-    const { AppState: { getUserInfo: { id }, menuType: { orgId } }, intl, children } = props;
-    const intlPrefix = 'user.permissioninfo';
-    const permissionInfoDataSet = useMemo(() => new DataSet(PermissionInfoDataSet(id, intl, `${intlPrefix}.table`, orgId)), []);
+    const intlPrefix = 'c7ncd.permission-info';
+    const formatClient = useFormatMessage(intlPrefix);
+    const formatCommon = useFormatCommon();
+    const { AppState: { menuType: { orgId } }, children } = props;
+    const permissionInfoDataSet = useMemo(() => new DataSet(PermissionInfoDataSet(
+      formatClient, formatCommon, orgId,
+    )), []);
     const value = {
       ...props,
       prefixCls: 'user-permissioninfo',

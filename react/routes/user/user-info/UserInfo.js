@@ -1,3 +1,4 @@
+// ~~个人信息
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -19,12 +20,14 @@ import {
   Choerodon,
   Permission,
   logout,
+  useFormatCommon, useFormatMessage, useCurrentLanguage,
 } from '@choerodon/master';
 import './Userinfo.less';
 import { cloneDeep } from 'lodash';
 // import JSEncrypt from '@/utils/jsencrypt.min';
 import { CaptchaField } from '@choerodon/components/lib/index.js';
 import Cookies from 'universal-cookie';
+import { injectIntl } from 'react-intl';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
 import { iamApi, oauthApi } from '@/api';
@@ -35,10 +38,9 @@ const cookies = new Cookies();
 const { Text } = TextEditToggle;
 let recordValue = '';
 
-function UserInfo(props) {
+function UserInfo() {
   const context = useStore();
   const {
-    intl,
     intlPrefix,
     prefixCls,
     userId,
@@ -50,6 +52,11 @@ function UserInfo(props) {
     newPhoneDataSet,
     modifyPswFormDataSet,
   } = context;
+
+  const formatCommon = useFormatCommon();
+  const formatClient = useFormatMessage(intlPrefix);
+  const currentLanguage = useCurrentLanguage();
+
   const [editObj, seEditObj] = useState({});
   const [visible, setVisible] = useState(false);
 
@@ -318,17 +325,17 @@ function UserInfo(props) {
       }
       function go() {
         // 新手机号验证、绑定手机号,手机号字段可编辑 看输入的手机存不存在
-        if (p.type !== 'modify') {
+        if (type !== 'modify') {
           // eslint-disable-next-line consistent-return
           DS.current.getField('phone').set('validator', async (value) => {
             if (!/^1[3-9]\d{9}$/.test(value)) {
               return '手机格式不正确';
             }
             try {
-              if (p.type === 'bind') {
+              if (type === 'bind') {
                 await checkPhoneExit(DS.current.get('phone'), false);
                 return true;
-              } if (!p.type) { // 新手机号
+              } if (!type) { // 新手机号
                 await checkPhoneExit(DS.current.get('phone'), true);
                 return true;
               }
@@ -476,7 +483,7 @@ function UserInfo(props) {
                 toSetEdit('email');
               }}
             >
-              修改
+              {formatCommon({ id: 'modify' })}
             </span>
           </div>
         );
@@ -493,7 +500,7 @@ function UserInfo(props) {
               cancelSetEdit('email');
             }}
           >
-            取消
+            {formatCommon({ id: 'cancel' })}
           </span>
           <TextField
             name="email"
@@ -512,7 +519,7 @@ function UserInfo(props) {
         text = '';
       } else if (!ldap) {
         if (phoneBind) {
-          text = '修改';
+          text = formatClient({ id: 'notBind' });
         } else {
           text = '绑定';
         }
@@ -524,11 +531,11 @@ function UserInfo(props) {
       } else {
         tag = phoneBind ? (
           <Tag size="small" color="#87d068">
-            已绑定
+            {formatClient({ id: 'bind' })}
           </Tag>
         ) : (
           <Tag size="small" color="orange">
-            未绑定
+            {formatClient({ id: 'notBind' })}
           </Tag>
         );
       }
@@ -572,20 +579,20 @@ function UserInfo(props) {
         <span className={`${prefixCls}-info-container-fix-text`}>
           {!ldap && (
             <span role="none" onClick={openModifyPsw}>
-              修改
+              {formatCommon({ id: 'modify' })}
             </span>
           )}
           {ldap && (
             <Tooltip title="ldap用户不支持修改密码">
-              <span style={{ color: '#9EADBE' }}>修改</span>
+              <span style={{ color: '#9EADBE' }}>{formatCommon({ id: 'modify' })}</span>
             </Tooltip>
           )}
         </span>
       </div>
     );
 
-    const renderLanguage = ({ text }) => <span>简体中文</span>;
-    const renderTimeZone = ({ text }) => <span>中国</span>;
+    const renderLanguage = ({ text }) => <span>{formatClient({ id: 'temporary1' })}</span>;
+    const renderTimeZone = ({ text }) => <span>{formatClient({ id: 'temporary2' })}</span>;
 
     const editPersonInfo = async (params) => {
       const result = await userInfoDs.current.validate();
@@ -617,15 +624,15 @@ function UserInfo(props) {
               </span>
             </div>
             <div>
-              {intl.formatMessage({ id: `${intlPrefix}.source` })}
+              {formatClient({ id: 'source' })}
               :
               {ldap
-                ? intl.formatMessage({ id: `${intlPrefix}.ldap` })
-                : intl.formatMessage({ id: `${intlPrefix}.notldap` })}
+                ? formatClient({ id: 'ldap' })
+                : formatClient({ id: 'noLdap' })}
             </div>
             <div>
               <span>
-                {intl.formatMessage({ id: `${intlPrefix}.loginname` })}
+                {formatCommon({ id: 'account' })}
                 ：
               </span>
               <Text style={{ fontSize: '13px' }}>
@@ -639,12 +646,13 @@ function UserInfo(props) {
             dataSet={userInfoDs}
             labelLayout="horizontal"
             labelAlign="left"
-            style={{ width: '3.5rem' }}
+            style={currentLanguage === 'en_US' ? { width: '5rem' } : { width: '3.5rem' }}
           >
             <Output
+              labelWidth={currentLanguage === 'en_US' ? 200 : 100}
               label={(
                 <span className={`${prefixCls}-info-container-info-title`}>
-                  账号信息
+                  {formatClient({ id: 'account' })}
                 </span>
               )}
             />
@@ -656,7 +664,7 @@ function UserInfo(props) {
             <Output
               label={(
                 <span className={`${prefixCls}-info-container-info-title`}>
-                  组织信息
+                  {formatClient({ id: 'organization' })}
                 </span>
               )}
             />
@@ -677,4 +685,4 @@ function UserInfo(props) {
   );
   return render();
 }
-export default observer(UserInfo);
+export default injectIntl(observer(UserInfo));

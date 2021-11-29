@@ -1859,3 +1859,7 @@ export * from './project-setting';
 export * from './org-user';
 
 export * from './organization-pwdpolicy';
+
+export * from './userInfo';
+
+export * from './userPermissionInfo';

@@ -2,12 +2,8 @@ import { DataSet } from 'choerodon-ui/pro/lib';
 
 import JSONbig from 'json-bigint';
 
-export default (userId, intl, intlPrefix, orgId) => {
-  const name = intl.formatMessage({ id: `${intlPrefix}.name` });
-  const code = intl.formatMessage({ id: `${intlPrefix}.code` });
-  const level = intl.formatMessage({ id: 'level' });
-  const role = intl.formatMessage({ id: 'role' });
-
+// eslint-disable-next-line import/no-anonymous-default-export
+export default (formatClient, formatCommon, orgId) => {
   const queryPredefined = new DataSet({
     autoQuery: true,
     paging: false,
@@ -16,16 +12,9 @@ export default (userId, intl, intlPrefix, orgId) => {
       { name: 'value', type: 'string' },
     ],
     data: [
-      { key: 'site', value: '平台' },
-      { key: 'organization', value: '组织' },
-      { key: 'project', value: '项目' },
-
-    ],
-  });
-  const optionDataSet = new DataSet({
-    selection: 'multiple',
-    data: [
-      { text: intl.formatMessage({ id: `${intlPrefix}.current` }), value: true },
+      { key: 'site', value: formatClient({ id: 'platformText' }) },
+      { key: 'organization', value: formatClient({ id: 'organization' }) },
+      { key: 'project', value: formatCommon({ id: 'project' }) },
     ],
   });
 
@@ -35,17 +24,17 @@ export default (userId, intl, intlPrefix, orgId) => {
     // dataKey: null,
     paging: true,
     fields: [
-      { name: 'name', type: 'string', label: name },
-      { name: 'code', type: 'string', label: code },
-      { name: 'level', type: 'string', label: level },
-      { name: 'roles', type: 'string', label: role },
+      { name: 'name', type: 'string', label: formatCommon({ id: 'name' }) },
+      { name: 'code', type: 'string', label: formatCommon({ id: 'code' }) },
+      { name: 'level', type: 'string', label: formatClient({ id: 'level' }) },
+      { name: 'roles', type: 'string', label: formatCommon({ id: 'role' }) },
 
     ],
     queryFields: [
-      { name: 'name', type: 'string', label: name },
-      // { name: 'code', type: 'string', label: code },
-      { name: 'level', type: 'string', label: level, textField: 'value', valueField: 'key', options: queryPredefined },
-      // { name: 'roles', type: 'string', label: role },
+      { name: 'name', type: 'string', label: formatCommon({ id: 'name' }) },
+      {
+        name: 'level', type: 'string', label: formatClient({ id: 'level' }), textField: 'value', valueField: 'key', options: queryPredefined,
+      },
     ],
 
     transport: {
