@@ -12,12 +12,6 @@ const verifyFormDataSetConfig = {
         }
         return true;
       },
-    //   computedProps: {
-    //     disabled: ({ dataSet }) => {
-    //       console.log(dataSet.originData[0].phone);
-    //       return dataSet.current.get('phone');
-    //     },
-    //   },
     },
     {
       name: 'captcha',

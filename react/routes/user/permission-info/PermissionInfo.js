@@ -1,19 +1,18 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { } from 'react';
 import { observer } from 'mobx-react-lite';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
 import { Table } from 'choerodon-ui/pro';
 import {
-  Content, Header, Page, Breadcrumb,
+  Content, Page, Breadcrumb,
 } from '@choerodon/boot';
-import { Table as OldTable, Button, Tooltip } from 'choerodon-ui';
+import { Tooltip } from 'choerodon-ui';
 import './PermissionInfo.less';
 import MouseOverWrapper from '../../../components/mouseOverWrapper';
 import { useStore } from './stores';
 
 const { Column } = Table;
-function PermissionInfo(props) {
+function PermissionInfo() {
   const context = useStore();
   const {
     permissionInfoDataSet, AppState, intlPrefix, history,
@@ -39,6 +38,7 @@ function PermissionInfo(props) {
   function getFristPath(subMenu) {
     // let i = 0;
     while (subMenu[0] && subMenu[0]?.subMenus) {
+      // eslint-disable-next-line no-param-reassign
       subMenu = subMenu[0]?.subMenus;
     }
     return subMenu[0]?.route;
@@ -112,8 +112,6 @@ function PermissionInfo(props) {
     </MouseOverWrapper>
   ) : '');
   function render() {
-    const { intl } = context;
-
     return (
       <Page
         className="c7n-permission-info"
@@ -123,7 +121,7 @@ function PermissionInfo(props) {
           <Table dataSet={permissionInfoDataSet}>
             <Column name="name" width={300} className="c7n-permission-info-name" renderer={renderName} />
             <Column name="code" width={120} renderer={renderCode} className="c7n-permission-info-code" />
-            <Column name="level" width={60} renderer={renderLevel} className="c7n-permission-info-level" />
+            <Column name="level" width={120} renderer={renderLevel} className="c7n-permission-info-level" />
             <Column name="roles" renderer={renderRoleColumn} className="c7n-permission-info-description" />
 
           </Table>

@@ -1,45 +1,46 @@
-const testDsConfig = () => ({
+const userInfoDsConfig = (formatClient, formatCommon) => ({
   autoCreate: true,
   autoQuery: true,
   fields: [
     {
       name: 'email',
       type: 'string',
-      label: '邮箱地址',
+      label: formatClient({ id: 'email' }),
+      // eslint-disable-next-line no-useless-escape
       pattern: /^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/,
     },
     {
       name: 'phone',
       type: 'string',
-      label: '手机号码',
+      label: formatClient({ id: 'phone' }),
       pattern: /^1[3-9]\d{9}$/,
     },
     {
       name: 'password',
       type: 'string',
-      label: '密码',
+      label: formatCommon({ id: 'password' }),
       defaultValue: '***********',
       ignore: 'always',
     },
     {
       name: 'language',
       type: 'string',
-      label: '语言',
+      label: formatCommon({ id: 'language' }),
     },
     {
       name: 'timeZone',
       type: 'string',
-      label: '时区',
+      label: formatClient({ id: 'timezone' }),
     },
     {
       name: 'organizationName',
       type: 'string',
-      label: '组织名称',
+      label: formatClient({ id: 'organizationName' }),
     },
     {
       name: 'organizationCode',
       type: 'string',
-      label: '组织编码',
+      label: formatClient({ id: 'organizationCode' }),
     },
   ],
   transport: {
@@ -53,15 +54,5 @@ const testDsConfig = () => ({
       data: JSON.stringify(data[0]),
     }),
   },
-  events: {
-    // update: ({
-    //   dataSet, record, name, value, oldValue,
-    // }) => {
-    //   console.log(787878);
-    // },
-    // submit: ({ dataSet, data }) => {
-    //   console.log('submit');
-    // },
-  },
 });
-export default testDsConfig;
+export default userInfoDsConfig;
