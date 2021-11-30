@@ -338,7 +338,7 @@ export default BrowserAdapter(observer((props) => {
   function renderNewContent() {
     return (
       <Spin wrapperClassName={styles['theme4-c7n-spin']} spinning={dataSet.status == 'loading'}>
-        {mode === filterPageRef.current?.ModeList[0].value ? (
+        {!mode || (mode === filterPageRef.current?.ModeList[0].value) ? (
           <div>
             <div className={styles['theme4-c7n-member']}>
               {
