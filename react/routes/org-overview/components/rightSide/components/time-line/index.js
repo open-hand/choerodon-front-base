@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import './index.less';
 import { Icon, Button, Tooltip } from 'choerodon-ui';
 import { useOrgOverviewRightSide } from '../../stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 // 点击展示更多
 function handleDropDown(e) {
@@ -146,6 +147,10 @@ const TimeLine = observer(() => {
     overStores,
   } = useOrgOverviewRightSide();
 
+  const {
+    formatClient,
+  } = useOrgOverview();
+
   const [isMore, setLoadMoreBtn] = useState(false);
 
   const scorllRef = useRef();
@@ -186,9 +191,9 @@ const TimeLine = observer(() => {
     return false;
   }
   // 更多操作
-  function loadMoreOptsRecord() {
+  const loadMoreOptsRecord = () => {
     loadData(optsDs.currentPage + 1);
-  }
+  };
 
   /* eslint-disable no-shadow */
   /* eslint-disable wrap-iife */
@@ -281,9 +286,9 @@ const TimeLine = observer(() => {
           <div className="c7ncd-timeLine-body" ref={scorllRef}>
             {renderData()}
           </div>
-        ) : <span className="c7ncd-timeLine-empty">暂无更多记录...</span>
+        ) : <span className="c7ncd-timeLine-empty">{formatClient({ id: 'noMore' })}</span>
       }
-      {isMore && <Button type="primary" onClick={loadMoreOptsRecord}>加载更多</Button>}
+      {isMore && <Button type="primary" onClick={loadMoreOptsRecord}>{formatClient({ id: 'loadMore' })}</Button>}
     </div>
   );
 });

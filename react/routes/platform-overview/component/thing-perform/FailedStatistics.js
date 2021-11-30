@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table } from 'choerodon-ui/pro';
+import { Table, Tooltip } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 
-import { Tooltip } from 'choerodon-ui/pro';
 import { useFailedStatisticsStore } from './stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const { Column } = Table;
 
@@ -22,6 +22,10 @@ const FailedStatistics = withRouter(observer((props) => {
     FailedStatisticsTableDataSet,
   } = useFailedStatisticsStore();
 
+  const {
+    formatClient,
+  } = useOrgOverview();
+
   const handleClickSagaRecord = (record) => {
     history.push(`/asgard/saga-instance${search}&sagaCode=${record.get('sagaCode')}-${record.get('searchId')}`);
   };
@@ -34,7 +38,7 @@ const FailedStatistics = withRouter(observer((props) => {
 
   return (
     <div className="c7n-overview-failedStatistics">
-      <span className="c7n-overview-failedStatistics-titlespan">失败事务统计</span>
+      <span className="c7n-overview-failedStatistics-titlespan">{formatClient({ id: 'failedTransactionStatistics' })}</span>
       <Table
         className="c7n-overview-failedStatistics-table"
         dataSet={FailedStatisticsTableDataSet}

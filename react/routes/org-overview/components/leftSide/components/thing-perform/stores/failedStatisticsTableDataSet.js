@@ -1,4 +1,5 @@
-export default ({ orgId }) => ({
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ({ orgId, formatClient }) => ({
   selection: false,
   transport: {
     read: ({ data: { date } }) => ({
@@ -9,14 +10,14 @@ export default ({ orgId }) => ({
   fields: [{
     name: 'sagaCode',
     type: 'string',
-    label: '事务实例',
+    label: formatClient({ id: 'failedTransactionStatistics' }),
   }, {
     name: 'refType',
     type: 'string',
-    label: '关联业务类型',
+    label: formatClient({ id: 'transactionInstance' }),
   }, {
     name: 'startTime',
     type: 'string',
-    label: '开始时间',
+    label: formatClient({ id: 'associatedServiceType' }),
   }],
 });

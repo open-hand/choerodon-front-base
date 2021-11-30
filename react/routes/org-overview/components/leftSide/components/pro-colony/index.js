@@ -4,34 +4,39 @@ import { Icon } from 'choerodon-ui';
 import ContainerBlock from '../../../ContainerBlock';
 import { useOrgOverviewLeftSide } from '../../stores';
 import './index.less';
-
-const ClusterType = [
-  {
-    text: '运行中集群',
-    code: 'connectedClusters',
-  },
-  {
-    text: '未连接集群',
-    code: 'unconnectedCluster',
-  },
-];
-
-const ProjectType = [
-  {
-    text: '启用项目',
-    code: 'enableSum',
-  },
-  {
-    text: '停用项目',
-    code: 'stopSum',
-  },
-];
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const ProColony = observer(() => {
   const {
     clusterDs,
     projectDs,
   } = useOrgOverviewLeftSide();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
+
+  const ClusterType = [
+    {
+      text: formatClient({ id: 'runningCluster' }),
+      code: 'connectedClusters',
+    },
+    {
+      text: formatClient({ id: 'disconnectedCluster' }),
+      code: 'unconnectedCluster',
+    },
+  ];
+
+  const ProjectType = [
+    {
+      text: formatClient({ id: 'enableProject' }),
+      code: 'enableSum',
+    },
+    {
+      text: formatClient({ id: 'stopProject' }),
+      code: 'stopSum',
+    },
+  ];
 
   const clusterRecord = clusterDs.current;
   const projectRecord = projectDs.current;

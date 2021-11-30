@@ -4,6 +4,7 @@ import moment from 'moment';
 import ContainerBlock from '../../../ContainerBlock';
 import { useOrgPeopleStore } from './stores';
 import Charts from './Charts';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 import './index.less';
 
@@ -16,6 +17,10 @@ const OrgPeople = observer(() => {
       menuType: { orgId },
     },
   } = useOrgPeopleStore();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
 
   const initData = (day) => {
     const startTime = moment().subtract(day, 'days').format('YYYY-MM-DD HH:mm:ss');
@@ -37,7 +42,7 @@ const OrgPeople = observer(() => {
       <ContainerBlock
         width="100%"
         height={306}
-        title="组织人数统计"
+        title={formatClient({ id: 'orgStatistics' })}
         hasDaysPicker
         handleChangeDays={handleChangeDays}
         loading={loading}
