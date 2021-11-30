@@ -3,6 +3,7 @@ import ReactEchartsCore from 'echarts-for-react/lib/core';
 import echarts from 'echarts';
 import { observer } from 'mobx-react-lite';
 import { useOrgPeopleStore } from './stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const Charts = observer(() => {
   const [resizeIf, setResizeIf] = useState(false);
@@ -10,6 +11,10 @@ const Charts = observer(() => {
   const {
     OrgPeopleStore,
   } = useOrgPeopleStore();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
 
   useEffect(() => {
     function resizeCharts() {
@@ -62,8 +67,8 @@ const Charts = observer(() => {
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        data: dateList.map(d => `${d.split('-')[1]}-${d.split('-')[2]}`),
-        name: '时间',
+        data: dateList.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
+        name: formatClient({ id: 'time' }),
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -86,7 +91,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '人数',
+        name: formatClient({ id: 'numbers' }),
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {

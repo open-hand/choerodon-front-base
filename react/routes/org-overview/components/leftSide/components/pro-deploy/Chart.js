@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import echarts from 'echarts';
 import EmptyPage from '@/components/empty-page';
 import { useProDeployStore } from './stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const Charts = observer(() => {
   const [resizeIf, setResizeIf] = useState(false);
@@ -11,6 +12,10 @@ const Charts = observer(() => {
   const {
     ProDeployStore,
   } = useProDeployStore();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
 
   const chartData = ProDeployStore.getChartData;
 
@@ -75,7 +80,7 @@ const Charts = observer(() => {
       xAxis: {
         type: 'category',
         data: dateList,
-        name: '时间',
+        name: formatClient({ id: 'time' }),
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -98,7 +103,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '次数',
+        name: formatClient({ id: 'numbers' }),
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {

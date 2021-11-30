@@ -3,6 +3,7 @@ import ReactEchartsCore from 'echarts-for-react/lib/core';
 import echarts from 'echarts';
 import { observer } from 'mobx-react-lite';
 import { useFailedStatisticsStore } from './stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const Charts = observer(() => {
   const [resizeIf, setResizeIf] = useState(false);
@@ -10,6 +11,10 @@ const Charts = observer(() => {
   const {
     ThingPerformStore,
   } = useFailedStatisticsStore();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
 
   useEffect(() => {
     function resizeCharts() {
@@ -56,7 +61,7 @@ const Charts = observer(() => {
           return `
           日期: ${`${x[0].split('-')[0]}-${params[0].name}`}</br>
           事务失败率: ${percentage[params[0].dataIndex]}%</br>
-          失败次数: ${params[0].value}</br>
+          ${formatClient({ id: 'failNumber' })}: ${params[0].value}</br>
           总次数: ${totalCount[params[0].dataIndex]}
         `;
         },
@@ -64,8 +69,8 @@ const Charts = observer(() => {
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        data: x.map(d => `${d.split('-')[1]}-${d.split('-')[2]}`),
-        name: '时间',
+        data: x.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
+        name: formatClient({ id: 'time' }),
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -88,7 +93,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '失败次数',
+        name: formatClient({ id: 'failNumber' }),
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {

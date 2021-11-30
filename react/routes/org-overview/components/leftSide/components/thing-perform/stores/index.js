@@ -6,6 +6,7 @@ import { DataSet } from 'choerodon-ui/pro';
 
 import failedStatisticsTableDataSet from './failedStatisticsTableDataSet';
 import useStore from './useStore';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 const Store = createContext();
 
@@ -21,7 +22,13 @@ export const StoreProvider = injectIntl(inject('AppState')(observer((props) => {
     },
   } = props;
 
-  const FailedStatisticsTableDataSet = useMemo(() => new DataSet(failedStatisticsTableDataSet({ orgId })), []);
+  const {
+    formatClient,
+  } = useOrgOverview();
+
+  const FailedStatisticsTableDataSet = useMemo(() => new DataSet(
+    failedStatisticsTableDataSet({ orgId, formatClient }),
+  ), []);
 
   const ThingPerformStore = useStore();
 

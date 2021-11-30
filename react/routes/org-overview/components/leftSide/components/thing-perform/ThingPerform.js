@@ -4,6 +4,7 @@ import ContainerBlock from '../../../ContainerBlock';
 import Charts from './Charts';
 import FailedStatistics from './FailedStatistics';
 import { useFailedStatisticsStore } from './stores';
+import { useOrgOverview } from '@/routes/org-overview/stores';
 
 import './index.less';
 
@@ -17,6 +18,10 @@ const ThingPerform = observer(() => {
       menuType: { orgId },
     },
   } = useFailedStatisticsStore();
+
+  const {
+    formatClient,
+  } = useOrgOverview();
 
   const initData = (days) => {
     ThingPerformStore.initThingPerformChartData(orgId, days);
@@ -36,7 +41,7 @@ const ThingPerform = observer(() => {
     <div className="c7n-overview-thingPerform">
       <ContainerBlock
         width="100%"
-        title="事务执行情况"
+        title={formatClient({ id: 'transactionExecution' })}
         hasDaysPicker
         handleChangeDays={handleChangeDays}
         loading={loading}

@@ -83,7 +83,7 @@ const Charts = observer(() => {
       },
       xAxis: {
         boundaryGap: false,
-        data: dates.map(d => `${d.split('-')[1]}-${d.split('-')[2]}`),
+        data: dates.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
         name: '时间',
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
