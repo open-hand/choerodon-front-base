@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { useOrgOverview } from '@/routes/org-overview/stores';
 import './DaysPicker.less';
+import { useFormatMessage } from '@choerodon/master';
 
+// 很多地方用到这个dayspicker  useOrgOverview不能用 不然其它地方报错
 const DaysPicker = (props) => {
   const {
     handleChangeDays,
   } = props;
   const [day, setDay] = useState(7);
 
-  const {
-    formatClient,
-  } = useOrgOverview();
+  const formatClient = useFormatMessage('c7ncd.org-overview');
 
   const clickDay = (i) => {
     setDay(i);
