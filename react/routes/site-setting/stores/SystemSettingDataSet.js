@@ -2,14 +2,15 @@ const mapping = {
   openAppMarket: {
     name: 'enableOpenPlatformMarket',
     type: 'boolean',
-    label: '是否启用开放平台应用市场',
     defaultValue: true,
   },
 };
 
 export { mapping };
 
-export default ({ id = 0, hasRegister }) => {
+export default ({
+  id = 0, hasRegister, intlPrefix, formatCommon, format,
+}) => {
   const fields = hasRegister ? [
     { name: 'registerEnabled', type: 'boolean', label: '是否启用注册' },
     {
@@ -88,13 +89,13 @@ export default ({ id = 0, hasRegister }) => {
         ...mapping.openAppMarket,
       },
       {
-        name: 'systemName', type: 'string', label: '平台简称', defaultValue: 'Choerodon', required: true,
+        name: 'systemName', type: 'string', label: format({ id: 'shortForplatform' }), defaultValue: 'Choerodon', required: true,
       },
       { name: 'favicon', type: 'string', label: '平台logo' },
-      { name: 'systemTitle', type: 'string', label: '平台全称' },
-      { name: 'defaultLanguage', type: 'string', label: '平台默认语言' },
-      { name: 'resetGitlabPasswordUrl', type: 'url', label: '重置gitlab密码页面链接' },
-      { name: 'registerEnabled', type: 'boolean', label: '是否启用注册' },
+      { name: 'systemTitle', type: 'string', label: format({ id: 'FullForplatform' }) },
+      { name: 'defaultLanguage', type: 'string', label: format({ id: 'platformDefaultlanguage' }) },
+      { name: 'resetGitlabPasswordUrl', type: 'url', label: format({ id: 'resetGitlabLink' }) },
+      { name: 'registerEnabled', type: 'boolean', label: format({ id: 'isStartRegister' }) },
       {
         name: 'registerUrl',
         type: 'url',
@@ -105,7 +106,7 @@ export default ({ id = 0, hasRegister }) => {
       },
       { name: 'systemLogo', type: 'string', label: '平台导航栏图形标' },
       { name: 'defaultPassword', type: 'string', label: '平台默认密码' },
-      { name: 'themeColor', type: 'string', label: '系统主题色' },
+      { name: 'themeColor', type: 'string', label: format({ id: 'systemThemeColor' }) },
       { name: 'autoCleanEmailRecord', type: 'boolean' },
       { name: 'autoCleanWebhookRecord', type: 'boolean' },
       { name: 'autoCleanSagaInstance', type: 'boolean' },

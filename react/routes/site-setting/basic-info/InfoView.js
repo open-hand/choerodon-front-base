@@ -8,12 +8,12 @@ import {
 } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import { mapping as systemMapping } from '../stores/SystemSettingDataSet';
 import GitlabSync from './components/gitlab-sync';
 import SketchPicker from './components/sketchPicker';
 import { mapping } from '../stores/FuncModeDataSet';
 import './index.less';
-
 import InfoForm from './InfoForm';
 
 import Store from '../stores';
@@ -22,7 +22,9 @@ const modalKey = Modal.key();
 
 const basicInfo = withRouter(observer(() => {
   const {
-    systemSettingDataSet: dataSet, AppState, intl, intlPrefix, presetColors, colorMap, hasRegister,
+    systemSettingDataSet: dataSet,
+    AppState, intl, intlPrefix, presetColors, colorMap, hasRegister, format,
+    formatCommon,
   } = useContext(Store);
 
   const favicon = dataSet.current && dataSet.current.getPristineValue('favicon');
@@ -112,19 +114,19 @@ const basicInfo = withRouter(observer(() => {
       <Header>
         <HeaderButtons
           items={([{
-            name: '修改信息',
+            name: format({ id: 'editInfo' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.general-setting.ps.update'],
             handler: openModal,
           }, {
-            name: '修改主题色',
+            name: format({ id: 'editThemeColor' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.general-setting.ps.update.theme'],
             handler: openThemeColorModal,
           }, {
-            name: '重置',
+            name: formatCommon({ id: 'reset' }),
             icon: 'swap_horiz',
             display: true,
             permissions: ['choerodon.code.site.setting.general-setting.ps.reset'],
@@ -148,14 +150,14 @@ const basicInfo = withRouter(observer(() => {
           >
             <Output name="systemName" colSpan={1} />
 
-            <div colSpan={1} rowSpan={3} className="c7n-system-setting-formImg" label="平台LOGO">
+            <div colSpan={1} rowSpan={3} className="c7n-system-setting-formImg" label={format({ id: 'platformLogo' })}>
               {favicon ? <img src={favicon} alt="图片" />
                 : <div className="c7n-system-setting-formImg-wrapper default-favicon" />}
             </div>
             <Output name="systemTitle" newLine />
             <Output renderer={() => '简体中文'} name="defaultLanguage" newLine />
             <Output renderer={() => (dataSet.current && dataSet.current.getPristineValue('resetGitlabPasswordUrl')) || '无'} name="resetGitlabPasswordUrl" />
-            <div colSpan={1} rowSpan={3} className="c7n-system-setting-formImg" label="平台导航栏图形标">
+            <div colSpan={1} rowSpan={3} className="c7n-system-setting-formImg" label={format({ id: 'platformNavigationBar' })}>
               {systemLogo ? <img src={systemLogo} alt="图片" />
                 : <div className="c7n-system-setting-formImg-wrapper default-logo" />}
             </div>
@@ -165,15 +167,15 @@ const basicInfo = withRouter(observer(() => {
             {hasRegister && dataSet.current && dataSet.current.getPristineValue('registerEnabled') && (
               <Output renderer={() => (dataSet.current && dataSet.current.getPristineValue('registerUrl')) || '无'} name="registerUrl" />
             )}
-            <Output renderer={renderBoolean} name={systemMapping.openAppMarket.name} />
-            <Output renderer={renderBoolean} name="autoCleanEmailRecord" newLine label="是否自动清理邮件日志" />
-            <Output renderer={renderBoolean} name="autoCleanWebhookRecord" newLine label="是否自动清理webhook日志" />
-            <Output renderer={renderBoolean} name="autoCleanSagaInstance" newLine label="是否自动清理事务记录" />
+            <Output renderer={renderBoolean} name={systemMapping.openAppMarket.name} label={format({ id: 'isStartOpenAppMarket' })} />
+            <Output renderer={renderBoolean} name="autoCleanEmailRecord" newLine label={format({ id: 'isAutoCleanEmailLog' })} />
+            <Output renderer={renderBoolean} name="autoCleanWebhookRecord" newLine label={format({ id: 'isAutoCleanWebhookLog' })} />
+            <Output renderer={renderBoolean} name="autoCleanSagaInstance" newLine label={format({ id: 'isAutoCleanRecords' })} />
           </Form>
         </div>
 
         <div className="c7n-system-setting-form">
-          <h3>主题色</h3>
+          <h3>{format({ id: 'themeColor' })}</h3>
           <div className="divider" />
           <Form
             pristine
@@ -193,12 +195,14 @@ const basicInfo = withRouter(observer(() => {
 const funcMode = withRouter(observer(() => {
   const {
     FuncModeDataSet,
+    format,
+    formatCommon,
   } = useContext(Store);
 
   const handleClickSync = () => {
     Modal.open({
       key: Modal.key(),
-      title: 'GitLab用户同步',
+      title: format({ id: 'gitlabUserSync' }),
       drawer: true,
       children: <GitlabSync />,
       style: {
@@ -214,7 +218,7 @@ const funcMode = withRouter(observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: 'GitLab用户同步',
+            name: format({ id: 'gitlabUserSync' }),
             icon: 'refresh',
             display: true,
             handler: handleClickSync,
@@ -224,31 +228,34 @@ const funcMode = withRouter(observer(() => {
       <Breadcrumb />
       <Content>
         <Form labelWidth={210} className="c7ncd-func-form" labelLayout="horizontal" dataSet={FuncModeDataSet} columns={1}>
-          <Output name={mapping.isInstallMission.name} colSpan={1} />
-          <Output name={mapping.isInstallDevops.name} colSpan={1} />
-          <Output name={mapping.isInstallTest.name} colSpan={1} />
+          <Output name={mapping.isInstallMission.name} colSpan={1} label={format({ id: 'isInstallTaskManagement' })} />
+          <Output name={mapping.isInstallDevops.name} colSpan={1} label={format({ id: 'isInstallDevopsManagement' })} />
+          <Output name={mapping.isInstallTest.name} colSpan={1} label={format({ id: 'isInstallTestManagement' })} />
         </Form>
       </Content>
     </TabPage>
   );
 }));
 
-const InfoView = observer(() => (
-  <Page>
-    <PageWrap noHeader={[]} cache>
-      <PageTab
-        title="基础信息"
-        tabKey="baseInfo"
-        component={basicInfo}
-        alwaysShow
-      />
-      <PageTab
-        title="功能模块"
-        tabKey="function"
-        component={funcMode}
-        alwaysShow
-      />
-    </PageWrap>
-  </Page>
-));
+const InfoView = observer(() => {
+  const format = useFormatMessage('c7n.system-setting');
+  return (
+    <Page>
+      <PageWrap noHeader={[]} cache>
+        <PageTab
+          title={format({ id: 'basicInfo' })}
+          tabKey="baseInfo"
+          component={basicInfo}
+          alwaysShow
+        />
+        <PageTab
+          title={format({ id: 'functionModule' })}
+          tabKey="function"
+          component={funcMode}
+          alwaysShow
+        />
+      </PageWrap>
+    </Page>
+  );
+});
 export default withRouter(InfoView);
