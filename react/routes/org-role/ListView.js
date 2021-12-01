@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import {
   Action, Content, Header, axios, Breadcrumb, Page, Permission, Choerodon, HeaderButtons,
 } from '@choerodon/boot';
-import { Button, Tag } from 'choerodon-ui';
+import { Tag } from 'choerodon-ui';
 import { Table, Modal } from 'choerodon-ui/pro';
 import Store from './stores';
 import FormView from './create-role';
@@ -28,11 +28,13 @@ const ListView = () => {
     prefixCls,
     permissions,
     intlPrefix,
+    formatCommon,
+    formatClient,
   } = context;
 
-  function refresh() {
+  const refresh = () => {
     dataSet.query();
-  }
+  };
 
   function openModal(type, level) {
     const record = dataSet.current;
@@ -96,7 +98,7 @@ const ListView = () => {
     dataSet.delete(record, modalProps);
   }
 
-  function renderName({ value, record: tableRecord }) {
+  const renderName = ({ value, record: tableRecord }) => {
     const defaultChildren = <span>{value}</span>;
     if (tableRecord.get('builtIn')) {
       return (
@@ -126,39 +128,33 @@ const ListView = () => {
         </span>
       </Permission>
     );
-  }
+  };
 
-  function renderAction({ record }) {
+  const renderAction = ({ record }) => {
     const enabled = record.get('enabled');
     const builtIn = record.get('builtIn');
     const actionDatas = [
       {
         service: [enabled ? 'choerodon.code.organization.manager.role.ps.disable' : 'choerodon.code.organization.manager.role.ps.enable'],
-        text: enabled ? '停用' : '启用',
+        text: enabled ? formatCommon({ id: 'stop' }) : formatCommon({ id: 'enable' }),
         action: openEnabledModal,
       },
     ];
     if (!enabled) {
       actionDatas.push({
         service: ['choerodon.code.organization.manager.role.ps.delete'],
-        text: '删除',
+        text: formatCommon({ id: 'delete' }),
         action: handleDelete,
       });
     }
     return !builtIn && <Action data={actionDatas} />;
-  }
+  };
 
-  function renderBuildIn({ value }) {
-    return value ? '预定义' : '自定义';
-  }
+  const renderBuildIn = ({ value }) => (value ? formatClient({ id: 'predefined' }) : formatClient({ id: 'custom' }));
 
-  function renderEnabled({ value }) {
-    return <Tag color={value ? '#00bfa5' : '#d3d3d3'}>{value ? '启用' : '停用'}</Tag>;
-  }
+  const renderEnabled = ({ value }) => <Tag color={value ? '#00bfa5' : '#d3d3d3'}>{value ? formatCommon({ id: 'enable' }) : formatCommon({ id: 'stop' })}</Tag>;
 
-  function renderLevel({ value }) {
-    return value === 'project' ? '项目层' : '组织层';
-  }
+  const renderLevel = ({ value }) => (value === 'project' ? formatClient({ id: 'projectLevel' }) : formatClient({ id: 'organizationLevel' }));
 
   return (
     <Page service={permissions}>
@@ -166,13 +162,13 @@ const ListView = () => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '创建组织角色',
+            name: formatClient({ id: 'creatingOrganizationRole' }),
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.organization.manager.role.ps.create.organization'],
             handler: () => openModal('add', 'organization'),
           }, {
-            name: '创建项目角色',
+            name: formatClient({ id: 'creatingProjectRole' }),
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.organization.manager.role.ps.create.project'],
