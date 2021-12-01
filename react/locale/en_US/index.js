@@ -257,3 +257,4 @@ export * from './userInfo';
 export * from './userPermissionInfo';
 export * from './orgOverview';
 export * from './org-admin';
+export * from './org-role';

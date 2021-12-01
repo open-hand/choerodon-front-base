@@ -41,7 +41,8 @@ const levelDs = new DataSet({
   ],
 });
 
-export default ({ level, organizationId }) => {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ({ level, organizationId, formatClient }) => {
   const codeValidator = async (value, name, record) => {
     const validValue = `role/${level}/custom/${value}`;
     if (record.status !== 'add') {
@@ -121,29 +122,29 @@ export default ({ level, organizationId }) => {
     },
     fields: [
       {
-        name: 'name', type: 'string', label: '名称', required: true, validator: nameValidator,
+        name: 'name', type: 'string', label: formatClient({ id: 'name' }), required: true, validator: nameValidator,
       },
       {
-        name: 'code', type: 'string', label: '编码', required: true, validator: codeValidator,
+        name: 'code', type: 'string', label: formatClient({ id: 'code' }), required: true, validator: codeValidator,
       },
-      { name: 'roleLevel', type: 'string', label: '层级' },
-      { name: 'builtIn', type: 'boolean', label: '来源' },
-      { name: 'enabled', type: 'boolean', label: '状态' },
+      { name: 'roleLevel', type: 'string', label: formatClient({ id: 'level' }) },
+      { name: 'builtIn', type: 'boolean', label: formatClient({ id: 'source' }) },
+      { name: 'enabled', type: 'boolean', label: formatClient({ id: 'status' }) },
       {
         name: 'labels', type: 'auto', textField: 'name', valueField: 'id',
       },
     ],
     queryFields: [
-      { name: 'name', type: 'string', label: '名称' },
-      { name: 'code', type: 'string', label: '编码' },
+      { name: 'name', type: 'string', label: formatClient({ id: 'name' }) },
+      { name: 'code', type: 'string', label: formatClient({ id: 'code' }) },
       {
-        name: 'roleLevel', type: 'string', label: '层级', textField: 'value', valueField: 'key', options: levelDs,
+        name: 'roleLevel', type: 'string', label: formatClient({ id: 'level' }), textField: 'value', valueField: 'key', options: levelDs,
       },
       {
-        name: 'builtIn', type: 'auto', label: '来源', textField: 'value', valueField: 'key', options: buildInDs,
+        name: 'builtIn', type: 'auto', label: formatClient({ id: 'source' }), textField: 'value', valueField: 'key', options: buildInDs,
       },
       {
-        name: 'enabled', type: 'auto', label: '状态', textField: 'value', valueField: 'key', options: enabledDs,
+        name: 'enabled', type: 'auto', label: formatClient({ id: 'status' }), textField: 'value', valueField: 'key', options: enabledDs,
       },
     ],
   };
