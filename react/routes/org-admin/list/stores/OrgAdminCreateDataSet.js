@@ -1,16 +1,17 @@
-
-export default ({ id = 0, organizationId, intl, intlPrefix }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
-  const status = intl.formatMessage({ id: `${intlPrefix}.status` });
-  const safeStatus = intl.formatMessage({ id: `${intlPrefix}.safe-status` });
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ({
+  id = 0, organizationId, formatCommon,
+}) => {
+  const username = formatCommon({ id: 'username' });
 
   return {
     autoQuery: false,
     autoCreate: false,
     selection: false,
     fields: [
-      { name: 'userName', label: username, textField: 'realName', valueField: 'id', required: true },
+      {
+        name: 'userName', label: username, textField: 'realName', valueField: 'id', required: true,
+      },
     ],
     transport: {
       create: ({ data, dataSet }) => ({

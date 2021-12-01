@@ -1,4 +1,4 @@
-import React, { useContext, useState, use } from 'react';
+import React, { useContext } from 'react';
 import { useDebounceFn } from 'ahooks';
 import { observer } from 'mobx-react-lite';
 import { Select, Tooltip } from 'choerodon-ui/pro';
@@ -6,10 +6,10 @@ import Store from './stores';
 import './index.less';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 
-export default observer((props) => {
+export default observer(() => {
   const {
-    prefixCls, intlPrefix, intl, orgAdminCreateDataSet, OrgUserDataSetConfig,
-    orgAdminListDataSet, modal, dsStore,
+    prefixCls, orgAdminCreateDataSet, OrgUserDataSetConfig,
+    orgAdminListDataSet, modal, dsStore, formatClient,
   } = useContext(Store);
   modal.handleOk(async () => {
     try {
@@ -24,7 +24,7 @@ export default observer((props) => {
     }
   });
 
-  function getUserOption({ record }) {
+  const getUserOption = ({ record }) => {
     const isLdap = record.get('ldap');
     const email = record.get('email');
     const imgUrl = record.get('imageUrl');
@@ -52,7 +52,7 @@ export default observer((props) => {
         </div>
       </Tooltip>
     );
-  }
+  };
 
   const {
     run,
@@ -85,7 +85,7 @@ export default observer((props) => {
         record={orgAdminCreateDataSet.current}
         optionDataSetConfig={OrgUserDataSetConfig}
         name="userName"
-        addButton={intl.formatMessage({ id: 'organization.admin.sider.button.add' })}
+        addButton={formatClient({ id: 'addOther' })}
         alwaysRequired
         canDeleteAll={false}
         dsStore={dsStore}

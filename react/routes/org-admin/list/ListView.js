@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
-import { FormattedMessage } from 'react-intl';
 import {
-  Action, Content, Header, axios, Permission, Breadcrumb, Page, HeaderButtons,
+  Action, Content, Header, axios, Breadcrumb, Page, HeaderButtons,
 } from '@choerodon/boot';
-import { Button, Modal as OldModal } from 'choerodon-ui';
 import { Table, message, Modal } from 'choerodon-ui/pro';
 import Store from './stores';
 import Sider from './sider';
@@ -14,7 +12,7 @@ const modalKey = Modal.key();
 const { Column } = Table;
 export default function ListView() {
   const {
-    intlPrefix, permissions, intl, orgAdminListDataSet: dataSet,
+    formatClient, formatCommon, permissions, orgAdminListDataSet: dataSet,
     orgAdminCreateDataSet, organizationId,
   } = useContext(Store);
 
@@ -41,7 +39,7 @@ export default function ListView() {
   const renderAction = (record) => {
     const actionDatas = [{
       service: ['choerodon.code.organization.manager.organization-admin.ps.delete'],
-      text: <FormattedMessage id={`${intlPrefix}.action.delete`} />,
+      text: formatCommon({ id: 'delete' }),
       action: () => handleDelete(record),
     }];
     return <Action data={actionDatas} />;
@@ -50,7 +48,7 @@ export default function ListView() {
   function handleCreate() {
     orgAdminCreateDataSet.create({ userName: [''] });
     Modal.open({
-      title: intl.formatMessage({ id: 'organization.admin.sider.title' }),
+      title: formatClient({ id: 'addOrganizationAdministrator' }),
       key: modalKey,
       drawer: true,
       style: {
@@ -60,6 +58,7 @@ export default function ListView() {
         <Sider
           orgAdminCreateDataSet={orgAdminCreateDataSet}
           orgAdminListDataSet={dataSet}
+          formatClient={formatClient}
         />
       ),
       okText: '保存',
@@ -74,7 +73,7 @@ export default function ListView() {
           <span>{value}</span>
           <div className="base-org-admin-external-user">
             <span className="base-org-admin-external-user-text">
-              外部人员
+              {formatClient({ id: 'outer' })}
             </span>
           </div>
         </span>
@@ -86,13 +85,11 @@ export default function ListView() {
     <Page
       service={permissions}
     >
-      <Header
-        title={<FormattedMessage id={`${intlPrefix}.header.title`} />}
-      >
+      <Header>
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: <FormattedMessage id={`${intlPrefix}.button.add`} />,
+            name: formatClient({ id: 'addOrganizationAdministrator' }),
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.organization.manager.organization-admin.ps.add'],
