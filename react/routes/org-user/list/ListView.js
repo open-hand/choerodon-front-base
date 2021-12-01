@@ -13,7 +13,7 @@ import {
   Page,
   HeaderButtons,
 } from '@choerodon/boot';
-import { Modal as OldModal, Tooltip, Button } from 'choerodon-ui';
+import {Tooltip } from 'choerodon-ui';
 import {
   Select,
   SelectBox,
@@ -113,6 +113,8 @@ export default withRouter(
       orgAllRoleDataSet,
       passwordPolicyDataSet,
       userStore,
+      formatProjectUser,
+      formatCommon,
     } = useContext(Store);
     const { getCanCreate } = userStore;
     const modalProps = {
@@ -369,11 +371,11 @@ export default withRouter(
     }
 
     function renderLocked({ value }) {
-      return value ? '锁定' : '未锁定';
+      return value ? formatProjectUser({id:'lock'}) : formatProjectUser({id:'unlock'});
     }
     function rednerEnabled({ value }) {
       return (
-        <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'COMPLETED' : 'DEFAULT'} />
+        <StatusTag name={value ? formatProjectUser({id:'action.enable'}) : formatProjectUser({id:'action.disable'})} colorCode={value ? 'COMPLETED' : 'DEFAULT'} />
       );
     }
 
@@ -384,7 +386,7 @@ export default withRouter(
         children: <SagaDetails sagaInstanceId={id} instance />,
         drawer: true,
         okCancel: false,
-        okText: formatMessage({ id: 'close' }),
+        okText: formatCommon({id:'close'}),
         style: {
           width: 'calc(100% - 3.5rem)',
         },
@@ -452,7 +454,7 @@ export default withRouter(
         : [
           {
             service: ['choerodon.code.organization.manager.user.ps.reset.password'],
-            text: <FormattedMessage id={`${intlPrefix}.action.reset`} />,
+            text: formatProjectUser({id: 'action.reset'}),
             action: () => handleResetPassword(record),
           },
         ];
@@ -464,7 +466,7 @@ export default withRouter(
         actionDatas = [
           {
             service: ['choerodon.code.organization.manager.user.ps.delete'],
-            text: '删除',
+            text: formatCommon({id: 'delete'}),
             action: () => handleDeleteUser(record),
           },
         ];
@@ -473,20 +475,20 @@ export default withRouter(
       if (record.get('enabled')) {
         actionDatas.push({
           service: ['choerodon.code.organization.manager.user.ps.disable'],
-          text: <FormattedMessage id={`${intlPrefix}.action.disable`} />,
+          text: formatProjectUser({id: 'action.disable'}),
           action: () => handleDisable(record),
         });
       } else {
         actionDatas.push({
           service: ['choerodon.code.organization.manager.user.ps.enable'],
-          text: <FormattedMessage id={`${intlPrefix}.action.enable`} />,
+          text: formatProjectUser({id: 'action.enable'}),
           action: () => handleEnable(record),
         });
       }
       if (record.get('locked')) {
         actionDatas.push({
           service: ['choerodon.code.organization.manager.user.ps.unlock'],
-          text: <FormattedMessage id={`${intlPrefix}.action.unlock`} />,
+          text: formatProjectUser({id: 'action.unlock'}),
           action: () => handleUnLock(record),
         });
       }
@@ -505,9 +507,9 @@ export default withRouter(
             showClassName={false}
             items={[
               {
-                name: '创建用户',
+                name: formatProjectUser({id: 'create'}),
                 groupBtnItems: [{
-                  name:'创建新用户',
+                  name: formatProjectUser({id: 'createNew'}),
                    icon: 'playlist_add',
                   display: true,
                   permissions: ['choerodon.code.organization.manager.user.ps.create'],
@@ -515,7 +517,7 @@ export default withRouter(
                   disabled: !getCanCreate,
                 },
                 {
-                name:'导入新用户',
+                name:formatProjectUser({id: 'importingNewUser'}),
                 icon: 'archive-o',
                 display: true,
                 permissions: ['choerodon.code.organization.manager.user.ps.import'],
@@ -524,15 +526,15 @@ export default withRouter(
               }],
             },
             {
-              name: '添加用户',
-              groupBtnItems: [  {name: <Tooltip placement="left" title={<FormattedMessage id={`${intlPrefix}.add.user.tip`} />}>添加组织用户</Tooltip>,
+              name: formatProjectUser({id: 'button.addUser'}),
+              groupBtnItems: [  {name: <Tooltip placement="left" title={<FormattedMessage id={`${intlPrefix}.add.user.tip`} />}>{formatProjectUser({id: 'button.assign-roles'})}</Tooltip>,
               icon: 'person_add-o',
               display: true,
               permissions: ['choerodon.code.organization.manager.user.ps.add.user'],
               handler: handleRoleAssignment,
             },
             {
-              name: <Tooltip placement="left" title={<FormattedMessage id={`${intlPrefix}.import.user.tip`} />} >导入组织用户</Tooltip>,
+              name: <Tooltip placement="left" title={<FormattedMessage id={`${intlPrefix}.import.user.tip`} />} >{formatProjectUser({id: 'button.importingOrganizationUsers'})}</Tooltip>,
               icon: 'archive-o',
               display: true,
               permissions: ['choerodon.code.organization.manager.user.ps.import.user'],
@@ -540,7 +542,7 @@ export default withRouter(
             }],
           },
               {
-                name: 'LDAP同步设置',
+                name: formatProjectUser({id: 'button.LDAPSynchronizationSettings'}),
                 icon: 'compare_arrows',
                 display: true,
                 permissions: ['choerodon.code.organization.manager.user.ps.ldap'],
