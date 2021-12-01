@@ -265,3 +265,4 @@ export * from './overview';
 export * from './days-piker';
 export * from './root-user';
 export * from './system-setting';
+export * from './safe';

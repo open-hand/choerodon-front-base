@@ -1880,3 +1880,4 @@ export * from './client';
 export * from './overview';
 export * from './days-piker';
 export * from './system-setting';
+export * from './safe';
