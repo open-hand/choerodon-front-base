@@ -1,9 +1,11 @@
-
-export default ({ id = 0, intl, intlPrefix }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
-  const status = intl.formatMessage({ id: `${intlPrefix}.status` });
-  const safeStatus = intl.formatMessage({ id: `${intlPrefix}.safe-status` });
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ({
+  id = 0, formatClient, formatCommon,
+}) => {
+  const username = formatCommon({ id: 'username' });
+  const loginName = formatCommon({ id: 'account' });
+  const status = '';
+  const safeStatus = '';
   return {
     autoQuery: true,
     selection: false,
@@ -18,7 +20,7 @@ export default ({ id = 0, intl, intlPrefix }) => {
       { name: 'loginName', type: 'string', label: loginName },
       { name: 'enabled', type: 'boolean', label: status },
       { name: 'locked', type: 'boolean', label: safeStatus },
-      { name: 'creationDate', type: 'date', label: '添加日期' },
+      { name: 'creationDate', type: 'date', label: formatClient({ id: 'creationTime' }) },
     ],
     queryFields: [
       { name: 'realName', type: 'string', label: username },
