@@ -18,23 +18,29 @@ export default ({
     try {
       const result = await axios.post(`/iam/choerodon/v1/organizations/${organizationId}/users/check`, JSON.stringify({ organizationId, [name]: value }));
       if (result.failed) {
+        // eslint-disable-next-line consistent-return
         return formatProjectUser({ id: result.message });
       }
     } catch (e) {
       // Choerodon.prompt(e);
       if (e && e.message) {
+        // eslint-disable-next-line consistent-return
         return e.message;
       }
+      // eslint-disable-next-line consistent-return
       return false;
     }
   }
   function checkPhone(value, name, record) {
     if (value === record.getPristineValue(name) || !value) return;
     if (!regPhone.test(value)) {
+      // eslint-disable-next-line consistent-return
       return '手机号格式错误';
     }
+    // eslint-disable-next-line consistent-return
     return check(value, name, record);
   }
+  // eslint-disable-next-line consistent-return
   function checkRealname(value, name, record) {
     if (emptyReg.test(value)) {
       return '用户名不能全为空格';
@@ -98,10 +104,10 @@ export default ({
         name: 'roleName', type: 'string', label: formatCommon({ id: 'role' }), textField: 'name', valueField: 'name', options: orgRoleDataSet,
       },
       {
-        name: 'enabled', type: 'string', label: '启用状态', textField: 'text', valueField: 'value', options: statusOptionDs,
+        name: 'enabled', type: 'string', label: formatProjectUser({ id: 'enabled' }), textField: 'text', valueField: 'value', options: statusOptionDs,
       },
       {
-        name: 'locked', type: 'string', label: '安全状态', textField: 'text', valueField: 'value', options: safeOptionDs,
+        name: 'locked', type: 'string', label: formatProjectUser({ id: 'locked' }), textField: 'text', valueField: 'value', options: safeOptionDs,
       },
     ],
   };
