@@ -16,7 +16,7 @@ const modalKey = Modal.key();
 
 const InfoView = observer(() => {
   const {
-    organizationDataSet: dataSet, AppState, intl, orgName,
+    organizationDataSet: dataSet, AppState, intl, orgName, formatClient,
   } = useContext(Store);
   const imageUrl = dataSet.current && dataSet.current.getPristineValue('imageUrl');
   function handleRefresh() {
@@ -62,7 +62,7 @@ const InfoView = observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '修改',
+            name: formatClient({ id: 'base.Edit' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],

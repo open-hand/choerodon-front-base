@@ -1869,3 +1869,5 @@ export * from './orgOverview';
 export * from './org-admin';
 
 export * from './org-role';
+
+export * from './organization-setting';

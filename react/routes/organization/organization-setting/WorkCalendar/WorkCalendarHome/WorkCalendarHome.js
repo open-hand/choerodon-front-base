@@ -9,6 +9,7 @@ import WorkCalendar from './Component/WorkCalendar';
 import Store from './stores';
 import WorkCalendarSider from './WorkCalendarSider';
 import './index.less';
+import MainStore from '@/routes/organization/organization-setting/stores';
 
 function noop() {
 
@@ -16,6 +17,9 @@ function noop() {
 const modalKey = Modal.key();
 export default observer(() => {
   const context = useContext(Store);
+  const {
+    formatClient,
+  } = useContext(MainStore);
   const { calendarDataSet, holidayDataSet, workDaySettingDataSet } = context;
   const saturdayWork = workDaySettingDataSet.current && workDaySettingDataSet.current.getPristineValue('saturdayWork');
   const sundayWork = workDaySettingDataSet.current && workDaySettingDataSet.current.getPristineValue('sundayWork');
@@ -40,7 +44,7 @@ export default observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '修改',
+            name: formatClient({ id: 'workingCalendar.edit' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.update.working-calendar'],

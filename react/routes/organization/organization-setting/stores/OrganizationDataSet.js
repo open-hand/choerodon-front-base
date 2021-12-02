@@ -8,7 +8,7 @@ function validateName(value, name, record) {
   return true;
 }
 
-export default ({ id = 0 }) => ({
+export default ({ id = 0, formatClient }) => ({
   // autoCreate: true,
   autoQuery: true,
   transport: {
@@ -43,17 +43,17 @@ export default ({ id = 0 }) => ({
     },
   },
   fields: [
-    { name: 'imageUrl', type: 'string', label: '组织Logo' },
+    { name: 'imageUrl', type: 'string', label: formatClient({ id: 'base.logo' }) },
     {
-      name: 'tenantName', type: 'string', label: '组织名称', defaultValue: '汉得', required: true, validator: validateName,
+      name: 'tenantName', type: 'string', label: formatClient({ id: 'base.organizationName' }), defaultValue: '汉得', required: true, validator: validateName,
     },
     {
-      name: 'tenantNum', type: 'string', label: '组织编码', required: true,
+      name: 'tenantNum', type: 'string', label: formatClient({ id: 'base.organizationCode' }), required: true,
     },
-    { name: 'address', type: 'string', label: '组织所在地' },
+    { name: 'address', type: 'string', label: formatClient({ id: 'base.locationOfOrganization' }) },
     {
-      name: 'homePage', type: 'url', label: '官网地址', defaultValue: '无',
+      name: 'homePage', type: 'url', label: formatClient({ id: 'base.website' }), defaultValue: '无',
     },
-    { name: 'ownerRealName', type: 'string', label: '所有者' },
+    { name: 'ownerRealName', type: 'string', label: formatClient({ id: 'base.organizationOwner' }) },
   ],
 });

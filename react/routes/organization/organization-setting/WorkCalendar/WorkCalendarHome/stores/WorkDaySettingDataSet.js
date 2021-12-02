@@ -1,4 +1,4 @@
-export default ({ orgId, calendarDataSet }) => ({
+export default ({ orgId, calendarDataSet, formatClient }) => ({
   autoCreate: true,
   autoQuery: true,
   paging: false,
@@ -14,9 +14,13 @@ export default ({ orgId, calendarDataSet }) => ({
     }),
   },
   fields: [
-    { name: 'areaCode', type: 'string', label: '地区', required: true },
-    { name: 'timeZoneCode', type: 'string', label: '时区', required: true },
-    { name: 'objectVersionNumber', type: 'string', label: '日历' },
+    {
+      name: 'areaCode', type: 'string', label: '地区', required: true,
+    },
+    {
+      name: 'timeZoneCode', type: 'string', label: formatClient({ id: 'workingCalendar.timezone' }), required: true,
+    },
+    { name: 'objectVersionNumber', type: 'string', label: formatClient({ id: 'workingCalendar.calendar' }) },
     { name: 'saturdayWork', type: 'boolean', label: '选定周六为工作日' },
     { name: 'sundayWork', type: 'boolean', label: '选定周日为工作日' },
     { name: 'useHoliday', type: 'boolean', label: '自动更新每年的法定节假日' },
