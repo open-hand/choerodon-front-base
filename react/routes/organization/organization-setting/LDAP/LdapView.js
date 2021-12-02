@@ -28,6 +28,7 @@ const LdapView = observer(() => {
     match,
     history,
     intl,
+    formatClient
   } = useContext(Store);
   const { current: currentRecord } = ldapDataSet;
   const ldapId = currentRecord && currentRecord.get('id');
@@ -127,37 +128,37 @@ const LdapView = observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '修改',
+            name: formatClient({id:'ldap.edit'}),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.update.ldap'],
             handler: modifyInfo,
           }, {
-            name: '停用',
+            name: formatClient({id:'ldap.disable'}),
             icon: 'remove_circle_outline',
             display: currentRecord && currentRecord.getPristineValue('enabled'),
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.disable'],
             handler: handleDisable,
           }, {
-            name: '启用',
+            name: formatClient({id:'ldap.enable'}),
             icon: 'finished',
             display: currentRecord && !currentRecord.getPristineValue('enabled'),
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.enable'],
             handler: handleEnableLdap,
           }, {
-            name: '测试连接',
+            name: formatClient({id:'ldap.testConnection'}),
             icon: 'low_priority',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.test'],
             handler: testLinks,
           }, {
-            name: '同步用户',
+            name: formatClient({id:'ldap.simultaneousUsers'}),
             icon: 'sync_user',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.sync'],
             handler: loaderClient,
           }, {
-            name: '同步记录',
+            name: formatClient({id:'ldap.synchronousRecord'}),
             icon: 'sync_records',
             display: true,
             permissions: ['choerodon.code.organization.setting.general-setting.ps.ldap.records'],
@@ -168,7 +169,7 @@ const LdapView = observer(() => {
       <Breadcrumb />
       <Content className="c7n-organization-page-content">
         <div className="c7n-pro-organization-LdapForm-container">
-          <h3>服务器设置</h3>
+          <h3>{formatClient({id:'ldap.serverSettings'})}</h3>
           <Form pristine header="" dataSet={ldapDataSet} className="c7n-pro-organization-LdapForm" labelLayout="horizontal" labelWidth={235} labelAlign="left">
             <Output
               name="directoryType"
@@ -197,7 +198,7 @@ const LdapView = observer(() => {
           </Form>
         </div>
         <div className="c7n-pro-organization-LdapForm-container">
-          <h3>用户属性设置</h3>
+          <h3>{formatClient({id:'ldap.userSettings'})}</h3>
           <Form pristine dataSet={ldapDataSet} className="c7n-pro-organization-LdapForm" labelLayout="horizontal" labelWidth={235} labelAlign="left">
             <Output name="objectClass" showHelp="none" />
             <Output name="loginNameField" />
