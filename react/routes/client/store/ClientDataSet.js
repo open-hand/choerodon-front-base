@@ -37,12 +37,12 @@ export default function (orgId, isProject, projectId, formatClient) {
       }),
     },
     fields: [
-      { name: 'id', label: formatClient({ id: 'clientId' }) },
+      { name: 'id', label: formatClient({ id: 'clientID' }) },
       {
-        name: 'name', type: 'string', label: formatClient({ id: 'clientId' }), required: true,
+        name: 'name', type: 'string', label: formatClient({ id: 'clientID' }), required: true,
       },
       {
-        name: 'authorizedGrantTypes', type: 'string', label: '授权类型', required: true, multiple: ',',
+        name: 'authorizedGrantTypes', type: 'string', label: formatClient({ id: 'license' }), required: true, multiple: ',',
       },
       {
         name: 'secret',
@@ -72,7 +72,7 @@ export default function (orgId, isProject, projectId, formatClient) {
       { name: 'apiEncryptFlag', type: 'number', defaultValue: 0 },
     ],
     queryFields: [
-      { name: 'name', type: 'string', label: formatClient({ id: 'clientId' }) },
+      { name: 'name', type: 'string', label: formatClient({ id: 'clientID' }) },
     ],
     events: {
       update: ({ record, name, value }) => {

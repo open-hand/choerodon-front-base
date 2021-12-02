@@ -31,7 +31,7 @@ const Client = withRouter(observer(() => {
     clientDataSet.current = record;
     Modal.open({
       key: editKey,
-      title: formatClient({ id: 'modifyClient' }),
+      title: formatClient({ id: 'edit' }),
       children: <EditRecord
         dataSet={clientDataSet}
         record={clientDataSet.current}
@@ -63,13 +63,13 @@ const Client = withRouter(observer(() => {
 
     Modal.open({
       key: createKey,
-      title: formatClient({ id: 'addClient' }),
+      title: formatClient({ id: 'add' }),
       children: <CreateRecord isProject={isProject} dataSet={clientDataSet} />,
       style: {
         width: 380,
       },
       drawer: true,
-      okText: formatCommon({ id: 'add' }),
+      okText: formatClient({ id: 'addtext' }),
     });
   }
   async function openRoleManageModal(record) {
@@ -101,8 +101,8 @@ const Client = withRouter(observer(() => {
   }
   async function handleDelete(record) {
     Modal.open({
-      title: formatClient({ id: 'deleteClient' }),
-      content: `确认删除客户端"${record.get('name')}"吗？`,
+      title: formatClient({ id: 'delete' }),
+      children: `确认删除客户端"${record.get('name')}"吗？`,
       maskClosable: false,
       okText: formatCommon({ id: 'delete' }),
       onOk: async () => {
@@ -123,7 +123,7 @@ const Client = withRouter(observer(() => {
     openRoleManageModal(record);
   }
 
-  function renderAction({ record }) {
+  const renderAction = ({ record }) => {
     const actionDatas = [{
       service: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.delete`],
       text: <FormattedMessage id="organization.client.delete.title" />,
@@ -134,29 +134,25 @@ const Client = withRouter(observer(() => {
       action: () => handleRoleClick(record),
     }];
     return <Action data={actionDatas} />;
-  }
-  function filterData(record) {
-    return record.status !== 'add';
-  }
-  function renderName({ text, record }) {
-    return (
-      <Permission
-        service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.update`]}
-        defaultChildren={(<span>{text}</span>)}
-      >
-        <span role="none" className="link" onClick={() => handleRowClick(record)}>
-          {text}
-        </span>
-      </Permission>
-    );
-  }
+  };
+  const filterData = (record) => record.status !== 'add';
+  const renderName = ({ text, record }) => (
+    <Permission
+      service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.update`]}
+      defaultChildren={(<span>{text}</span>)}
+    >
+      <span role="none" className="link" onClick={() => handleRowClick(record)}>
+        {text}
+      </span>
+    </Permission>
+  );
   return (
     <Page service={[`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.default`]}>
       <Header>
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: formatClient({ id: 'modifyClient' }),
+            name: formatClient({ id: 'edit' }),
             icon: 'playlist_add',
             display: true,
             permissions: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`],
