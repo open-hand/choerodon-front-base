@@ -14,7 +14,7 @@ import EditPassword from './editPassword';
 const editModalKey = Modal.key();
 
 export default observer(() => {
-  const { passwordPolicyDataSet, orgId } = useContext(Store);
+  const { passwordPolicyDataSet, orgId, formatClient } = useContext(Store);
   const [visible, setVisible] = useState(false);
   function openPasswordModal() {
     Modal.open({
@@ -28,16 +28,14 @@ export default observer(() => {
       okText: '保存',
     });
   }
-  function renderBoolean({ value }) {
-    return value ? '是' : '否';
-  }
+  const renderBoolean = ({ value }) => (value ? '是' : '否');
 
   return (
     <TabPage service={['choerodon.code.organization.setting.security.ps.password-policy']}>
       <Header>
         <HeaderButtons
           items={([{
-            name: '修改安全策略',
+            name: formatClient({ id: 'edit' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.organization.setting.security.ps.password-policy.update'],
@@ -50,65 +48,65 @@ export default observer(() => {
         <Form pristine dataSet={passwordPolicyDataSet} labelWidth={450} className="tab1">
           <Row>
             <Col span={24}>
-              <span className="policyTitle">密码安全策略</span>
+              <span className="policyTitle">{formatClient({ id: 'passwordSecurityPolicy' })}</span>
             </Col>
             <Col span={24}>
               <Row>
-                <label>是否启用</label>
+                <label>{formatClient({ id: 'whethertoEnable' })}</label>
                 <Output name="enablePassword" renderer={renderBoolean} />
               </Row>
               {passwordPolicyDataSet.current && passwordPolicyDataSet.current.getPristineValue('enablePassword') ? [
                 <Row>
-                  <label>是否开启随机密码</label>
+                  <label>{formatClient({ id: 'whetherToEnableRandomPassword' })}</label>
                   <Output name="enableRandomPassword" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>登录时强制修改默认密码</label>
+                  <label>{formatClient({ id: 'changeTheDefaultPasswordForciblyUponLogin' })}</label>
                   <Output name="forceModifyPassword" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>是否允许密码与登录名相同</label>
+                  <label>{formatClient({ id: 'whetherToAllowThePasswordToBeTheSameAsTheLoginName' })}</label>
                   <Output name="notUsername" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>强制验证码校验</label>
+                  <label>{formatClient({ id: 'mandatoryVerificationCode' })}</label>
                   <Output name="forceCodeVerify" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>新用户默认密码</label>
+                  <label>{formatClient({ id: 'defaultPasswordOfTheNewUser' })}</label>
                   <Output name="originalPassword" />
                 </Row>,
                 <Row>
-                  <label>最小密码长度</label>
+                  <label>{formatClient({ id: 'minimumPasswordLength' })}</label>
                   <Output name="minLength" />
                 </Row>,
                 <Row>
-                  <label>最大密码长度</label>
+                  <label>{formatClient({ id: 'maximumPasswordLength' })}</label>
                   <Output name="maxLength" />
                 </Row>,
                 <Row>
-                  <label>最少数字数</label>
+                  <label>{formatClient({ id: 'minimumNumberOfDigits' })}</label>
                   <Output name="digitsCount" />
                 </Row>,
                 <Row>
-                  <label>最少小写字母数</label>
+                  <label>{formatClient({ id: 'minimumNumberOfLowercaseLetters' })}</label>
                   <Output name="lowercaseCount" />
                 </Row>,
                 <Row>
-                  <label>最少大写字母数</label>
+                  <label>{formatClient({ id: 'minimumNumberOfUppercaseLetters' })}</label>
                   <Output name="uppercaseCount" />
                 </Row>,
                 <Row>
-                  <label>密码正则</label>
+                  <label>{formatClient({ id: 'passwordRegular' })}</label>
                   <Output name="regularExpression" />
                 </Row>,
                 <Row>
-                  <label>密码更新频率</label>
+                  <label>{formatClient({ id: 'passwordUpdateFrequency' })}</label>
                   <Output name="passwordUpdateRate" />
                   天
                 </Row>,
                 <Row>
-                  <label>密码到期提醒</label>
+                  <label>{formatClient({ id: 'passwordExpirationReminder' })}</label>
                   <Output name="passwordReminderPeriod" />
                   天前
                 </Row>,
@@ -117,44 +115,44 @@ export default observer(() => {
           </Row>
           <Row>
             <Col span={24}>
-              <span className="policyTitle">登录安全策略</span>
+              <span className="policyTitle">{formatClient({ id: 'loginSecurityPolicy' })}</span>
             </Col>
             <Col span={24}>
               <Row>
-                <label>是否启用</label>
+                <label>{formatClient({ id: 'whethertoEnable' })}</label>
                 <Output name="enableSecurity" renderer={renderBoolean} />
               </Row>
               {passwordPolicyDataSet.current && passwordPolicyDataSet.current.getPristineValue('enableSecurity') ? [
                 <Row>
-                  <label>是否开启验证码</label>
+                  <label>{formatClient({ id: 'whetherVerificationCode' })}</label>
                   <Output name="enableCaptcha" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>验证码错误次数</label>
+                  <label>{formatClient({ id: 'Numberofverificationcodeerrors' })}</label>
                   <Output name="maxCheckCaptcha" />
                 </Row>,
                 <Row>
-                  <label>是否开启锁定</label>
+                  <label>{formatClient({ id: 'Enablelockornot' })}</label>
                   <Output name="enableLock" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>最大密码错误次数</label>
+                  <label>{formatClient({ id: 'maxerrorpsw' })}</label>
                   <Output name="maxErrorTime" />
                 </Row>,
                 <Row>
-                  <label>锁定时长</label>
+                  <label>{formatClient({ id: 'Thelocktime' })}</label>
                   <Output name="lockedExpireTime" />
                 </Row>,
                 <Row>
-                  <label>PC端允许多处登录</label>
+                  <label>{formatClient({ id: 'pcLogins' })}</label>
                   <Output name="enableWebMultipleLogin" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>移动端允许多处登录</label>
+                  <label>{formatClient({ id: 'mobileLogins' })}</label>
                   <Output name="enableAppMultipleLogin" renderer={renderBoolean} />
                 </Row>,
                 <Row>
-                  <label>修改密码后重新登录</label>
+                  <label>{formatClient({ id: 'pswChangeReLogin' })}</label>
                   <Output name="loginAgain" renderer={renderBoolean} />
                 </Row>,
               ] : null}
