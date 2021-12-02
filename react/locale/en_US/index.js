@@ -260,3 +260,4 @@ export * from './org-admin';
 export * from './org-role';
 export * from './organization-setting';
 export * from './org-safe';
+export * from './client';

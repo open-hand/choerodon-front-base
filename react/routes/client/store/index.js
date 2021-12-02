@@ -23,7 +23,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')(
         },
       }, children, intl,
     } = props;
-    const intlPrefix = 'organization.pwdpolicy';
+    const intlPrefix = 'c7ncd.client';
     const formatCommon = useFormatCommon();
     const formatClient = useFormatMessage(intlPrefix);
 
