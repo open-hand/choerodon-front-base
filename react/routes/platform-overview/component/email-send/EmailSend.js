@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react-lite';
+import { useFormatMessage } from '@choerodon/master';
 import ContainerBlock from '../../../org-overview/components/ContainerBlock';
 import { useEmailSendStore } from './stores';
 import Chart from './Chart';
 
 const EmailSend = observer(() => {
   const [chosenDays, setChosenDays] = useState(7);
-
   const {
     EmailSendStore,
     EmailSendStore: { loading },
+    intlPrefix,
   } = useEmailSendStore();
-
+  const format = useFormatMessage(intlPrefix);
   const initData = (days) => {
     const startTime = moment().subtract(days, 'days').format('YYYY-MM-DD HH:mm:ss');
     const endTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -32,7 +33,7 @@ const EmailSend = observer(() => {
     <ContainerBlock
       width="100%"
       height="400px"
-      title="邮件发送情况"
+      title={format({ id: 'situation' })}
       hasDaysPicker
       handleChangeDays={handleChangeDays}
       loading={loading}

@@ -9,6 +9,8 @@ const Charts = observer(() => {
 
   const {
     ThingPerformStore,
+    format,
+    formatCommon,
   } = useFailedStatisticsStore();
 
   useEffect(() => {
@@ -57,10 +59,10 @@ const Charts = observer(() => {
         extraCssText: 'box-shadow:0px 2px 6px 0px rgba(0,0,0,0.12);padding: 15px 17px;',
         formatter(params) {
           return `
-          日期: ${`${x[0].split('-')[0]}-${params[0].name}`}</br>
-          事务失败率: ${percentage[params[0].dataIndex]}%</br>
-          失败次数: ${params[0].value}</br>
-          总次数: ${totalCount[params[0].dataIndex]}
+          ${formatCommon({ id: 'date' })}: ${`${x[0].split('-')[0]}-${params[0].name}`}</br>
+          ${format({ id: 'failedRate' })}: ${percentage[params[0].dataIndex]}%</br>
+          ${formatCommon({ id: 'failed' })}${formatCommon({ id: 'times' })}: ${params[0].value}</br>
+          ${formatCommon({ id: 'allTimes' })}: ${totalCount[params[0].dataIndex]}
         `;
         },
       },
@@ -68,7 +70,7 @@ const Charts = observer(() => {
         boundaryGap: false,
         type: 'category',
         data: x.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
-        name: '时间',
+        name: formatCommon({ id: 'time' }),
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -91,7 +93,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '失败次数',
+        name: formatCommon({ id: 'failed' }) + formatCommon({ id: 'times' }),
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {

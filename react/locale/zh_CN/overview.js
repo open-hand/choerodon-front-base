@@ -1,0 +1,23 @@
+const overview = {
+  'c7n.platform.connectedClusters': '运行中集群',
+  'c7n.platform.unconnectedCluster': '未连接集群',
+  'c7n.platform.peopleStore.people': '平台人数',
+  'c7n.platform.peopleStore.increaseToYesterday': '较昨日新增',
+  'c7n.platform.dailyVisits': '日访问量',
+  'c7n.platform.people': '在线人数',
+  'c7n.platform.emailSend.situation': '邮件发送情况',
+  'c7n.platform.emailSend.sendNumber': '发送数目',
+  'c7n.platform.emailSend.sendTotalNumber': '发送总数',
+  'c7n.platform.emailSend.sendSuccessRate': '发送成功率',
+  'c7n.platform.thingPerform.situation': '事务执行情况',
+  'c7n.platform.thingPerform.failedRate': '事务失败率',
+  'c7n.platform.thingPerform.failedThing': '失败事务',
+  'c7n.platform.thingPerform.thingInstance': '事务实例',
+  'c7n.platform.thingPerform.associatedServiceType': '关联业务类型',
+  'c7n.platform.systemAnnouncement': '系统公告',
+  'c7n.platform.noMoreRecods': '暂无更多记录...',
+  'c7n.platform.operationRecords': '平台层操作记录',
+  'c7n.platform.editOrganizationInfo': '平台层修改组织信息',
+  'c7n.platform.retryTransaction': '重试事务',
+};
+export { overview };

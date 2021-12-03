@@ -8,6 +8,7 @@ import React, { createContext } from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import SystemSettingDataSet from './SystemSettingDataSet';
 import funcModeDataSet from './FuncModeDataSet';
 
@@ -19,9 +20,14 @@ export default Store;
 
 export const StoreProvider = injectIntl(inject('AppState')((props) => {
   const { children, AppState: { currentMenuType: { id: orgId } } } = props;
-  const systemSettingDataSet = new DataSet(SystemSettingDataSet({ id: orgId, hasRegister }));
+
   const FuncModeDataSet = new DataSet(funcModeDataSet());
-  const intlPrefix = 'global.system-setting';
+  const intlPrefix = 'c7n.system-setting';
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon();
+  const systemSettingDataSet = new DataSet(SystemSettingDataSet({
+    id: orgId, hasRegister, intlPrefix, formatCommon, format,
+  }));
   // map first color to second color
   const colorMap = {
     '#e50113': '#d20112',
@@ -44,6 +50,8 @@ export const StoreProvider = injectIntl(inject('AppState')((props) => {
     presetColors,
     colorMap,
     hasRegister,
+    format,
+    formatCommon,
   };
   return (
     <Store.Provider value={value}>

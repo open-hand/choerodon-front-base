@@ -15,13 +15,13 @@ import './index.less';
 const modalKey = Modal.key();
 
 export default observer(() => {
-  const { systemSettingDataSet: dataSet } = useContext(Store);
+  const { systemSettingDataSet: dataSet, format } = useContext(Store);
   function openPasswordModal() {
     Modal.open({
       children: <Sider
         dataSet={dataSet}
       />,
-      title: '修改密码策略',
+      title: format({ id: 'modifyPasswordPolicy' }),
       key: modalKey,
       drawer: true,
       style: { width: 380 },
@@ -41,7 +41,7 @@ export default observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: '修改密码策略',
+            name: format({ id: 'modifyPasswordPolicy' }),
             icon: 'edit-o',
             display: true,
             permissions: ['choerodon.code.site.setting.security.ps.password-policy.update'],

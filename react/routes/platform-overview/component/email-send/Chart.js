@@ -9,6 +9,8 @@ const Charts = observer(() => {
 
   const {
     EmailSendStore,
+    format,
+    formatCommon,
   } = useEmailSendStore();
 
   useEffect(() => {
@@ -44,10 +46,10 @@ const Charts = observer(() => {
         right: 0,
         itemHeight: 10,
         data: [{
-          name: `成功次数: ${totalSuccess}`,
+          name: `${formatCommon({ id: 'success' })}${formatCommon({ id: 'times' })}: ${totalSuccess}`,
           icon: 'circle',
         }, {
-          name: `失败次数: ${totalFailed}`,
+          name: `${formatCommon({ id: 'failed' })}${formatCommon({ id: 'times' })}: ${totalFailed}`,
           icon: 'circle',
         }],
         textStyle: {
@@ -73,18 +75,18 @@ const Charts = observer(() => {
         extraCssText: 'box-shadow:0px 2px 6px 0px rgba(0,0,0,0.12);padding: 15px 17px;',
         formatter(params) {
           return `
-            日期: ${`${dates[0].split('-')[0]}-${params[0].name}`}</br>
-            成功发送数目: ${params[0].data}</br>
-            失败发送数目: ${params[1].data}</br>
-            发送总数: ${totalNums[params[0].dataIndex]}</br>
-            发送成功率 ${totalNums[params[0].dataIndex] !== 0 ? ((params[0].data / (totalNums[params[0].dataIndex])) * 100).toFixed(1) : 0}%
+            ${formatCommon({ id: 'date' })}: ${`${dates[0].split('-')[0]}-${params[0].name}`}</br>
+            ${formatCommon({ id: 'success' })}${format({ id: 'sendNumber' })}: ${params[0].data}</br>
+            ${formatCommon({ id: 'failed' })}${format({ id: 'sendNumber' })}: ${params[1].data}</br>
+            ${format({ id: 'sendTotalNumber' })}: ${totalNums[params[0].dataIndex]}</br>
+            ${format({ id: 'sendSuccessRate' })} ${totalNums[params[0].dataIndex] !== 0 ? ((params[0].data / (totalNums[params[0].dataIndex])) * 100).toFixed(1) : 0}%
           `;
         },
       },
       xAxis: {
         boundaryGap: false,
         data: dates.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
-        name: '时间',
+        name: `${formatCommon({ id: 'time' })}`,
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -109,7 +111,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '次数',
+        name: `${formatCommon({ id: 'times' })}`,
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {
@@ -120,7 +122,7 @@ const Charts = observer(() => {
       },
       series: [
         {
-          name: `成功次数: ${totalSuccess}`,
+          name: `${formatCommon({ id: 'success' })}${formatCommon({ id: 'times' })}: ${totalSuccess}`,
           type: 'bar',
           stack: 'one',
           data: successNums,
@@ -130,7 +132,7 @@ const Charts = observer(() => {
           barWidth: 8,
         },
         {
-          name: `失败次数: ${totalFailed}`,
+          name: `${formatCommon({ id: 'failed' })}${formatCommon({ id: 'times' })}: ${totalFailed}`,
           type: 'bar',
           stack: 'one',
           data: failedNums,

@@ -80,6 +80,8 @@ const pageDetail = {
 
   // rootuser
   'global.root-user.sider.title': '添加root用户',
+  'global.root-user.list.deleteRootUser': '删除root用户',
+  'global.root-user.list.confirm.deleteRootUser': '确认删除root用户{name}吗?',
   'global.root-user.list.button.add': '添加',
   'global.root-user.list.status': '启用状态',
   'global.root-user.list.safe-status': '安全状态',
@@ -649,22 +651,6 @@ const pageDetail = {
   'time.seven.days': '近7天',
   'time.fifteen.days': '近15天',
   'time.thirty.days': '近30天',
-};
-
-const c7nHzeroPage = {
-  'c7n.hzero.page.link': '跳转至HZERO框架',
-  'c7n.hzero.page.user.title': '用户管理',
-  'c7n.hzero.page.user.describe': '该页面已替换为HZERO子账户管理页面，请点击下方按钮跳转至HZERO框架操作',
-  'c7n.hzero.page.role.title': '角色管理',
-  'c7n.hzero.page.role.describe': '该页面已替换为HZERO角色管理页面，请点击下方按钮跳转至HZERO框架操作',
-  'c7n.hzero.page.menu.title': '菜单管理',
-  'c7n.hzero.page.menu.describe': '该页面已替换为HZERO菜单管理页面，请点击下方按钮跳转至HZERO框架操作',
-  'c7n.hzero.page.instance.title': '微服务实例',
-  'c7n.hzero.page.instance.describe': '该页面已替换为HZER微服务实例页面，请点击下方按钮跳转至HZERO框架操作',
-  'c7n.hzero.page.api.title': 'API统计',
-  'c7n.hzero.page.api.describe': '该页面已替换为HZERO的API统计页面，请点击下方按钮跳转至HZERO框架操作',
-  'c7n.hzero.page.api-test.title': '接口',
-  'c7n.hzero.page.api-test.describe': '该页面已替换为HZERO的API测试页面，请点击下方按钮跳转至HZERO框架操作',
 };
 
 /* eslint-disable-next-line */
@@ -1414,45 +1400,45 @@ const zh_CN = {
   'global.dashboard-setting.needRoles.disable': '关闭',
 
   // 系统设置
-  'global.system-setting.header': '系统配置',
-  'global.system-setting.title': '对平台的自定义设置',
-  'global.system-setting.description': '设置平台的名称、logo、系统默认密码和默认语言，以便于提高您的企业辨识度，个性化定制您的平台',
-  'global.system-setting.file.size.limit': '图标大小不能大于{size}',
-  'global.system-setting.favicon': '平台徽标',
-  'global.system-setting.favicon.error': '请填写您的平台徽标',
-  'global.system-setting.favicon.modifyTitle': '对您的平台徽标进行修改',
-  'global.system-setting.systemName': '平台简称',
-  'global.system-setting.registerEnabled': '是否启用注册',
-  'global.system-setting.registerUrl': '注册页面链接',
-  'global.system-setting.resetGitlabPasswordUrl': '重置gitlab密码页面链接',
-  'global.system-setting.registerUrl.error': '当启用注册时必须填写注册页面链接',
-  'global.system-setting.systemName.error': '请填写您的平台简称',
-  'global.system-setting.systemLogo': '平台导航栏图形标',
-  'global.system-setting.systemTitle': '平台全称',
-  'global.system-setting.defaultPassword': '平台默认密码',
-  'global.system-setting.defaultPassword.error': '请填写您的默认密码',
-  'global.system-setting.defaultLanguage': '平台默认语言',
-  'global.system-setting.defaultLanguage.error': '请填写您的默认语言',
-  'global.system-setting.language.zhcn': '简体中文',
-  'global.system-setting.language.enus': 'English',
-  'global.system-setting.favicon.tips': '展示在平台的登录页面，作为贵企业在平台上的标识',
-  'global.system-setting.logo.tips': '企业自己的特示图案，加强品牌的识别，展示在导航栏左边',
-  'global.system-setting.title.tips': '企业平台简称，展示在导航栏右边',
-  'global.system-setting.name.tips': '企业平台全称，显示为网页标题',
-  'global.system-setting.save.success': '保存成功',
-  'global.system-setting.save.conflict': '未进行修改',
-  'global.system-setting.reset.confirm.title': '重置配置',
-  'global.system-setting.reset.confirm.content': '确定要重置系统自定义配置吗？您的自定义配置将被删除。',
-  'global.system-setting.reset': '重置成功',
-  'global.system-setting.edit.title': '对平台的{name}进行修改',
-  'global.system-setting.edit.dragger.text': '点击或将图片拖到此区域上传图片',
-  'global.system-setting.edit.dragger.hint': '图片支持PNG、JPG、JPEG格式，且不能大于1M',
-  'global.system-setting.edit.text': '上传徽标',
-  'global.system-setting.edit.hint': '您可以在此裁剪、旋转图片，然后点击"保存" 完成徽标的修改',
-  'global.system-setting.edit.preview': '徽标预览',
-  'global.system-setting.edit.button': '重新上传',
-  'global.system-setting.min-length': '平台默认最小密码长度',
-  'global.system-setting.max-length': '平台默认最大密码长度',
+  'c7n.system-setting.header': '系统配置',
+  'c7n.system-setting.title': '对平台的自定义设置',
+  'c7n.system-setting.description': '设置平台的名称、logo、系统默认密码和默认语言，以便于提高您的企业辨识度，个性化定制您的平台',
+  'c7n.system-setting.file.size.limit': '图标大小不能大于{size}',
+  'c7n.system-setting.favicon': '平台徽标',
+  'c7n.system-setting.favicon.error': '请填写您的平台徽标',
+  'c7n.system-setting.favicon.modifyTitle': '对您的平台徽标进行修改',
+  'c7n.system-setting.systemName': '平台简称',
+  'c7n.system-setting.registerEnabled': '是否启用注册',
+  'c7n.system-setting.registerUrl': '注册页面链接',
+  'c7n.system-setting.resetGitlabPasswordUrl': '重置gitlab密码页面链接',
+  'c7n.system-setting.registerUrl.error': '当启用注册时必须填写注册页面链接',
+  'c7n.system-setting.systemName.error': '请填写您的平台简称',
+  'c7n.system-setting.systemLogo': '平台导航栏图形标',
+  'c7n.system-setting.systemTitle': '平台全称',
+  'c7n.system-setting.defaultPassword': '平台默认密码',
+  'c7n.system-setting.defaultPassword.error': '请填写您的默认密码',
+  'c7n.system-setting.defaultLanguage': '平台默认语言',
+  'c7n.system-setting.defaultLanguage.error': '请填写您的默认语言',
+  'c7n.system-setting.language.zhcn': '简体中文',
+  'c7n.system-setting.language.enus': 'English',
+  'c7n.system-setting.favicon.tips': '展示在平台的登录页面，作为贵企业在平台上的标识',
+  'c7n.system-setting.logo.tips': '企业自己的特示图案，加强品牌的识别，展示在导航栏左边',
+  'c7n.system-setting.title.tips': '企业平台简称，展示在导航栏右边',
+  'c7n.system-setting.name.tips': '企业平台全称，显示为网页标题',
+  'c7n.system-setting.save.success': '保存成功',
+  'c7n.system-setting.save.conflict': '未进行修改',
+  'c7n.system-setting.reset.confirm.title': '重置配置',
+  'c7n.system-setting.reset.confirm.content': '确定要重置系统自定义配置吗？您的自定义配置将被删除。',
+  'c7n.system-setting.reset': '重置成功',
+  'c7n.system-setting.edit.title': '对平台的{name}进行修改',
+  'c7n.system-setting.edit.dragger.text': '点击或将图片拖到此区域上传图片',
+  'c7n.system-setting.edit.dragger.hint': '图片支持PNG、JPG、JPEG格式，且不能大于1M',
+  'c7n.system-setting.edit.text': '上传徽标',
+  'c7n.system-setting.edit.hint': '您可以在此裁剪、旋转图片，然后点击"保存" 完成徽标的修改',
+  'c7n.system-setting.edit.preview': '徽标预览',
+  'c7n.system-setting.edit.button': '重新上传',
+  'c7n.system-setting.min-length': '平台默认最小密码长度',
+  'c7n.system-setting.max-length': '平台默认最大密码长度',
 
   // 系统公告
   'global.announcement.header.title': '系统公告',
@@ -1844,7 +1830,6 @@ const zh_CN = {
 
   // page
   ...pageDetail,
-  ...c7nHzeroPage,
   ...enterprises,
   ...template,
 
@@ -1875,3 +1860,8 @@ export * from './organization-setting';
 export * from './org-safe';
 
 export * from './client';
+export * from './overview';
+export * from './days-piker';
+export * from './system-setting';
+export * from './safe';
+export * from './hzero-page';

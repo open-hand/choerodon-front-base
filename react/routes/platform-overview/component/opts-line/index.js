@@ -2,108 +2,109 @@ import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import './index.less';
 import { Icon, Button, Tooltip } from 'choerodon-ui';
+import { C7NFormatCommon, C7NFormat } from '@choerodon/master';
 import { usePlatformOverviewStore } from '../../stores';
-
-const iconType = {
-  addAdminUsers: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '分配root权限',
-  },
-  assignUserRole: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '分配权限',
-  },
-  assignUsersRoles: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '分配角色',
-  },
-  createOrg: {
-    icon: 'project_line',
-    className: '',
-    typeTxt: '创建组织',
-  },
-  enableOrganization: {
-    icon: 'project_line',
-    className: '',
-    typeTxt: '启用组织',
-  },
-  disableOrganization: {
-    icon: 'project_line',
-    className: 'disabled',
-    typeTxt: '停用组织',
-  },
-  updateOrganization: {
-    icon: 'project_line',
-    className: '',
-    typeTxt: '平台层修改组织信息',
-  },
-  unlockUser: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '解锁用户',
-  },
-  enableUser: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '启用用户',
-  },
-  disableUser: {
-    icon: 'account_circle',
-    className: 'disabled',
-    typeTxt: '禁用用户',
-  },
-  deleteOrgAdministrator: {
-    icon: 'account_circle',
-    className: 'delete',
-    typeTxt: '删除组织管理员角色',
-  },
-  createOrgAdministrator: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '添加组织管理员角色',
-  },
-  createProject: {
-    icon: 'project_line',
-    className: '',
-    typeTxt: '创建项目',
-  },
-  enableProject: {
-    icon: 'project_line',
-    className: '',
-    typeTxt: '启用项目',
-  },
-  disableProject: {
-    icon: 'project_line',
-    className: 'disabled',
-    typeTxt: '禁用项目',
-  },
-  createUserOrg: {
-    icon: 'account_circle',
-    className: '',
-    typeTxt: '创建用户',
-  },
-  registersApproval: {
-    icon: 'filter_frames',
-    className: '',
-    typeTxt: '审批注册',
-  },
-  siteRetry: {
-    icon: 'ballot',
-    className: '',
-    typeTxt: '重试事务',
-  },
-};
 
 const OptsLine = observer(() => {
   const {
     optsDs,
     platOverStores,
     renderMonth,
+    format,
+    formatCommon,
   } = usePlatformOverviewStore();
-
+  const iconType = {
+    addAdminUsers: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'assignRootPermission' }),
+    },
+    assignUserRole: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'assignPermissions' }),
+    },
+    assignUsersRoles: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'assignRoles' }),
+    },
+    createOrg: {
+      icon: 'project_line',
+      className: '',
+      typeTxt: formatCommon({ id: 'createOrganization' }),
+    },
+    enableOrganization: {
+      icon: 'project_line',
+      className: '',
+      typeTxt: formatCommon({ id: 'enableOrganization' }),
+    },
+    disableOrganization: {
+      icon: 'project_line',
+      className: 'disabled',
+      typeTxt: formatCommon({ id: 'stopOrganization' }),
+    },
+    updateOrganization: {
+      icon: 'project_line',
+      className: '',
+      typeTxt: format({ id: 'editOrganizationInfo' }),
+    },
+    unlockUser: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'unlockUser' }),
+    },
+    enableUser: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'enableUser' }),
+    },
+    disableUser: {
+      icon: 'account_circle',
+      className: 'disabled',
+      typeTxt: formatCommon({ id: 'disableUser' }),
+    },
+    deleteOrgAdministrator: {
+      icon: 'account_circle',
+      className: 'delete',
+      typeTxt: formatCommon({ id: 'deleteOrganizationAdminRole' }),
+    },
+    createOrgAdministrator: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'addOrganizationAdminRole' }),
+    },
+    createProject: {
+      icon: 'project_line',
+      className: '',
+      typeTxt: formatCommon({ id: 'createProject' }),
+    },
+    enableProject: {
+      icon: 'project_line',
+      className: '',
+      typeTxt: formatCommon({ id: 'enableProject' }),
+    },
+    disableProject: {
+      icon: 'project_line',
+      className: 'disabled',
+      typeTxt: formatCommon({ id: 'disableProject' }),
+    },
+    createUserOrg: {
+      icon: 'account_circle',
+      className: '',
+      typeTxt: formatCommon({ id: 'createUser' }),
+    },
+    registersApproval: {
+      icon: 'filter_frames',
+      className: '',
+      typeTxt: formatCommon({ id: 'approvalRegister' }),
+    },
+    siteRetry: {
+      icon: 'ballot',
+      className: '',
+      typeTxt: format({ id: 'retryTransaction' }),
+    },
+  };
   const scorllRef = useRef();
 
   const [isMore, setLoadMoreBtn] = useState(false);
@@ -144,9 +145,9 @@ const OptsLine = observer(() => {
     return false;
   }
   // 更多操作
-  function loadMoreOptsRecord() {
+  const loadMoreOptsRecord = () => {
     loadData(optsDs.currentPage + 1);
-  }
+  };
 
   useEffect(() => {
     loadData();
@@ -211,9 +212,9 @@ const OptsLine = observer(() => {
         <div className="c7ncd-opts-timeLine-body" ref={scorllRef}>
           {renderData()}
         </div>
-      ) : <span className="c7ncd-opts-timeLine-empty">暂无更多记录...</span>}
+      ) : <span className="c7ncd-opts-timeLine-empty">{format({ id: 'noMoreRecods' })}</span>}
 
-      {isMore && <Button disabled={optsDs.status === 'loading'} loading={optsDs.status === 'loading'} type="primary" onClick={loadMoreOptsRecord}>加载更多</Button>}
+      {isMore && <Button disabled={optsDs.status === 'loading'} loading={optsDs.status === 'loading'} type="primary" onClick={loadMoreOptsRecord}>{formatCommon({ id: 'loadMore' })}</Button>}
     </div>
   );
 });

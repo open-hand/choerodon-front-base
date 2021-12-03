@@ -19,6 +19,8 @@ const FailedStatistics = withRouter(observer((props) => {
 
   const {
     FailedStatisticsTableDataSet,
+    format,
+    formatCommon,
   } = useFailedStatisticsStore();
 
   const handleClickSagaRecord = (record) => {
@@ -33,7 +35,10 @@ const FailedStatistics = withRouter(observer((props) => {
 
   return (
     <div className="c7n-overview-failedStatistics">
-      <span className="c7n-overview-failedStatistics-titlespan">失败事务统计</span>
+      <span className="c7n-overview-failedStatistics-titlespan">
+        {format({ id: 'failedThing' })}
+        {formatCommon({ id: 'statistical' })}
+      </span>
       <Table
         className="c7n-overview-failedStatistics-table"
         dataSet={FailedStatisticsTableDataSet}

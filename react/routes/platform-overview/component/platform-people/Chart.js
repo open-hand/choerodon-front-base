@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactEchartsCore from 'echarts-for-react/lib/core';
 import { observer } from 'mobx-react-lite';
 import echarts from 'echarts';
+import { useFormatMessage, useFormatCommon } from '@choerodon/master';
 import { usePlatformPeopleStore } from './stores';
 
 const Charts = observer(() => {
@@ -9,8 +10,10 @@ const Charts = observer(() => {
 
   const {
     PlatformPeopleStore,
+    intlPrefix,
   } = usePlatformPeopleStore();
-
+  const format = useFormatMessage(intlPrefix);
+  const formatCommon = useFormatCommon();
   useEffect(() => {
     function resizeCharts() {
       setResizeIf(true);
@@ -56,17 +59,17 @@ const Charts = observer(() => {
         extraCssText: 'box-shadow:0px 2px 6px 0px rgba(0,0,0,0.12);padding: 15px 17px;',
         formatter(params) {
           return `
-          日期: ${`${dateList[0].split('-')[0]}-${params[0].name}`}</br>
-          较昨日新增: ${newUserNumberList[params[0].dataIndex]}</br>
-          总人数: ${params[0].value}
+          ${formatCommon({ id: 'date' })}: ${`${dateList[0].split('-')[0]}-${params[0].name}`}</br>
+          ${format({ id: 'increaseToYesterday' })}: ${newUserNumberList[params[0].dataIndex]}</br>
+          ${formatCommon({ id: 'allPeople' })}: ${params[0].value}
         `;
         },
       },
       xAxis: {
         boundaryGap: false,
         type: 'category',
-        data: dateList.map(d => `${d.split('-')[1]}-${d.split('-')[2]}`),
-        name: '时间',
+        data: dateList.map((d) => `${d.split('-')[1]}-${d.split('-')[2]}`),
+        name: formatCommon({ id: 'time' }),
         nameTextStyle: {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
@@ -89,7 +92,7 @@ const Charts = observer(() => {
           color: 'rgba(0,0,0,1)',
           fontSize: '13px',
         },
-        name: '人数',
+        name: formatCommon({ id: 'peopleNum' }),
         type: 'value',
         axisLabel: { color: 'rgba(0,0,0,0.65)' },
         axisLine: {

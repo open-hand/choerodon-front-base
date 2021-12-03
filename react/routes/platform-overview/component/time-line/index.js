@@ -12,6 +12,8 @@ const TimeLine = observer(() => {
     noticeDs,
     platOverStores,
     renderMonth,
+    format,
+    formatCommon,
   } = usePlatformOverviewStore();
 
   const scorllRef = useRef();
@@ -45,15 +47,15 @@ const TimeLine = observer(() => {
   }
 
   // 更多公告
-  function loadMoreNoticeRecord() {
+  const loadMoreNoticeRecord = () => {
     loadData(noticeDs.currentPage + 1);
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  function renderDateLine(date) {
+  const renderDateLine = (date) => {
     const dateArr = date && date.split('-');
     const month = renderMonth(dateArr[1]);
     return (
@@ -64,9 +66,9 @@ const TimeLine = observer(() => {
         </div>
       </Tooltip>
     );
-  }
+  };
 
-  function renderId(id) {
+  const renderId = (id) => {
     const type = typeof id;
     if (type === 'string') {
       return id.slice(3, 6);
@@ -74,7 +76,7 @@ const TimeLine = observer(() => {
       return String(id).slice(3, 6);
     }
     return id;
-  }
+  };
 
   function renderData() {
     return record ? (
@@ -104,8 +106,8 @@ const TimeLine = observer(() => {
         <div className="c7ncd-notice-timeLine-body" ref={scorllRef}>
           {renderData()}
         </div>
-      ) : <span className="c7ncd-notice-timeLine-empty">暂无更多记录...</span>}
-      {isMore && <Button disabled={noticeDs.status === 'loading'} loading={noticeDs.status === 'loading'} type="primary" onClick={loadMoreNoticeRecord}>加载更多</Button>}
+      ) : <span className="c7ncd-notice-timeLine-empty">{format({ id: 'noMoreRecods' })}</span>}
+      {isMore && <Button disabled={noticeDs.status === 'loading'} loading={noticeDs.status === 'loading'} type="primary" onClick={loadMoreNoticeRecord}>{formatCommon({ id: 'loadMore' })}</Button>}
     </div>
   );
 });
