@@ -7,6 +7,8 @@ import { withRouter } from 'react-router-dom';
 import { Button } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import './OrganizationBasic.less';
+import { CONSTANTS } from '@choerodon/master';
+import TransferModal from '@/components/transferModal';
 
 import InfoForm from './InfoForm';
 
@@ -14,9 +16,11 @@ import Store from '../stores';
 
 const modalKey = Modal.key();
 
+const transferModalKey = Modal.key();
+
 const InfoView = observer(() => {
   const {
-    organizationDataSet: dataSet, AppState, intl, orgName, formatClient,
+    organizationDataSet: dataSet, AppState, intl, orgName, formatClient, orgId,
   } = useContext(Store);
   const imageUrl = dataSet.current && dataSet.current.getPristineValue('imageUrl');
   function handleRefresh() {
@@ -38,6 +42,16 @@ const InfoView = observer(() => {
     dataSet.reset();
     return true;
   }
+
+  const openTransferModal = () => {
+    Modal.open({
+      key: transferModalKey,
+      title: '移交组织所有者',
+      children: <TransferModal tenantId={orgId} />,
+      style: { width: CONSTANTS.MODAL_WIDTH.MIDDLE },
+    });
+  };
+
   function openModal() {
     Modal.open({
       key: modalKey,
@@ -61,13 +75,21 @@ const InfoView = observer(() => {
       <Header>
         <HeaderButtons
           showClassName={false}
-          items={([{
-            name: formatClient({ id: 'base.Edit' }),
-            icon: 'edit-o',
-            display: true,
-            permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],
-            handler: openModal,
-          }])}
+          items={([
+            {
+              name: formatClient({ id: 'base.Edit' }),
+              icon: 'edit-o',
+              permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],
+              handler: openModal,
+            },
+            {
+              name: '移交组织所有者',
+              icon: 'sync_alt',
+              // permissions:
+              // ['choerodon.code.organization.setting.general-setting.ps.update.info'],
+              handler: openTransferModal,
+            },
+          ])}
         />
       </Header>
 
