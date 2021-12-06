@@ -7,8 +7,8 @@ import { withRouter } from 'react-router-dom';
 import { Button } from 'choerodon-ui';
 import { observer } from 'mobx-react-lite';
 import './OrganizationBasic.less';
+import { CONSTANTS } from '@choerodon/master';
 import TransferModal from '@/components/transferModal';
-import { MIDDLE } from '@/common/getModalWidth';
 
 import InfoForm from './InfoForm';
 
@@ -48,7 +48,7 @@ const InfoView = observer(() => {
       key: transferModalKey,
       title: '移交组织所有者',
       children: <TransferModal tenantId={orgId} />,
-      style: { width: MIDDLE },
+      style: { width: CONSTANTS.MODAL_WIDTH.MIDDLE },
     });
   };
 
@@ -79,14 +79,12 @@ const InfoView = observer(() => {
             {
               name: formatClient({ id: 'base.Edit' }),
               icon: 'edit-o',
-              display: true,
               permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],
               handler: openModal,
             },
             {
               name: '移交组织所有者',
               icon: 'sync_alt',
-              display: true,
               // permissions:
               // ['choerodon.code.organization.setting.general-setting.ps.update.info'],
               handler: openTransferModal,
