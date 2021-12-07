@@ -18,7 +18,7 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
 
     const AddWayDataSet = useMemo(() => new DataSet(addWayDataSet()), []);
 
-    const intlPrefix = 'c7ncd.orguser.sider';
+    const intlPrefix = 'c7ncd.org-user.sider';
     const dsStore = [];
     const value = {
       ...props,

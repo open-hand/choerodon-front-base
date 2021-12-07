@@ -7,6 +7,8 @@ const orguser = {
   'c7ncd.org-user.addteammate': 'Add teammate',
   'c7ncd.org-user.modifyteammate': 'Modify teammate',
   'c7ncd.org-user.inviteteammate': 'Invite teammate',
+  'c7ncd.org-user.invitEmail': 'Invite mail',
+  'c7ncd.org-user.invitLink': 'Invite Link',
   'c7ncd.org-user.sendInvitation': 'Send Invitation',
   'c7ncd.org-user.importteammate': 'Import teammate',
   'c7ncd.org-user.cardmode': 'Card mode',
