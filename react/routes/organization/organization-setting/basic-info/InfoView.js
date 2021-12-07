@@ -23,9 +23,9 @@ const InfoView = observer(() => {
     organizationDataSet: dataSet, AppState, intl, orgName, formatClient, orgId,
   } = useContext(Store);
   const imageUrl = dataSet.current && dataSet.current.getPristineValue('imageUrl');
-  function handleRefresh() {
+  const handleRefresh = () => {
     dataSet.query();
-  }
+  };
   // eslint-disable-next-line consistent-return
   async function handleSave() {
     try {
@@ -47,7 +47,7 @@ const InfoView = observer(() => {
     Modal.open({
       key: transferModalKey,
       title: '移交组织所有者',
-      children: <TransferModal tenantId={orgId} />,
+      children: <TransferModal tenantId={orgId} refresh={handleRefresh} />,
       style: { width: CONSTANTS.MODAL_WIDTH.MIDDLE },
     });
   };
