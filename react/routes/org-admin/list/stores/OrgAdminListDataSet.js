@@ -2,7 +2,7 @@
 export default ({
   id = 0, formatClient, formatCommon,
 }) => {
-  const username = formatCommon({ id: 'username' });
+  const username = formatClient({ id: 'username' });
   const loginName = formatCommon({ id: 'account' });
   const status = '';
   const safeStatus = '';

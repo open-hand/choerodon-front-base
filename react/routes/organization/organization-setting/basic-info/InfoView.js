@@ -107,7 +107,7 @@ const InfoView = observer(() => {
         >
           <Output name="tenantName" colSpan={1} />
 
-          <div colSpan={1} rowSpan={3} className="c7n-organization-formImg" label="组织LOGO">
+          <div colSpan={1} rowSpan={3} className="c7n-organization-formImg" label={formatClient({ id: 'base.logo' })}>
             {imageUrl ? <img src={imageUrl} alt="图片" />
               : <div className="c7n-organization-formImg-wrapper">{orgName[0]}</div>}
 
