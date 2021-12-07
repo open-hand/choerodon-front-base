@@ -1,6 +1,8 @@
-export default ({ id = 0, intl, intlPrefix }) => {
-  const username = intl.formatMessage({ id: 'username' });
-  const loginName = intl.formatMessage({ id: 'loginname' });
+export default ({
+  id = 0, intl, intlPrefix, newIntlPrefix,
+}) => {
+  const username = intl.formatMessage({ id: `${newIntlPrefix}.userName` });
+  const loginName = intl.formatMessage({ id: `${newIntlPrefix}.loginName` });
   const status = intl.formatMessage({ id: `${intlPrefix}.status` });
   const safeStatus = intl.formatMessage({ id: `${intlPrefix}.safe-status` });
   return {

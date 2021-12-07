@@ -15,7 +15,7 @@ const { Column } = Table;
 export default function ListView() {
   const context = useContext(Store);
   const {
-    intlPrefix, permissions, intl, adminListDataSet, adminCreateDataSet, prefixCls,
+    intlPrefix, permissions, intl, adminListDataSet, adminCreateDataSet, prefixCls, newIntlPrefix,
   } = context;
   const format = useFormatMessage(intlPrefix);
   async function handleDelete({ record }) {
@@ -66,7 +66,7 @@ export default function ListView() {
       >
         <HeaderButtons
           items={([{
-            name: <FormattedMessage id={`${intlPrefix}.button.add`} />,
+            name: <FormattedMessage id={`${newIntlPrefix}.button.add`} />,
             icon: 'playlist_add',
             display: true,
             permissions: ['choerodon.code.site.manager.root-user.ps.add'],

@@ -13,10 +13,12 @@ export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const { AppState: { currentMenuType: { type, id, organizationId } }, intl, children } = props;
     const intlPrefix = 'global.root-user.list';
+    const newIntlPrefix = 'c7n.root-user.list';
     const adminListDataSet = useMemo(() => new DataSet(AdminListDataSet({
       id,
       intl,
       intlPrefix,
+      newIntlPrefix,
     })), [id]);
     const adminCreateDataSet = useMemo(() => new DataSet(AdminCreateDataSet({
       id, organizationId, intl, intlPrefix,
@@ -30,6 +32,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
       intlPrefix,
       organizationId,
       permissions,
+      newIntlPrefix,
     };
     return (
       <Store.Provider value={value}>

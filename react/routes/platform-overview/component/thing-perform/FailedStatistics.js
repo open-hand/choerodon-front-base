@@ -37,7 +37,6 @@ const FailedStatistics = withRouter(observer((props) => {
     <div className="c7n-overview-failedStatistics">
       <span className="c7n-overview-failedStatistics-titlespan">
         {format({ id: 'failedThing' })}
-        {formatCommon({ id: 'statistical' })}
       </span>
       <Table
         className="c7n-overview-failedStatistics-table"

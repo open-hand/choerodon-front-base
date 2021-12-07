@@ -1854,3 +1854,4 @@ export * from './days-piker';
 export * from './system-setting';
 export * from './safe';
 export * from './hzero-page';
+export * from './root-user';

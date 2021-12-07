@@ -1,5 +1,5 @@
 // ~~安全
-const safe = {
+const orgSafe = {
   'c7ncd.org-safe.safety': 'Safety',
   'c7ncd.org-safe.edit': 'Edit',
   'c7ncd.org-safe.passwordSecurityPolicy': 'Password Security Policy',
@@ -29,4 +29,4 @@ const safe = {
   'c7ncd.org-safe.pswChangeReLogin': 'Change the password and log in again',
 };
 
-export { safe };
+export { orgSafe };
