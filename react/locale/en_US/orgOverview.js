@@ -7,7 +7,7 @@ const orgOverview = {
   'c7ncd.org-overview.appOverview': 'Application Services Overview',
   'c7ncd.org-overview.unitNum': 'Unit: Number of application services',
   'c7ncd.org-overview.orgStatistics': 'Organization Statistics',
-  'c7ncd.org-overview.lastdays': 'last {name} days',
+  'c7ncd.org-overview.lastdays': 'Last {name} Days',
   'c7ncd.org-overview.numbers': 'Number',
   'c7ncd.org-overview.time': 'Time',
   'c7ncd.org-overview.OrgOperationRecords': 'Organizational operation records',

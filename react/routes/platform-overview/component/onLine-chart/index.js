@@ -85,7 +85,7 @@ const LineChart = observer(() => {
     <ContainerBlock
       width="100%"
       height="255px"
-      title={format({ id: 'people' }) + formatCommon({ id: 'statistical' })}
+      title={format({ id: 'people' })}
       titleMarginBottom="0"
       loading={onlineHourDs.status === 'loading' || onlineNumDs.status === 'loading'}
     >
