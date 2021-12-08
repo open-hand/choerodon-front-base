@@ -521,7 +521,7 @@ function UserInfo() {
         if (phoneBind) {
           text = formatClient({ id: 'notBind' });
         } else {
-          text = '绑定';
+          text = formatClient({ id: 'goBind' });
         }
       }
 
