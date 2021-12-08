@@ -28,6 +28,7 @@ import { cloneDeep } from 'lodash';
 import { CaptchaField } from '@choerodon/components/lib/index.js';
 import Cookies from 'universal-cookie';
 import { injectIntl } from 'react-intl';
+import topBg from './assets/bg.svg';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
 import { iamApi, oauthApi } from '@/api';
@@ -521,7 +522,7 @@ function UserInfo() {
         if (phoneBind) {
           text = formatClient({ id: 'notBind' });
         } else {
-          text = '绑定';
+          text = formatClient({ id: 'goBind' });
         }
       }
 
@@ -609,35 +610,38 @@ function UserInfo() {
     return (
       <>
         <div className={`${prefixCls}-top-container`}>
-          <div className={`${prefixCls}-avatar-wrap-container`}>
-            {renderAvatar()}
-          </div>
-          <div className={`${prefixCls}-login-info`}>
-            <div>
-              {userInfoDs?.current?.get('realName')}
-              <span
-                onClick={openModifyNameModal}
-                role="none"
-                style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
-              >
-                <Icon type="edit-o" />
-              </span>
+          <img className={`${prefixCls}-top-container-bg`} src={topBg} alt="" />
+          <div className={`${prefixCls}-top-container-conent`}>
+            <div className={`${prefixCls}-avatar-wrap-container`}>
+              {renderAvatar()}
             </div>
-            <div>
-              {formatClient({ id: 'source' })}
-              :
-              {ldap
-                ? formatClient({ id: 'ldap' })
-                : formatClient({ id: 'noLdap' })}
-            </div>
-            <div>
-              <span>
-                {formatCommon({ id: 'account' })}
-                ：
-              </span>
-              <Text style={{ fontSize: '13px' }}>
-                <span>{userInfoDs?.current?.get('loginName')}</span>
-              </Text>
+            <div className={`${prefixCls}-login-info`}>
+              <div>
+                {userInfoDs?.current?.get('realName')}
+                <span
+                  onClick={openModifyNameModal}
+                  role="none"
+                  style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
+                >
+                  <Icon type="edit-o" />
+                </span>
+              </div>
+              <div>
+                {formatClient({ id: 'source' })}
+                :
+                {ldap
+                  ? formatClient({ id: 'ldap' })
+                  : formatClient({ id: 'noLdap' })}
+              </div>
+              <div>
+                <span>
+                  {formatCommon({ id: 'account' })}
+                  ：
+                </span>
+                <Text style={{ fontSize: '13px' }}>
+                  <span>{userInfoDs?.current?.get('loginName')}</span>
+                </Text>
+              </div>
             </div>
           </div>
         </div>
