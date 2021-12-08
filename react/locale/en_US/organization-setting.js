@@ -8,6 +8,7 @@ const base = {
   'c7ncd.organization-setting.base.website': 'Website',
   'c7ncd.organization-setting.base.organizationOwner': 'Owner',
   'c7ncd.organization-setting.base.logo': 'LOGO',
+  'c7ncd.organization-setting.base.transfer': 'Transfer Of Organization Owner',
 };
 
 const ldap = {
