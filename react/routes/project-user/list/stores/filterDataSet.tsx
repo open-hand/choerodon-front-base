@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import { DataSet } from 'choerodon-ui/pro';
 import { C7NFormat } from '@choerodon/master';

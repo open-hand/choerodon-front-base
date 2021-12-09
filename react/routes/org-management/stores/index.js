@@ -7,6 +7,7 @@ import FormListDataSet from './FormListDataSet';
 import OrganizationDataSet from './OrganizationDataSet';
 
 const Store = createContext();
+
 export default Store;
 
 export const StoreProvider = injectIntl(inject('AppState', 'HeaderStore')(
@@ -17,7 +18,7 @@ export const StoreProvider = injectIntl(inject('AppState', 'HeaderStore')(
     const projectFormListDataSet = useMemo(() => new DataSet(FormListDataSet({ level: 'project' })));
     const organizationFormListDataSet = useMemo(() => new DataSet(FormListDataSet({ level: 'organization' })));
     const organizationDataSet = useMemo(() => new DataSet(OrganizationDataSet({ intl })), []);
-    
+
     const modalStyle = {
       width: 'calc(100% - 3.5rem)',
     };

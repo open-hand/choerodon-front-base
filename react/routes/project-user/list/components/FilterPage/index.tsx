@@ -133,13 +133,13 @@ const Index = observer(({
       <div className={`${cssPrefix}__formField`}>
         <Form
           labelLayout={'placeholder' as LabelLayoutType}
-          columns={7}
+          columns={8}
           dataSet={FilterDataSet}
         >
           <TextField
             prefix={(
               <Icon type="search" />
-                )}
+            )}
             name={mapping.params.name}
             placeholder={formatCommon({ id: 'pleaseSearch' })}
             onInput={(e: any) => run(e.target.value)}
@@ -167,7 +167,7 @@ const Index = observer(({
               value: v,
             })}
             dropdownMatchSelectWidth={false}
-            colSpan={1}
+            colSpan={2}
           />
           {/* @ts-ignore */}
           <Button colSpan={1} onClick={handleReset}>

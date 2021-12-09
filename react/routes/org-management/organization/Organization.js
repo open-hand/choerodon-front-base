@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { runInAction } from 'mobx';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { Button, Form, Input, Modal, Tooltip, Row, Col, Select, Icon } from 'choerodon-ui';
 import { Table, message } from 'choerodon-ui/pro';
