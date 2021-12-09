@@ -428,7 +428,7 @@ export default BrowserAdapter(observer((props) => {
             <CardPagination
               style={{
                 textAlign: 'center',
-                marginBottom: 60,
+                marginBottom: 32,
               }}
               total={dataSet.totalCount}
               page={dataSet.currentPage}

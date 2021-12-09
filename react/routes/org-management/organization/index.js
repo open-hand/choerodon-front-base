@@ -1,8 +1,5 @@
-
-import React, { useContext } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { asyncRouter, NoMatch } from '@choerodon/boot';
-// import Organization from './Organization';
+import React from 'react';
+import { asyncRouter } from '@choerodon/boot';
 import Store from '../stores';
 
 const Organization = asyncRouter(
@@ -10,9 +7,18 @@ const Organization = asyncRouter(
   () => import('../../../stores/global/organization'),
 );
 
-const Index = (props) => (
+const Index = () => (
   <Store.Consumer>
-    {({ AppState, HeaderStore, intl, organizationDataSet }) => <Organization intl={intl} AppState={AppState} HeaderStore={HeaderStore} organizationDataSet={organizationDataSet} />}
+    {({
+      AppState, HeaderStore, intl, organizationDataSet,
+    }) => (
+      <Organization
+        intl={intl}
+        AppState={AppState}
+        HeaderStore={HeaderStore}
+        organizationDataSet={organizationDataSet}
+      />
+    )}
   </Store.Consumer>
 );
 

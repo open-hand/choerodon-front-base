@@ -28,8 +28,8 @@
     "universal-cookie": "2.2.0"
   },
   "devDependencies": {
-    "@choerodon/boot": "1.2.0",
-    "@choerodon/master": "1.2.0",
+    "@choerodon/boot": "1.2.0-alpha.1",
+    "@choerodon/master": "1.2.0-alpha.1",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5gs",
