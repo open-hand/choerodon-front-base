@@ -8,6 +8,7 @@ const base = {
   'c7ncd.organization-setting.base.website': '官网地址',
   'c7ncd.organization-setting.base.organizationOwner': '所有者',
   'c7ncd.organization-setting.base.logo': '组织LOGO',
+  'c7ncd.organization-setting.base.transfer': '移交组织所有者',
 };
 
 const ldap = {
