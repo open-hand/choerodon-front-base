@@ -245,25 +245,29 @@ function UserInfo() {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await oauthApi.goCheckCode({
-        phone: verifyFormDataSet.current.get('phone'),
-        captcha: verifyFormDataSet.current.get('captcha'),
-        captchaKey,
-      });
-      cookies.set('captchaKey', '');
-      if (res.status) {
-        boolean = true;
-        cookies.set('verifyKey', res.key);
-        setTimeout(() => {
-          Modal.open({
-            key: Math.random(),
-            title: '请输入新手机号',
-            children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
-            okText: '确定',
-            onOk: () => submitNewPhone('SMS'),
-            destroyOnClose: true,
-          });
-        }, 300);
+      try {
+        const res = await oauthApi.goCheckCode({
+          phone: verifyFormDataSet.current.get('phone'),
+          captcha: verifyFormDataSet.current.get('captcha'),
+          captchaKey,
+        });
+        cookies.set('captchaKey', '');
+        if (res.status) {
+          boolean = true;
+          cookies.set('verifyKey', res.key);
+          setTimeout(() => {
+            Modal.open({
+              key: Math.random(),
+              title: '请输入新手机号',
+              children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
+              okText: '确定',
+              onOk: () => submitNewPhone('SMS'),
+              destroyOnClose: true,
+            });
+          }, 300);
+        }
+      } catch (error) {
+        console.log(error);
       }
       return boolean;
     };
@@ -520,7 +524,7 @@ function UserInfo() {
         text = '';
       } else if (!ldap) {
         if (phoneBind) {
-          text = formatClient({ id: 'notBind' });
+          text = formatClient({ id: 'goTotBind' });
         } else {
           text = formatClient({ id: 'goBind' });
         }

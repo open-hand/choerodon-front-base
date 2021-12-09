@@ -14,7 +14,8 @@ const userInfo = {
   'c7ncd.user-info.bind': 'Is binding',
   'c7ncd.user-info.notBind': 'Unbounded',
   'c7ncd.user-info.goBind': 'Binding',
-  'c7ncd.user-info.temporary1': 'Simplified Chinese',
+  'c7ncd.user-info.goTotBind': 'Unbundling',
+  'c7ncd.user-info.temporary1': 'English',
   'c7ncd.user-info.temporary2': 'China',
 };
 

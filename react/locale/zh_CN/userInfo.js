@@ -14,6 +14,7 @@ const userInfo = {
   'c7ncd.user-info.bind': '已绑定',
   'c7ncd.user-info.notBind': '未绑定',
   'c7ncd.user-info.goBind': '绑定',
+  'c7ncd.user-info.goTotBind': '解绑',
   'c7ncd.user-info.temporary1': '简体中文',
   'c7ncd.user-info.temporary2': '中国',
 };
