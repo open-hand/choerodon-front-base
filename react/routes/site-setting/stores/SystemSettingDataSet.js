@@ -3,6 +3,7 @@ const mapping = {
     name: 'enableOpenPlatformMarket',
     type: 'boolean',
     defaultValue: true,
+    label: '是否启用开放平台市场应用',
   },
 };
 
