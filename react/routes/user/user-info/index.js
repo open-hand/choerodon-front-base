@@ -1,13 +1,16 @@
 import React from 'react';
-import { asyncRouter } from '@choerodon/master';
+import { asyncRouter, C7NLocaleProvider } from '@choerodon/master';
 import { StoreProvider } from './stores';
 
 const UserInfo = asyncRouter(() => import('./UserInfo'));
+const handleImport = (language) => import(`../../../locale/${language}`);
 
 const Index = (props) => (
-  <StoreProvider {...props}>
-    <UserInfo />
-  </StoreProvider>
+  <C7NLocaleProvider importer={handleImport}>
+    <StoreProvider {...props}>
+      <UserInfo />
+    </StoreProvider>
+  </C7NLocaleProvider>
 );
 
 export default Index;
