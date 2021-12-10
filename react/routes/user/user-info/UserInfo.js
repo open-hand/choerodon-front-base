@@ -52,6 +52,7 @@ function UserInfo() {
     modifyNameDataSet,
     newPhoneDataSet,
     modifyPswFormDataSet,
+    isOutSide = false,
   } = context;
 
   const formatCommon = useFormatCommon();
@@ -676,20 +677,25 @@ function UserInfo() {
                 </span>
               )}
             />
-            <Output name="organizationName" />
-            <Output name="organizationCode" />
+            {!isOutSide ? ([
+              <Output name="organizationName" />,
+              <Output name="organizationCode" />,
+            ]) : null}
           </ProForm>
         </div>
       </>
     );
   }
 
-  const render = () => (
+  const render = () => (isOutSide ? (
+    <Content className={`${prefixCls}-container`}>{renderUserInfo()}</Content>
+  ) : (
     <Page>
       <Header className={`${prefixCls}-header`} />
       <Breadcrumb />
       <Content className={`${prefixCls}-container`}>{renderUserInfo()}</Content>
     </Page>
+  )
   );
   return render();
 }
