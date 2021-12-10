@@ -670,14 +670,14 @@ function UserInfo() {
             <Output name="password" renderer={renderPassword} />
             <Output name="language" renderer={renderLanguage} />
             <Output name="timeZone" renderer={renderTimeZone} />
-            <Output
-              label={(
-                <span className={`${prefixCls}-info-container-info-title`}>
-                  {formatClient({ id: 'organization' })}
-                </span>
-              )}
-            />
             {!isOutSide ? ([
+              <Output
+                label={(
+                  <span className={`${prefixCls}-info-container-info-title`}>
+                    {formatClient({ id: 'organization' })}
+                  </span>
+                )}
+              />,
               <Output name="organizationName" />,
               <Output name="organizationCode" />,
             ]) : null}
