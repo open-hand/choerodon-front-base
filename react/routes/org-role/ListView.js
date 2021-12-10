@@ -46,7 +46,7 @@ const ListView = () => {
     Modal.open({
       key: modalKey,
       drawer: true,
-      title: formatMessage({ id: `${intlPrefix}.${type}` }),
+      title: `${type === 'add' ? '添加' : '修改'}${level === 'organization' ? '组织' : '项目'}角色`,
       children: (
         <FormView
           level={level}

@@ -7,7 +7,7 @@ const userInfoDsConfig = (formatClient, formatCommon) => ({
       type: 'string',
       label: formatClient({ id: 'email' }),
       // eslint-disable-next-line no-useless-escape
-      pattern: /^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/,
+      // pattern: /^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/,
     },
     {
       name: 'phone',

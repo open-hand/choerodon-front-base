@@ -152,7 +152,7 @@ const Client = withRouter(observer(() => {
         <HeaderButtons
           showClassName={false}
           items={([{
-            name: formatClient({ id: 'edit' }),
+            name: formatClient({ id: 'add' }),
             icon: 'playlist_add',
             display: true,
             permissions: [`choerodon.code.${isProject ? 'project' : 'organization'}.setting.client.ps.add`],

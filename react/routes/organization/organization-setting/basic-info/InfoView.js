@@ -1,6 +1,13 @@
 import React, { useContext, Fragment } from 'react';
 import {
-  Action, Content, Header, Page, Permission, Breadcrumb, TabPage, HeaderButtons,
+  Action,
+  Content,
+  Header,
+  Page,
+  Permission,
+  Breadcrumb,
+  TabPage,
+  HeaderButtons,
 } from '@choerodon/boot';
 import { Form, Output, Modal } from 'choerodon-ui/pro';
 import { withRouter } from 'react-router-dom';
@@ -20,16 +27,21 @@ const transferModalKey = Modal.key();
 
 const InfoView = observer(() => {
   const {
-    organizationDataSet: dataSet, AppState, intl, orgName, formatClient, orgId,
+    organizationDataSet: dataSet,
+    AppState,
+    intl,
+    orgName,
+    formatClient,
+    orgId,
   } = useContext(Store);
   const imageUrl = dataSet.current && dataSet.current.getPristineValue('imageUrl');
-  function handleRefresh() {
+  const handleRefresh = () => {
     dataSet.query();
-  }
+  };
   // eslint-disable-next-line consistent-return
   async function handleSave() {
     try {
-      if ((await dataSet.submit())) {
+      if (await dataSet.submit()) {
         handleRefresh();
       } else {
         return false;
@@ -46,8 +58,8 @@ const InfoView = observer(() => {
   const openTransferModal = () => {
     Modal.open({
       key: transferModalKey,
-      title: '移交组织所有者',
-      children: <TransferModal tenantId={orgId} />,
+      title: formatClient({ id: 'base.transfer' }),
+      children: <TransferModal tenantId={orgId} refresh={handleRefresh} />,
       style: { width: CONSTANTS.MODAL_WIDTH.MIDDLE },
     });
   };
@@ -59,7 +71,12 @@ const InfoView = observer(() => {
       title: '修改信息',
       style: { width: 380 },
       children: (
-        <InfoForm intl={intl} dataSet={dataSet} AppState={AppState} orgName={orgName} />
+        <InfoForm
+          intl={intl}
+          dataSet={dataSet}
+          AppState={AppState}
+          orgName={orgName}
+        />
       ),
       fullScreen: true,
       onOk: handleSave,
@@ -71,25 +88,27 @@ const InfoView = observer(() => {
     <TabPage
       service={['choerodon.code.organization.setting.general-setting.ps.info']}
     >
-
       <Header>
         <HeaderButtons
           showClassName={false}
-          items={([
+          items={[
             {
               name: formatClient({ id: 'base.Edit' }),
               icon: 'edit-o',
-              permissions: ['choerodon.code.organization.setting.general-setting.ps.update.info'],
+              permissions: [
+                'choerodon.code.organization.setting.general-setting.ps.update.info',
+              ],
               handler: openModal,
             },
             {
-              name: '移交组织所有者',
+              name: formatClient({ id: 'base.transfer' }),
               icon: 'sync_alt',
-              // permissions:
-              // ['choerodon.code.organization.setting.general-setting.ps.update.info'],
+              permissions: [
+                'choerodon.code.organization.setting.general-setting.ps.orgTransfer',
+              ],
               handler: openTransferModal,
             },
-          ])}
+          ]}
         />
       </Header>
 
@@ -107,17 +126,30 @@ const InfoView = observer(() => {
         >
           <Output name="tenantName" colSpan={1} />
 
-          <div colSpan={1} rowSpan={3} className="c7n-organization-formImg" label="组织LOGO">
-            {imageUrl ? <img src={imageUrl} alt="图片" />
-              : <div className="c7n-organization-formImg-wrapper">{orgName[0]}</div>}
-
+          <div
+            colSpan={1}
+            rowSpan={3}
+            className="c7n-organization-formImg"
+            label={formatClient({ id: 'base.logo' })}
+          >
+            {imageUrl ? (
+              <img src={imageUrl} alt="图片" />
+            ) : (
+              <div className="c7n-organization-formImg-wrapper">
+                {orgName[0]}
+              </div>
+            )}
           </div>
           <Output name="tenantNum" newLine />
-          <Output name="address" newLine renderer={({ text }) => (text || '无')} />
+          <Output
+            name="address"
+            newLine
+            renderer={({ text }) => text || '无'}
+          />
           <Output
             name="homePage"
             newLine
-            renderer={({ text }) => (text || '暂未设置官网地址')}
+            renderer={({ text }) => text || '暂未设置官网地址'}
           />
           <Output name="ownerRealName" newLine />
         </Form>

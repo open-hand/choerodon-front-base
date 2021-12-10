@@ -1,10 +1,10 @@
 const overview = {
   'c7n.platform.connectedClusters': '运行中集群',
   'c7n.platform.unconnectedCluster': '未连接集群',
-  'c7n.platform.peopleStore.people': '平台人数',
+  'c7n.platform.peopleStore.people': '平台人数统计',
   'c7n.platform.peopleStore.increaseToYesterday': '较昨日新增',
   'c7n.platform.dailyVisits': '日访问量',
-  'c7n.platform.people': '在线人数',
+  'c7n.platform.people': '在线人数统计',
   'c7n.platform.emailSend.situation': '邮件发送情况',
   'c7n.platform.emailSend.sendNumber': '发送数目',
   'c7n.platform.emailSend.sendTotalNumber': '发送总数',

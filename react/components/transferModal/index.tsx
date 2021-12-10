@@ -4,16 +4,19 @@ import React, {
 import {
   Form, Select, DataSet, message,
 } from 'choerodon-ui/pro';
-import { NewTips } from '@choerodon/components';
+import { NewTips, UserInfo } from '@choerodon/components';
 import { LabelLayoutType } from 'choerodon-ui/pro/lib/form/Form';
 import debounce from 'lodash/debounce';
 import { organizationsApi, registerSaasApi } from '@choerodon/master';
 import { get } from '@choerodon/inject';
 import transferDataSet from './transferDataSet';
+
 import './index.less';
 
 const TransferModal = (props: any) => {
-  const { modal, tenantId } = props;
+  const {
+    modal, tenantId, refresh, site,
+  } = props;
 
   const [isSaas, setIsSaas] = useState(false);
 
@@ -31,27 +34,51 @@ const TransferModal = (props: any) => {
     const checkRes = await ds?.current?.getField('user')?.checkValidity();
     if (checkRes) {
       try {
-        await organizationsApi.transferOrg(tenantId, { user_id: ds?.current.get('user')?.id });
+        if (site) {
+          await organizationsApi.transferOrgSite({ user_id: ds?.current.get('user')?.id, tenant_id: tenantId });
+        } else {
+          await organizationsApi.transferOrg(tenantId, { user_id: ds?.current.get('user')?.id });
+        }
         message.success('操作成功!');
+        if (refresh) {
+          refresh();
+        }
+        return true;
       } catch (error) {
         console.log(error);
+        return false;
       }
     }
     return false;
   });
 
   const notify = async () => {
-    try {
-      await organizationsApi.transferOrgNotify(tenantId);
-      message.success('通知成功!');
-    } catch (error) {
-      console.log(error);
+    const checkRes = await ds?.current?.getField('user')?.checkValidity();
+    if (checkRes) {
+      try {
+        await organizationsApi.transferOrgNotify(tenantId, { user_id: ds?.current.get('user')?.id });
+        message.success('通知成功!');
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const optionRender = ({ record: itemRecord }: any) => (
-    <span>{itemRecord?.get('realName')}</span>
-  );
+  const optionRender = ({ record: itemRecord }: any) => {
+    const isLdap = itemRecord.get('ldap');
+    const email = itemRecord.get('email');
+    const imgUrl = itemRecord.get('imageUrl');
+    const realName = itemRecord.get('realName');
+    const loginName = itemRecord.get('loginName');
+    return (
+      <UserInfo
+        avatar={imgUrl}
+        realName={`${realName}`}
+        loginName={isLdap ? loginName : email}
+        showTooltip
+      />
+    );
+  };
 
   const goQuery = useCallback(
     debounce((value) => {

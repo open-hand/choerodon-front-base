@@ -5,7 +5,6 @@ import { action, computed, observable } from 'mobx';
 import { axios, store, Choerodon } from '@choerodon/boot';
 import { message } from 'choerodon-ui/pro';
 import queryString from 'query-string';
-import { handleFiltersParams } from '../../../common/util';
 
 @store('OrganizationStore')
 class OrganizationStore {

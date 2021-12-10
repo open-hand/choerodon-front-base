@@ -34,7 +34,7 @@ const PlatformPeople = observer(() => {
     <ContainerBlock
       width="58%"
       height="100%"
-      title={format({ id: 'people' }) + formatCommon({ id: 'statistical' })}
+      title={format({ id: 'people' })}
       hasDaysPicker
       handleChangeDays={handleChangeDays}
       loading={loading}

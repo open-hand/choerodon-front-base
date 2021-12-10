@@ -110,9 +110,9 @@ export default observer((props) => {
           <Spin />
         </div>
         <div className="text">{intl.formatMessage({
-          id: `c7ncd.orguser.${uploading ? 'fileloading' : 'uploading'}.text` })}
+          id: `c7ncd.org-user.${uploading ? 'fileloading' : 'uploading'}.text` })}
         </div>
-        {!uploading && (<div className="tip">{intl.formatMessage({ id: 'c7ncd.orguser.uploading.tip' })}</div>)}
+        {!uploading && (<div className="tip">{intl.formatMessage({ id: 'c7ncd.org-user.uploading.tip' })}</div>)}
       </div>
     );
   }

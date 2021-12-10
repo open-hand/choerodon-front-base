@@ -28,6 +28,7 @@ import { cloneDeep } from 'lodash';
 import { CaptchaField } from '@choerodon/components/lib/index.js';
 import Cookies from 'universal-cookie';
 import { injectIntl } from 'react-intl';
+import topBg from './assets/bg.svg';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
 import { iamApi, oauthApi } from '@/api';
@@ -51,6 +52,7 @@ function UserInfo() {
     modifyNameDataSet,
     newPhoneDataSet,
     modifyPswFormDataSet,
+    isOutSide = false,
   } = context;
 
   const formatCommon = useFormatCommon();
@@ -244,25 +246,29 @@ function UserInfo() {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await oauthApi.goCheckCode({
-        phone: verifyFormDataSet.current.get('phone'),
-        captcha: verifyFormDataSet.current.get('captcha'),
-        captchaKey,
-      });
-      cookies.set('captchaKey', '');
-      if (res.status) {
-        boolean = true;
-        cookies.set('verifyKey', res.key);
-        setTimeout(() => {
-          Modal.open({
-            key: Math.random(),
-            title: '请输入新手机号',
-            children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
-            okText: '确定',
-            onOk: () => submitNewPhone('SMS'),
-            destroyOnClose: true,
-          });
-        }, 300);
+      try {
+        const res = await oauthApi.goCheckCode({
+          phone: verifyFormDataSet.current.get('phone'),
+          captcha: verifyFormDataSet.current.get('captcha'),
+          captchaKey,
+        });
+        cookies.set('captchaKey', '');
+        if (res.status) {
+          boolean = true;
+          cookies.set('verifyKey', res.key);
+          setTimeout(() => {
+            Modal.open({
+              key: Math.random(),
+              title: '请输入新手机号',
+              children: <VerifyOrNewPhoneModalContent ds={newPhoneDataSet} />,
+              okText: '确定',
+              onOk: () => submitNewPhone('SMS'),
+              destroyOnClose: true,
+            });
+          }, 300);
+        }
+      } catch (error) {
+        console.log(error);
       }
       return boolean;
     };
@@ -519,9 +525,9 @@ function UserInfo() {
         text = '';
       } else if (!ldap) {
         if (phoneBind) {
-          text = formatClient({ id: 'notBind' });
+          text = formatClient({ id: 'goTotBind' });
         } else {
-          text = '绑定';
+          text = formatClient({ id: 'goBind' });
         }
       }
 
@@ -609,35 +615,38 @@ function UserInfo() {
     return (
       <>
         <div className={`${prefixCls}-top-container`}>
-          <div className={`${prefixCls}-avatar-wrap-container`}>
-            {renderAvatar()}
-          </div>
-          <div className={`${prefixCls}-login-info`}>
-            <div>
-              {userInfoDs?.current?.get('realName')}
-              <span
-                onClick={openModifyNameModal}
-                role="none"
-                style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
-              >
-                <Icon type="edit-o" />
-              </span>
+          <img className={`${prefixCls}-top-container-bg`} src={topBg} alt="" />
+          <div className={`${prefixCls}-top-container-conent`}>
+            <div className={`${prefixCls}-avatar-wrap-container`}>
+              {renderAvatar()}
             </div>
-            <div>
-              {formatClient({ id: 'source' })}
-              :
-              {ldap
-                ? formatClient({ id: 'ldap' })
-                : formatClient({ id: 'noLdap' })}
-            </div>
-            <div>
-              <span>
-                {formatCommon({ id: 'account' })}
-                ：
-              </span>
-              <Text style={{ fontSize: '13px' }}>
-                <span>{userInfoDs?.current?.get('loginName')}</span>
-              </Text>
+            <div className={`${prefixCls}-login-info`}>
+              <div>
+                {userInfoDs?.current?.get('realName')}
+                <span
+                  onClick={openModifyNameModal}
+                  role="none"
+                  style={{ cursor: 'pointer', color: '#5365EA', marginLeft: 6 }}
+                >
+                  <Icon type="edit-o" />
+                </span>
+              </div>
+              <div>
+                {formatClient({ id: 'source' })}
+                :
+                {ldap
+                  ? formatClient({ id: 'ldap' })
+                  : formatClient({ id: 'noLdap' })}
+              </div>
+              <div>
+                <span>
+                  {formatCommon({ id: 'account' })}
+                  ：
+                </span>
+                <Text style={{ fontSize: '13px' }}>
+                  <span>{userInfoDs?.current?.get('loginName')}</span>
+                </Text>
+              </div>
             </div>
           </div>
         </div>
@@ -661,27 +670,32 @@ function UserInfo() {
             <Output name="password" renderer={renderPassword} />
             <Output name="language" renderer={renderLanguage} />
             <Output name="timeZone" renderer={renderTimeZone} />
-            <Output
-              label={(
-                <span className={`${prefixCls}-info-container-info-title`}>
-                  {formatClient({ id: 'organization' })}
-                </span>
-              )}
-            />
-            <Output name="organizationName" />
-            <Output name="organizationCode" />
+            {!isOutSide ? ([
+              <Output
+                label={(
+                  <span className={`${prefixCls}-info-container-info-title`}>
+                    {formatClient({ id: 'organization' })}
+                  </span>
+                )}
+              />,
+              <Output name="organizationName" />,
+              <Output name="organizationCode" />,
+            ]) : null}
           </ProForm>
         </div>
       </>
     );
   }
 
-  const render = () => (
+  const render = () => (isOutSide ? (
+    <Content className={`${prefixCls}-container`}>{renderUserInfo()}</Content>
+  ) : (
     <Page>
       <Header className={`${prefixCls}-header`} />
       <Breadcrumb />
       <Content className={`${prefixCls}-container`}>{renderUserInfo()}</Content>
     </Page>
+  )
   );
   return render();
 }

@@ -7,6 +7,8 @@ const orguser = {
   'c7ncd.org-user.addteammate': '添加团队成员',
   'c7ncd.org-user.modifyteammate': '修改团队成员',
   'c7ncd.org-user.inviteteammate': '邀请成员',
+  'c7ncd.org-user.invitEmail': '邮件邀请成员',
+  'c7ncd.org-user.invitLink': '链接邀请成员',
   'c7ncd.org-user.sendInvitation': '发送邀请',
   'c7ncd.org-user.importteammate': '导入团队成员',
   'c7ncd.org-user.cardmode': '卡片模式',
