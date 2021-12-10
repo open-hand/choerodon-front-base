@@ -4,12 +4,13 @@ import React, {
 import {
   Form, Select, DataSet, message,
 } from 'choerodon-ui/pro';
-import { NewTips } from '@choerodon/components';
+import { NewTips, UserInfo } from '@choerodon/components';
 import { LabelLayoutType } from 'choerodon-ui/pro/lib/form/Form';
 import debounce from 'lodash/debounce';
 import { organizationsApi, registerSaasApi } from '@choerodon/master';
 import { get } from '@choerodon/inject';
 import transferDataSet from './transferDataSet';
+
 import './index.less';
 
 const TransferModal = (props: any) => {
@@ -63,9 +64,21 @@ const TransferModal = (props: any) => {
     }
   };
 
-  const optionRender = ({ record: itemRecord }: any) => (
-    <span>{itemRecord?.get('realName')}</span>
-  );
+  const optionRender = ({ record: itemRecord }: any) => {
+    const isLdap = itemRecord.get('ldap');
+    const email = itemRecord.get('email');
+    const imgUrl = itemRecord.get('imageUrl');
+    const realName = itemRecord.get('realName');
+    const loginName = itemRecord.get('loginName');
+    return (
+      <UserInfo
+        avatar={imgUrl}
+        realName={`${realName}`}
+        loginName={isLdap ? loginName : email}
+        showTooltip
+      />
+    );
+  };
 
   const goQuery = useCallback(
     debounce((value) => {
