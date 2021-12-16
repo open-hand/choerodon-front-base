@@ -66,7 +66,7 @@ export default observer(() => {
   return (
     <div className={`${prefixCls}-modal`}>
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
-        <input type="password" style={{ position: 'absolute', top: '-999px' }} />
+        <input autoComplete="new-password" type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="realName" />
         <TextField
           name="email"
@@ -85,7 +85,7 @@ export default observer(() => {
         canDeleteAll={false}
         maxDisable
       >
-        {(itemProps) => <Select {...itemProps} labelLayout="float" style={{ width: '100%' }} />}
+        {(itemProps) => <Select {...itemProps} name="roles" labelLayout="float" style={{ width: '100%' }} />}
       </FormSelectEditor>
     </div>
   );

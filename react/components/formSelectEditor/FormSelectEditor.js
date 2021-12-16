@@ -135,7 +135,7 @@ export default observer(({
 
   return (
     <>
-      <Form ref={formElement} className="form-select-editor" columns={12}>
+      <Form record={record} ref={formElement} className="form-select-editor" columns={12}>
         {(record.get(name) || []).map((v, index) => {
           if (idField) {
             v = v[idField];
