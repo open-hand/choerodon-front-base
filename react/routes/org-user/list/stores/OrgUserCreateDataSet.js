@@ -53,7 +53,6 @@ export default ({
         label: formatCommon({ id: 'role' }),
         textField: 'name',
         valueField: 'id',
-        required: true,
       },
       {
         name: 'email',
