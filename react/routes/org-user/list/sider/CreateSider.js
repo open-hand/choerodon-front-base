@@ -85,7 +85,7 @@ export default observer(() => {
         canDeleteAll={false}
         maxDisable
       >
-        {(itemProps) => <Select {...itemProps} name="roles" labelLayout="float" style={{ width: '100%' }} />}
+        {(itemProps) => <Select {...itemProps} labelLayout="float" style={{ width: '100%' }} />}
       </FormSelectEditor>
     </div>
   );
