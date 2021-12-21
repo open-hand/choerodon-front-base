@@ -116,5 +116,12 @@ export default ({
         name: 'enabled', type: 'string', label: '启用状态', textField: 'text', valueField: 'value', options: statusOptionDs,
       },
     ],
+    events: {
+      load: ({ dataSet }) => {
+        dataSet?.records.forEach(record => {
+          record.selectable = !record.get('programOwner');
+        })
+      }
+    }
   };
 };
