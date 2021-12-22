@@ -18,7 +18,6 @@ function TabIndex(props) {
 const Index = ({ match }) => (
   <Switch>
     <PermissionRoute
-      exact
       path={match.url}
       component={TabIndex}
       service={['choerodon.code.organization.setting.security.ps.password-policy']}
