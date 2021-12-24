@@ -13,7 +13,6 @@ const userInfoDsConfig = (formatClient, formatCommon) => ({
       name: 'phone',
       type: 'string',
       label: formatClient({ id: 'phone' }),
-      pattern: /^1[3-9]\d{9}$/,
     },
     {
       name: 'password',

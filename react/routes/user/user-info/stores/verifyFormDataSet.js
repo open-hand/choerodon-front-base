@@ -3,15 +3,9 @@ const verifyFormDataSetConfig = {
   fields: [
     {
       name: 'phone',
-      type: 'string',
+      type: 'phone',
       label: '手机号',
       required: true,
-      validator: (value) => {
-        if (!/^1[3-9]\d{9}$/.test(value)) {
-          return '手机格式不正确';
-        }
-        return true;
-      },
     },
     {
       name: 'captcha',

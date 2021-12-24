@@ -66,7 +66,7 @@ export default observer(() => {
   return (
     <div className={`${prefixCls}-modal`}>
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
-        <input type="password" style={{ position: 'absolute', top: '-999px' }} />
+        <input autoComplete="new-password" type="password" style={{ position: 'absolute', top: '-999px' }} />
         <TextField name="realName" />
         <TextField
           name="email"

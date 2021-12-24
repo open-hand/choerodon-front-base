@@ -3,10 +3,9 @@ const newPhoneDataSetConfig = {
   fields: [
     {
       name: 'phone',
-      type: 'string',
+      type: 'phone',
       label: '新手机号码',
       required: true,
-      pattern: /^1[3-9]\d{9}$/,
     },
     {
       name: 'captcha',
