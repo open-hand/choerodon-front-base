@@ -452,6 +452,20 @@ export default BrowserAdapter(observer((props) => {
         dataSet={ds}
         queryBar="none"
         showSelectionCachedButton={false}
+        onRow={({ record }) => ({
+          onMouseEnter: (e) => {
+            if (record.get('programOwner')) {
+              Tooltip.show(e.target, {
+                title: '该用户为项目群人员，不支持批量操作',
+              });
+            }
+          },
+          onMouseLeave: () => {
+            if (record.get('programOwner')) {
+              Tooltip.hide();
+            }
+          },
+        })}
       >
         <Table.Column
           width={100}
