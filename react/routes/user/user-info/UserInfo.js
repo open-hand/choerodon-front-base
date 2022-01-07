@@ -193,6 +193,7 @@ function UserInfo() {
 
     // 绑定手机号确定
     const verifyOk = async () => {
+      console.log(1111);
       let boolean = false;
       const result = await verifyFormDataSet.current.validate();
       if (!result) {
@@ -203,16 +204,20 @@ function UserInfo() {
         message.warning('请先获取验证码');
         return boolean;
       }
-      const res = await oauthApi.goVerify({
-        phone: verifyFormDataSet.current.get('phone'),
-        loginName: userInfoDs.current.get('loginName'),
-        captcha: verifyFormDataSet.current.get('captcha'),
-        captchaKey,
-      });
-      cookies.set('captchaKey', '');
-      if (res.status) {
-        boolean = true;
-        userInfoDs.query();
+      try {
+        const res = await oauthApi.goVerify({
+          phone: verifyFormDataSet.current.get('phone'),
+          loginName: userInfoDs.current.get('loginName'),
+          captcha: verifyFormDataSet.current.get('captcha'),
+          captchaKey,
+        });
+        cookies.set('captchaKey', '');
+        if (res.status) {
+          boolean = true;
+          userInfoDs.query();
+        }
+      } catch (error) {
+        console.log(error);
       }
       return boolean;
     };
