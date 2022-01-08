@@ -22,6 +22,7 @@ export default ({ id = 0, formatClient }) => ({
           ...newData.tenantConfigVO,
           name: newData.tenantName,
           code: newData.tenantNum,
+          tableSplitFlag: newData.tableSplitFlag,
         };
         return ({
           list: [newData.tenantConfigVO],
@@ -29,12 +30,14 @@ export default ({ id = 0, formatClient }) => ({
       }),
     },
     update: ({ data: [data] }) => {
-      const postData = pick(data, ['tenantName', 'tenantNum', 'objectVersionNumber', 'enabledFlag']);
+      const postData = pick(data, ['tenantName', 'tenantNum', 'objectVersionNumber',
+        'enabledFlag', 'tableSplitFlag']);
       postData.tenantConfigVO = {
         homePage: data.homePage || '',
         address: data.address || '',
         imageUrl: data.imageUrl || '',
       };
+
       return ({
         url: `/iam/choerodon/v1/organizations/${id}/organization_level`,
         method: 'put',

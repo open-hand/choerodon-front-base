@@ -36,7 +36,7 @@ const mapping: {
         name: <C7NFormat intlPreifx="boot" id="enable" />,
         value: true,
       }, {
-        name: <C7NFormat intlPreifx="boot" id="stop" />,
+        name: <C7NFormat id="c7n.teamMember.disabled" />,
         value: false,
       }],
     }),

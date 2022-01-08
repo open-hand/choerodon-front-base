@@ -1855,3 +1855,4 @@ export * from './system-setting';
 export * from './safe';
 export * from './hzero-page';
 export * from './root-user';
+export * from './team-member';
