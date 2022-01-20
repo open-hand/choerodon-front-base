@@ -24,9 +24,9 @@ const InfoForm = observer(({
     setAvatarType(type);
   }
   // 关闭模态框
-  function closeAvatarUploader() {
+  const closeAvatarUploader = () => {
     changeAvatarStatus(false);
-  }
+  };
   function getTitle() {
     return avatarType === 'favicon' ? '上传平台Logo' : '上传导航栏图形标';
   }
