@@ -55,8 +55,7 @@ const GeneralSetting = observer(() => {
       }
       message.info('停用成功');
       const queryObj = queryString.parse(history.location.search);
-      const search = await getSearchString('organization', 'id', queryObj.organizationId);
-      history.push(`/projects${search}`);
+      history.push(`/projects?id=${queryObj?.organizationId}&organizationId=${queryObj?.organizationId}&type=organization`);
       return true;
     } catch (err) {
       return false;
@@ -199,7 +198,7 @@ const GeneralSetting = observer(() => {
             permissions: ['choerodon.code.project.setting.general-setting.ps.update'],
             handler: handleEditClick,
           }, {
-            name: formatCommon({ id: 'disable' }),
+            name: formatCommon({ id: 'stop' }),
             icon: 'remove_circle_outline',
             display: true,
             permissions: ['choerodon.code.project.setting.general-setting.ps.disable'],
