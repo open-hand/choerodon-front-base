@@ -81,6 +81,10 @@ export default function ListView() {
     }
     return <span>{value}</span>;
   };
+
+  const refresh = () => {
+    dataSet.query();
+  };
   return (
     <Page
       service={permissions}
@@ -94,7 +98,15 @@ export default function ListView() {
             display: true,
             permissions: ['choerodon.code.organization.manager.organization-admin.ps.add'],
             handler: handleCreate,
-          }])}
+          },
+          {
+            icon: 'refresh',
+            display: true,
+            handler: () => {
+              refresh();
+            },
+          },
+          ])}
         />
       </Header>
       <Breadcrumb />
