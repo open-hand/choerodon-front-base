@@ -4,8 +4,9 @@ import React, {
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
+import { NewTips } from '@choerodon/components';
 import {
-  Form, TextField, Tooltip, Spin, Icon, Button, DatePicker, TextArea,
+  Form, TextField, Tooltip, Spin, Icon, Button, DatePicker, TextArea, CheckBox, Select,
 } from 'choerodon-ui/pro';
 import { notification } from 'choerodon-ui';
 import { map, some, isEmpty } from 'lodash';
@@ -19,7 +20,7 @@ import './index.less';
 
 const EditProject = observer(() => {
   const {
-    formDs, categoryDs, AppState, intl, prefixCls, modal, refresh, categoryCodes,
+    formDs, categoryDs, AppState, intl, prefixCls, modal, refresh, categoryCodes, infoDs,
     intl: { formatMessage }, intlPrefix,
     showProjectPrefixArr,
     isShowAgilePrefix,
@@ -48,6 +49,10 @@ const EditProject = observer(() => {
         id: selectedRecord.get('id'),
         code: selectedRecord.get('code'),
       }));
+
+      if (typeof formDs?.current?.get('statusId') === 'object') {
+        formDs?.current?.set('statusId', formDs?.current?.get('statusId')?.id);
+      }
       record.set('categories', categories);
       const postData = record.toData();
       // @ts-ignore
@@ -55,10 +60,10 @@ const EditProject = observer(() => {
         agileProjectCode, testProjectCode, testProjectInfoId, testProjectObjectVersionNumber,
       } = postData || {};
       const [res] = await axios.all([formDs.submit(),
-        isWATERFALL ? editProjectStore.axiosUpdateWaterfallProjectInfo({
-          ...postData,
-          projectCode: agileProjectCode,
-        }) : undefined,
+        // isWATERFALL ? editProjectStore.axiosUpdateWaterfallProjectInfo({
+        //   ...postData,
+        //   projectCode: agileProjectCode,
+        // }) : undefined,
         isShowAgilePrefix && agileProjectCode !== record.getPristineValue('agileProjectCode')
           ? editProjectStore.axiosUpdateAgileProjectInfo(postData)
           : undefined,
@@ -174,38 +179,66 @@ const EditProject = observer(() => {
   })), []);
 
   const getTooltipContent = useCallback((categoryRecord) => {
+    const isModify = true;
     const code = categoryRecord.get('code');
     if (!categoryRecord.getState('disabled')) {
       return '';
     }
     if (!editProjectStore.getIsSenior && standardDisable.includes(code)) {
-      return '仅SaaS高级版可选此项目类型';
+      return '仅SaaS企业版可选此项目类型';
     }
     if (code === categoryCodes.require) {
       return '请先选择【敏捷管理】或【敏捷项目群】项目类型';
     }
     if (categoryRecord.isSelected) {
-      if (code === categoryCodes.program) {
+      if (code === categoryCodes.program && isModify) {
         return '项目群中存在子项目，无法移除此项目类型';
       }
-      if (code === categoryCodes.agile) {
+      if (code === categoryCodes.agile && isModify) {
         return '敏捷管理项目已加入项目群，无法移除此项目类型';
       }
     } else {
-      if (code === categoryCodes.program) {
+      if (code === categoryCodes.agile && isModify && categoryDs.getState('isWaterfall')) {
+        return '已添加或添加过【瀑布管理】项目类型，不可添加【敏捷管理】项目类型';
+      }
+      if (code === categoryCodes.program && isModify && categoryDs.getState('isWaterfall')) {
+        return '已添加或添加过【瀑布管理】项目类型，不可添加【敏捷项目群】项目类型';
+      }
+      if (code === categoryCodes.waterfall && isModify && categoryDs.getState('isAgile') || categoryDs.getState('isProgram')) {
+        return '已添加或添加过【敏捷管理】/【敏捷项目群】项目类型，不可添加【瀑布管理】项目类型';
+      }
+      if (code === categoryCodes.program && isModify) {
         return '已添加或添加过【敏捷管理】项目类型，不可添加【敏捷项目群】项目类型';
       }
-      if (code === categoryCodes.agile) {
+      if (code === categoryCodes.agile && isModify) {
         return '原项目曾经为【敏捷项目群】项目，不支持调整为【敏捷管理】类型';
+      }
+      if ([categoryCodes.program, categoryCodes.waterfall, categoryCodes.agile]
+        .indexOf(code) !== -1) {
+        return '不可同时选择敏捷管理/敏捷项目群与瀑布管理项目类型';
       }
       return '不可同时选择【敏捷管理】与【规模化敏捷项目群】项目类型';
     }
     return '';
-  }, []);
+  }, [editProjectStore.getIsSenior]);
+
+  const sprintCheckboxOnChange = (value) => {
+    formDs?.current?.set('agileWaterfall', value);
+  };
 
   if (!record) {
     return <Spin spinning />;
   }
+
+  const getVisible = (codeArr) => {
+    let bool = false;
+    codeArr.forEach((item) => {
+      if (infoDs?.current?.get('categories').findIndex((k:any) => k.code === item) !== -1) {
+        bool = true;
+      }
+    });
+    return bool;
+  };
 
   return (
     <>
@@ -215,42 +248,57 @@ const EditProject = observer(() => {
       {renderAvatar()}
       <Form record={record} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
         <TextField name="name" />
+        <Select name="statusId" />
         <TextArea name="description" resize="vertical" />
       </Form>
       <div className={`${prefixCls}-category-label`}>项目类型</div>
       <Spin spinning={categoryDs.status === 'loading'}>
         <div className={`${prefixCls}-category`}>
           {categoryDs.map((categoryRecord) => (
-            <Tooltip title={getTooltipContent(categoryRecord)} key={categoryRecord.get('code')}>
+            <div>
+              <Tooltip title={getTooltipContent(categoryRecord)} key={categoryRecord.get('code')}>
+                <div
+                  className={getCategoryClassNames(categoryRecord)}
+                  onClick={() => handleCategoryClick(categoryRecord)}
+                  role="none"
+                >
+                  <div className={`${prefixCls}-category-item-icon ${prefixCls}-category-item-icon-${categoryRecord.get('code')}`} />
+                  <span>{categoryRecord.get('name')}</span>
+                </div>
+              </Tooltip>
+              {categoryRecord.get('code') === 'N_WATERFALL'
+              && categoryRecord.isSelected && (
               <div
-                className={getCategoryClassNames(categoryRecord)}
-                onClick={() => handleCategoryClick(categoryRecord)}
                 role="none"
+                className={`${prefixCls}-category-exception`}
+                onClick={(e) => { e.stopPropagation(); }}
               >
-                <div className={`${prefixCls}-category-item-icon ${prefixCls}-category-item-icon-${categoryRecord.get('code')}`} />
-                <span>{categoryRecord.get('name')}</span>
+                是否同时启用冲刺
+                {' '}
+                <CheckBox checked={record?.get('agileWaterfall')} onChange={sprintCheckboxOnChange} />
+                <NewTips
+                  helpText="启用冲刺适用于大瀑布小敏捷场景， 启用后可使用任务看板，故事地图等功能"
+                  style={{
+                    marginLeft: 6,
+                    position: 'relative',
+                  }}
+                />
               </div>
-            </Tooltip>
+              )}
+            </div>
           ))}
         </div>
       </Spin>
-      {(!isEmpty(showProjectPrefixArr) || isWATERFALL) && ([
+      {/* (!isEmpty(showProjectPrefixArr) || isWATERFALL) */}
+      {getVisible(['N_AGILE', 'N_PROGRAM', 'N_TEST']) && ([
         <div className={`${prefixCls}-section-title`}>
           {formatMessage({ id: `${intlPrefix}.otherSetting` })}
         </div>,
         <Form dataSet={formDs} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
-          {isShowAgilePrefix && <TextField name="agileProjectCode" renderer={({ value }) => (isWATERFALL ? record.get('projectCode') : value)} />}
-          {isShowTestPrefix && <TextField name="testProjectCode" />}
-          {isWATERFALL && ([
-            <DatePicker
-              name="projectEstablishmentTime"
-              autoComplete="off"
-            />,
-            <DatePicker
-              name="projectConclusionTime"
-              autoComplete="off"
-            />,
-          ])}
+          {/* {isWATERFALL || isShowAgilePrefix && <TextField name="agileProjectCode" />}
+          {isShowTestPrefix && <TextField name="testProjectCode" />} */}
+          {getVisible(['N_AGILE', 'N_PROGRAM']) && <TextField name="agileProjectCode" />}
+          {getVisible(['N_TEST']) && <TextField name="testProjectCode" />}
         </Form>,
       ])}
     </>

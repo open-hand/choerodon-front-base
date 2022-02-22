@@ -11,7 +11,7 @@ export const projectSettingsInfo = {
   'c7ncd.project.setting.info.otherSetting': '其他设置',
   'c7ncd.project.setting.info.name': '项目名称',
   'c7ncd.project.setting.info.applicationName': '应用名称',
-  'c7ncd.project.setting.info.agile.prefix': '敏捷问题前缀',
+  'c7ncd.project.setting.info.agile.prefix': '工作项前缀',
   'c7ncd.project.setting.info.test.prefix': '测试问题前缀',
   'c7ncd.project.setting.info.waterfall.startTime': '立项时间',
   'c7ncd.project.setting.info.waterfall.endTime': '结项时间',

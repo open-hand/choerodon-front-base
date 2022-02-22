@@ -6,10 +6,9 @@ import { withRouter } from 'react-router-dom';
 import { DataSet } from 'choerodon-ui/pro';
 import { forEach, some } from 'lodash';
 import { injectIntl } from 'react-intl';
-import moment from 'moment';
-import { axios } from '@choerodon/boot';
 import FormDataSet from './FormDataSet';
 import CategoryDataSet from './CategoryDataSet';
+import StatusDataSet from './StatusDataSet';
 import useStore, { StoreProps } from './useStore';
 
 interface ContextProps {
@@ -30,6 +29,7 @@ interface ContextProps {
   modal: any,
   refresh(): void,
   standardDisable: string[],
+  infoDs: DataSet
 }
 
 export interface CategoryCodesProps {
@@ -82,28 +82,37 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
   ]), []);
 
   const editProjectStore = useStore();
+
   const categoryDs = useMemo(() => new DataSet(CategoryDataSet({
     organizationId,
     categoryCodes,
     editProjectStore,
   })), [organizationId]);
+
+  const statusDs = useMemo(() => new DataSet(StatusDataSet({
+    organizationId, projectId,
+  })), [projectId]);
+
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    isShowTestPrefix, intlPrefix, isShowAgilePrefix, formatMessage, isWATERFALL,
-  })), [organizationId, projectId]);
+    isShowTestPrefix, intlPrefix, isShowAgilePrefix, formatMessage, isWATERFALL, statusDs,
+  })), [organizationId, projectId, statusDs]);
 
   useEffect(() => {
-    if (isWATERFALL) {
-      projectData.projectConclusionTime = projectData.projectEstablishmentTime ? moment(projectData.projectEstablishmentTime, 'YYYY-MM-DD') : null;
-      projectData.projectEstablishmentTime = projectData.projectEstablishmentTime ? moment(projectData.projectEstablishmentTime, 'YYYY-MM-DD') : null;
-    }
     formDs.loadData([projectData]);
     loadData();
   }, [projectId, organizationId]);
 
   const loadData = async () => {
     try {
-      await axios.all([categoryDs.query(), editProjectStore.checkSenior(organizationId)]);
+      await statusDs.query();
+      await categoryDs.query();
+      // const projectData = await formDs.query();
+      await editProjectStore.checkSenior(organizationId);
+
       const isSenior = editProjectStore.getIsSenior;
+
+      // await axios.all([categoryDs.query(), editProjectStore.checkSenior(organizationId)]);
+      // const isSenior = editProjectStore.getIsSenior;
       if (projectData && projectData.categories && projectData.categories.length) {
         const isBeforeProgram = (projectData.beforeCategory || '')?.split(',').includes(categoryCodes.program);
         const isBeforeAgile = (projectData.beforeCategory || '').includes(categoryCodes.agile);
@@ -111,8 +120,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
         let isProgramProject = false;
         let isRequire = false;
         let isAgile = false;
+        let isWaterfall = false;
         forEach(projectData.categories, async ({ code: categoryCode }: { code: string}) => {
           switch (categoryCode) {
+            case categoryCodes.waterfall:
+              isWaterfall = true;
+              break;
             case categoryCodes.program:
               isProgram = true;
               break;
@@ -130,10 +143,12 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           }
         });
         categoryDs.setState({
+          isEdit: true,
           isBeforeAgile,
           isBeforeProgram,
-          isCurrentAgile: isAgile,
-          isCurrentProgram: isProgram,
+          isAgile,
+          isProgram,
+          isWaterfall,
         });
         categoryDs.forEach(async (categoryRecord) => {
           const currentCode = categoryRecord.get('code');
