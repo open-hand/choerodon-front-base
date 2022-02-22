@@ -52,13 +52,21 @@ export default ({
       label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
     },
     {
-      name: 'projectEstablishmentTime',
-      label: formatMessage({ id: `${intlPrefix}.waterfall.startTime` }),
+      name: 'enabled',
+      type: 'boolean' as FieldType,
     },
     {
-      name: 'projectConclusionTime',
-      label: formatMessage({ id: `${intlPrefix}.waterfall.endTime` }),
+      name: 'statusName',
+      label: '状态',
     },
+    // {
+    //   name: 'projectEstablishmentTime',
+    //   label: formatMessage({ id: `${intlPrefix}.waterfall.startTime` }),
+    // },
+    // {
+    //   name: 'projectConclusionTime',
+    //   label: formatMessage({ id: `${intlPrefix}.waterfall.endTime` }),
+    // },
     {
       name: 'description',
       label: formatMessage({ id: `${intlPrefix}.description.title` }),

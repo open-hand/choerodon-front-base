@@ -70,6 +70,7 @@ const GeneralSetting = observer(() => {
       key: Modal.key(),
       title: '修改信息',
       children: <EditProject
+        infoDs={infoDs}
         refresh={loadProject}
         showProjectPrefixArr={showProjectPrefixArr}
         isWATERFALL={isWATERFALL}
@@ -185,6 +186,16 @@ const GeneralSetting = observer(() => {
     return <Spin spinning />;
   }
 
+  const getVisible = (codeArr) => {
+    let bool = false;
+    codeArr.forEach((item) => {
+      if (infoDs?.current?.get('categories').findIndex((k:any) => k.code === item) !== -1) {
+        bool = true;
+      }
+    });
+    return bool;
+  };
+
   return (
     <Page
       service={['choerodon.code.project.setting.general-setting.ps.info']}
@@ -219,6 +230,7 @@ const GeneralSetting = observer(() => {
             <Output name="name" />
             <Output name="code" />
             <Output name="categories" renderer={renderCategories} />
+            {infoDs?.current?.get('enabled') && <Output name="statusName" /> }
             <Output name="description" />
             <Output name="creationDate" />
             <Output name="createUserName" />
@@ -256,12 +268,10 @@ const GeneralSetting = observer(() => {
                 labelAlign={'left' as LabelAlign}
                 className={`${prefixCls}-section`}
               >
-                {isShowAgilePrefix ? <Output name="agileProjectCode" renderer={({ value }) => record.get('waterfallProjectCode') || value} /> : null}
-                {isShowTestPrefix ? <Output name="testProjectCode" /> : null}
-                {isWATERFALL ? ([
-                  <Output name="projectEstablishmentTime" renderer={({ value }) => (value ? String(value).split(' ')[0] : '')} />,
-                  <Output name="projectConclusionTime" renderer={({ value }) => (value ? String(value).split(' ')[0] : '')} />,
-                ]) : null}
+                {/* {isWATERFALL || isShowAgilePrefix ? <Output name="agileProjectCode" /> : null}
+                {isShowTestPrefix ? <Output name="testProjectCode" /> : null} */}
+                {getVisible(['N_AGILE', 'N_PROGRAM']) && <Output name="agileProjectCode" />}
+                {getVisible(['N_TEST']) && <Output name="testProjectCode" />}
               </Form>
             </>
           )

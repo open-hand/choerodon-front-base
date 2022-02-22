@@ -10,7 +10,7 @@ export const projectSettingsInfo = {
   'c7ncd.project.setting.info.setting': '项目设置',
   'c7ncd.project.setting.info.otherSetting': 'Other Settings',
   'c7ncd.project.setting.info.name': 'Project name',
-  'c7ncd.project.setting.info.agile.prefix': 'Agile issue prefix',
+  'c7ncd.project.setting.info.agile.prefix': 'WorkItem issue prefix',
   'c7ncd.project.setting.info.test.prefix': 'Test issue prefix',
   'c7ncd.project.setting.info.waterfall.startTime': '立项时间',
   'c7ncd.project.setting.info.waterfall.endTime': '结项时间',

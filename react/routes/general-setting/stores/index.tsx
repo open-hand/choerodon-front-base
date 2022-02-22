@@ -64,16 +64,16 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
 
   const loadProject = useCallback(async () => {
     try {
-      const [infoData, waterfallData, agileData = {}, testData = {}] = await axios.all([
+      const [infoData, agileData = {}, testData = {}] = await axios.all([
         infoDs.query(),
-        isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
+        // isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
         isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
         isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
           : undefined,
       ]);
       infoDs.loadData([assign(infoData, {
         agileProjectCode: agileData.projectCode,
-        waterfallData: waterfallData || {},
+        // waterfallData: waterfallData || {},
         testProjectCode: testData.projectCode,
         testProjectInfoId: testData.infoId,
         testProjectObjectVersionNumber: testData.objectVersionNumber,

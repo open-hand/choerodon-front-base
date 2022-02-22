@@ -1,5 +1,5 @@
 // @ts-nocheck
-import moment from 'moment';
+import { DataSet } from 'choerodon-ui/pro';
 import { DataSetProps, FieldType } from '../../../../../interface';
 
 interface FormProps {
@@ -8,6 +8,7 @@ interface FormProps {
   isShowTestPrefix: boolean,
   isShowAgilePrefix: boolean,
   isWATERFALL: boolean,
+  statusDs: DataSet
 }
 
 // 项目名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成   /^[-—\.\w\s\u4e00-\u9fa5]{1,32}$/
@@ -30,7 +31,7 @@ const nameValidator = (value: string) => {
 };
 
 export default ({
-  formatMessage, intlPrefix, isShowTestPrefix, isShowAgilePrefix, isWATERFALL,
+  formatMessage, intlPrefix, isShowTestPrefix, isShowAgilePrefix, isWATERFALL, statusDs,
 }: FormProps): DataSetProps => ({
   autoQuery: false,
   selection: false,
@@ -54,6 +55,24 @@ export default ({
       validator: nameValidator,
     },
     {
+      name: 'statusId',
+      type: 'object',
+      label: '项目状态',
+      textField: 'name',
+      valueField: 'id',
+      options: statusDs,
+      dynamicProps: {
+        required: ({ record }) => record?.status !== 'add'
+        ,
+      },
+    },
+    {
+      name: 'agileWaterfall',
+      type: 'boolean',
+      label: '是否同时启用冲刺',
+      defaultValue: false,
+    },
+    {
       name: 'description',
       type: 'string' as FieldType,
       label: formatMessage({ id: `${intlPrefix}.description.title` }),
@@ -67,7 +86,7 @@ export default ({
     {
       name: 'agileProjectCode',
       label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
-      required: isShowAgilePrefix,
+      required: isShowAgilePrefix || isWATERFALL,
       dynamicProps: {
         maxLength: ({ record }) => isShowAgilePrefix && (record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 5 : null),
       },
@@ -78,28 +97,6 @@ export default ({
       required: isShowTestPrefix,
       dynamicProps: {
         maxLength: ({ record }) => isShowTestPrefix && (record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 5 : null),
-      },
-    },
-    {
-      name: 'projectEstablishmentTime',
-      label: formatMessage({ id: `${intlPrefix}.waterfall.startTime` }),
-      required: isWATERFALL,
-      dynamicProps: {
-        max: ({ record }) => {
-          const endDate = record.get('projectConclusionTime');
-          return isWATERFALL && endDate ? moment(endDate, 'YYYY-MM-DD').subtract(1, 'day') : null;
-        },
-      },
-    },
-    {
-      name: 'projectConclusionTime',
-      label: formatMessage({ id: `${intlPrefix}.waterfall.endTime` }),
-      required: isWATERFALL,
-      dynamicProps: {
-        min: ({ record }) => {
-          const startDate = record.get('projectEstablishmentTime');
-          return isWATERFALL && startDate ? moment.max(moment(startDate, 'YYYY-MM-DD').add(1, 'day'), moment(moment().add(1, 'day').format('YYYY-MM-DD'), 'YYYY-MM-DD')) : moment(moment().add(1, 'day').format('YYYY-MM-DD'), 'YYYY-MM-DD');
-        },
       },
     },
   ],
