@@ -10,8 +10,8 @@ interface TableProps {
 export default ({
   intlPrefix, formatMessage, projectId,
 }: TableProps): DataSetProps => ({
-  autoCreate: false,
-  autoQuery: true,
+  autoCreate: true,
+  // autoQuery: true,
   selection: false,
   paging: false,
   transport: {

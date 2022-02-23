@@ -54,7 +54,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
   );
   const projectCategoryCodes = useMemo(() => map(categories || [], 'code'), [categories]);
   const showProjectPrefixArr = useMemo(() => intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL']), [projectCategoryCodes]);
-  const isShowAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM'])), [projectCategoryCodes]);
+  const isShowAgilePrefix = useMemo(() => !isEmpty(intersection(projectCategoryCodes || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL'])), [projectCategoryCodes]);
   const isShowTestPrefix = useMemo(() => showProjectPrefixArr.includes('N_TEST'), [showProjectPrefixArr]);
   const isWATERFALL = useMemo(() => (projectCategoryCodes || []).includes('N_WATERFALL'), [projectCategoryCodes]);
 

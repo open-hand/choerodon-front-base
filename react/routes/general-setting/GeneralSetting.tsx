@@ -189,7 +189,7 @@ const GeneralSetting = observer(() => {
   const getVisible = (codeArr) => {
     let bool = false;
     codeArr.forEach((item) => {
-      if (infoDs?.current?.get('categories').findIndex((k:any) => k.code === item) !== -1) {
+      if (infoDs?.current?.get('categories')?.findIndex((k:any) => k.code === item) !== -1) {
         bool = true;
       }
     });
