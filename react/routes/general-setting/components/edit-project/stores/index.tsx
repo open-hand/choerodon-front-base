@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useEffect, useMemo,
+  createContext, useContext, useEffect, useMemo, useState,
 } from 'react';
 import { inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
@@ -94,8 +94,26 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
   })), [projectId]);
 
   const formDs = useMemo(() => new DataSet(FormDataSet({
-    isShowTestPrefix, intlPrefix, isShowAgilePrefix, formatMessage, isWATERFALL, statusDs,
-  })), [organizationId, projectId, statusDs]);
+    isShowTestPrefix,
+    intlPrefix,
+    isShowAgilePrefix,
+    formatMessage,
+    isWATERFALL,
+    statusDs,
+    categoryDs,
+  })), [organizationId, projectId, statusDs, categoryDs]);
+
+  // const exist = useCallback((codeArr:any) => {
+  //   console.log(categoryDs.selected);
+  //   let bool = false;
+  //   forEach(codeArr, (value, key) => {
+  //     const index = categoryDs?.selected?.findIndex((item) => item?.get('code') === value);
+  //     if (index !== -1) {
+  //       bool = true;
+  //     }
+  //   });
+  //   return bool;
+  // }, [categoryDs.selected]);
 
   useEffect(() => {
     formDs.loadData([projectData]);
@@ -154,6 +172,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           const currentCode = categoryRecord.get('code');
           if (some(projectData.categories, ['code', currentCode])) {
             categoryDs.select(categoryRecord);
+            formDs.setState('category', categoryDs.selected);
+            // @ts-ignore
           }
           switch (currentCode) {
             case categoryCodes.program:

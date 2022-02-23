@@ -57,7 +57,7 @@ export default ({
     },
     {
       name: 'statusName',
-      label: '状态',
+      label: formatMessage({ id: `${intlPrefix}.status` }),
     },
     // {
     //   name: 'projectEstablishmentTime',
