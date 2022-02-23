@@ -238,6 +238,15 @@ const EditProject = observer((props:any) => {
     return bool;
   }, [categoryDs.selected]);
 
+  const renderStatus = ({ record: hereRecord, value, text }) => {
+    const arr = hereRecord?.getField('statusId')?.options?.toData();
+    const index = arr.findIndex((item) => item.id === hereRecord?.get('statusId')?.id);
+    if (index === -1) {
+      return hereRecord?.get('statusName');
+    }
+    return text;
+  };
+
   if (!record) {
     return <Spin spinning />;
   }
@@ -250,7 +259,7 @@ const EditProject = observer((props:any) => {
       {renderAvatar()}
       <Form record={record} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
         <TextField name="name" />
-        <Select name="statusId" />
+        <Select name="statusId" renderer={renderStatus} />
         <TextArea name="description" resize="vertical" />
       </Form>
       <div className={`${prefixCls}-category-label`}>项目类型</div>
