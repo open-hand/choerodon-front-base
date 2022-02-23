@@ -255,7 +255,8 @@ const GeneralSetting = observer(() => {
           </section>
         </div>
         {
-          showProjectPrefixArr.length > 0 && (
+          // showProjectPrefixArr.length > 0
+          getVisible(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL', 'N_TEST']) && (
             <>
               <Divider style={{ backgroundColor: 'var(--divider)' }} />
               <div className={`${prefixCls}-section-title`}>
@@ -270,7 +271,8 @@ const GeneralSetting = observer(() => {
               >
                 {/* {isWATERFALL || isShowAgilePrefix ? <Output name="agileProjectCode" /> : null}
                 {isShowTestPrefix ? <Output name="testProjectCode" /> : null} */}
-                {getVisible(['N_AGILE', 'N_PROGRAM']) && <Output name="agileProjectCode" />}
+                {getVisible(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL'])
+                 && <Output name="agileProjectCode" />}
                 {getVisible(['N_TEST']) && <Output name="testProjectCode" />}
               </Form>
             </>

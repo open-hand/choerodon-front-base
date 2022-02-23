@@ -13,6 +13,7 @@ export const projectSettingsInfo = {
   'c7ncd.project.setting.info.applicationName': '应用名称',
   'c7ncd.project.setting.info.agile.prefix': '工作项前缀',
   'c7ncd.project.setting.info.test.prefix': '测试问题前缀',
+  'c7ncd.project.setting.info.status': '项目状态',
   'c7ncd.project.setting.info.waterfall.startTime': '立项时间',
   'c7ncd.project.setting.info.waterfall.endTime': '结项时间',
 

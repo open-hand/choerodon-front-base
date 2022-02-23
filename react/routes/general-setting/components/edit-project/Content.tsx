@@ -6,10 +6,10 @@ import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { NewTips } from '@choerodon/components';
 import {
-  Form, TextField, Tooltip, Spin, Icon, Button, DatePicker, TextArea, CheckBox, Select,
+  Form, TextField, Tooltip, Spin, Icon, Button, TextArea, CheckBox, Select,
 } from 'choerodon-ui/pro';
 import { notification } from 'choerodon-ui';
-import { map, some, isEmpty } from 'lodash';
+import { map, forEach } from 'lodash';
 import { axios, Choerodon } from '@choerodon/boot';
 import ProjectNotification from '@choerodon/master/lib/containers/components/c7n/routes/projectsPro/components/create-project/components/project-notification';
 import AvatarUploader from '../../../../components/avatarUploader';
@@ -18,7 +18,7 @@ import { LabelLayoutType, Record } from '../../../../interface';
 
 import './index.less';
 
-const EditProject = observer(() => {
+const EditProject = observer((props:any) => {
   const {
     formDs, categoryDs, AppState, intl, prefixCls, modal, refresh, categoryCodes, infoDs,
     intl: { formatMessage }, intlPrefix,
@@ -64,10 +64,10 @@ const EditProject = observer(() => {
         //   ...postData,
         //   projectCode: agileProjectCode,
         // }) : undefined,
-        isShowAgilePrefix && agileProjectCode !== record.getPristineValue('agileProjectCode')
+        exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && agileProjectCode !== record.getPristineValue('agileProjectCode')
           ? editProjectStore.axiosUpdateAgileProjectInfo(postData)
           : undefined,
-        isShowTestPrefix && testProjectCode !== record.getPristineValue('testProjectCode')
+        exist(['N_TEST']) && testProjectCode !== record.getPristineValue('testProjectCode')
           ? editProjectStore.axiosUpdateTestProjectInfo({
             projectId,
             testProjectInfoId,
@@ -129,6 +129,7 @@ const EditProject = observer(() => {
     } else {
       categoryDs.select(categoryRecord);
     }
+    formDs?.setState('category', categoryDs.selected);
   }, []);
 
   const renderAvatar = useCallback(() => {
@@ -226,19 +227,20 @@ const EditProject = observer(() => {
     formDs?.current?.set('agileWaterfall', value);
   };
 
-  if (!record) {
-    return <Spin spinning />;
-  }
-
-  const getVisible = (codeArr) => {
+  const exist = useCallback((codeArr:any) => {
     let bool = false;
-    codeArr.forEach((item) => {
-      if (infoDs?.current?.get('categories').findIndex((k:any) => k.code === item) !== -1) {
+    forEach(codeArr, (value, key) => {
+      const index = categoryDs?.selected?.findIndex((item) => item?.get('code') === value);
+      if (index !== -1) {
         bool = true;
       }
     });
     return bool;
-  };
+  }, [categoryDs.selected]);
+
+  if (!record) {
+    return <Spin spinning />;
+  }
 
   return (
     <>
@@ -290,15 +292,16 @@ const EditProject = observer(() => {
         </div>
       </Spin>
       {/* (!isEmpty(showProjectPrefixArr) || isWATERFALL) */}
-      {getVisible(['N_AGILE', 'N_PROGRAM', 'N_TEST']) && ([
+      {/* exist(['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL']) &&  */}
+      {exist(['N_AGILE', 'N_PROGRAM', 'N_TEST', 'N_WATERFALL']) && ([
         <div className={`${prefixCls}-section-title`}>
           {formatMessage({ id: `${intlPrefix}.otherSetting` })}
         </div>,
         <Form dataSet={formDs} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
           {/* {isWATERFALL || isShowAgilePrefix && <TextField name="agileProjectCode" />}
           {isShowTestPrefix && <TextField name="testProjectCode" />} */}
-          {getVisible(['N_AGILE', 'N_PROGRAM']) && <TextField name="agileProjectCode" />}
-          {getVisible(['N_TEST']) && <TextField name="testProjectCode" />}
+          {exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && <TextField name="agileProjectCode" />}
+          {exist(['N_TEST']) && <TextField name="testProjectCode" />}
         </Form>,
       ])}
     </>
