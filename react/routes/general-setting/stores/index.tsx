@@ -67,9 +67,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
       const [infoData, agileData = {}, testData = {}] = await axios.all([
         infoDs.query(),
         // isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
-        isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
-        isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
-          : undefined,
+        store.axiosGetProjectInfoOnlyAgile(projectId),
+        store.axiosGetProjectInfoOnlyTest(projectId),
+        // isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
+        // isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
+        //   : undefined,
       ]);
       infoDs.loadData([assign(infoData, {
         agileProjectCode: agileData.projectCode,
