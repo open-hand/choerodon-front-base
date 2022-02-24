@@ -10,8 +10,10 @@ interface FormProps {
   isShowAgilePrefix: boolean,
   isWATERFALL: boolean,
   statusDs: DataSet
-  categoryDs: any
+  categoryDs: DataSet
 }
+
+const reg = /^[^\u4e00-\u9fa5]+$/;
 
 // 项目名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成   /^[-—\.\w\s\u4e00-\u9fa5]{1,32}$/
 const nameValidator = (value: string) => {
@@ -104,8 +106,14 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
         // required: isShowAgilePrefix || isWATERFALL,
         dynamicProps: {
-          maxLength: ({ record, dataSet }) => exist(dataSet.getState('category') || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && (record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 5 : null),
+          maxLength: ({ record, dataSet }) => (exist(dataSet.getState('category') || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 5 : null),
           required: ({ dataSet }) => exist(dataSet.getState('category') || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']),
+        },
+        validator: (value:string) => {
+          if (!reg.test(value)) {
+            return '工作项前缀不能含有中文';
+          }
+          return true;
         },
       },
       {
@@ -113,8 +121,14 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
         // required: isShowTestPrefix,
         dynamicProps: {
-          maxLength: ({ dataSet, record }) => exist(dataSet.getState('category') || [], ['N_TEST']) && (record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 5 : null),
+          maxLength: ({ dataSet, record }) => (exist(dataSet.getState('category') || [], ['N_TEST']) && record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 5 : null),
           required: ({ dataSet }) => exist(dataSet.getState('category') || [], ['N_TEST']),
+        },
+        validator: (value:string) => {
+          if (!reg.test(value)) {
+            return '测试前缀不能含有中文';
+          }
+          return true;
         },
       },
     ],
