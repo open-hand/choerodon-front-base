@@ -186,7 +186,7 @@ const GeneralSetting = observer(() => {
     return <Spin spinning />;
   }
 
-  const getVisible = (codeArr) => {
+  const exist = (codeArr) => {
     let bool = false;
     codeArr.forEach((item) => {
       if (infoDs?.current?.get('categories')?.findIndex((k:any) => k.code === item) !== -1) {
@@ -256,7 +256,7 @@ const GeneralSetting = observer(() => {
         </div>
         {
           // showProjectPrefixArr.length > 0
-          getVisible(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL', 'N_TEST']) && (
+          exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL', 'N_TEST']) && (
             <>
               <Divider style={{ backgroundColor: 'var(--divider)' }} />
               <div className={`${prefixCls}-section-title`}>
@@ -271,9 +271,9 @@ const GeneralSetting = observer(() => {
               >
                 {/* {isWATERFALL || isShowAgilePrefix ? <Output name="agileProjectCode" /> : null}
                 {isShowTestPrefix ? <Output name="testProjectCode" /> : null} */}
-                {getVisible(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL'])
+                {exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL'])
                  && <Output name="agileProjectCode" />}
-                {getVisible(['N_TEST']) && <Output name="testProjectCode" />}
+                {exist(['N_TEST']) && <Output name="testProjectCode" />}
               </Form>
             </>
           )

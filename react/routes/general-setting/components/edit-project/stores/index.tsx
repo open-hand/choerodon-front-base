@@ -51,6 +51,7 @@ export function useCreateProjectProStore() {
 
 export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: any) => {
   const {
+    infoDs,
     children,
     AppState: {
       currentMenuType: {
@@ -101,7 +102,8 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     isWATERFALL,
     statusDs,
     categoryDs,
-  })), [organizationId, projectId, statusDs, categoryDs]);
+    infoDs,
+  })), [organizationId, projectId, statusDs, categoryDs, infoDs]);
 
   // const exist = useCallback((codeArr:any) => {
   //   console.log(categoryDs.selected);

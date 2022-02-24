@@ -229,14 +229,13 @@ const EditProject = observer((props:any) => {
 
   const exist = useCallback((codeArr:any) => {
     let bool = false;
-    forEach(codeArr, (value, key) => {
-      const index = categoryDs?.selected?.findIndex((item) => item?.get('code') === value);
-      if (index !== -1) {
+    codeArr.forEach((item) => {
+      if (infoDs?.current?.get('categories')?.findIndex((k:any) => k.code === item) !== -1) {
         bool = true;
       }
     });
     return bool;
-  }, [categoryDs.selected]);
+  }, [infoDs?.current?.get('categories')]);
 
   const renderStatus = ({ record: hereRecord, value, text }) => {
     const arr = hereRecord?.getField('statusId')?.options?.toData();

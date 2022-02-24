@@ -11,6 +11,7 @@ interface FormProps {
   isWATERFALL: boolean,
   statusDs: DataSet
   categoryDs: DataSet
+  infoDs: DataSet
 }
 
 const reg = /^[^\u4e00-\u9fa5]+$/;
@@ -34,11 +35,10 @@ const nameValidator = (value: string) => {
   return true;
 };
 
-const exist = (selectedRecords:any, codeArr:any) => {
+const exist = (infoDs:DataSet, codeArr:any) => {
   let bool = false;
-  forEach(codeArr, (value, key) => {
-    const index = selectedRecords.findIndex((item) => item?.get('code') === value);
-    if (index !== -1) {
+  codeArr.forEach((item) => {
+    if (infoDs?.current?.get('categories')?.findIndex((k:any) => k.code === item) !== -1) {
       bool = true;
     }
   });
@@ -47,6 +47,7 @@ const exist = (selectedRecords:any, codeArr:any) => {
 
 export default ({
   formatMessage, intlPrefix, isShowTestPrefix, isShowAgilePrefix, isWATERFALL, statusDs, categoryDs,
+  infoDs,
 }: FormProps): DataSetProps => {
   // const selectedRecords = formDs.getState('test') || [];
   console.log(666);
@@ -106,8 +107,8 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
         // required: isShowAgilePrefix || isWATERFALL,
         dynamicProps: {
-          maxLength: ({ record, dataSet }) => (exist(dataSet.getState('category') || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 5 : null),
-          required: ({ dataSet }) => exist(dataSet.getState('category') || [], ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']),
+          maxLength: ({ record, dataSet }) => (exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 10 : null),
+          required: ({ dataSet }) => exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']),
         },
         validator: (value:string) => {
           if (!reg.test(value)) {
@@ -121,8 +122,8 @@ export default ({
         label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
         // required: isShowTestPrefix,
         dynamicProps: {
-          maxLength: ({ dataSet, record }) => (exist(dataSet.getState('category') || [], ['N_TEST']) && record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 5 : null),
-          required: ({ dataSet }) => exist(dataSet.getState('category') || [], ['N_TEST']),
+          maxLength: ({ dataSet, record }) => (exist(infoDs, ['N_TEST']) && record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 10 : null),
+          required: ({ dataSet }) => exist(infoDs, ['N_TEST']),
         },
         validator: (value:string) => {
           if (!reg.test(value)) {
