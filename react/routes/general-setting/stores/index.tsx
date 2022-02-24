@@ -66,16 +66,13 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
     try {
       const [infoData, agileData = {}, testData = {}] = await axios.all([
         infoDs.query(),
-        // isWATERFALL ? store.axiosGetWaterfallProjectInfo(projectId) : undefined,
-        store.axiosGetProjectInfoOnlyAgile(projectId),
-        store.axiosGetProjectInfoOnlyTest(projectId),
-        // isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
-        // isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
-        //   : undefined,
+        isShowAgilePrefix ? store.axiosGetProjectInfoOnlyAgile(projectId) : undefined,
+        isShowTestPrefix ? store.axiosGetProjectInfoOnlyTest(projectId)
+          : undefined,
+        // 应该是拿infods的 catalogy
       ]);
       infoDs.loadData([assign(infoData, {
         agileProjectCode: agileData.projectCode,
-        // waterfallData: waterfallData || {},
         testProjectCode: testData.projectCode,
         testProjectInfoId: testData.infoId,
         testProjectObjectVersionNumber: testData.objectVersionNumber,
