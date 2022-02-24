@@ -309,8 +309,13 @@ const EditProject = observer((props:any) => {
         <Form dataSet={formDs} className={`${prefixCls}-form`} labelLayout={'float' as LabelLayoutType}>
           {/* {isWATERFALL || isShowAgilePrefix && <TextField name="agileProjectCode" />}
           {isShowTestPrefix && <TextField name="testProjectCode" />} */}
-          {exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && <TextField name="agileProjectCode" />}
-          {exist(['N_TEST']) && <TextField name="testProjectCode" />}
+          {exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && (
+          <TextField
+            valueChangeAction="input"
+            name="agileProjectCode"
+          />
+          )}
+          {exist(['N_TEST']) && <TextField name="testProjectCode" valueChangeAction="input" />}
         </Form>,
       ])}
     </>
