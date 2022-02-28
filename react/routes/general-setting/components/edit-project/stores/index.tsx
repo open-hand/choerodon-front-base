@@ -193,7 +193,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
             case categoryCodes.require:
               categoryRecord.setState({
                 isRequire,
-                disabled: !isSenior || (!isProgram && !isAgile),
+                disabled: !isSenior || (!isProgram && !isAgile && !isWaterfall),
               });
               break;
             case categoryCodes.operations:
