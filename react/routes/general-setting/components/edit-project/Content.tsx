@@ -189,7 +189,7 @@ const EditProject = observer((props:any) => {
       return '仅SaaS企业版可选此项目类型';
     }
     if (code === categoryCodes.require) {
-      return '请先选择【敏捷管理】或【敏捷项目群】项目类型';
+      return '请先选择【敏捷管理】或【敏捷项目群】或【瀑布管理】项目类型';
     }
     if (categoryRecord.isSelected) {
       if (code === categoryCodes.program && isModify) {
