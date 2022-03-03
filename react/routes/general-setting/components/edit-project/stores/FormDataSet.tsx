@@ -28,8 +28,8 @@ const nameValidator = (value: string) => {
     return '名称长度不能超过110！';
   }
   // eslint-disable-next-line no-useless-escape
-  const reg = /^[-—.\w\s\u0800-\u9fa5]{1,110}$/;
-  if (!reg.test(value)) {
+  const Reg = /^[-—.\w\s\u0800-\u9fa5]{1,110}$/;
+  if (!Reg.test(value)) {
     return '名称只能由汉字、字母、数字、"_"、"."、"-"、"——"和空格组成';
   }
   return true;
@@ -88,7 +88,7 @@ export default ({
       {
         name: 'agileWaterfall',
         type: 'boolean',
-        label: '同时启用冲刺',
+        label: '启用冲刺',
         defaultValue: false,
       },
       {

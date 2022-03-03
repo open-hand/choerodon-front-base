@@ -18,7 +18,7 @@ import { LabelLayoutType, Record } from '../../../../interface';
 
 import './index.less';
 
-const EditProject = observer((props:any) => {
+const EditProject = observer((props: any) => {
   const {
     formDs, categoryDs, AppState, intl, prefixCls, modal, refresh, categoryCodes, infoDs,
     intl: { formatMessage }, intlPrefix,
@@ -60,10 +60,10 @@ const EditProject = observer((props:any) => {
         agileProjectCode, testProjectCode, testProjectInfoId, testProjectObjectVersionNumber,
       } = postData || {};
       const [res] = await axios.all([formDs.submit(),
-        // isWATERFALL ? editProjectStore.axiosUpdateWaterfallProjectInfo({
-        //   ...postData,
-        //   projectCode: agileProjectCode,
-        // }) : undefined,
+      // isWATERFALL ? editProjectStore.axiosUpdateWaterfallProjectInfo({
+      //   ...postData,
+      //   projectCode: agileProjectCode,
+      // }) : undefined,
         exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && agileProjectCode !== record.getPristineValue('agileProjectCode')
           ? editProjectStore.axiosUpdateAgileProjectInfo(postData)
           : undefined,
@@ -227,10 +227,10 @@ const EditProject = observer((props:any) => {
     formDs?.current?.set('agileWaterfall', value);
   };
 
-  const exist = useCallback((codeArr:any) => {
+  const exist = useCallback((codeArr: any) => {
     let bool = false;
     codeArr.forEach((item) => {
-      if (infoDs?.current?.get('categories')?.findIndex((k:any) => k.code === item) !== -1) {
+      if (infoDs?.current?.get('categories')?.findIndex((k: any) => k.code === item) !== -1) {
         bool = true;
       }
     });
@@ -277,23 +277,22 @@ const EditProject = observer((props:any) => {
                 </div>
               </Tooltip>
               {categoryRecord.get('code') === 'N_WATERFALL'
-              && categoryRecord.isSelected && (
-              <div
-                role="none"
-                className={`${prefixCls}-category-exception`}
-                onClick={(e) => { e.stopPropagation(); }}
-              >
-                同时启用冲刺
-                {' '}
-                <CheckBox checked={record?.get('agileWaterfall')} onChange={sprintCheckboxOnChange} />
-                <NewTips
-                  helpText="启用冲刺适用于大瀑布小敏捷场景， 启用后可使用任务看板，故事地图等功能"
-                  style={{
-                    marginLeft: 6,
-                    position: 'relative',
-                  }}
-                />
-              </div>
+                && categoryRecord.isSelected && (
+                  <div
+                    role="none"
+                    className={`${prefixCls}-category-exception`}
+                    onClick={(e) => { e.stopPropagation(); }}
+                  >
+                    <CheckBox checked={record?.get('agileWaterfall')} onChange={sprintCheckboxOnChange} />
+                    <span style={{ marginLeft: 3 }}>启用冲刺</span>
+                    <NewTips
+                      helpText="启用冲刺适用于大瀑布小敏捷场景， 启用后可使用任务看板，故事地图等功能"
+                      style={{
+                        marginLeft: 3,
+                        position: 'relative',
+                      }}
+                    />
+                  </div>
               )}
             </div>
           ))}
@@ -309,10 +308,10 @@ const EditProject = observer((props:any) => {
           {/* {isWATERFALL || isShowAgilePrefix && <TextField name="agileProjectCode" />}
           {isShowTestPrefix && <TextField name="testProjectCode" />} */}
           {exist(['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && (
-          <TextField
-            valueChangeAction="input"
-            name="agileProjectCode"
-          />
+            <TextField
+              valueChangeAction="input"
+              name="agileProjectCode"
+            />
           )}
           {exist(['N_TEST']) && <TextField name="testProjectCode" valueChangeAction="input" />}
         </Form>,
