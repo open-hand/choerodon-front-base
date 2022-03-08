@@ -1,7 +1,7 @@
 /**
  * 裁剪头像上传
  */
-/*eslint-disable*/ 
+/*eslint-disable*/
 import React, { Component } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { inject } from 'mobx-react';
@@ -67,7 +67,7 @@ export default class AvatarUploader extends Component {
       startY: round(startY * scale),
       endX: round(size * scale),
       endY: round(size * scale),
-      bucketName: 'hzero-iam',
+      bucketName: 'iam-service',
     });
     const data = new FormData();
     const { AppState: { currentMenuType: { organizationId } } } = this.props;
