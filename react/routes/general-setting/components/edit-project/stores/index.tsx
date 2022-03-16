@@ -136,6 +136,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
       if (projectData && projectData.categories && projectData.categories.length) {
         const isBeforeProgram = (projectData.beforeCategory || '')?.split(',').includes(categoryCodes.program);
         const isBeforeAgile = (projectData.beforeCategory || '').includes(categoryCodes.agile);
+        const isBeforeWaterfall = (projectData.beforeCategory || '').includes(categoryCodes.waterfall);
         let isProgram = false;
         let isProgramProject = false;
         let isRequire = false;
@@ -166,6 +167,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           isEdit: true,
           isBeforeAgile,
           isBeforeProgram,
+          isBeforeWaterfall,
           isAgile,
           isProgram,
           isWaterfall,
@@ -180,14 +182,14 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
           switch (currentCode) {
             case categoryCodes.program:
               // eslint-disable-next-line max-len
-              if (!isSenior || (isBeforeAgile && !isBeforeProgram) || (isProgram && await editProjectStore.hasProgramProjects(organizationId, projectId))) {
+              if (!isSenior || (isBeforeAgile && !isBeforeProgram) || (isProgram && await editProjectStore.hasProgramProjects(organizationId, projectId)) || isBeforeWaterfall) {
                 categoryRecord.setState('disabled', true);
               }
               break;
             case categoryCodes.agile:
               categoryRecord.setState({
                 isAgile: isBeforeAgile,
-                disabled: isProgramProject || (isBeforeProgram && !isProgram),
+                disabled: isProgramProject || (isBeforeProgram && !isProgram) || isBeforeWaterfall,
               });
               break;
             case categoryCodes.require:
@@ -198,6 +200,11 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
               break;
             case categoryCodes.operations:
               categoryRecord.setState('disabled', !isSenior);
+              break;
+            case categoryCodes.waterfall:
+              categoryRecord.setState({
+                disabled: isBeforeProgram || isBeforeAgile,
+              });
               break;
             default:
               break;
