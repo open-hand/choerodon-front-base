@@ -67,12 +67,14 @@ function handleDisabled({
       agileRecord?.setState('disabled', isSelected);
       programRecord?.setState('disabled', isSelected);
     }
-    const bool = dataSet.getState('isAgile') || dataSet.getState('isProgram');
+    const bool = dataSet.getState('isBeforeAgile') || dataSet.getState('isBeforeProgram');
+    const bool2 = dataSet.getState('isBeforeWaterfall');
+
     const isEdit = dataSet.getState('isEdit');
     if (isEdit && bool) {
       waterfallRecord?.setState('disabled', true);
     }
-    if (isEdit && record === waterfallRecord) {
+    if (isEdit && bool2) {
       agileRecord?.setState('disabled', true);
       programRecord?.setState('disabled', true);
     }

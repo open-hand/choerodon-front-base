@@ -201,7 +201,7 @@ export default BrowserAdapter(observer((props) => {
     if (InviteModal && some(categories || [], ['code', 'N_PROGRAM'])) {
       setDeleteRoleRecord(record);
     } else {
-      Modal.confirm({
+      Modal.open({
         key: Modal.key(),
         title: '删除用户',
         children: `确认删除用户"${record.get('realName')}"在本项目下的全部角色吗?`,
@@ -609,12 +609,11 @@ export default BrowserAdapter(observer((props) => {
               name: '批量删除',
               service: [],
               handler: () => {
-                Modal.confirm({
+                Modal.open({
                   title: '批量删除',
                   children: `是否删除已选的${dataSet.selected.length}个用户在本项目下的所有角色`,
                   okText: formatCommon({ id: 'delete' }),
-                }).then(async (button) => {
-                  if (button === 'ok') {
+                  onOk: async () => {
                     try {
                       dataSet.status = 'loading';
                       const userIds = dataSet.selected.map((item) => item.get('id'));
@@ -624,7 +623,7 @@ export default BrowserAdapter(observer((props) => {
                     } catch (e) {
                       dataSet.status = 'ready';
                     }
-                  }
+                  },
                 });
               },
             }],
