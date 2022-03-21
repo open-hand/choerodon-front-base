@@ -634,7 +634,7 @@ export default BrowserAdapter(observer((props) => {
                 });
               },
             }],
-            disabled: !(dataSet.selected && dataSet.selected.length > 1),
+            disabled: !(dataSet.selected && dataSet.selected.length > 0),
             display: mode === filterPageRef.current?.ModeList[1].value,
             permissions: [],
           }, getInitialButton() && {
