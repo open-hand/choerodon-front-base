@@ -323,7 +323,9 @@ export default BrowserAdapter(observer((props) => {
     if (!flag) {
       return '';
     }
-    return (
+    return isList ? (
+      <Action data={actionDatas} />
+    ) : (
       <div
         className={`${styles['theme4-c7n-memberItem-action']} c7ncd-projectUser-action`}
         style={{
@@ -477,7 +479,7 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column
-          width={50}
+          width={70}
           renderer={({ record }) => handleRenderActionDom(
             permissions,
             record,
@@ -506,6 +508,11 @@ export default BrowserAdapter(observer((props) => {
             <span>
               {formatCommon({ id: 'source' })}
               <NewTips
+                style={{
+                  position: 'relative',
+                  bottom: '1px',
+                  color: 'var(--help-icon-color)',
+                }}
                 helpText={(
                   <>
                     <p>【外部人员】指该成员账号注册时所属的组织不是当前组织。</p>
@@ -627,7 +634,7 @@ export default BrowserAdapter(observer((props) => {
                 });
               },
             }],
-            disabled: !(dataSet.selected && dataSet.selected.length > 1),
+            disabled: !(dataSet.selected && dataSet.selected.length > 0),
             display: mode === filterPageRef.current?.ModeList[1].value,
             permissions: [],
           }, getInitialButton() && {
