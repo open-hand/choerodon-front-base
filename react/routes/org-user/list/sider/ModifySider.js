@@ -1,14 +1,20 @@
 import React, { useContext, useState, use } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, TabPage } from '@choerodon/boot';
-import { Form, TextField, Password, Select, EmailField } from 'choerodon-ui/pro';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, TabPage,
+} from '@choerodon/boot';
+import {
+  Form, TextField, Password, Select, EmailField, SelectBox,
+} from 'choerodon-ui/pro';
 import Store from './stores';
 import './index.less';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 
 const { Option } = Select;
 export default observer((props) => {
-  const { prefixCls, intlPrefix, modal, orgUserListDataSet, onOk, orgAllRoleDataSet, orgRoleDataSet } = useContext(Store);
+  const {
+    prefixCls, intlPrefix, modal, orgUserListDataSet, onOk, orgAllRoleDataSet, orgRoleDataSet,
+  } = useContext(Store);
   function handleCancel() {
     orgUserListDataSet.reset();
   }
@@ -20,14 +26,13 @@ export default observer((props) => {
       await orgUserListDataSet.reset();
       await onOk();
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
-  function renderOption({ text, value }) {
-    const result = orgAllRoleDataSet.find(item => item.get('id') === value);
+  const renderOption = ({ text, value }) => {
+    const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
     if (!result) {
       return `${value}`;
     }
@@ -35,7 +40,7 @@ export default observer((props) => {
       return `${result && result.get('name')}（已停用）`;
     }
     return result && result.get('name');
-  }
+  };
 
   return (
     <div
@@ -51,6 +56,10 @@ export default observer((props) => {
         <Select value="CTT" label="时区">
           <Option value="CTT">中国</Option>
         </Select>
+        <SelectBox name="outsourcing">
+          <Option value>是</Option>
+          <Option value={false}>否</Option>
+        </SelectBox>
         <FormSelectEditor
           record={orgUserListDataSet.current}
           optionDataSet={orgRoleDataSet}
@@ -60,7 +69,7 @@ export default observer((props) => {
           maxDisable
         >
           {((itemProps) => {
-            const result = orgAllRoleDataSet.find(item => item.get('id') === itemProps.value);
+            const result = orgAllRoleDataSet.find((item) => item.get('id') === itemProps.value);
             return (
               <Select
                 {...itemProps}

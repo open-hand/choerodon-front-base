@@ -12,6 +12,8 @@ import {
   Icon,
   TextField,
   Form,
+  DatePicker,
+  Button,
 } from 'choerodon-ui/pro';
 import { useDebounceFn } from 'ahooks';
 import Store from './stores';
@@ -34,6 +36,7 @@ export default observer((props) => {
     projectId,
     orgRoleDataSet,
     AddWayDataSet,
+    outsourcingDataSet,
     AppState: {
       currentMenuType: {
         id,
@@ -46,6 +49,7 @@ export default observer((props) => {
 
   useEffect(() => {
     roleAssignDataSet.reset();
+    outsourcingDataSet.reset();
   }, [AddWayDataSet.current.get(mapping.way.name)]);
 
   function handleCancel() {
@@ -110,6 +114,14 @@ export default observer((props) => {
     }
   }
 
+  const handleUserChange = (value, rowIndex) => {
+    console.log(value, rowIndex, 'xxxx');
+    const userRecord = outsourcingDataSet.find((record, index, array) => index === rowIndex);
+    console.log(userRecord);
+    userRecord.set('outsourcing', true);
+    userRecord.set('workingGroup', 'xxxxxxxxx');
+  };
+
   const getOption = ({ record }) => {
     const isLdap = record.get('ldap');
     const email = record.get('email');
@@ -159,6 +171,7 @@ export default observer((props) => {
             name={['memberId', 'roleId']}
             addButton="添加其他用户"
             dsStore={[dsStore]}
+            extraFieldDS={outsourcingDataSet}
           >
             {[(itemProps) => (
               <Select
@@ -168,6 +181,7 @@ export default observer((props) => {
                 searchMatcher={() => true}
                 onInput={(e) => handleFilterChange(e, itemProps.options)}
                 onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+                onChange={(value) => { handleUserChange(value, itemProps.rowIndex); }}
                 onKeyDown={(e) => {
                   if (e.keyCode === 13) {
                     cancel();
@@ -187,7 +201,19 @@ export default observer((props) => {
                 labelLayout="float"
                 style={{ width: '100%' }}
               />
-            )]}
+            ),
+            (itemProps) => (
+              <Form dataSet={outsourcingDataSet} columns={13} colSpan={12} {...itemProps}>
+                <DatePicker colSpan={12} newLine name="scheduleEntryTime" />
+                <DatePicker colSpan={12} newLine name="scheduleExitTime" />
+                <SelectBox colSpan={12} newLine name="outsourcing">
+                  <Option value>是</Option>
+                  <Option value={false}>否</Option>
+                </SelectBox>
+                <TextField colSpan={12} newLine name="workingGroup" />
+              </Form>
+            ),
+            ]}
           </TwoFormSelectEditor>
         ) : (
           <>
@@ -229,6 +255,7 @@ export default observer((props) => {
                   searchMatcher={() => true}
                   onInput={(e) => handleFilterChange(e, itemProps.options)}
                   onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
+                  onChange={(value) => { handleUserChange(value, itemProps.rowIndex); }}
                   onKeyDown={(e) => {
                     if (e.keyCode === 13) {
                       cancel();
@@ -249,12 +276,23 @@ export default observer((props) => {
                     visibility: 'hidden',
                   }}
                 />
-              )]}
+              ),
+              (itemProps) => (
+                <Form dataSet={outsourcingDataSet} columns={13} colSpan={12} {...itemProps}>
+                  <DatePicker colSpan={12} newLine name="scheduleEntryTime" />
+                  <DatePicker colSpan={12} newLine name="scheduleExitTime" />
+                  <SelectBox colSpan={12} disabled newLine name="outsourcing">
+                    <Option value>是</Option>
+                    <Option value={false}>否</Option>
+                  </SelectBox>
+                  <TextField colSpan={12} disabled newLine name="workingGroup" />
+                </Form>
+              ),
+              ]}
             </TwoFormSelectEditor>
           </>
         )
       }
-
     </div>
   );
 });

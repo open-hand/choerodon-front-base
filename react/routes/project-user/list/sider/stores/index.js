@@ -4,6 +4,7 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import RoleAssignDataSet from './RoleAssignDataSet';
 import addWayDataSet from './addWayDataSet';
+import OutsourcingDataSet from './outsourcingDataSet';
 
 const Store = createContext();
 
@@ -18,6 +19,9 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
 
     const AddWayDataSet = useMemo(() => new DataSet(addWayDataSet()), []);
 
+    // 3gedouzaichushihuale
+    const outsourcingDataSet = useMemo(() => new DataSet(OutsourcingDataSet()), []);
+
     const intlPrefix = 'c7ncd.org-user.sider';
     const dsStore = [];
     const value = {
@@ -29,6 +33,7 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
       userId,
       dsStore,
       AddWayDataSet,
+      outsourcingDataSet,
     };
     return (
       <Store.Provider value={value}>
