@@ -48,90 +48,86 @@ const exist = (infoDs:DataSet, codeArr:any) => {
 export default ({
   formatMessage, intlPrefix, isShowTestPrefix, isShowAgilePrefix, isWATERFALL, statusDs, categoryDs,
   infoDs,
-}: FormProps): DataSetProps => {
-  // const selectedRecords = formDs.getState('test') || [];
-  console.log(666);
-  return {
-    autoQuery: false,
-    selection: false,
-    autoCreate: false,
-    paging: false,
-    autoQueryAfterSubmit: false,
-    transport: {
-      update: ({ data: [data] }) => ({
-        url: `/iam/choerodon/v1/projects/${data.id}`,
-        method: 'put',
-        data,
-      }),
+}: FormProps): DataSetProps => ({
+  autoQuery: false,
+  selection: false,
+  autoCreate: false,
+  paging: false,
+  autoQueryAfterSubmit: false,
+  transport: {
+    update: ({ data: [data] }) => ({
+      url: `/iam/choerodon/v1/projects/${data.id}`,
+      method: 'put',
+      data,
+    }),
+  },
+  // @ts-ignore
+  fields: [
+    {
+      name: 'name',
+      type: 'string' as FieldType,
+      label: formatMessage({ id: `${intlPrefix}.name` }),
+      required: true,
+      validator: nameValidator,
     },
-    // @ts-ignore
-    fields: [
-      {
-        name: 'name',
-        type: 'string' as FieldType,
-        label: formatMessage({ id: `${intlPrefix}.name` }),
-        required: true,
-        validator: nameValidator,
+    {
+      name: 'statusId',
+      type: 'object',
+      label: '项目状态',
+      textField: 'name',
+      valueField: 'id',
+      options: statusDs,
+      dynamicProps: {
+        required: ({ record }) => record?.status !== 'add'
+        ,
       },
-      {
-        name: 'statusId',
-        type: 'object',
-        label: '项目状态',
-        textField: 'name',
-        valueField: 'id',
-        options: statusDs,
-        dynamicProps: {
-          required: ({ record }) => record?.status !== 'add'
-          ,
-        },
+    },
+    {
+      name: 'agileWaterfall',
+      type: 'boolean',
+      label: '启用冲刺',
+      defaultValue: false,
+    },
+    {
+      name: 'description',
+      type: 'string' as FieldType,
+      label: formatMessage({ id: `${intlPrefix}.description.title` }),
+      maxLength: 100,
+    },
+    {
+      name: 'categories',
+      label: formatMessage({ id: `${intlPrefix}.category` }),
+      required: true,
+    },
+    {
+      name: 'agileProjectCode',
+      label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
+      // required: isShowAgilePrefix || isWATERFALL,
+      dynamicProps: {
+        maxLength: ({ record, dataSet }) => (exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 10 : null),
+        required: ({ dataSet }) => exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']),
       },
-      {
-        name: 'agileWaterfall',
-        type: 'boolean',
-        label: '启用冲刺',
-        defaultValue: false,
+      validator: (value:string) => {
+        if (!reg.test(value)) {
+          return '工作项前缀不能含有中文';
+        }
+        return true;
       },
-      {
-        name: 'description',
-        type: 'string' as FieldType,
-        label: formatMessage({ id: `${intlPrefix}.description.title` }),
-        maxLength: 100,
+    },
+    {
+      name: 'testProjectCode',
+      label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
+      // required: isShowTestPrefix,
+      dynamicProps: {
+        maxLength: ({ dataSet, record }) => (exist(infoDs, ['N_TEST']) && record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 10 : null),
+        required: ({ dataSet }) => exist(infoDs, ['N_TEST']),
       },
-      {
-        name: 'categories',
-        label: formatMessage({ id: `${intlPrefix}.category` }),
-        required: true,
+      validator: (value:string) => {
+        if (!reg.test(value)) {
+          return '测试前缀不能含有中文';
+        }
+        return true;
       },
-      {
-        name: 'agileProjectCode',
-        label: formatMessage({ id: `${intlPrefix}.agile.prefix` }),
-        // required: isShowAgilePrefix || isWATERFALL,
-        dynamicProps: {
-          maxLength: ({ record, dataSet }) => (exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']) && record.get('agileProjectCode') !== record.getPristineValue('agileProjectCode') ? 10 : null),
-          required: ({ dataSet }) => exist(infoDs, ['N_AGILE', 'N_PROGRAM', 'N_WATERFALL']),
-        },
-        validator: (value:string) => {
-          if (!reg.test(value)) {
-            return '工作项前缀不能含有中文';
-          }
-          return true;
-        },
-      },
-      {
-        name: 'testProjectCode',
-        label: formatMessage({ id: `${intlPrefix}.test.prefix` }),
-        // required: isShowTestPrefix,
-        dynamicProps: {
-          maxLength: ({ dataSet, record }) => (exist(infoDs, ['N_TEST']) && record.get('testProjectCode') !== record.getPristineValue('testProjectCode') ? 10 : null),
-          required: ({ dataSet }) => exist(infoDs, ['N_TEST']),
-        },
-        validator: (value:string) => {
-          if (!reg.test(value)) {
-            return '测试前缀不能含有中文';
-          }
-          return true;
-        },
-      },
-    ],
-  };
-};
+    },
+  ],
+});
