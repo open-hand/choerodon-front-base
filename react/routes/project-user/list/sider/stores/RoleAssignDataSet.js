@@ -14,7 +14,15 @@ export default ({ id = 0, intl }) => ({
     }),
   },
   fields: [
-    { name: 'memberId', label: '用户', textField: 'realName', valueField: 'id', required: true },
-    { name: 'roleId', label: '角色', textField: 'name', valueField: 'id', required: true },
+    {
+      name: 'memberId', label: '用户', textField: 'realName', valueField: 'id', required: true,
+    },
+    {
+      name: 'roleId', label: '角色', textField: 'name', valueField: 'id', required: true,
+    },
+    { name: 'scheduleEntryTime', label: '计划进场时间' },
+    { name: 'scheduleExitTime', label: '计划撤场时间' },
+    { name: 'outsourcing', label: '是否外包' },
+    { name: 'workingGroup', label: '所属工作组' },
   ],
 });

@@ -105,6 +105,10 @@ export default ({
         name: 'timeZone', type: 'string', label: '时区', defaultValue: 'CTT',
       },
       { name: 'myRoles', type: 'string', label: formatCommon({id:'role'}) },
+      { name: 'outsourcing', type: 'boolean', label: formatProjectUser({ id: 'outsourcing' }) },
+      { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
+      { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }) },
+      { name: 'workingGroup', type: 'string', label: formatProjectUser({ id: 'workingGroup' }) },
     ],
     queryFields: [
       { name: 'realName', type: 'string', label: formatCommon({id:'username'}) },

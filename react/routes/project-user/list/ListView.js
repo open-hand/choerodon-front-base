@@ -503,6 +503,24 @@ export default BrowserAdapter(observer((props) => {
           renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
         />
         <Table.Column
+          // width={150}
+          name="scheduleEntryTime"
+        />
+        <Table.Column
+          // width={150}
+          name="scheduleExitTime"
+        />
+        <Table.Column
+          width={150}
+          align="left"
+          name="outsourcing"
+          renderer={({ value }) => (value ? '是' : '否')}
+        />
+        <Table.Column
+          // width={150}
+          name="workingGroup"
+        />
+        <Table.Column
           width={200}
           title={(
             <span>

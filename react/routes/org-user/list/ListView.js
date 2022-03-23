@@ -499,6 +499,10 @@ export default withRouter(
       return formatMessage({ id: `${intlPrefix}.${value ? 'ldap' : 'notldap'}` });
     }
 
+    const renderOutsourcing = ({ value })=>{
+      return value ? '是': '否'
+    }
+
     return (
       <Page service={permissions}>
         <Header title={<FormattedMessage id={`${intlPrefix}.header.title`} />}>
@@ -563,16 +567,17 @@ export default withRouter(
             <Column renderer={renderUserName} name="realName" />
             <Column renderer={renderAction} width={60} align="right" />
             <Column name="loginName" tooltip="overflow" />
-            <Column renderer={rednerEnabled} name="enabled" align="left" width={70} />
+            <Column renderer={rednerEnabled} name="enabled" align="left" />
             <Column
-              minWidth={320}
-              width={320}
+              // minWidth={320}
+              // width={320}
               renderer={expandMoreColumn}
               className="org-user-roles"
               name="myRoles"
             />
             <Column renderer={renderSource} name="ldap" align="left" />
-            <Column renderer={renderLocked} name="locked" align="left" width={100} />
+            <Column renderer={renderLocked} name="locked" align="left" width={150} />
+            <Column renderer={renderOutsourcing} name="outsourcing" width={150} align="left" />
           </Table>
         </Content>
       </Page>

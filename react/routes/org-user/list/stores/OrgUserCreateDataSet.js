@@ -62,6 +62,9 @@ export default ({
         validator: checkEmail,
       },
       { name: 'password', type: 'string', label: formatCommon({ id: 'password' }) },
+      {
+        name: 'outsourcing', type: 'boolean', label: '是否外包', defaultValue: false,
+      },
     ],
   };
 };

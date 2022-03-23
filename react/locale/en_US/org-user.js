@@ -34,6 +34,10 @@ const orguser = {
   // 用户
   'c7ncd.org-user.status': '状态',
   'c7ncd.org-user.safe-status': 'Safe Status',
+  'c7ncd.org-user.outsourcing': 'Outsourcing',
+  'c7ncd.org-user.scheduleEntryTime': 'Schedule Entry Time',
+  'c7ncd.org-user.scheduleExitTime': 'Schedule Exit Time',
+  'c7ncd.org-user.workingGroup': 'working Group',
   'c7ncd.org-user.button.create-user': 'Create user',
   'c7ncd.org-user.button.import-user': 'Import the user',
   'c7ncd.org-user.button.addUser': 'Add',

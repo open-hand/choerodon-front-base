@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, TextField, Password, Select,
+  Form, TextField, Password, Select, SelectBox,
 } from 'choerodon-ui/pro';
 import NewTips from '@/components/new-tips';
 import Store from './stores';
@@ -11,6 +11,8 @@ import './index.less';
 
 // eslint-disable-next-line no-undef
 const hasRegister = C7NHasModule('@choerodon/base-pro');
+
+const { Option } = Select;
 
 export default observer(() => {
   const {
@@ -75,6 +77,10 @@ export default observer(() => {
           {...addonAfterObj}
         />
         <Password name="password" addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />} />
+        <SelectBox name="outsourcing">
+          <Option value>是</Option>
+          <Option value={false}>否</Option>
+        </SelectBox>
       </Form>
       <FormSelectEditor
         record={orgUserCreateDataSet.current}
