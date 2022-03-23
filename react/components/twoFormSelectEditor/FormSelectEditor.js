@@ -158,7 +158,7 @@ export default observer(({
           marginTop: '-0.04rem'
         }}
         icon="add"
-        // disabled={addDisabled()}
+        disabled={addDisabled()}
         funcType="flat"
       >
         {addButton || '添加'}
