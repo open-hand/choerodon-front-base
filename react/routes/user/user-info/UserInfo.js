@@ -545,16 +545,19 @@ function UserInfo() {
             {formatClient({ id: 'bind' })}
           </Tag>
         ) : (
-          <Tag size="small" color="orange">
+          <Tag size="small" color="gold">
             {formatClient({ id: 'notBind' })}
           </Tag>
         );
       }
-
       if (!editObj.phone) {
         return (
           <div style={{ position: 'relative' }}>
-            <span style={{ marginRight: 12 }}>{value}</span>
+            {
+              value && (
+              <span style={{ marginRight: 12 }}>{value}</span>
+              )
+            }
             {tag}
             {phoneBind && (
               <span
