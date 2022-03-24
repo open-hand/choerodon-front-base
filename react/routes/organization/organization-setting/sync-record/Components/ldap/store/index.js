@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useMemo, useCallback } from 'react';
+import React, {
+  createContext, useContext, useMemo, useCallback,
+} from 'react';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import { DataSet } from 'choerodon-ui/pro';
 import synRecordDataState from './synRecordDataState';
-import LDAPStore from '../../stores';
+import LDAPStore from '@/routes/organization/organization-setting/stores';
 // import errorUserDataSet from './errorUserDataSet'
 
 const Store = createContext();

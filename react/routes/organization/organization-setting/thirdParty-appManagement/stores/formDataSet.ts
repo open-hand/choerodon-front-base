@@ -1,46 +1,41 @@
-// import { organizationsApiConfig } from '@choerodon/master';
+import { organizationsApiConfig } from '@choerodon/master';
 
 export default ({ }): object => ({
   autoCreate: true,
+  autoQuery: true,
   fields: [
     {
-      name: 'a',
+      name: 'appId',
       label: 'AppID',
+      required: true,
     },
     {
-      name: 'b',
+      name: 'appSecret',
       label: 'AppSecret',
+      required: true,
     },
     {
-      name: 'c',
+      name: 'openAppConfigVO.loginNameField',
       label: '登录名',
+      required: true,
     },
     {
-      name: 'd',
+      name: 'openAppConfigVO.emailField',
       label: '邮箱',
+      required: true,
     },
     {
-      name: 'e',
+      name: 'openAppConfigVO.realNameField',
       label: '名称',
     },
     {
-      name: 'f',
+      name: 'openAppConfigVO.phoneField',
       label: '电话',
-    },
-  ],
-  data: [
-    {
-      a: 1,
-      b: 2,
-      c: 3,
-      d: 4,
-      e: 5,
-      f: 6,
     },
   ],
   transport: {
     read: {
-      //   url: organizationsApiConfig.cooperationProjStatusList().url,
+      url: organizationsApiConfig.thirdPartyAppList().url,
       method: 'get',
     },
   },

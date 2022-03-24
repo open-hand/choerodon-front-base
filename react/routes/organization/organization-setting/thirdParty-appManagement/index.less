@@ -1,11 +1,69 @@
 /* stylelint-disable */
 .c7ncd-organization-setting-thirdPartyAppManagement {
-    &-form-title {
-    font-size: 0.16rem;
-    font-family: PingFangSC-Medium;
-    line-height: 0.24rem;
-    color: var(--text-color);
-    margin-bottom: 0.16rem;
+  &-form-title {
+    margin-bottom: 18px;
     position: relative;
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #0f1358;
+  }
+  &-form-container {
+    margin-top: 10px;
+    position: relative;
+    height: 186px;
+  }
+  &-form-content {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: flex-start;
+  }
+  &-app-list {
+    &-item {
+      border-radius: 4px;
+      border: 1px solid #d9e6f2;
+      margin-bottom: 16px;
+      &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+        position: relative;
+        overflow: hidden;
+        .bg-img {
+          max-width: 100% !important;
+        }
+        .left {
+          position: absolute;
+          left: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          .left-item {
+            margin-right: 12px;
+          }
+          .app-name {
+            font-size: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #0f1358;
+          }
+        }
+        .right {
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 2;
+          .c7ncd-action {
+            background-color: #fff;
+          }
+        }
+      }
     }
+  }
 }

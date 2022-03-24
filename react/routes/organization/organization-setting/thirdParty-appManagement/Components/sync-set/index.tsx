@@ -4,7 +4,6 @@ import {
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
 import FormDs from './autoSyncDataSet';
-import { useStore } from '../../stores';
 
 const { Option } = SelectBox;
 
@@ -15,9 +14,6 @@ export interface Props {
 const Index: React.FC<Props> = (props) => {
   // @ts-ignore
   const { modal } = props;
-  const {
-    prefixCls,
-  } = useStore();
 
   const formDs = useMemo(() => {
     const ds = new DataSet(FormDs({}));

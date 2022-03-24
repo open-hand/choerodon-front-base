@@ -1,59 +1,67 @@
-import React, { } from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  useFormatCommon, useFormatMessage,
+  useFormatCommon, useFormatMessage, organizationsApi,
 } from '@choerodon/master';
-import { NewTips } from '@choerodon/components';
-import { Form, Output, Modal } from 'choerodon-ui/pro';
+import { NewTips, StatusTag } from '@choerodon/components';
+import {
+  Form, Output, Modal,
+} from 'choerodon-ui/pro';
+import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import {
   Content,
   Header,
   Breadcrumb,
   TabPage,
-  HeaderButtons,
   CONSTANTS,
+  Action,
 } from '@choerodon/boot';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { useRouteMatch } from 'react-router';
+
+import dingtalkDisable from './imgs/dingtalk-disable.svg';
+import dingtalkActive from './imgs/dingtalk-active.svg';
+import dingtalklogoActive from './imgs/dingtalklogo-active.svg';
+import dingtalklogoDisable from './imgs/dingtalklogo-disable.svg';
 import EditInfo from './Components/edit-info';
 import SyncSet from './Components/sync-set';
 import HMSync from './Components/HM-sync';
-
+import DingTalkSyncRecord from './Components/sync-record/ding-talk';
 import { useStore } from './stores/index';
 
 const {
   MODAL_WIDTH: {
-    MIN, MIDDLE,
+    MIN, MAX,
   },
 } = CONSTANTS;
 
-export interface Props extends RouteComponentProps {
+export interface Props {
 
 }
 
 const PageContent: React.FC<Props> = (props) => {
-  const { history, location: { search }, location } = props;
   const {
     intlPrefix, prefixCls, formDs,
   } = useStore();
-  const match = useRouteMatch();
 
   const formatCommon = useFormatCommon();
   const formatMessage = useFormatMessage(intlPrefix);
 
-  const renderApplyPermission = () => <span>如何申请权限</span>;
+  const renderApplyPermission = () => <span role="none" onClick={jump} style={{ cursor: 'pointer', color: '#415BC9' }}>如何申请权限</span>;
 
-  const handleEditClick = () => {
+  const jump = () => {
+    window.open('https://choerodon.com.cn/#/knowledge/share/3f54b341ad7818fb');
+  };
+
+  const handleEditClick = (record: Record) => {
     Modal.open({
       title: '修改设置',
       drawer: true,
-      children: <EditInfo recordData={formDs?.current?.toData()[0]} />,
+      children: <EditInfo recordData={formDs?.current?.toData()[0]} prefixCls={prefixCls} />,
       style: { width: MIN },
       okText: '保存',
     });
   };
 
-  const handleDisableClick = () => {
+  const handleDisableClick = (record: Record) => {
     Modal.open({
       title: '停用钉钉用户同步',
       children: (<div>确定要停用钉钉用户同步吗？停用后，之前所同步的用户将无法登录平台，且无法使用测试连接和同步用户功能。</div>),
@@ -65,7 +73,11 @@ const PageContent: React.FC<Props> = (props) => {
     });
   };
 
-  const handleSyncSetClick = () => {
+  const handleEnableClick = (record: Record) => {
+
+  };
+
+  const handleSyncSetClick = (record: Record) => {
     Modal.open({
       title: '同步设置',
       children: <SyncSet />,
@@ -75,21 +87,71 @@ const PageContent: React.FC<Props> = (props) => {
     });
   };
 
-  const handleHMSyncClick = () => {
+  const handleHMSyncClick = (record: Record) => {
     Modal.open({
       title: '手动同步用户',
-      children: <HMSync />,
-      drawer: true,
-      style: { width: MIN },
+      children: <HMSync prefixCls={prefixCls} />,
+      style: { width: 600 },
       okText: '手动同步',
     });
   };
 
-  const handleSyncRecordClick = () => {
-    history.push({
-      pathname: `${match.url}/sync-record`,
-      search: `${search}&appType=dingding'`,
+  const handleSyncRecordClick = (record: Record) => {
+    Modal.open({
+      title: '同步记录',
+      drawer: true,
+      children: <DingTalkSyncRecord />,
+      style: { width: MAX },
+      okCancel: false,
+      okText: '关闭',
     });
+  };
+
+  const getActionData = (record: Record) => {
+    const actionDatas = [];
+
+    actionDatas.push(
+      {
+        service: [],
+        text: '修改',
+        action: () => handleEditClick(record),
+      },
+      {
+        service: [],
+        text: '同步设置',
+        action: () => handleSyncSetClick(record),
+      },
+      {
+        service: [],
+        text: '手动同步',
+        action: () => handleHMSyncClick(record),
+      },
+      {
+        service: [],
+        text: '同步记录',
+        action: () => handleSyncRecordClick(record),
+      },
+    );
+    record.get('enabledFlag') ? actionDatas.splice(1, 0,
+      {
+        service: [],
+        text: '停用',
+        action: () => { handleDisableClick(record); },
+      }) : actionDatas.splice(1, 1,
+      {
+        service: [],
+        text: '启用',
+        action: () => handleEnableClick(record),
+      });
+    return actionDatas;
+  };
+
+  const getName = (record: Record) => {
+    const appNameObj = {
+      ding_talk: '钉钉',
+    };
+    // @ts-ignore
+    return appNameObj[record.get('type')];
   };
 
   return (
@@ -97,89 +159,98 @@ const PageContent: React.FC<Props> = (props) => {
       className={prefixCls}
       service={['choerodon.code.organization.setting.general-setting.ps.info']}
     >
-      <Header>
-        <HeaderButtons
-          items={[
-            {
-              name: '修改',
-              icon: 'sync_alt',
-              permissions: [
-              ],
-              handler: handleEditClick,
-            },
-            {
-              name: '停用',
-              icon: 'sync_alt',
-              permissions: [
-              ],
-              handler: handleDisableClick,
-            },
-            {
-              name: '同步设置',
-              icon: 'sync_alt',
-              permissions: [
-              ],
-              handler: handleSyncSetClick,
-            },
-            {
-              name: '手动同步',
-              icon: 'sync_alt',
-              permissions: [
-              ],
-              handler: handleHMSyncClick,
-            },
-            {
-              name: '同步记录',
-              icon: 'edit-o',
-              permissions: [
-              ],
-              handler: handleSyncRecordClick,
-            },
-          ]}
-        />
-      </Header>
+      <Header />
 
       <Breadcrumb />
 
       <Content>
-        <Form
-          dataSet={formDs}
-          labelLayout={'horizontal' as any}
-          labelAlign={'left' as any}
-        >
-          <Output
-            label={(
-              <span className={`${prefixCls}-form-title`}>
-                基本信息
-              </span>
-            )}
-          />
-          <Output name="a" />
-          <Output name="b" />
-          <Output label="申请权限" renderer={renderApplyPermission} />
-          <Output
-            label={(
-              <span className={`${prefixCls}-form-title`}>
-                用户信息
-              </span>
-            )}
-          />
-          <Output name="c" />
-          <Output
-            label={(
-              <span>
-                邮箱
-                <NewTips helpText="邮箱属于猪齿鱼系统必填项，请确保钉钉有邮箱，否则将同步失效。" />
-              </span>
-            )}
-            name="d"
-          />
-          <Output name="e" />
-          <Output name="f" />
-        </Form>
+        <div className={`${prefixCls}-app-list`}>
+          {
+            formDs.map((record: any) => (
+              <div className={`${prefixCls}-app-list-item`}>
+                <div className={`${prefixCls}-app-list-item-header`}>
+                  <img className="bg-img" src={record.get('enabledFlag') ? dingtalkActive : dingtalkDisable} alt="" />
+                  <div className="left">
+                    <span className="left-item">
+                      <img src={record.get('enabledFlag') ? dingtalklogoActive : dingtalklogoDisable} alt="" />
+                    </span>
+                    <span className="app-name left-item">{getName(record)}</span>
+                    <span className="left-item">
+                      <StatusTag
+                        colorCode={record?.get('enabledFlag') ? 'success' : 'lost'}
+                        name={record?.get('enabledFlag') ? '启用' : '停用'}
+                      />
+                    </span>
+
+                  </div>
+                  <div className="right">
+                    <Action data={getActionData(record)} />
+                  </div>
+                </div>
+                <div className={`${prefixCls}-form-container`}>
+                  <div className={`${prefixCls}-form-content`}>
+                    <Form
+                      record={record}
+                      labelLayout={'horizontal' as any}
+                      labelAlign={'left' as any}
+                      style={{ width: 180, marginRight: 250 }}
+                    >
+                      <Output
+                        label={(
+                          <span className={`${prefixCls}-form-title`}>
+                            基本信息
+                          </span>
+                        )}
+                      />
+                      <Output name="appId" />
+                      <Output name="appSecret" />
+                      <Output label="申请权限" renderer={renderApplyPermission} />
+                    </Form>
+
+                    <Form
+                      record={record}
+                      labelLayout={'horizontal' as any}
+                      labelAlign={'left' as any}
+                      style={{ width: 180 }}
+                    >
+                      <Output
+                        label={(
+                          <span className={`${prefixCls}-form-title`}>
+                            用户信息
+                          </span>
+                        )}
+                      />
+                      <Output
+                        name="openAppConfigVO.loginNameField"
+                        label={(
+                          <span>
+                            登录名
+                            <NewTips style={{ marginLeft: 3 }} helpText="登录名属于猪齿鱼系统必填项且要求平台唯一，默认使用钉钉的userid字段作为登录名。" />
+                          </span>
+                        )}
+                      />
+                      <Output
+                        label={(
+                          <span>
+                            邮箱
+                            <NewTips style={{ marginLeft: 3 }} helpText="邮箱属于猪齿鱼系统必填项，请确保钉钉有邮箱，否则将同步失效。" />
+                          </span>
+                        )}
+                        name="openAppConfigVO.emailField"
+                      />
+                      <Output name="openAppConfigVO.realNameField" />
+                      <Output name="openAppConfigVO.phoneField" />
+                    </Form>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+
+        </div>
       </Content>
     </TabPage>
   );
 };
 
-export default withRouter(observer(PageContent));
+export default observer(PageContent);
