@@ -19,20 +19,24 @@ const {
 const { Column } = Table;
 
 export interface Props {
-
+  recordData: Record
 }
 
-const PageIndex:React.FC<Props> = () => {
+const PageIndex:React.FC<Props> = (props) => {
+  const { recordData } = props;
+
   const tableDs = useMemo(() => {
-    const ds = new DataSet(TableListDataset({}));
+    const ds = new DataSet(TableListDataset({ id: recordData.get('id') }));
     return ds;
   }, []);
 
-  const handleErrorClick = () => {
-    console.log(8989);
+  const handleErrorClick = (record:Record) => {
+    if (!record.get('syncStatusFlag')) {
+      return;
+    }
     Modal.open({
       title: '失败详情',
-      children: <ErrorPage />,
+      children: <ErrorPage historyId={record.get('id')} />,
       drawer: true,
       style: { width: MIDDLE },
       okCancel: false,
@@ -40,17 +44,23 @@ const PageIndex:React.FC<Props> = () => {
     });
   };
 
-  const renderSyncBeginTime = ({ value, record }: {value:string, record: Record}) => {
-    console.log(123);
-    return (
-      <span role="none" onClick={handleErrorClick}>{value}</span>
-    );
-  };
+  const renderSyncBeginTime = ({ value, record }: {value:string, record: Record}) => (
+    <span
+      role="none"
+      className={record?.get('syncStatusFlag') ? 'sync-record-error' : ''}
+      onClick={() => {
+        handleErrorClick(record);
+      }}
+    >
+      {value}
+    </span>
+  );
 
   return (
     <div className="sync-record-dingTalk">
       <Table
         dataSet={tableDs}
+        queryBar={'none' as any}
       >
         <Column renderer={renderSyncBeginTime} name="syncBeginTime" />
         <Column className="text-gray" name="updateUserCount" />

@@ -1,6 +1,6 @@
-// import { organizationsApiConfig } from '@choerodon/master';
+import { organizationsApiConfig } from '@choerodon/master';
 
-export default ({ }): object => ({
+export default ({ id }: { id: string }): object => ({
   autoCreate: true,
   autoQuery: true,
   selection: false,
@@ -19,9 +19,9 @@ export default ({ }): object => ({
     },
   ],
   transport: {
-    read: {
-      //   url: organizationsApiConfig.cooperationProjStatusList().url,
+    read: () => ({
+      url: organizationsApiConfig.thirdPartyAppHistory(id).url,
       method: 'get',
-    },
+    }),
   },
 });

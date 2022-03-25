@@ -23,6 +23,7 @@ export default ({ }): object => ({
       name: 'openAppConfigVO.emailField',
       label: '邮箱',
       required: true,
+      type: 'email',
     },
     {
       name: 'openAppConfigVO.realNameField',

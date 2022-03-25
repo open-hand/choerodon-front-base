@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   useFormatCommon, useFormatMessage, organizationsApi,
 } from '@choerodon/master';
 import { NewTips, StatusTag } from '@choerodon/components';
 import {
-  Form, Output, Modal,
+  Form, Output, Modal, message,
 } from 'choerodon-ui/pro';
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import {
@@ -33,6 +33,13 @@ const {
   },
 } = CONSTANTS;
 
+const imgMap = new Map([
+  ['bgding_talkactive', dingtalkActive],
+  ['bgding_talkdisable', dingtalkDisable],
+  ['logoding_talkactive', dingtalklogoActive],
+  ['logoding_talkdisable', dingtalklogoDisable],
+]);
+
 export interface Props {
 
 }
@@ -51,11 +58,15 @@ const PageContent: React.FC<Props> = (props) => {
     window.open('https://choerodon.com.cn/#/knowledge/share/3f54b341ad7818fb');
   };
 
+  const refresh = () => {
+    formDs.query();
+  };
+
   const handleEditClick = (record: Record) => {
     Modal.open({
       title: '修改设置',
       drawer: true,
-      children: <EditInfo recordData={formDs?.current?.toData()[0]} prefixCls={prefixCls} />,
+      children: <EditInfo recordData={record} prefixCls={prefixCls} refresh={refresh} />,
       style: { width: MIN },
       okText: '保存',
     });
@@ -67,20 +78,37 @@ const PageContent: React.FC<Props> = (props) => {
       children: (<div>确定要停用钉钉用户同步吗？停用后，之前所同步的用户将无法登录平台，且无法使用测试连接和同步用户功能。</div>),
       style: { width: 600 },
       onOk: async () => {
-        console.log(999);
-        return false;
+        try {
+          await organizationsApi.thirdPartyAppDisable({
+            open_app_id: record.get('id'),
+          });
+          message.success('停用应用成功');
+          refresh();
+          return true;
+        } catch (error) {
+          console.log(error);
+          return false;
+        }
       },
     });
   };
 
-  const handleEnableClick = (record: Record) => {
-
+  const handleEnableClick = async (record: Record) => {
+    try {
+      await organizationsApi.thirdPartyAppEnable({
+        open_app_id: record.get('id'),
+      });
+      message.success('启用应用成功');
+      refresh();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSyncSetClick = (record: Record) => {
     Modal.open({
       title: '同步设置',
-      children: <SyncSet />,
+      children: <SyncSet recordData={record} refresh={refresh} />,
       drawer: true,
       style: { width: MIN },
       okText: '保存',
@@ -90,7 +118,7 @@ const PageContent: React.FC<Props> = (props) => {
   const handleHMSyncClick = (record: Record) => {
     Modal.open({
       title: '手动同步用户',
-      children: <HMSync prefixCls={prefixCls} />,
+      children: <HMSync prefixCls={prefixCls} recordData={record} />,
       style: { width: 600 },
       okText: '手动同步',
     });
@@ -100,7 +128,7 @@ const PageContent: React.FC<Props> = (props) => {
     Modal.open({
       title: '同步记录',
       drawer: true,
-      children: <DingTalkSyncRecord />,
+      children: <DingTalkSyncRecord recordData={record} />,
       style: { width: MAX },
       okCancel: false,
       okText: '关闭',
@@ -110,39 +138,48 @@ const PageContent: React.FC<Props> = (props) => {
   const getActionData = (record: Record) => {
     const actionDatas = [];
 
-    actionDatas.push(
-      {
+    if (!record.get('id')) {
+      actionDatas.push({
         service: [],
         text: '修改',
         action: () => handleEditClick(record),
-      },
-      {
-        service: [],
-        text: '同步设置',
-        action: () => handleSyncSetClick(record),
-      },
-      {
-        service: [],
-        text: '手动同步',
-        action: () => handleHMSyncClick(record),
-      },
-      {
-        service: [],
-        text: '同步记录',
-        action: () => handleSyncRecordClick(record),
-      },
-    );
-    record.get('enabledFlag') ? actionDatas.splice(1, 0,
-      {
-        service: [],
-        text: '停用',
-        action: () => { handleDisableClick(record); },
-      }) : actionDatas.splice(1, 1,
-      {
-        service: [],
-        text: '启用',
-        action: () => handleEnableClick(record),
       });
+    } else {
+      actionDatas.push(
+        {
+          service: [],
+          text: '修改',
+          action: () => handleEditClick(record),
+        },
+        {
+          service: [],
+          text: '同步设置',
+          action: () => handleSyncSetClick(record),
+        },
+        {
+          service: [],
+          text: '手动同步',
+          action: () => handleHMSyncClick(record),
+        },
+        {
+          service: [],
+          text: '同步记录',
+          action: () => handleSyncRecordClick(record),
+        },
+      );
+      record.get('enabledFlag') ? actionDatas.splice(1, 0,
+        {
+          service: [],
+          text: '停用',
+          action: () => { handleDisableClick(record); },
+        }) : actionDatas.splice(1, 0,
+        {
+          service: [],
+          text: '启用',
+          action: () => handleEnableClick(record),
+        });
+    }
+
     return actionDatas;
   };
 
@@ -154,10 +191,17 @@ const PageContent: React.FC<Props> = (props) => {
     return appNameObj[record.get('type')];
   };
 
+  const getImg = (record:Record, imgType: 'bg' | 'logo') => {
+    const active = record.get('enabledFlag') ? 'active' : 'disable';
+    const appType = record.get('type');
+    return imgMap.get(imgType + appType + active);
+  };
+
   return (
     <TabPage
       className={prefixCls}
       service={['choerodon.code.organization.setting.general-setting.ps.info']}
+      // service={['choerodon.code.organization.setting.general-setting.ps.thirdpartyapp']}
     >
       <Header />
 
@@ -166,13 +210,13 @@ const PageContent: React.FC<Props> = (props) => {
       <Content>
         <div className={`${prefixCls}-app-list`}>
           {
-            formDs.map((record: any) => (
+            formDs.map((record: Record) => (
               <div className={`${prefixCls}-app-list-item`}>
                 <div className={`${prefixCls}-app-list-item-header`}>
-                  <img className="bg-img" src={record.get('enabledFlag') ? dingtalkActive : dingtalkDisable} alt="" />
+                  <img className="bg-img" src={getImg(record, 'bg')} alt="" />
                   <div className="left">
                     <span className="left-item">
-                      <img src={record.get('enabledFlag') ? dingtalklogoActive : dingtalklogoDisable} alt="" />
+                      <img src={getImg(record, 'logo')} alt="" />
                     </span>
                     <span className="app-name left-item">{getName(record)}</span>
                     <span className="left-item">
@@ -193,7 +237,7 @@ const PageContent: React.FC<Props> = (props) => {
                       record={record}
                       labelLayout={'horizontal' as any}
                       labelAlign={'left' as any}
-                      style={{ width: 180, marginRight: 250 }}
+                      style={{ width: 220, marginRight: 250 }}
                     >
                       <Output
                         label={(
@@ -211,7 +255,7 @@ const PageContent: React.FC<Props> = (props) => {
                       record={record}
                       labelLayout={'horizontal' as any}
                       labelAlign={'left' as any}
-                      style={{ width: 180 }}
+                      style={{ width: 220 }}
                     >
                       <Output
                         label={(
@@ -246,7 +290,6 @@ const PageContent: React.FC<Props> = (props) => {
               </div>
             ))
           }
-
         </div>
       </Content>
     </TabPage>

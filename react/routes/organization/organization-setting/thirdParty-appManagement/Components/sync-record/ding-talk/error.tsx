@@ -7,12 +7,13 @@ import ErrorListDataSet from './errorListDataSet';
 const { Column } = Table;
 
 export interface Props {
-
+  historyId: string
 }
 
-const PageIndex:React.FC<Props> = () => {
+const PageIndex:React.FC<Props> = (props) => {
+  const { historyId } = props;
   const tableDs = useMemo(() => {
-    const ds = new DataSet(ErrorListDataSet({}));
+    const ds = new DataSet(ErrorListDataSet({ historyId }));
     return ds;
   }, []);
 

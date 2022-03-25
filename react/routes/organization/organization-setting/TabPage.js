@@ -1,22 +1,63 @@
 import React, { useContext } from 'react';
 import { PageWrap, PageTab, asyncRouter } from '@choerodon/boot';
+import { Divider } from 'choerodon-ui';
+import { mount, has } from '@choerodon/inject';
 import BasicInfo from './basic-info';
 import Ldap from './LDAP';
 import WorkCalendarHome from './WorkCalendar';
 import ThirdPartyAppManagement from './thirdParty-appManagement';
 import Store from '@/routes/organization/organization-setting/stores';
 
+// eslint-disable-next-line no-undef
+const hasBusiness = C7NHasModule('@choerodon/base-business');
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (props) {
   const {
     formatClient,
   } = useContext(Store);
+
+  const data = [
+    {
+      title: formatClient({ id: 'base.organizeInformation' }),
+      route: '/iam/organization-setting/info',
+      tabKey: 'choerodon.code.organization.general-info',
+      component: BasicInfo,
+    },
+    {
+      title: formatClient({ id: 'ldap.ldapSet' }),
+      route: '/iam/organization-setting/ldap',
+      tabKey: 'choerodon.code.organization.general-ldap',
+      component: Ldap,
+    },
+    {
+      title: formatClient({ id: 'workingCalendar.workingCalendar' }),
+      route: '/iam/organization-setting/working-calendar',
+      tabKey: 'choerodon.code.organization.general-calendar',
+      component: WorkCalendarHome,
+    },
+  ];
+
+  data.push({
+    title: formatClient({ id: 'thirdPartyAppManagement.thirdPartyAppManagement' }),
+    route: '/iam/organization-setting/thirdParty-appManagement',
+    tabKey: 'choerodon.code.organization.thirdParty-appManagement',
+    component: ThirdPartyAppManagement,
+  });
+
   return (
     <PageWrap noHeader={[]}>
-      <PageTab route="/iam/organization-setting/info" component={BasicInfo} title={formatClient({ id: 'base.organizeInformation' })} tabKey="choerodon.code.organization.general-info" />
-      <PageTab route="/iam/organization-setting/ldap" component={Ldap} title={formatClient({ id: 'ldap.ldapSet' })} tabKey="choerodon.code.organization.general-ldap" />
-      <PageTab route="/iam/organization-setting/working-calendar" component={WorkCalendarHome} title={formatClient({ id: 'workingCalendar.workingCalendar' })} tabKey="choerodon.code.organization.general-calendar" />
-      <PageTab route="/iam/organization-setting/thirdParty-appManagement" component={ThirdPartyAppManagement} title={formatClient({ id: 'thirdPartyAppManagement.thirdPartyAppManagement' })} tabKey="choerodon.code.organization.thirdParty-appManagement" />
+      {data.map(({
+        title, route, tabKey, component,
+      }) => (
+        <PageTab
+          key={tabKey}
+          title={title}
+          route={route}
+          tabKey={tabKey}
+          component={component}
+        />
+      ))}
     </PageWrap>
   );
 }
