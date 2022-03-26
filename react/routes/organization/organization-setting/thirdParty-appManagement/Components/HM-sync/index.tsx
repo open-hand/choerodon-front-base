@@ -111,7 +111,7 @@ const Index: React.FC<Props> = (props) => {
             <p className={`${prefixCls}-HM-p2`}>
               共同步
               &nbsp;
-              <span className={`${prefixCls}-HM-success-num`}>{syncInfo.updateUserCount + syncInfo.newUserCount + syncInfo.errorUserCount}</span>
+              <span className={`${prefixCls}-HM-success-num`}>{syncInfo.updateUserCount + syncInfo.newUserCount}</span>
               &nbsp;
               个用户成功,
               &nbsp;

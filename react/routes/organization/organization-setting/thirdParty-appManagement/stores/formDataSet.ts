@@ -40,6 +40,7 @@ export default ({ }): object => ({
     {
       name: 'openAppConfigVO.phoneField',
       label: '电话',
+      maxLength: 11,
       validator: checkPhone,
     },
   ],

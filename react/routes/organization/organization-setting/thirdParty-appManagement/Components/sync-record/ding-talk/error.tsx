@@ -22,11 +22,11 @@ const PageIndex:React.FC<Props> = (props) => {
       <Table
         dataSet={tableDs}
       >
-        <Column name="loginName" />
-        <Column name="email" />
-        <Column name="name" />
-        <Column name="phone" />
-        <Column name="cause" />
+        <Column name="loginName" tooltip={'overflow' as any} />
+        <Column name="email" tooltip={'overflow' as any} />
+        <Column name="name" tooltip={'overflow' as any} />
+        <Column name="phone" tooltip={'overflow' as any} />
+        <Column name="cause" tooltip={'overflow' as any} />
       </Table>
     </div>
   );
