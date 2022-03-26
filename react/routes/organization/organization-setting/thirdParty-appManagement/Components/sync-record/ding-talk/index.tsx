@@ -63,9 +63,10 @@ const PageIndex:React.FC<Props> = (props) => {
         queryBar={'none' as any}
       >
         <Column renderer={renderSyncBeginTime} name="syncBeginTime" />
-        <Column className="text-gray" name="updateUserCount" />
-        <Column className="text-gray" name="errorUserCount" />
-        <Column className="text-gray" name="syncEndTime" />
+        <Column name="newUserCount" />
+        <Column name="updateUserCount" />
+        <Column name="errorUserCount" />
+        <Column name="syncEndTime" />
       </Table>
     </div>
   );

@@ -6,7 +6,8 @@ export default ({ id }: { id: string }): object => ({
   selection: false,
   fields: [
     { name: 'syncBeginTime', type: 'string', label: '同步时间' },
-    { name: 'updateUserCount', type: 'string', label: '成功人数' },
+    { name: 'newUserCount', type: 'string', label: '新增人数' },
+    { name: 'updateUserCount', type: 'string', label: '更新人数' },
     { name: 'errorUserCount', type: 'string', label: '失败人数' },
     { name: 'syncEndTime', type: 'string', label: '耗时' },
   ],

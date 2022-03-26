@@ -11,6 +11,8 @@ export interface Props {
   recordData: Record
 }
 
+let timer :any;
+
 const Index: React.FC<Props> = (props) => {
   // @ts-ignore
   const { modal, prefixCls, recordData } = props;
@@ -24,16 +26,24 @@ const Index: React.FC<Props> = (props) => {
     syncBeginTime: 0,
   });
 
-  useEffect(() => {
-    async function forAsync() {
-      const res = await organizationsApi.thirdPartyAppLatestHistory(recordData.get('id'));
-      setSyncInfo(res);
+  async function getLatestHistory() {
+    const res = await organizationsApi.thirdPartyAppLatestHistory(recordData.get('id'));
+    if (res.data === '') {
+      return;
     }
-    forAsync();
+    setSyncInfo(res);
+  }
+
+  useEffect(() => {
+    getLatestHistory();
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   const handleOk = async () => {
     if (!syncing) {
+      clearInterval(timer);
       setSyncing(true);
       modal.update({
         title: '正在同步用户中…',
@@ -42,6 +52,14 @@ const Index: React.FC<Props> = (props) => {
       organizationsApi.thirdPartyAppHMSync({
         app_type: recordData.get('type'),
       });
+      timer = setInterval(() => {
+        setSyncing(false);
+        getLatestHistory();
+        modal.update({
+          title: '手动同步用户',
+          okText: '手动同步',
+        });
+      }, 10000);
       return false;
     }
     return true;
@@ -49,7 +67,7 @@ const Index: React.FC<Props> = (props) => {
 
   function handleLoadTime() {
     if (!syncInfo.syncEndTime) {
-      return '';
+      return '-';
     }
     const startTime = syncInfo.syncBeginTime;
     const endTime = syncInfo.syncEndTime;
@@ -84,7 +102,7 @@ const Index: React.FC<Props> = (props) => {
             <p className={`${prefixCls}-HM-p1`}>
               上次同步完成时间
               {' '}
-              {syncInfo.syncEndTime}
+              {syncInfo.syncEndTime === 0 ? '-' : syncInfo.syncEndTime}
               {' '}
               （耗时
               {handleLoadTime()}

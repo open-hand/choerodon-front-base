@@ -5,8 +5,9 @@ import {
 } from '@choerodon/master';
 import { NewTips, StatusTag } from '@choerodon/components';
 import {
-  Form, Output, Modal, message,
+  Form, Output, Modal, message, Tooltip,
 } from 'choerodon-ui/pro';
+import isOverflow from 'choerodon-ui/pro/lib/overflow-tip/util';
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import {
   Content,
@@ -197,6 +198,40 @@ const PageContent: React.FC<Props> = (props) => {
     return imgMap.get(imgType + appType + active);
   };
 
+  const handleMouseEnter = (e:any, text:string) => {
+    const { currentTarget } = e;
+    if (isOverflow(currentTarget)) {
+      Tooltip.show(currentTarget, {
+        title: text,
+        placement: 'top',
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    Tooltip.hide();
+  };
+
+  const renderAppId = ({ text }:{text:string}) => (
+    <div
+      onMouseEnter={(e) => { handleMouseEnter(e, text); }}
+      onMouseLeave={handleMouseLeave}
+      className={`${prefixCls}-form-item`}
+    >
+      {text}
+    </div>
+  );
+
+  const renderAppSecret = ({ text }:{text:string}) => (
+    <div
+      onMouseEnter={(e) => { handleMouseEnter(e, text); }}
+      onMouseLeave={handleMouseLeave}
+      className={`${prefixCls}-form-item`}
+    >
+      {text}
+    </div>
+  );
+
   return (
     <TabPage
       className={prefixCls}
@@ -237,7 +272,7 @@ const PageContent: React.FC<Props> = (props) => {
                       record={record}
                       labelLayout={'horizontal' as any}
                       labelAlign={'left' as any}
-                      style={{ width: 220, marginRight: 250 }}
+                      style={{ width: 240, marginRight: 250 }}
                     >
                       <Output
                         label={(
@@ -246,8 +281,8 @@ const PageContent: React.FC<Props> = (props) => {
                           </span>
                         )}
                       />
-                      <Output name="appId" />
-                      <Output name="appSecret" />
+                      <Output name="appId" renderer={renderAppId} />
+                      <Output name="appSecret" renderer={renderAppSecret} />
                       <Output label="申请权限" renderer={renderApplyPermission} />
                     </Form>
 
@@ -255,7 +290,7 @@ const PageContent: React.FC<Props> = (props) => {
                       record={record}
                       labelLayout={'horizontal' as any}
                       labelAlign={'left' as any}
-                      style={{ width: 220 }}
+                      style={{ width: 240 }}
                     >
                       <Output
                         label={(

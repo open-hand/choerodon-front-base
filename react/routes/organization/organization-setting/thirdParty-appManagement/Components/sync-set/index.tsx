@@ -28,7 +28,7 @@ const Index: React.FC<Props> = (props) => {
   }, []);
 
   const handleOk = async () => {
-    const validateRes = await formDs.validate();
+    const validateRes = await formDs?.current?.validate(true);
     if (validateRes) {
       try {
         await organizationsApi.thirdPartyAppEditSyncSetting({

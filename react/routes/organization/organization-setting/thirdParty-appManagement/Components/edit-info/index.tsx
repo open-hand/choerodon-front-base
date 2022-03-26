@@ -32,7 +32,7 @@ const EditInfo: React.FC<Props> = (props) => {
   }, []);
 
   const handleOk = async () => {
-    const validateRes = await formDs.validate();
+    const validateRes = await formDs?.current?.validate(true);
     if (validateRes) {
       try {
         recordData.get('id') ? await organizationsApi.thirdPartyAppEdit({
@@ -53,8 +53,8 @@ const EditInfo: React.FC<Props> = (props) => {
 
   const handleTestConnectClick = async () => {
     const res = await organizationsApi.thirdPartyAppTestConnection({
-      appId: recordData.get('appId'),
-      appSecret: recordData.get('appSecret'),
+      appId: formDs?.current?.get('appId'),
+      appSecret: formDs?.current?.get('appSecret'),
       type: recordData.get('type'),
     });
     if (!res.canConnectServer) {

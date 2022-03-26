@@ -1,5 +1,13 @@
 import { organizationsApiConfig } from '@choerodon/master';
 
+const checkPhone = async (value: any) => {
+  const p = /^1[3-9]\d{9}$/;
+  if (value && !p.test(value)) {
+    return '请输入正确的手机号码';
+  }
+  return true;
+};
+
 export default ({ }): object => ({
   autoCreate: true,
   autoQuery: true,
@@ -32,6 +40,7 @@ export default ({ }): object => ({
     {
       name: 'openAppConfigVO.phoneField',
       label: '电话',
+      validator: checkPhone,
     },
   ],
   transport: {
