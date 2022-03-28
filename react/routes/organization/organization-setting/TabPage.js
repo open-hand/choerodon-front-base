@@ -5,11 +5,7 @@ import { mount, has } from '@choerodon/inject';
 import BasicInfo from './basic-info';
 import Ldap from './LDAP';
 import WorkCalendarHome from './WorkCalendar';
-import ThirdPartyAppManagement from './thirdParty-appManagement';
 import Store from '@/routes/organization/organization-setting/stores';
-
-// eslint-disable-next-line no-undef
-const hasBusiness = C7NHasModule('@choerodon/base-business');
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (props) {
@@ -38,11 +34,11 @@ export default function (props) {
     },
   ];
 
-  data.push({
+  has('base-business:thirdPartyAppManagement') && data.push({
     title: formatClient({ id: 'thirdPartyAppManagement.thirdPartyAppManagement' }),
     route: '/iam/organization-setting/thirdParty-appManagement',
     tabKey: 'choerodon.code.organization.thirdParty-appManagement',
-    component: ThirdPartyAppManagement,
+    component: () => mount('base-business:thirdPartyAppManagement', {}),
   });
 
   return (
