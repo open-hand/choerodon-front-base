@@ -11,9 +11,7 @@ const Index = (props) => (
   // eslint-disable-next-line no-undef
   <StoreProvider {...props}>
     <Switch>
-      {/* eslint-disable-next-line */}
       <Route component={SyncRecord} path={`${props.match.url}/sync-record`} />
-      {/* eslint-disable-next-line */}
       <Route component={TabPage} path={props.match.url} />
     </Switch>
   </StoreProvider>

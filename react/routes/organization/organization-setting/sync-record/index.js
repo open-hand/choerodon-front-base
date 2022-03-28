@@ -1,9 +1,13 @@
 import React from 'react';
-import Content from './Content';
+import { StoreProvider } from './store';
+import SyncRecordForm from './SyncRecordForm';
+
 
 function Index(props) {
   return (
-    <Content />
+    <StoreProvider {...props}>
+      <SyncRecordForm />
+    </StoreProvider>
   );
 }
 export default Index;

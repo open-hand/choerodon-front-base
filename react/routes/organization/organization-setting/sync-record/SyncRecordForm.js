@@ -7,7 +7,7 @@ import { Breadcrumb, Content, Page } from '@choerodon/boot';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import errorUserDataSet from './store/errorUserDataSet';
+import errorUserDataSet from '../stores/errorUserDataSet';
 import SyncErrorForm from './SyncErrorForm';
 import Store from './store';
 import './index.less';
@@ -99,7 +99,7 @@ const SyncRecordForm = observer(() => {
   return (
     <Page>
       <Breadcrumb title="同步记录" />
-      <Content className="sync-record-ldap">
+      <Content className="sync-record">
         <Table
           dataSet={dataSet}
         >
