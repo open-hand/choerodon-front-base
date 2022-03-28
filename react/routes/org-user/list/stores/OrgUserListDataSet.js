@@ -96,6 +96,7 @@ export default ({
       },
       { name: 'myRoles', type: 'string', label: formatCommon({ id: 'role' }) },
       { name: 'ldap', type: 'boolean', label: source },
+      { name: 'outsourcing', type: 'boolean', label: formatProjectUser({ id: 'outsourcing' }) },
     ],
     queryFields: [
       { name: 'realName', type: 'string', label: formatCommon({ id: 'username' }) },

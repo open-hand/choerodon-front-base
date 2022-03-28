@@ -17,7 +17,8 @@ export default observer(({
   record,
   children,
   addButton,
-  onlyMember
+  onlyMember,
+  extraFieldDS,
 }) => {
   const formElement = useRef(null);
 
@@ -54,6 +55,7 @@ export default observer(({
       record[0].set(name[0], (record[0].get(name[0]) || []).concat(''));
       record[1].set(name[1], (record[1].get(name[1]) || []).concat(''));
     });
+    extraFieldDS.create()
   }
 
   const handleChange = [(e, index) => {
@@ -76,6 +78,7 @@ export default observer(({
       record[0].set(name[0], arr[0].slice());
       record[1].set(name[1], arr[1].slice());
     });
+    extraFieldDS.splice(index,1)
   }
 
   function addDisabled() {
@@ -109,6 +112,7 @@ export default observer(({
               colSpan: 6,
               label: record[0].fields.get(name[0]).get('label'),
               required: record[0].fields.get(name[0]).get('required'),
+              newLine: true,
             }),
             React.createElement(children[1], {
               onChange: (text) => handleChange[1](text, index),
@@ -138,6 +142,9 @@ export default observer(({
               icon="delete_black-o"
               funcType="flat"
             />,
+              children[2] && React.createElement(children[2], {
+                colSpan: 12
+              })
           ];
         })}
 

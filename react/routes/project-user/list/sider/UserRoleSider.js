@@ -5,7 +5,7 @@ import {
   Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
 } from '@choerodon/boot';
 import {
-  Form, Modal, TextField, Select, EmailField,
+  Form, Modal, TextField, Select, EmailField, DatePicker , SelectBox
 } from 'choerodon-ui/pro';
 import some from 'lodash/some';
 import Store from './stores';
@@ -110,16 +110,23 @@ export default observer((props) => {
 
   return (
     <div className={`${prefixCls}-modal`}>
-      <Form disabled dataSet={orgUserListDataSet}>
-        <TextField name="realName" />
-        <EmailField name="email" />
-        <TextField name="phone" />
-        <Select value="zh_CN" label="语言">
+      <Form  dataSet={orgUserListDataSet}>
+        <TextField name="realName" disabled/>
+        <EmailField name="email" disabled/>
+        <TextField name="phone" disabled/>
+        <Select value="zh_CN" label="语言" disabled>
           <Option value="zh_CN">简体中文</Option>
         </Select>
-        <Select value="CTT" label="时区">
+        <Select value="CTT" label="时区" disabled>
           <Option value="CTT">中国</Option>
         </Select>
+        <DatePicker name='scheduleEntryTime' />
+        <DatePicker name='scheduleExitTime' />
+        <SelectBox name="outsourcing" disabled>
+          <Option value>是</Option>
+          <Option value={false}>否</Option>
+        </SelectBox>
+        <TextField name="workingGroup" disabled/>
       </Form>
       <DeleteRoleModal
         deleteRoleRecord={deleteRoleRecord}
