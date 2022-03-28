@@ -48,13 +48,6 @@ const workingCalendar = {
   'c7ncd.organization-setting.workingCalendar.edit': '修改',
 };
 
-const thirdPartyAppManagement = {
-  'c7ncd.organization-setting.thirdPartyAppManagement.thirdPartyAppManagement': '第三方应用管理',
-  // 'c7ncd.organization-setting.thirdPartyAppManagement.timezone': 'Time Zone',
-  // 'c7ncd.organization-setting.thirdPartyAppManagement.calendar': 'Calendar',
-  // 'c7ncd.organization-setting.thirdPartyAppManagement.edit': 'Edit',
-};
-
 export {
-  base, ldap, workingCalendar, thirdPartyAppManagement,
+  base, ldap, workingCalendar,
 };
