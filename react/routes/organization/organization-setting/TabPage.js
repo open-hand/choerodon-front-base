@@ -34,6 +34,8 @@ export default function (props) {
     },
   ];
 
+  console.log(has('base-business:thirdPartyAppManagement'), 'xxx');
+
   has('base-business:thirdPartyAppManagement') && data.push({
     title: formatClient({ id: 'thirdPartyAppManagement.thirdPartyAppManagement' }),
     route: '/iam/organization-setting/thirdParty-appManagement',
