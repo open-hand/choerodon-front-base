@@ -48,4 +48,10 @@ const workingCalendar = {
   'c7ncd.organization-setting.workingCalendar.edit': '修改',
 };
 
-export { base, ldap, workingCalendar };
+const thirdPartyAppManagement = {
+  'c7ncd.organization-setting.thirdPartyAppManagement.thirdPartyAppManagement': '第三方应用同步',
+};
+
+export {
+  base, ldap, workingCalendar, thirdPartyAppManagement,
+};
