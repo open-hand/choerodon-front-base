@@ -112,15 +112,13 @@ export default observer((props) => {
       memberIdArr[rowIndex] = '';
       currentRecord.set('memberId', memberIdArr);
     }
-  }
 
-  const handleUserChange = (value, rowIndex) => {
-    console.log(value, rowIndex, 'xxxx');
-    const userRecord = outsourcingDataSet.find((record, index, array) => index === rowIndex);
-    console.log(userRecord);
-    userRecord.set('outsourcing', true);
-    userRecord.set('workingGroup', 'xxxxxxxxx');
-  };
+    if (currentRecord.get('memberId')[rowIndex]) {
+      const userRecord = outsourcingDataSet.find((record, index, array) => index === rowIndex);
+      userRecord.set('outsourcing', true);
+      userRecord.set('workingGroup', 'xxxxxxxxx');
+    }
+  }
 
   const getOption = ({ record }) => {
     const isLdap = record.get('ldap');
@@ -181,7 +179,6 @@ export default observer((props) => {
                 searchMatcher={() => true}
                 onInput={(e) => handleFilterChange(e, itemProps.options)}
                 onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
-                onChange={(value) => { handleUserChange(value, itemProps.rowIndex); }}
                 onKeyDown={(e) => {
                   if (e.keyCode === 13) {
                     cancel();
@@ -255,7 +252,6 @@ export default observer((props) => {
                   searchMatcher={() => true}
                   onInput={(e) => handleFilterChange(e, itemProps.options)}
                   onBlur={() => handleBlur(itemProps.options, itemProps.rowIndex)}
-                  onChange={(value) => { handleUserChange(value, itemProps.rowIndex); }}
                   onKeyDown={(e) => {
                     if (e.keyCode === 13) {
                       cancel();
