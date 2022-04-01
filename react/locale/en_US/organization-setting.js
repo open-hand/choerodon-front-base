@@ -49,7 +49,7 @@ const workingCalendar = {
 };
 
 const thirdPartyAppManagement = {
-  'c7ncd.organization-setting.thirdPartyAppManagement.thirdPartyAppManagement': '第三方应用同步',
+  'c7ncd.organization-setting.thirdPartyAppManagement.thirdPartyAppManagement': '第三方应用管理',
 };
 
 export {
