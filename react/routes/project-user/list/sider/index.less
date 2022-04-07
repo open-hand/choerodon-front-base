@@ -126,9 +126,65 @@
     width: 3.4rem;
     margin-bottom: 0.3rem;
   }
-
   &-help-icon {
     color: var(--help-icon-color);
     font-size: 0.14rem;
+  }
+  .c7ncd-test-user-info-wrap-name {
+    max-width: 108px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.base-project-user-sider-normal-form-cycle-container {
+  position: relative;
+  .delete-btn {
+    position: absolute;
+    right: 0;
+    top: 9px;
+  }
+  tr:nth-child(1) {
+    .c7n-pro-field-wrapper {
+      width: 304px !important;
+    }
+  }
+  tr:nth-child(2) {
+    .c7n-pro-field-wrapper {
+      width: 304px !important;
+    }
+  }
+  tr:nth-child(3) {
+    .c7n-pro-field-wrapper {
+      width: 147px !important;
+    }
+    td:nth-child(2) {
+      position: relative;
+      left: 22px;
+    }
+  }
+}
+
+.base-project-user-sider-role-form-cycle-container {
+  position: relative;
+  .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: -23px;
+  }
+  tr:nth-child(1) {
+    .c7n-pro-field-wrapper {
+      width: 304px !important;
+    }
+  }
+  tr:nth-child(2) {
+    .c7n-pro-field-wrapper {
+      width: 147px !important;
+    }
+    td:nth-child(2) {
+      position: relative;
+      left: 5px;
+      margin-bottom: 0;
+    }
   }
 }
