@@ -4,7 +4,11 @@ import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import RoleAssignDataSet from './RoleAssignDataSet';
 import addWayDataSet from './addWayDataSet';
-import OutsourcingDataSet from './outsourcingDataSet';
+
+import NormalFormDataSet from './normalFormDataSet';
+import RoleChildrenDataSet from './roleChildrenDataSet';
+import RoleFormDataSet from './roleFormDataSet';
+import UserOptionDataSet from './UserOptionDataSet';
 
 const Store = createContext();
 
@@ -18,9 +22,10 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
     const roleAssignDataSet = useMemo(() => new DataSet(RoleAssignDataSet({ id, intl })), [id]);
 
     const AddWayDataSet = useMemo(() => new DataSet(addWayDataSet()), []);
-
-    // 3gedouzaichushihuale
-    const outsourcingDataSet = useMemo(() => new DataSet(OutsourcingDataSet()), []);
+    const userOptionDataSet = useMemo(() => new DataSet(UserOptionDataSet({ id })), []);
+    const normalFormDataSet = useMemo(() => new DataSet(NormalFormDataSet()), []);
+    const roleChildrenDataSet = useMemo(() => new DataSet(RoleChildrenDataSet()), []);
+    const roleFormDataSet = useMemo(() => new DataSet(RoleFormDataSet(roleChildrenDataSet)), []);
 
     const intlPrefix = 'c7ncd.org-user.sider';
     const dsStore = [];
@@ -33,7 +38,9 @@ export const SiderStoreProvider = injectIntl(inject('AppState')(
       userId,
       dsStore,
       AddWayDataSet,
-      outsourcingDataSet,
+      userOptionDataSet,
+      normalFormDataSet,
+      roleFormDataSet,
     };
     return (
       <Store.Provider value={value}>

@@ -18,7 +18,6 @@ export default observer(({
   children,
   addButton,
   onlyMember,
-  extraFieldDS,
 }) => {
   const formElement = useRef(null);
 
@@ -55,7 +54,6 @@ export default observer(({
       record[0].set(name[0], (record[0].get(name[0]) || []).concat(''));
       record[1].set(name[1], (record[1].get(name[1]) || []).concat(''));
     });
-    extraFieldDS.create()
   }
 
   const handleChange = [(e, index) => {
@@ -78,7 +76,6 @@ export default observer(({
       record[0].set(name[0], arr[0].slice());
       record[1].set(name[1], arr[1].slice());
     });
-    extraFieldDS.splice(index,1)
   }
 
   function addDisabled() {
@@ -91,7 +88,7 @@ export default observer(({
 
   return (
     <>
-      <Form ref={formElement} className="two-form-select-editor" columns={13}>
+      <Form ref={formElement} className={`two-form-select-editor`} columns={13}>
         {(record[0]?.get(name[0]) || []).map((v, index) => {
           const value = [v, record[1]?.get(name[1])?.[index] || ''];
           if (!dsStore[0][index]) {
@@ -142,9 +139,6 @@ export default observer(({
               icon="delete_black-o"
               funcType="flat"
             />,
-              children[2] && React.createElement(children[2], {
-                colSpan: 12
-              })
           ];
         })}
 
