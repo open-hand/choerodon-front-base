@@ -1,0 +1,55 @@
+/* stylelint-disable */
+.c7ncd-system-setting-loginIndex-edit {
+  &-imgItem {
+    .text-title {
+      color: rgba(15, 19, 88, 0.65);
+      font-size: 13px;
+      line-height: 0.3rem;
+    }
+    .img-container {
+      position: relative;
+      width: 484px;
+      background: #f5f6fa;
+      box-shadow: 0px 0px 4px 1px #d9dee8;
+      border-radius: 8px;
+      border: 8px solid #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .mask {
+        position: absolute;
+        border-radius: 8px;
+        left: -8px;
+        top: -8px;
+        right: -8px;
+        bottom: -8px;
+        z-index: 99;
+        opacity: 0;
+        transition: 0.2s;
+        background: rgba(0, 0, 0, 0.26);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        .icon {
+          font-size: 20px;
+          color: #fff;
+        }
+      }
+    }
+    .img-container:hover {
+      .mask {
+        opacity: 1;
+      }
+    }
+    .img-container1 {
+      height: 68px;
+      justify-content: flex-start;
+      padding-left: 4px;
+      
+    }
+    .img-container2 {
+      height: 415px;
+    }
+  }
+}

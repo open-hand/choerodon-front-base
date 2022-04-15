@@ -1,6 +1,7 @@
 const systemSetting = {
   'c7n.system-setting.basicInfo': '基础信息',
   'c7n.system-setting.functionModule': '功能模块',
+  'c7n.system-setting.loginIndex': '登录首页',
   'c7n.system-setting.shortForplatform': '平台简称',
   'c7n.system-setting.FullForplatform': '平台全称',
   'c7n.system-setting.platformDefaultlanguage': '平台默认语言',

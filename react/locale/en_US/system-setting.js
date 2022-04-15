@@ -1,6 +1,7 @@
 const systemSetting = {
   'c7n.system-setting.basicInfo': 'Basic Information',
   'c7n.system-setting.functionModule': 'Function Module',
+  'c7n.system-setting.loginIndex': 'Login Page',
   'c7n.system-setting.shortForplatform': 'Short Name',
   'c7n.system-setting.FullForplatform': 'Full Name',
   'c7n.system-setting.platformDefaultlanguage': 'Default Language',

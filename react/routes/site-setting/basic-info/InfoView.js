@@ -12,6 +12,7 @@ import { useFormatMessage } from '@choerodon/master';
 import { mapping as systemMapping } from '../stores/SystemSettingDataSet';
 import GitlabSync from './components/gitlab-sync';
 import SketchPicker from './components/sketchPicker';
+import LoginIndex from './tabs/loginIndex';
 import { mapping } from '../stores/FuncModeDataSet';
 import './index.less';
 import InfoForm from './InfoForm';
@@ -246,6 +247,12 @@ const InfoView = observer(() => {
           title={format({ id: 'basicInfo' })}
           tabKey="baseInfo"
           component={basicInfo}
+          alwaysShow
+        />
+        <PageTab
+          title={format({ id: 'loginIndex' })}
+          tabKey="loginIndex"
+          component={LoginIndex}
           alwaysShow
         />
         <PageTab
