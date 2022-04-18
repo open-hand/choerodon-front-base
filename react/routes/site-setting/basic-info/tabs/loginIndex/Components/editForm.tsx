@@ -1,15 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { inject } from 'mobx-react';
 import { injectIntl } from 'react-intl';
 import {
   Form, TextField, TextArea, DataSet, Select, SelectBox, Icon,
 } from 'choerodon-ui/pro';
+import { ImageCrop, Upload } from 'choerodon-ui';
 import FormDs from '../stores/formDataSet';
-import AvatarUploader from '@/components/avatarUploader';
 import './edit.less';
 import img1 from '../1.svg';
 import img2 from '../2.svg';
+
+const { AvatarUploader } = ImageCrop;
 
 export interface Iprops {
 
@@ -22,12 +24,18 @@ const Index: React.FC<Iprops> = (props) => {
 
   const [visible, setVisible] = useState(false);
 
+  const [fileList, setFileList] = useState([]);
   const formDs = useMemo(() => {
     const ds = new DataSet(FormDs({}));
     return ds;
   }, []);
 
-  const aaa = () => {
+  const hanleImageCropOk = useCallback(({ url, blob, area }) => {
+    console.log(url, blob, area);
+    setVisible(false);
+  }, []);
+
+  const hanleImageCropCancel = () => {
 
   };
 
@@ -66,15 +74,34 @@ const Index: React.FC<Iprops> = (props) => {
         <TextField name="j" colSpan={1} />
       </Form>
 
-      <AvatarUploader
-        title="123"
-        visible={visible}
-        AppState={AppState}
-        intl={intl}
-        intlPrefix="global.organization.avatar.edit"
-        onVisibleChange={aaa}
-        onUploadOk={(url:any) => () => { console.log(url); }}
-      />
+      <div className="qwer">
+        <ImageCrop
+          modalVisible={visible}
+          onOk={hanleImageCropOk}
+          onCancel={hanleImageCropCancel}
+          modalWidth={212}
+        // @ts-ignore
+          on
+        // src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          src={img2}
+          rotate
+          zoom
+          aspect={5.85 / 1}
+          aspectControl
+          modalProps={{
+            className: 'crop-logo',
+          }}
+        >
+          {/* <Upload
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            listType="picture-card"
+            fileList={fileList}
+            // onPreview={this.handlePreview}
+            onChange={handleChange}
+            requestFileKeys="imageCropArea"
+          /> */}
+        </ImageCrop>
+      </div>
     </div>
   );
 };
