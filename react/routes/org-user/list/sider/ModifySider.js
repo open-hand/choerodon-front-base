@@ -1,4 +1,6 @@
-import React, { useContext, useState, use } from 'react';
+import React, {
+  useContext, useState, use, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Action, Content, axios, Page, Permission, Breadcrumb, TabPage,
@@ -15,9 +17,15 @@ export default observer((props) => {
   const {
     prefixCls, intlPrefix, modal, orgUserListDataSet, onOk, orgAllRoleDataSet, orgRoleDataSet,
   } = useContext(Store);
+
+  useEffect(() => {
+    orgUserListDataSet?.getField('userLabels')?.options?.query();
+  }, []);
+
   function handleCancel() {
     orgUserListDataSet.reset();
   }
+
   async function handleOk() {
     if (!orgUserListDataSet.current.dirty && !orgUserListDataSet.current.get('dirty')) {
       return true;
@@ -29,8 +37,10 @@ export default observer((props) => {
     }
     return false;
   }
+
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
+
   const renderOption = ({ text, value }) => {
     const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
     if (!result) {
@@ -40,6 +50,21 @@ export default observer((props) => {
       return `${result && result.get('name')}（已停用）`;
     }
     return result && result.get('name');
+  };
+
+  const handleInput = (e) => {
+    const optionDs = orgUserListDataSet?.getField('userLabels').options;
+    optionDs.forEach((record) => {
+      if (record.get('status') === 'local' && !record.isSelected) {
+        optionDs.remove(record);
+      }
+    });
+    const arr = orgUserListDataSet?.getField('userLabels').options.toData();
+    arr.unshift({
+      name: e.target.value,
+      status: 'local',
+    });
+    orgUserListDataSet?.getField('userLabels').options.loadData(arr);
   };
 
   return (
@@ -56,32 +81,17 @@ export default observer((props) => {
         <Select value="CTT" label="时区">
           <Option value="CTT">中国</Option>
         </Select>
-        <SelectBox name="outsourcing">
-          <Option value>是</Option>
-          <Option value={false}>否</Option>
-        </SelectBox>
-        <FormSelectEditor
-          record={orgUserListDataSet.current}
-          optionDataSet={orgRoleDataSet}
+        <Select
+          multiple
+          name="userLabels"
+          searchable
+          onInput={(e) => { handleInput(e); }}
+        />
+        <Select
+          multiple
           name="roles"
-          idField="id"
-          addButton="添加其他角色"
-          maxDisable
-        >
-          {((itemProps) => {
-            const result = orgAllRoleDataSet.find((item) => item.get('id') === itemProps.value);
-            return (
-              <Select
-                {...itemProps}
-                labelLayout="float"
-                renderer={renderOption}
-                searchable
-                disabled={result && !result.get('enabled')}
-                style={{ width: '100%' }}
-              />
-            );
-          })}
-        </FormSelectEditor>
+          options={orgRoleDataSet}
+        />
       </Form>
     </div>
   );

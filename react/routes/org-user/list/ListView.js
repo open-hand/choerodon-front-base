@@ -25,7 +25,7 @@ import {
   Button as ProButton,
   Radio,
 } from 'choerodon-ui/pro';
-import { SagaDetails } from '@choerodon/master';
+import { SagaDetails,UserLabels } from '@choerodon/master';
 import OrgUserServices from '@/routes/org-user/list/services';
 import expandMoreColumn from '../../../components/expandMoreColumn';
 import StatusTag from '../../../components/statusTag';
@@ -258,7 +258,7 @@ export default withRouter(
             type={type}
             password={password}
             orgRoleDataSet={orgRoleDataSet}
-            orgAllRoleDataSet={orgAllRoleDataSet}
+            orgAllRoleDataSet={orgAllRoleDataSet} // niupi
             orgUserRoleDataSet={orgUserRoleDataSet}
             orgUserCreateDataSet={orgUserCreateDataSet}
             orgUserListDataSet={dataSet}
@@ -414,10 +414,12 @@ export default withRouter(
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  marginRight: 6
                 }}
               >
                 {value}
               </span>
+              <UserLabels list={record.get('userLabels') || []}/>
               {idEqual && (
                 <>
                   <div className="org-user-external-user">
@@ -499,10 +501,6 @@ export default withRouter(
       return formatMessage({ id: `${intlPrefix}.${value ? 'ldap' : 'notldap'}` });
     }
 
-    const renderOutsourcing = ({ value })=>{
-      return value ? '是': '否'
-    }
-
     return (
       <Page service={permissions}>
         <Header title={<FormattedMessage id={`${intlPrefix}.header.title`} />}>
@@ -564,7 +562,7 @@ export default withRouter(
             pristine
             dataSet={dataSet}
           >
-            <Column renderer={renderUserName} name="realName" />
+            <Column renderer={renderUserName} name="realName" width={320}/>
             <Column renderer={renderAction} width={60} align="right" />
             <Column name="loginName" tooltip="overflow" />
             <Column renderer={rednerEnabled} name="enabled" align="left" />
@@ -577,7 +575,6 @@ export default withRouter(
             />
             <Column renderer={renderSource} name="ldap" align="left" />
             <Column renderer={renderLocked} name="locked" align="left" width={150} />
-            <Column renderer={renderOutsourcing} name="outsourcing" width={150} align="left" />
           </Table>
         </Content>
       </Page>

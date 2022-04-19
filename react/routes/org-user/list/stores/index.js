@@ -49,10 +49,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }),
     ), [id]);
     const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
-      id, formatCommon, formatProjectUser, statusOptionDs, safeOptionDs, orgRoleDataSet,
+      id,
+      formatCommon,
+      formatProjectUser,
+      statusOptionDs,
+      safeOptionDs,
+      orgRoleDataSet,
+      orgID: organizationId,
     })), [id]);
     const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
-      id, formatCommon, formatProjectUser, orgRoleDataSet, userStore,
+      id, formatCommon, formatProjectUser, orgRoleDataSet, userStore, organizationId,
     })), [id]);
     const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
       id, formatCommon, formatProjectUser, orgRoleDataSet,

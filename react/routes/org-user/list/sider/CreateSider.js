@@ -5,7 +5,6 @@ import {
 } from 'choerodon-ui/pro';
 import NewTips from '@/components/new-tips';
 import Store from './stores';
-import FormSelectEditor from '../../../../components/formSelectEditor';
 
 import './index.less';
 
@@ -35,6 +34,7 @@ export default observer(() => {
   );
 
   useEffect(() => {
+    orgUserCreateDataSet?.getField('userLabels')?.options?.query();
     if (hasRegister) {
       userStore.loadEmailSuffix(organizationId);
     }
@@ -65,6 +65,21 @@ export default observer(() => {
     orgUserCreateDataSet.reset();
   });
 
+  const handleInput = (e) => {
+    const optionDs = orgUserCreateDataSet?.getField('userLabels').options;
+    optionDs.forEach((record) => {
+      if (record.get('status') === 'local' && !record.isSelected) {
+        optionDs.remove(record);
+      }
+    });
+    const arr = orgUserCreateDataSet?.getField('userLabels').options.toData();
+    arr.unshift({
+      name: e.target.value,
+      status: 'local',
+    });
+    orgUserCreateDataSet?.getField('userLabels').options.loadData(arr);
+  };
+
   return (
     <div className={`${prefixCls}-modal`}>
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
@@ -77,22 +92,18 @@ export default observer(() => {
           {...addonAfterObj}
         />
         <Password name="password" addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />} />
-        <SelectBox name="outsourcing">
-          <Option value>是</Option>
-          <Option value={false}>否</Option>
-        </SelectBox>
+        <Select
+          multiple
+          name="userLabels"
+          searchable
+          onInput={(e) => { handleInput(e); }}
+        />
+        <Select
+          multiple
+          name="roles"
+          options={orgRoleDataSet}
+        />
       </Form>
-      <FormSelectEditor
-        record={orgUserCreateDataSet.current}
-        optionDataSet={orgRoleDataSet}
-        name="roles"
-        addButton="添加其他角色"
-        alwaysRequired
-        canDeleteAll={false}
-        maxDisable
-      >
-        {(itemProps) => <Select {...itemProps} labelLayout="float" style={{ width: '100%' }} />}
-      </FormSelectEditor>
     </div>
   );
 });

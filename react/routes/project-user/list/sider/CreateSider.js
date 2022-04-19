@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { axios } from '@choerodon/master';
+import { axios, UserLabels } from '@choerodon/master';
 import {
   Spin,
   SelectBox,
@@ -14,11 +14,9 @@ import {
   Button,
   message,
 } from 'choerodon-ui/pro';
-import { Tag } from 'choerodon-ui';
 import { useDebounceFn } from 'ahooks';
 import { UserInfo } from '@choerodon/components';
 import { uniqBy } from 'lodash';
-import isOverflow from 'choerodon-ui/pro/lib/overflow-tip/util';
 import Store from './stores';
 import './index.less';
 import { mapping, wayOptions } from './stores/addWayDataSet';
@@ -109,79 +107,19 @@ export default observer((props) => {
     { wait: 500 },
   );
 
-  const handleMouseEnter = (e, title) => {
-    const { currentTarget } = e;
-    if (isOverflow(currentTarget)) {
-      Tooltip.show(currentTarget, {
-        title,
-        placement: 'top',
-      });
-    }
-  };
-
-  const handleMouseLeave = () => {
-    Tooltip.hide();
-  };
-
-  const getTag = (item, index, list) => {
-    if (index <= 1) {
-      return (
-        <Tag
-          onMouseEnter={(e) => { handleMouseEnter(e, item); }}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            color: '#4D90FE',
-            position: 'relative',
-            marginRight: 2,
-          }}
-          color="#E6F7FF"
-        >
-          {item}
-        </Tag>
-      );
-    }
-    if (index === 2) {
-      let str = '';
-      list.forEach((i) => {
-        str = `${str + i} ,`;
-      });
-      str = str.substring(0, str.length - 1);
-      return (
-        <Tooltip title={str}>
-          <Tag
-            style={{
-              color: '#4D90FE',
-              position: 'relative',
-              marginRight: 2,
-            }}
-            color="#E6F7FF"
-          >
-            +
-            {list.length - 2}
-            ...
-          </Tag>
-        </Tooltip>
-      );
-    }
-    return '';
-  };
-
-  const optionRenderer = ({ record }) => {
-    const list = ['标签1', '标签2', '标签3', '标签4'];
-    return (
-      <div className={`${prefixCls}-userSelect`}>
-        <UserInfo
-          loginName={
+  const optionRenderer = ({ record }) => (
+    <div className={`${prefixCls}-userSelect`}>
+      <UserInfo
+        loginName={
           record?.get('ldap') ? record?.get('loginName') : record?.get('email')
         }
-          realName={record?.get('realName')}
-          avatar={record?.get('imageUrl')}
-          style={{ marginRight: 6 }}
-        />
-        {list.map((item, index) => getTag(item, index, list))}
-      </div>
-    );
-  };
+        realName={record?.get('realName')}
+        avatar={record?.get('imageUrl')}
+        style={{ marginRight: 6 }}
+      />
+      <UserLabels list={record?.get('userLabels') || []} />
+    </div>
+  );
 
   const onOption = (optionRecord, currentFormRecord) => {
     const currentDs = AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value
