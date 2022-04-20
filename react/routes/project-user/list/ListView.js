@@ -382,7 +382,7 @@ export default BrowserAdapter(observer((props) => {
                           >
                             {item.realName}
                           </span>
-                          <UserLabels list={item.userLabels || []} />
+                          <UserLabels list={item.userLabels || []} maxTagNum={2} />
                         </p>
                         <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                       </div>

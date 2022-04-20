@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Form, TextField, Password, Select, SelectBox,
+  Form, TextField, Password, Select,
 } from 'choerodon-ui/pro';
+import { findIndex } from 'lodash';
 import NewTips from '@/components/new-tips';
 import Store from './stores';
 
@@ -73,10 +74,13 @@ export default observer(() => {
       }
     });
     const arr = orgUserCreateDataSet?.getField('userLabels').options.toData();
-    arr.unshift({
-      name: e.target.value,
-      status: 'local',
-    });
+    if (findIndex(arr, (i) => i.name === e.target.value) === -1) {
+      arr.unshift({
+        name: e.target.value,
+        status: 'local',
+      });
+    }
+
     orgUserCreateDataSet?.getField('userLabels').options.loadData(arr);
   };
 
