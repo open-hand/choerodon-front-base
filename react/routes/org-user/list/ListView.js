@@ -258,7 +258,7 @@ export default withRouter(
             type={type}
             password={password}
             orgRoleDataSet={orgRoleDataSet}
-            orgAllRoleDataSet={orgAllRoleDataSet} // niupi
+            orgAllRoleDataSet={orgAllRoleDataSet}
             orgUserRoleDataSet={orgUserRoleDataSet}
             orgUserCreateDataSet={orgUserCreateDataSet}
             orgUserListDataSet={dataSet}

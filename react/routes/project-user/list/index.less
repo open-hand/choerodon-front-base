@@ -1,3 +1,4 @@
+/* stylelint-disable */
 @import '~choerodon-ui/lib/style/themes/default';
 
 .c7ncd-projectUser {
@@ -6,6 +7,13 @@
     padding: 12px;
     .c7n-pro-table-cell-multiple-block {
       background-color: unset !important;
+    }
+    .realName-column {
+      display: flex;
+      justify-content: flex-start;
+      .realName {
+        margin-right: 6px;
+      }
     }
   }
 }
@@ -67,5 +75,12 @@
       font-weight: 400;
       color: #5365ea;
     }
+  }
+}
+
+.table-align-center {
+  .c7n-pro-table-cell-inner {
+    display: flex;
+    align-items: center;
   }
 }

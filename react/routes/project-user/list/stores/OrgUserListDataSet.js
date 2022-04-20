@@ -1,11 +1,12 @@
 /* eslint-disable */
 import { axios, Choerodon } from '@choerodon/boot';
+import { DataSet } from 'choerodon-ui/pro';
 
 const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s*$/);
 
 export default ({
-  id = 0, formatProjectUser, formatCommon, safeOptionDs, statusOptionDs, orgRoleDataSet,
+  id = 0, formatProjectUser, formatCommon, safeOptionDs, statusOptionDs, orgRoleDataSet,organizationId
 }) => {
   const username = formatCommon({ id: 'username' });
   const loginName = formatCommon({ id: 'account' });
@@ -80,7 +81,7 @@ export default ({
         name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs,
       },
       {
-        name: 'roles', type: 'string', label: formatCommon({id:'role'}), multiple: true, textField: 'name', valueField: 'id',
+        name: 'roles', type: 'string', label: formatCommon({id:'role'}), multiple: true, textField: 'name', valueField: 'id',required:true
       },
       // 这里加个role 是为了列表模式的角色 如果列表模式的角色用roles renderer会渲染多次
       {
@@ -105,7 +106,34 @@ export default ({
         name: 'timeZone', type: 'string', label: '时区', defaultValue: 'CTT',
       },
       { name: 'myRoles', type: 'string', label: formatCommon({id:'role'}) },
-      { name: 'outsourcing', type: 'boolean', label: formatProjectUser({ id: 'outsourcing' }) },
+      {
+        name: 'userLabels',
+        label: '标签',
+        textField: 'name',
+        valueField: 'name',
+        required: true,
+        options: new DataSet({
+          selection: 'multiple',
+          autoQuery: true,
+          transport: {
+            read: {
+              url: `/iam/choerodon/v1/organizations/${organizationId}/list_user_labels`,
+              method: 'get',
+              transformResponse: (data) => {
+                const arr = JSON.parse(data);
+                const newArr = [];
+                arr.forEach((item) => {
+                  const obj = {};
+                  obj.name = item;
+                  obj.status = 'remote';
+                  newArr.push(obj);
+                });
+                return newArr;
+              },
+            },
+          },
+        }),
+      },
       { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
       { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }) },
       { name: 'workingGroup', type: 'string', label: formatProjectUser({ id: 'workingGroup' }) },

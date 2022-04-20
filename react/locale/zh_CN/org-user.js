@@ -34,7 +34,6 @@ const orguser = {
   // 用户
   'c7ncd.org-user.status': '状态',
   'c7ncd.org-user.safe-status': '安全状态',
-  'c7ncd.org-user.outsourcing': '是否外包',
   'c7ncd.org-user.scheduleEntryTime': '计划进场时间',
   'c7ncd.org-user.scheduleExitTime': '计划撤场时间',
   'c7ncd.org-user.workingGroup': '所属工作组',

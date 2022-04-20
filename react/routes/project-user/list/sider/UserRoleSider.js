@@ -2,15 +2,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Action, Content, axios, Page, Permission, Breadcrumb, TabPage, Choerodon,
+  axios, Choerodon,
 } from '@choerodon/boot';
 import {
-  Form, Modal, TextField, Select, EmailField, DatePicker , SelectBox
+  Form, TextField, Select, EmailField, DatePicker , SelectBox
 } from 'choerodon-ui/pro';
 import some from 'lodash/some';
 import Store from './stores';
-import FormSelectEditor from '../../../../components/formSelectEditor';
-import DeleteRoleModal from '../../DeleteRoleModal';
 import './index.less';
 
 const { Option } = Select;
@@ -77,88 +75,35 @@ export default observer((props) => {
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
 
-  function renderOption({ text, value }) {
-    const result = allRoleDataSet.find((item) => item.get('id') === value);
-    if (!result) {
-      return `${value}`;
-    }
-    if (!result.get('enabled')) {
-      return `${result && result.get('name')}（已停用）`;
-    }
-    return result && result.get('name');
-  }
-
-  /*
-     如果是项目群成员 并且角色是项目成员 则不让修改和删除
-   */
-  function checkItemDisabled(userDataSet, v, optionsDataSet) {
-    const projectOwner = userDataSet.current.get('programOwner')
-    const value = v;
-    const options = optionsDataSet;
-    let itemDisabled = false;
-    if (projectOwner) {
-      if (value) {
-        const item = options.records.find(i => String(i.get('id')) === String(value));
-        if (item) {
-          const isProjectMember = item.get('code') === 'project-member';
-          itemDisabled = isProjectMember;
-        }
-      }
-    }
-    return itemDisabled;
-  }
-
   return (
     <div className={`${prefixCls}-modal`}>
-      <Form  dataSet={orgUserListDataSet}>
-        <TextField name="realName" disabled/>
-        <EmailField name="email" disabled/>
-        <TextField name="phone" disabled/>
-        <Select value="zh_CN" label="语言" disabled>
+      <Form  dataSet={orgUserListDataSet} columns={2}>
+        <TextField name="realName" disabled colSpan={2}/>
+        <EmailField name="email" disabled colSpan={2}/>
+        <Select
+          multiple
+          name="roles"
+          options={orgRoleDataSet}
+          colSpan={2}
+        />
+        <TextField name="phone" disabled colSpan={2}/>
+        <Select value="zh_CN" label="语言" disabled colSpan={2}>
           <Option value="zh_CN">简体中文</Option>
         </Select>
-        <Select value="CTT" label="时区" disabled>
+        <Select value="CTT" label="时区" disabled colSpan={2}>
           <Option value="CTT">中国</Option>
         </Select>
-        <DatePicker name='scheduleEntryTime' />
-        <DatePicker name='scheduleExitTime' />
-        <SelectBox name="outsourcing" disabled>
-          <Option value>是</Option>
-          <Option value={false}>否</Option>
-        </SelectBox>
-        <TextField name="workingGroup" disabled/>
+        <DatePicker name='scheduleEntryTime' colSpan={1} style={{width:165}}/>
+        <DatePicker name='scheduleExitTime' colSpan={1} style={{width:165,position:'relative',left:6}}/>
+        <TextField name="workingGroup" disabled colSpan={2}/>
+        <Select
+          multiple
+          name="userLabels"
+          searchable
+          colSpan={2}
+          disabled
+        />
       </Form>
-      <DeleteRoleModal
-        deleteRoleRecord={deleteRoleRecord}
-        handleCancel={handleDeleteRoleRecord}
-        projectId={projectId}
-      />
-      <FormSelectEditor
-        record={orgUserRoleDataSet.current}
-        optionDataSet={orgRoleDataSet}
-        name="roles"
-        addButton="添加其他角色"
-        maxDisable
-        allRoleDataSet={allRoleDataSet}
-        orgUserListDataSet={orgUserListDataSet}
-        itemDisabledFunc={checkItemDisabled}
-      >
-        {((itemProps) => {
-          const { value, options } = itemProps;
-          const result = allRoleDataSet.find((item) => item.get('id') === itemProps.value);
-          const itemDisabled = checkItemDisabled(orgUserListDataSet, value, options);
-          return (
-            <Select
-              {...itemProps}
-              labelLayout="float"
-              renderer={renderOption}
-              disabled={itemDisabled || itemProps.disabled || (result && !result.get('enabled'))}
-              style={{ width: '100%' }}
-            />
-          );
-        })}
-      </FormSelectEditor>
-
     </div>
   );
 });
