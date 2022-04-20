@@ -97,6 +97,7 @@ export default observer(() => {
           name="userLabels"
           searchable
           onInput={(e) => { handleInput(e); }}
+          className="userLabels-select"
         />
         <Select
           multiple
