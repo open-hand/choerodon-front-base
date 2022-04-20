@@ -1,16 +1,17 @@
 /* eslint-disable */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect,useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   axios, Choerodon,
 } from '@choerodon/boot';
 import {
-  Form, TextField, Select, EmailField, DatePicker , SelectBox
+  Form, TextField, Select, EmailField, DatePicker,DataSet
 } from 'choerodon-ui/pro';
 import some from 'lodash/some';
 import Store from './stores';
 import './index.less';
 import DeleteRoleModal from '../../DeleteRoleModal';
+import OrgUserListDataSet from '../stores/OrgUserListDataSet'
 
 const { Option } = Select;
 
@@ -29,16 +30,40 @@ export default observer((props) => {
     orgRoleDataSet,
     orgUserListDataSet,
     AppState,
+    statusOptionDs,
+    safeOptionDs,
+    formatProjectUser,
+    formatCommon,
+    organizationId
   } = useContext(Store);
-  const { current } = orgUserRoleDataSet;
 
-  const [hasOwner, setHasOwner] = useState(false);
-  const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
+  const { current } = orgUserRoleDataSet;
 
   useEffect(() => {
     setHasOwner(current.get('roles').some((r) => r === 9));
     orgUserListDataSet.current = orgUserListDataSet.records.find((i) => i.get('id') === current.get('id'));
   }, []);
+
+  const formDs = useMemo(() => {
+    const ds = new DataSet(OrgUserListDataSet({ 
+      id : projectId,
+      formatProjectUser,
+      formatCommon,
+      statusOptionDs,
+      safeOptionDs,
+      orgRoleDataSet,
+      organizationId,
+    }))
+    ds.getField('roles').set('required',false)
+    ds.loadData([orgUserListDataSet.current])
+    console.log(ds)
+   return  ds
+  }, []);
+
+  
+
+  const [hasOwner, setHasOwner] = useState(false);
+  const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
 
   function handleCancel() {
     orgUserRoleDataSet.reset();
@@ -49,7 +74,12 @@ export default observer((props) => {
       const requestData = current.toJSONData();
       requestData.roles = requestData.roles.filter((v) => v);
       // if (requestData.roles.length === 0) return false;
-      const result = await axios.put(`/iam/choerodon/v1/projects/${projectId}/users/${current.toData().id}/assign_roles`, requestData.roles);
+      const idArr = formDs.current.get('roles').map(item=>{
+       return typeof item === 'object' ? item.id : item
+      })
+      const result = await axios.put(`/iam/choerodon/v1/projects/${projectId}/users/${current.toData().id}/assign_roles`,{
+        roleIds: idArr,   scheduleEntryTime:formDs.current.get('scheduleEntryTime'),scheduleExitTime:formDs.current.get('scheduleExitTime') 
+      }) ;
       if (!result.failed) {
         await orgUserRoleDataSet.reset();
         await onOk();
@@ -66,9 +96,8 @@ export default observer((props) => {
 
   async function handleOk() {
     const { categories } = AppState?.currentMenuType || {};
-    if (hasBusiness && some(categories || [], ['code', 'N_PROGRAM']) && current.get('roles') && !current.get('roles').length) {
-      console.log(current)
-      await setDeleteRoleRecord(current);
+    if (hasBusiness && some(categories || [], ['code', 'N_PROGRAM']) && formDs.current.get('roles') && !formDs.current.get('roles').length) {
+      await setDeleteRoleRecord(formDs.current);
       return false;
     }
     await handleDeleteRoleRecord(true);
@@ -79,7 +108,7 @@ export default observer((props) => {
 
   return (
     <div className={`${prefixCls}-modal`}>
-      <Form  dataSet={orgUserListDataSet} columns={2}>
+      <Form dataSet={formDs} columns={2}>
         <TextField name="realName" disabled colSpan={2}/>
         <EmailField name="email" disabled colSpan={2}/>
         <Select

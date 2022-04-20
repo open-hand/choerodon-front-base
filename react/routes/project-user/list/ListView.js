@@ -67,6 +67,8 @@ export default BrowserAdapter(observer((props) => {
     AppState,
     formatCommon,
     formatProjectUser,
+    statusOptionDs,
+    safeOptionDs,
   } = useContext(Store);
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
@@ -156,6 +158,11 @@ export default BrowserAdapter(observer((props) => {
         orgUserRoleDataSet={orgUserRoleDataSet}
         orgUserCreateDataSet={orgUserCreateDataSet}
         orgUserListDataSet={dataSet}
+        statusOptionDs={statusOptionDs}
+        safeOptionDs={safeOptionDs}
+        formatProjectUser={formatProjectUser}
+        formatCommon={formatCommon}
+        organizationId={organizationId}
         // eslint-disable-next-line react/jsx-no-bind
         onOk={handleSave}
       />,
@@ -500,7 +507,7 @@ export default BrowserAdapter(observer((props) => {
             </Tooltip>
           )}
         />
-        <Table.Column width={100} className="table-align-center" name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
+        <Table.Column align="left" width={100} className="table-align-center" name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
         <Table.Column
           width={150}
           name="role"

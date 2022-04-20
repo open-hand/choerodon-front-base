@@ -62,6 +62,8 @@ export const StoreProvider = injectIntl(inject('AppState')(
     const value = {
       ...props,
       formatCommon,
+      statusOptionDs,
+      safeOptionDs,
       formatProjectUser,
       orgUserListDataSet,
       orgUserCreateDataSet,

@@ -1,7 +1,8 @@
+/* eslint-disable */
 import React from 'react';
 import { SiderStoreProvider } from './stores';
 import CreateSider from './CreateSider';
-import UserRoleSider from './UserRoleSider';
+import UserRoleSider from './EditSider';
 import ImportRoleSider from './ImportRoleSider';
 
 export default (props) => (

@@ -76,7 +76,6 @@ export default ({
         label: '标签',
         textField: 'name',
         valueField: 'name',
-        required: true,
         options: new DataSet({
           selection: 'multiple',
           autoQuery: true,

@@ -1,7 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Action, Content, axios, Page, Permission, Breadcrumb, Choerodon } from '@choerodon/boot';
-import { Form, Modal, TextField, Select, EmailField } from 'choerodon-ui/pro';
+import {
+  Action, Content, axios, Page, Permission, Breadcrumb, Choerodon,
+} from '@choerodon/boot';
+import {
+  Form, Modal, TextField, Select, EmailField,
+} from 'choerodon-ui/pro';
 import Store from './stores';
 import FormSelectEditor from '../../../../components/formSelectEditor';
 import './index.less';
@@ -9,11 +13,15 @@ import './index.less';
 const { Option } = Select;
 
 export default observer((props) => {
-  const { prefixCls, modal, orgUserRoleDataSet, onOk, organizationId, orgRoleDataSet, orgAllRoleDataSet, orgUserListDataSet } = useContext(Store);
+  const {
+    prefixCls, modal, orgUserRoleDataSet, onOk, organizationId, orgRoleDataSet,
+    orgAllRoleDataSet, orgUserListDataSet,
+  } = useContext(Store);
   const { current } = orgUserRoleDataSet;
   function handleCancel() {
     orgUserRoleDataSet.reset();
   }
+  // eslint-disable-next-line consistent-return
   async function handleOk() {
     const requestData = current.toJSONData();
     requestData.roles = requestData.roles.filter((v) => v).map((v) => ({ id: v }));
@@ -32,7 +40,7 @@ export default observer((props) => {
   modal.handleCancel(handleCancel);
 
   function renderOption({ text, value }) {
-    const result = orgAllRoleDataSet.find(item => item.get('id') === value);
+    const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
     if (!result) {
       return `${value}`;
     }
@@ -42,36 +50,45 @@ export default observer((props) => {
     return result && result.get('name');
   }
 
+  const handleInput = (e) => {
+    const optionDs = orgUserListDataSet?.getField('userLabels').options;
+    optionDs.forEach((record) => {
+      if (record.get('status') === 'local' && !record.isSelected) {
+        optionDs.remove(record);
+      }
+    });
+    const arr = orgUserListDataSet?.getField('userLabels').options.toData();
+    arr.unshift({
+      name: e.target.value,
+      status: 'local',
+    });
+    orgUserListDataSet?.getField('userLabels').options.loadData(arr);
+  };
+
   return (
     <div className={`${prefixCls}-modal`}>
-      <Form disabled dataSet={orgUserListDataSet}>
-        <TextField name="realName" />
-        <EmailField name="email" />
-        <TextField name="phone" />
-        <Select value="zh_CN" label="语言">
+      <Form dataSet={orgUserListDataSet}>
+        <TextField name="realName" disabled />
+        <EmailField name="email" disabled />
+        <TextField name="phone" disabled />
+        <Select value="zh_CN" label="语言" disabled>
           <Option value="zh_CN">简体中文</Option>
         </Select>
-        <Select value="CTT" label="时区">
+        <Select value="CTT" label="时区" disabled>
           <Option value="CTT">中国</Option>
         </Select>
+        <Select
+          multiple
+          name="userLabels"
+          searchable
+          onInput={(e) => { handleInput(e); }}
+        />
+        <Select
+          multiple
+          name="roles"
+          options={orgRoleDataSet}
+        />
       </Form>
-      <FormSelectEditor
-        record={orgUserRoleDataSet.current}
-        optionDataSet={orgRoleDataSet}
-        name="roles"
-        addButton="添加其他角色"
-        maxDisable
-      >
-        {((itemProps) => (
-          <Select
-            {...itemProps}
-            labelLayout="float"
-            renderer={renderOption}
-            searchable
-            style={{ width: '100%' }}
-          />
-        ))}
-      </FormSelectEditor>
     </div>
   );
 });
