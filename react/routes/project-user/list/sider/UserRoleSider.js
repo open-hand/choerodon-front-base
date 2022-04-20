@@ -10,6 +10,7 @@ import {
 import some from 'lodash/some';
 import Store from './stores';
 import './index.less';
+import DeleteRoleModal from '../../DeleteRoleModal';
 
 const { Option } = Select;
 
@@ -66,6 +67,7 @@ export default observer((props) => {
   async function handleOk() {
     const { categories } = AppState?.currentMenuType || {};
     if (hasBusiness && some(categories || [], ['code', 'N_PROGRAM']) && current.get('roles') && !current.get('roles').length) {
+      console.log(current)
       await setDeleteRoleRecord(current);
       return false;
     }
@@ -104,6 +106,11 @@ export default observer((props) => {
           disabled
         />
       </Form>
+      <DeleteRoleModal
+        deleteRoleRecord={deleteRoleRecord}
+        handleCancel={handleDeleteRoleRecord}
+        projectId={projectId}
+      />
     </div>
   );
 });
