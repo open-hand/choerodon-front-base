@@ -515,10 +515,12 @@ export default BrowserAdapter(observer((props) => {
         />
         <Table.Column
           // width={150}
+          tooltip="overflow"
           name="scheduleEntryTime"
         />
         <Table.Column
           // width={150}
+          tooltip="overflow"
           name="scheduleExitTime"
         />
         <Table.Column
