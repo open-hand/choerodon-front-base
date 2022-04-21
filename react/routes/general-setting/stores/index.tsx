@@ -72,6 +72,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props: an
         // 应该是拿infods的 catalogy
       ]);
       infoDs.loadData([assign(infoData, {
+        agileProjectId: agileData.infoId,
         agileProjectCode: agileData.projectCode,
         testProjectCode: testData.projectCode,
         testProjectInfoId: testData.infoId,
