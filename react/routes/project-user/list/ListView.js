@@ -179,7 +179,8 @@ export default BrowserAdapter(observer((props) => {
     const data = isData ? newRecord : newRecord.toData();
     data.roles = data.roles.map((v) => v.id);
     if (data.roles.length === 0) data.roles = [''];
-    orgUserRoleDataSet.create(data);
+    // orgUserRoleDataSet.create(data);
+    orgUserRoleDataSet.loadData([data]);
     openModal('addRole');
   }
   function handleCreate() {
@@ -515,14 +516,6 @@ export default BrowserAdapter(observer((props) => {
         />
         <Table.Column
           // width={150}
-          name="scheduleEntryTime"
-        />
-        <Table.Column
-          // width={150}
-          name="scheduleExitTime"
-        />
-        <Table.Column
-          // width={150}
           name="workingGroup"
         />
         <Table.Column
@@ -569,6 +562,14 @@ export default BrowserAdapter(observer((props) => {
               {text}
             </Tooltip>
           )}
+        />
+        <Table.Column
+          // width={150}
+          name="scheduleEntryTime"
+        />
+        <Table.Column
+          // width={150}
+          name="scheduleExitTime"
         />
       </Table>
     </div>

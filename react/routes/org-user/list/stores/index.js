@@ -18,6 +18,7 @@ export default Store;
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const { AppState: { currentMenuType: { id, organizationId } }, intl, children } = props;
+
     const intlPrefix = 'c7ncd.org-user';
 
     const formatCommon = useFormatCommon();
@@ -89,6 +90,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
       organizationId,
       passwordPolicyDataSet,
       userStore,
+      id,
+      statusOptionDs,
+      safeOptionDs,
+      orgID: organizationId,
     };
     return (
       <Store.Provider value={value}>

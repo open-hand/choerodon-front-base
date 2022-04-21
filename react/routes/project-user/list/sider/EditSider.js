@@ -55,8 +55,7 @@ export default observer((props) => {
       organizationId,
     }))
     ds.getField('roles').set('required',false)
-    ds.loadData([orgUserListDataSet.current])
-    console.log(ds)
+    ds.loadData([orgUserRoleDataSet.current])
    return  ds
   }, []);
 

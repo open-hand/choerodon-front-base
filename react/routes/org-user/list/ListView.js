@@ -65,6 +65,7 @@ const DeleteChildren = observer((props) => {
       },
     });
   }, [deleteOption]);
+  
 
   modal.handleOk(async () => {
     const result = await axios.delete(
@@ -115,8 +116,13 @@ export default withRouter(
       userStore,
       formatProjectUser,
       formatCommon,
+      safeOptionDs,
+      statusOptionDs
     } = useContext(Store);
     const { getCanCreate } = userStore;
+    useEffect(() => {
+      dataSet.query()
+    }, [])
     const modalProps = {
       create: {
         okText: '保存',
@@ -262,6 +268,11 @@ export default withRouter(
             orgUserRoleDataSet={orgUserRoleDataSet}
             orgUserCreateDataSet={orgUserCreateDataSet}
             orgUserListDataSet={dataSet}
+            statusOptionDs={statusOptionDs}
+            safeOptionDs={safeOptionDs}
+            formatProjectUser={formatProjectUser}
+            formatCommon={formatCommon}
+            organizationId={organizationId}
             onOk={handleSave}
             userStore={userStore}
           />
@@ -277,13 +288,14 @@ export default withRouter(
     }
     function handleModify(record) {
       dataSet.current = record;
+      orgUserRoleDataSet.loadData([record.toData()]);
       openModal('modify');
     }
     function handleUserRole(record) {
       const data = record.toData();
       data.roles = data.roles.map((v) => v.id);
       if (data.roles.length === 0) data.roles = [''];
-      orgUserRoleDataSet.create(data);
+      orgUserRoleDataSet.loadData([data]);
       openModal('addRole');
     }
     function handleCreate() {

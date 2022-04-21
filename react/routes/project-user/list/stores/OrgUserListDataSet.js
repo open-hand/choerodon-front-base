@@ -37,7 +37,7 @@ export default ({
     }
   }
   return {
-    autoQuery: true,
+    autoQuery: false,
     selection: 'multiple',
     pageSize: 15,
     primaryKey: 'id',
@@ -109,30 +109,6 @@ export default ({
       {
         name: 'userLabels',
         label: '标签',
-        textField: 'name',
-        valueField: 'name',
-        placeholder: '输入即可创建标签',
-        options: new DataSet({
-          selection: 'multiple',
-          autoQuery: true,
-          transport: {
-            read: {
-              url: `/iam/choerodon/v1/organizations/${organizationId}/list_user_labels`,
-              method: 'get',
-              transformResponse: (data) => {
-                const arr = JSON.parse(data);
-                const newArr = [];
-                arr.forEach((item) => {
-                  const obj = {};
-                  obj.name = item;
-                  obj.status = 'remote';
-                  newArr.push(obj);
-                });
-                return newArr;
-              },
-            },
-          },
-        }),
       },
       { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
       { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }) },

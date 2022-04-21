@@ -49,7 +49,8 @@ export default ({
     }
   }
   return {
-    autoQuery: true,
+    autoQuery: false,
+    autoCreate: true,
     selection: false,
     transport: {
       read: {
