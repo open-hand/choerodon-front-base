@@ -5,12 +5,12 @@ import { observer } from 'mobx-react-lite';
 import {
   Action, Content, axios, Page, Permission, Breadcrumb, TabPage,
 } from '@choerodon/boot';
+import { findIndex } from 'lodash';
 import {
   Form, TextField, Password, Select, EmailField, SelectBox,
 } from 'choerodon-ui/pro';
 import Store from './stores';
 import './index.less';
-import FormSelectEditor from '../../../../components/formSelectEditor';
 
 const { Option } = Select;
 export default observer((props) => {
@@ -41,17 +41,6 @@ export default observer((props) => {
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
 
-  const renderOption = ({ text, value }) => {
-    const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
-    if (!result) {
-      return `${value}`;
-    }
-    if (!result.get('enabled')) {
-      return `${result && result.get('name')}（已停用）`;
-    }
-    return result && result.get('name');
-  };
-
   const handleInput = (e) => {
     const optionDs = orgUserListDataSet?.getField('userLabels').options;
     optionDs.forEach((record) => {
@@ -60,10 +49,13 @@ export default observer((props) => {
       }
     });
     const arr = orgUserListDataSet?.getField('userLabels').options.toData();
-    arr.unshift({
-      name: e.target.value,
-      status: 'local',
-    });
+    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
+      arr.unshift({
+        name: e.target.value,
+        status: 'local',
+      });
+    }
+
     orgUserListDataSet?.getField('userLabels').options.loadData(arr);
   };
 

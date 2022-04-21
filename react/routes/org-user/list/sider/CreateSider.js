@@ -74,7 +74,7 @@ export default observer(() => {
       }
     });
     const arr = orgUserCreateDataSet?.getField('userLabels').options.toData();
-    if (findIndex(arr, (i) => i.name === e.target.value) === -1) {
+    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
       arr.unshift({
         name: e.target.value,
         status: 'local',

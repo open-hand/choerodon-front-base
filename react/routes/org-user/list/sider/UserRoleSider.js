@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  Action, Content, axios, Page, Permission, Breadcrumb, Choerodon,
+  axios, Choerodon,
 } from '@choerodon/boot';
+import { findIndex } from 'lodash';
 import {
-  Form, Modal, TextField, Select, EmailField,
+  Form, TextField, Select, EmailField,
 } from 'choerodon-ui/pro';
 import Store from './stores';
-import FormSelectEditor from '../../../../components/formSelectEditor';
 import './index.less';
 
 const { Option } = Select;
@@ -25,6 +25,7 @@ export default observer((props) => {
   async function handleOk() {
     const requestData = current.toJSONData();
     requestData.roles = requestData.roles.filter((v) => v).map((v) => ({ id: v }));
+
     // if (requestData.roles.length === 0) return false;
     const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${current.toData().id}/assign_roles`, requestData.roles);
     if (!result.failed) {
@@ -39,17 +40,6 @@ export default observer((props) => {
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
 
-  function renderOption({ text, value }) {
-    const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
-    if (!result) {
-      return `${value}`;
-    }
-    if (!result.get('enabled')) {
-      return `${result && result.get('name')}（已停用）`;
-    }
-    return result && result.get('name');
-  }
-
   const handleInput = (e) => {
     const optionDs = orgUserListDataSet?.getField('userLabels').options;
     optionDs.forEach((record) => {
@@ -58,10 +48,12 @@ export default observer((props) => {
       }
     });
     const arr = orgUserListDataSet?.getField('userLabels').options.toData();
-    arr.unshift({
-      name: e.target.value,
-      status: 'local',
-    });
+    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
+      arr.unshift({
+        name: e.target.value,
+        status: 'local',
+      });
+    }
     orgUserListDataSet?.getField('userLabels').options.loadData(arr);
   };
 
