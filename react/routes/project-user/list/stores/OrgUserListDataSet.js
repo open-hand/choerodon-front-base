@@ -110,8 +110,8 @@ export default ({
         name: 'userLabels',
         label: '标签',
       },
-      { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
-      { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }) },
+      { name: 'scheduleEntryTime', type: 'date', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
+      { name: 'scheduleExitTime', type: 'date', label: formatProjectUser({ id: 'scheduleExitTime' }) },
       { name: 'workingGroup', type: 'string', label: formatProjectUser({ id: 'workingGroup' }) },
     ],
     queryFields: [

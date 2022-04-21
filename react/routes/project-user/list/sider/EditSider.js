@@ -12,6 +12,7 @@ import Store from './stores';
 import './index.less';
 import DeleteRoleModal from '../../DeleteRoleModal';
 import OrgUserListDataSet from '../stores/OrgUserListDataSet'
+import moment from 'moment'
 
 const { Option } = Select;
 
@@ -77,7 +78,7 @@ export default observer((props) => {
        return typeof item === 'object' ? item.id : item
       })
       const result = await axios.put(`/iam/choerodon/v1/projects/${projectId}/users/${current.toData().id}/assign_roles`,{
-        roleIds: idArr,   scheduleEntryTime:formDs.current.get('scheduleEntryTime'),scheduleExitTime:formDs.current.get('scheduleExitTime') 
+        roleIds: idArr,  scheduleEntryTime: moment(formDs.current.get('scheduleEntryTime')).format('YYYY-MM-DD HH:mm:ss'),scheduleExitTime: moment(formDs.current.get('scheduleExitTime')).format('YYYY-MM-DD HH:mm:ss') 
       }) ;
       if (!result.failed) {
         await orgUserRoleDataSet.reset();

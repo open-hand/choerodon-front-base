@@ -191,8 +191,8 @@ export default observer((props) => {
                 newLine
                 multiple
               />
-              <DatePicker newLine colSpan={5} name="scheduleEntryTime" />
-              <DatePicker colSpan={5} name="scheduleExitTime" />
+              <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
+              <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" />
             </Form>
             {index !== 0 && (
               <Button
@@ -236,8 +236,8 @@ export default observer((props) => {
                   options={userOptionDataSet}
                   newLine
                 />
-                <DatePicker newLine colSpan={5} name="scheduleEntryTime" />
-                <DatePicker colSpan={5} name="scheduleExitTime" />
+                <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
+                <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" />
               </Form>
               {index !== 0 && (
                 <Button
