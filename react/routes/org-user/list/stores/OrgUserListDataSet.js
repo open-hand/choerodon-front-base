@@ -1,11 +1,13 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { axios } from '@choerodon/boot';
+import { DataSet } from 'choerodon-ui/pro';
 
 const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s*$/);
 
 export default ({
   id = 0, formatCommon, formatProjectUser, safeOptionDs, statusOptionDs, orgRoleDataSet,
+  orgID,
 }) => {
   const username = formatCommon({ id: 'username' });
   const loginName = formatCommon({ id: 'account' });
@@ -47,7 +49,8 @@ export default ({
     }
   }
   return {
-    autoQuery: true,
+    autoQuery: false,
+    autoCreate: true,
     selection: false,
     transport: {
       read: {
@@ -76,7 +79,7 @@ export default ({
         name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs,
       },
       {
-        name: 'roles', type: 'object', label: formatCommon({ id: 'role' }), maxTagTextLength: 1, multiple: true, textField: 'name', valueField: 'id',
+        name: 'roles', type: 'object', label: formatCommon({ id: 'role' }), multiple: true, textField: 'name', valueField: 'id',
       },
       {
         name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs,
@@ -96,7 +99,34 @@ export default ({
       },
       { name: 'myRoles', type: 'string', label: formatCommon({ id: 'role' }) },
       { name: 'ldap', type: 'boolean', label: source },
-      { name: 'outsourcing', type: 'boolean', label: formatProjectUser({ id: 'outsourcing' }) },
+      {
+        name: 'userLabels',
+        label: '标签',
+        textField: 'name',
+        valueField: 'name',
+        placeholder: '输入即可创建标签',
+        options: new DataSet({
+          selection: 'multiple',
+          autoQuery: false,
+          transport: {
+            read: {
+              url: `/iam/choerodon/v1/organizations/${orgID}/list_user_labels`,
+              method: 'get',
+              transformResponse: (data) => {
+                const arr = JSON.parse(data);
+                const newArr = [];
+                arr.forEach((item) => {
+                  const obj = {};
+                  obj.name = item;
+                  obj.status = 'remote';
+                  newArr.push(obj);
+                });
+                return newArr;
+              },
+            },
+          },
+        }),
+      },
     ],
     queryFields: [
       { name: 'realName', type: 'string', label: formatCommon({ id: 'username' }) },

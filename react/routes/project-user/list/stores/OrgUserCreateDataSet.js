@@ -2,6 +2,7 @@ import { axios, Choerodon } from '@choerodon/boot';
 
 export default ({ id = 0, formatCommon }) => {
   const username = formatCommon({ id: 'username' });
+  // eslint-disable-next-line consistent-return
   async function checkEmail(email) {
     try {
       const result = await axios.post(`/iam/choerodon/v1/projects/${id}/users/check`, JSON.stringify({ projectId: id, email }));
@@ -19,6 +20,7 @@ export default ({ id = 0, formatCommon }) => {
         url: `/iam/choerodon/v1/projects/${id}/users`,
         method: 'post',
         transformRequest: (([data]) => {
+          // eslint-disable-next-line no-param-reassign
           data.roles = data.roles.map((v) => ({ id: v }));
           return JSON.stringify(data);
         }),

@@ -1,52 +1,88 @@
-import React, { useContext, useState, use } from 'react';
+import React, {
+  useContext, useState, useMemo, useEffect,
+} from 'react';
 import { observer } from 'mobx-react-lite';
+import { findIndex } from 'lodash';
 import {
-  Action, Content, axios, Page, Permission, Breadcrumb, TabPage,
-} from '@choerodon/boot';
-import {
-  Form, TextField, Password, Select, EmailField, SelectBox,
+  Form, TextField, Select, EmailField, DataSet,
 } from 'choerodon-ui/pro';
+import OrgUserListDataSet from '../stores/OrgUserListDataSet';
 import Store from './stores';
 import './index.less';
-import FormSelectEditor from '../../../../components/formSelectEditor';
 
 const { Option } = Select;
 export default observer((props) => {
   const {
-    prefixCls, intlPrefix, modal, orgUserListDataSet, onOk, orgAllRoleDataSet, orgRoleDataSet,
+    prefixCls, intlPrefix, modal, orgUserListDataSet, onOk, orgAllRoleDataSet, orgRoleDataSet, id,
+    formatProjectUser, orgUserRoleDataSet, formatCommon, statusOptionDs, safeOptionDs,
+    organizationId,
   } = useContext(Store);
+
+  const formDs = useMemo(() => {
+    const ds = new DataSet(OrgUserListDataSet({
+      id: organizationId,
+      formatProjectUser,
+      formatCommon,
+      statusOptionDs,
+      safeOptionDs,
+      orgRoleDataSet,
+      orgID: organizationId,
+    }));
+    ds.getField('roles').set('required', false);
+    ds.loadData([orgUserRoleDataSet.current]);
+    ds?.getField('userLabels')?.options?.query();
+    return ds;
+  }, []);
+
   function handleCancel() {
-    orgUserListDataSet.reset();
+    orgUserRoleDataSet.reset();
   }
+
   async function handleOk() {
-    if (!orgUserListDataSet.current.dirty && !orgUserListDataSet.current.get('dirty')) {
-      return true;
-    }
-    if (await orgUserListDataSet.submit()) {
-      await orgUserListDataSet.reset();
-      await onOk();
-      return true;
+    // if (!orgUserListDataSet.current.dirty && !orgUserListDataSet.current.get('dirty')) {
+    //   return true;
+    // }
+    const validateRes = await formDs.validate();
+
+    if (validateRes) {
+      try {
+        await formDs.submit();
+        await orgUserRoleDataSet.reset();
+        await onOk();
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
     }
     return false;
   }
+
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
-  const renderOption = ({ text, value }) => {
-    const result = orgAllRoleDataSet.find((item) => item.get('id') === value);
-    if (!result) {
-      return `${value}`;
+
+  const handleInput = (e) => {
+    const optionDs = formDs?.getField('userLabels').options;
+    optionDs.forEach((record) => {
+      if (record.get('status') === 'local' && !record.isSelected) {
+        optionDs.remove(record);
+      }
+    });
+    const arr = formDs?.getField('userLabels').options.toData();
+    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
+      arr.unshift({
+        name: e.target.value,
+        status: 'local',
+      });
     }
-    if (!result.get('enabled')) {
-      return `${result && result.get('name')}（已停用）`;
-    }
-    return result && result.get('name');
+
+    formDs?.getField('userLabels').options.loadData(arr);
   };
 
   return (
     <div
       className={`${prefixCls}-modal`}
     >
-      <Form dataSet={orgUserListDataSet}>
+      <Form dataSet={formDs}>
         <TextField name="realName" />
         <EmailField name="email" />
         <TextField name="phone" />
@@ -56,32 +92,18 @@ export default observer((props) => {
         <Select value="CTT" label="时区">
           <Option value="CTT">中国</Option>
         </Select>
-        <SelectBox name="outsourcing">
-          <Option value>是</Option>
-          <Option value={false}>否</Option>
-        </SelectBox>
-        <FormSelectEditor
-          record={orgUserListDataSet.current}
-          optionDataSet={orgRoleDataSet}
+        <Select
+          multiple
+          name="userLabels"
+          searchable
+          onInput={(e) => { handleInput(e); }}
+          className="userLabels-select"
+        />
+        <Select
+          multiple
           name="roles"
-          idField="id"
-          addButton="添加其他角色"
-          maxDisable
-        >
-          {((itemProps) => {
-            const result = orgAllRoleDataSet.find((item) => item.get('id') === itemProps.value);
-            return (
-              <Select
-                {...itemProps}
-                labelLayout="float"
-                renderer={renderOption}
-                searchable
-                disabled={result && !result.get('enabled')}
-                style={{ width: '100%' }}
-              />
-            );
-          })}
-        </FormSelectEditor>
+          options={orgRoleDataSet}
+        />
       </Form>
     </div>
   );

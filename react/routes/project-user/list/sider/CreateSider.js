@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { axios } from '@choerodon/master';
+import { axios, UserLabels } from '@choerodon/master';
 import {
   Spin,
   SelectBox,
@@ -12,15 +12,13 @@ import {
   Form,
   DatePicker,
   Button,
+  message,
 } from 'choerodon-ui/pro';
-import { Tag } from 'choerodon-ui';
 import { useDebounceFn } from 'ahooks';
 import { UserInfo } from '@choerodon/components';
-import { compact } from 'lodash';
+import { uniqBy } from 'lodash';
 import Store from './stores';
-// import UserOptionDataSet from './stores/UserOptionDataSet';
 import './index.less';
-import TwoFormSelectEditor from '../../../../components/twoFormSelectEditor';
 import { mapping, wayOptions } from './stores/addWayDataSet';
 
 const { Option } = Select;
@@ -48,66 +46,39 @@ export default observer((props) => {
 
   const [disable, setDisable] = useState(true);
 
-  // useEffect(() => {
-  //   if (roleAssignDataSet.length === 0) {
-  //     if (AddWayDataSet.current.get(mapping.way.name) === 'normal') {
-  //       roleAssignDataSet.create({ memberId: [''], roleIds: [''] });
-  //     }
-  //     if (AddWayDataSet.current.get(mapping.way.name) === 'role') {
-  //       roleAssignDataSet.create({ memberId: [''], roleIds: undefined });
-  //     }
-  //   }
-  // });
-
-  useEffect(() => {
-    // roleAssignDataSet.reset();
-    // outsourcingDataSet.reset();
+  const addWayChange = () => {
     normalFormDataSet.reset();
     roleFormDataSet.reset();
-  }, [AddWayDataSet.current.get(mapping.way.name)]);
+    userOptionDataSet?.loadData([]);
+  };
 
   function handleCancel() {
-    // roleAssignDataSet.reset();
+    // orgUserRoleDataSet.reset();
   }
   async function handleOk() {
     let checkRes = false;
-    if (AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value) {
-      checkRes = await normalFormDataSet.validate();
-      if (checkRes) {
-        try {
-          await axios.post(
-            `/iam/choerodon/v1/projects/${id}/users/assign_roles`,
-            JSON.stringify(normalFormDataSet.toData()),
-          );
-          await onOk();
-          return true;
-        } catch (e) {
-          return false;
-        }
+    const currentDs = AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value
+      ? normalFormDataSet : roleFormDataSet;
+    checkRes = await currentDs.validate();
+    if (checkRes) {
+      const arr = roleFormDataSet.toData()[0].users;
+      arr.forEach((item) => {
+        // eslint-disable-next-line no-param-reassign
+        item.roleIds = roleFormDataSet.toData()[0].roleIds;
+      });
+      const postData = currentDs === normalFormDataSet
+        ? JSON.stringify(normalFormDataSet.toData()) : JSON.stringify(arr);
+      try {
+        await axios.post(
+          `/iam/choerodon/v1/projects/${id}/users/assign_roles`,
+          postData,
+        );
+        await onOk();
+        message.success('添加成功');
+        return true;
+      } catch (e) {
+        return false;
       }
-      return false;
-    }
-
-    if (AddWayDataSet.current.get(mapping.way.name) === wayOptions[1].value) {
-      checkRes = await roleFormDataSet.validate();
-      if (checkRes) {
-        const arr = roleFormDataSet.toData()[0].users;
-        arr.forEach((item) => {
-          // eslint-disable-next-line no-param-reassign
-          item.roleIds = roleFormDataSet.toData()[0].roleIds;
-        });
-        try {
-          await axios.post(
-            `/iam/choerodon/v1/projects/${id}/users/assign_roles`,
-            JSON.stringify(arr),
-          );
-          await onOk();
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
-      return false;
     }
     return false;
   }
@@ -116,59 +87,53 @@ export default observer((props) => {
   modal.handleOk(handleOk);
 
   const { run, cancel } = useDebounceFn(
-    (str, optionDataSet) => {
+    async (str, optionDataSet) => {
       optionDataSet.setQueryParameter('user_name', str);
       if (str !== '') {
-        optionDataSet.query();
+        const currentDs = AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value
+          ? normalFormDataSet : roleFormDataSet?.children?.users;
+        const arr = [];
+        currentDs.forEach((record) => {
+          optionDataSet.toData().forEach((item) => {
+            if (item.id === record.get('memberId')) {
+              arr.push(item);
+            }
+          });
+        });
+        await optionDataSet.query();
+        optionDataSet.loadData(uniqBy(arr.concat(optionDataSet.toData()), (i) => i.id));
       }
     },
     { wait: 500 },
   );
 
-  function handleFilterChange(e, optionDataSet) {
-    e.persist();
-    run(e.target.value, optionDataSet);
-  }
-
-  function handleBlur(optionDataSet, rowIndex) {
-    const currentRecord = roleAssignDataSet.current;
-    const memberIdArr = currentRecord
-      ? currentRecord.get('memberId') || []
-      : null;
-    const memberId = memberIdArr && memberIdArr[rowIndex];
-    if (
-      memberIdArr
-      && !optionDataSet?.some((eachRecord) => eachRecord.get('id') === memberId)
-    ) {
-      memberIdArr[rowIndex] = '';
-      currentRecord.set('memberId', memberIdArr);
-    }
-  }
-
-  const getOption = ({ record }) => (
-    <>
+  const optionRenderer = ({ record }) => (
+    <div className={`${prefixCls}-userSelect`}>
       <UserInfo
         loginName={
           record?.get('ldap') ? record?.get('loginName') : record?.get('email')
         }
         realName={record?.get('realName')}
         avatar={record?.get('imageUrl')}
+        style={{ marginRight: 6 }}
       />
-      {record.get('outsourcing') && (
-        <Tag
-          style={{
-            color: '#4D90FE',
-            position: 'relative',
-            top: 3,
-            marginLeft: 6,
-          }}
-          color="#E6F7FF"
-        >
-          外包
-        </Tag>
-      )}
-    </>
+      <UserLabels list={record?.get('userLabels') || []} />
+    </div>
   );
+
+  const onOption = (optionRecord, currentFormRecord) => {
+    const currentDs = AddWayDataSet.current.get(mapping.way.name) === wayOptions[0].value
+      ? normalFormDataSet : roleFormDataSet?.children?.users;
+    let disabled = false;
+    currentDs.forEach((formRecord) => {
+      if (formRecord !== currentFormRecord) {
+        if (optionRecord.get('id') === formRecord.get('memberId')) {
+          disabled = true;
+        }
+      }
+    });
+    return { disabled };
+  };
 
   const searchUser = (e) => {
     run(e.target.value, userOptionDataSet);
@@ -195,7 +160,7 @@ export default observer((props) => {
   return (
     <div className={`${prefixCls} ${prefixCls}-modal`}>
       <Form dataSet={AddWayDataSet}>
-        <SelectBox name={mapping.way.name}>
+        <SelectBox name={mapping.way.name} onChange={addWayChange}>
           <Option value={wayOptions[0].value}>{wayOptions[0].text}</Option>
           <Option value={wayOptions[1].value}>{wayOptions[1].text}</Option>
         </SelectBox>
@@ -210,7 +175,8 @@ export default observer((props) => {
                 searchable
                 searchMatcher={() => true}
                 onInput={searchUser}
-                optionRenderer={getOption}
+                optionRenderer={optionRenderer}
+                onOption={({ record: optionRecord }) => onOption(optionRecord, record)}
                 addonAfter={(
                   <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
                     <Icon type="help" className={`${prefixCls}-help-icon`} />
@@ -225,8 +191,8 @@ export default observer((props) => {
                 newLine
                 multiple
               />
-              <DatePicker newLine colSpan={5} name="scheduleEntryTime" />
-              <DatePicker colSpan={5} name="scheduleExitTime" />
+              <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
+              <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" />
             </Form>
             {index !== 0 && (
               <Button
@@ -260,7 +226,8 @@ export default observer((props) => {
                   searchable
                   searchMatcher={() => true}
                   onInput={searchUser}
-                  optionRenderer={getOption}
+                  optionRenderer={optionRenderer}
+                  onOption={({ record: optionRecord }) => onOption(optionRecord, record)}
                   addonAfter={(
                     <Tooltip title="此处需精确输入用户名或登录名来搜索对应的用户">
                       <Icon type="help" className={`${prefixCls}-help-icon`} />
@@ -269,8 +236,8 @@ export default observer((props) => {
                   options={userOptionDataSet}
                   newLine
                 />
-                <DatePicker newLine colSpan={5} name="scheduleEntryTime" />
-                <DatePicker colSpan={5} name="scheduleExitTime" />
+                <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
+                <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" />
               </Form>
               {index !== 0 && (
                 <Button

@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   useFormatCommon, useFormatMessage,
@@ -30,14 +30,22 @@ const PageContent:React.FC<IProps> = (props) => {
     intlPrefix, prefixCls, formDs,
   } = useStore();
 
+  useEffect(() => {
+    formDs.query();
+  }, []);
+
   const formatCommon = useFormatCommon();
   const formatMessage = useFormatMessage(intlPrefix);
+
+  const refresh = () => {
+    formDs.query();
+  };
 
   const handleEdit = () => {
     Modal.open({
       key: formKey,
       title: '修改登录首页',
-      children: <EditForm />,
+      children: <EditForm recordData={formDs?.toData()} refresh={refresh} />,
       style: {
         width: MIDDLE,
       },
@@ -45,6 +53,8 @@ const PageContent:React.FC<IProps> = (props) => {
       drawer: true,
     });
   };
+
+  const renderLoginEnableDingTalkScanningLogin = ({ value }:{value:string}) => (value === 'true' ? '是' : '否');
 
   return (
     <TabPage>
@@ -64,20 +74,20 @@ const PageContent:React.FC<IProps> = (props) => {
         <div className={`${prefixCls}`}>
           <div className={`${prefixCls}-page-left`}>
             <Form labelWidth={150} labelAlign={'left' as any} labelLayout={'horizontal' as any} dataSet={formDs}>
-              <Output name="a" />
+              {/* <Output name="a" />
               <Output name="b" />
               <Output name="c" />
               <Output name="d" />
               <Output name="e" />
               <Output name="f" />
               <Output name="g" />
-              <Output name="h" />
-              <Output name="i" />
-              <Output name="j" />
-              <Output name="k" />
+              <Output name="h" /> */}
+              <Output name="loginEnableDingTalkScanningLogin" renderer={renderLoginEnableDingTalkScanningLogin} />
+              <Output name="loginDingTalkAppKey" />
+              <Output name="loginDingTalkAppSecret" />
             </Form>
           </div>
-          <div className={`${prefixCls}-page-right`}>
+          {/* <div className={`${prefixCls}-page-right`}>
             <div className={`${prefixCls}-page-right-item`} style={{ marginBottom: 20 }}>
               <p>登录首页Logo</p>
               <div className="img-container img-container1">
@@ -90,7 +100,7 @@ const PageContent:React.FC<IProps> = (props) => {
                 <img src={img2} alt="" />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
       </Content>

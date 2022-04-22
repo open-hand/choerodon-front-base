@@ -12,12 +12,4 @@ export default () => ({
     { name: 'scheduleEntryTime', type: 'date', label: '计划进场时间' },
     { name: 'scheduleExitTime', type: 'date', label: '计划撤场时间' },
   ],
-  data: [
-    {
-      memberId: null,
-      roleIds: null,
-      scheduleEntryTime: null,
-      scheduleExitTime: null,
-    },
-  ],
 });

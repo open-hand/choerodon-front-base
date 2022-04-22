@@ -1,13 +1,10 @@
 import React, {
-  useContext, useState, Fragment, useImperativeHandle, useMemo, useEffect, useRef,
+  useContext, useState, useImperativeHandle, useEffect, useRef,
 } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import {
-  TextField,
   Table, Modal, message, Tooltip,
 } from 'choerodon-ui/pro';
 import { observer } from 'mobx-react-lite';
-import classNames from 'classnames';
 import { StatusTag, NewTips, CardPagination } from '@choerodon/components';
 import {
   Action, //
@@ -22,6 +19,7 @@ import {
   BrowserAdapter,
   CONSTANTS,
 } from '@choerodon/boot';
+import { UserLabels } from '@choerodon/master';
 import {
   Spin,
 } from 'choerodon-ui';
@@ -69,6 +67,8 @@ export default BrowserAdapter(observer((props) => {
     AppState,
     formatCommon,
     formatProjectUser,
+    statusOptionDs,
+    safeOptionDs,
   } = useContext(Store);
 
   const [deleteRoleRecord, setDeleteRoleRecord] = useState(undefined);
@@ -158,6 +158,11 @@ export default BrowserAdapter(observer((props) => {
         orgUserRoleDataSet={orgUserRoleDataSet}
         orgUserCreateDataSet={orgUserCreateDataSet}
         orgUserListDataSet={dataSet}
+        statusOptionDs={statusOptionDs}
+        safeOptionDs={safeOptionDs}
+        formatProjectUser={formatProjectUser}
+        formatCommon={formatCommon}
+        organizationId={organizationId}
         // eslint-disable-next-line react/jsx-no-bind
         onOk={handleSave}
       />,
@@ -174,7 +179,8 @@ export default BrowserAdapter(observer((props) => {
     const data = isData ? newRecord : newRecord.toData();
     data.roles = data.roles.map((v) => v.id);
     if (data.roles.length === 0) data.roles = [''];
-    orgUserRoleDataSet.create(data);
+    // orgUserRoleDataSet.create(data);
+    orgUserRoleDataSet.loadData([data]);
     openModal('addRole');
   }
   function handleCreate() {
@@ -351,6 +357,7 @@ export default BrowserAdapter(observer((props) => {
                         get: (params) => item[params],
                       }, item)
                     }
+                    <StatusTag className={styles['theme4-c7n-memberItem-statusTag']} name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
                     <div className={styles['theme4-c7n-memberItem-line']}>
                       <div
                         className={styles['theme4-c7n-memberItem-line-icon']}
@@ -376,7 +383,7 @@ export default BrowserAdapter(observer((props) => {
                           >
                             {item.realName}
                           </span>
-                          <StatusTag name={item.enabled ? '启用' : '停用'} colorCode={item.enabled ? 'success' : ''} />
+                          <UserLabels list={item.userLabels || []} maxTagNum={2} />
                         </p>
                         <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                       </div>
@@ -470,12 +477,17 @@ export default BrowserAdapter(observer((props) => {
         })}
       >
         <Table.Column
-          width={100}
+          width={250}
           name="realName"
-          renderer={({ text }) => (
-            <Tooltip title={text}>
-              {text}
-            </Tooltip>
+          renderer={({ text, record }) => (
+            <>
+              <div className="realName-column">
+                <Tooltip title={text}>
+                  <span className="realName">{text}</span>
+                </Tooltip>
+                <UserLabels list={record.get('userLabels') || []} />
+              </div>
+            </>
           )}
         />
         <Table.Column
@@ -496,27 +508,14 @@ export default BrowserAdapter(observer((props) => {
             </Tooltip>
           )}
         />
-        <Table.Column width={100} name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
+        <Table.Column align="left" width={100} className="table-align-center" name="enabled" renderer={({ value }) => <StatusTag name={value ? '启用' : '停用'} colorCode={value ? 'success' : ''} />} />
         <Table.Column
           width={150}
           name="role"
           renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
         />
         <Table.Column
-          // width={150}
-          name="scheduleEntryTime"
-        />
-        <Table.Column
-          // width={150}
-          name="scheduleExitTime"
-        />
-        <Table.Column
-          width={150}
-          align="left"
-          name="outsourcing"
-          renderer={({ value }) => (value ? '是' : '否')}
-        />
-        <Table.Column
+          tooltip="overflow"
           // width={150}
           name="workingGroup"
         />
@@ -557,13 +556,23 @@ export default BrowserAdapter(observer((props) => {
           )}
         />
         <Table.Column
-          width={100}
+          width={150}
           name="email"
           renderer={({ text }) => (
             <Tooltip title={text}>
               {text}
             </Tooltip>
           )}
+        />
+        <Table.Column
+          // width={150}
+          tooltip="overflow"
+          name="scheduleEntryTime"
+        />
+        <Table.Column
+          tooltip="overflow"
+          // width={150}
+          name="scheduleExitTime"
         />
       </Table>
     </div>

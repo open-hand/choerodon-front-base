@@ -1,18 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  DataSet, Form, Select, Button,
+  DataSet, Form, Select,
 } from 'choerodon-ui/pro';
 import { usersApi } from '@/api';
-import { Record } from '@/interface';
+import FormDs from './formDs';
 
 import './index.less';
 
 const cssPrefix = 'c7ncd-projectUser-batchAdd';
-
-const {
-  Option,
-} = Select;
 
 const Index = observer(({
   orgUserRoleDataSet,
@@ -27,21 +23,17 @@ const Index = observer(({
     modal?: any,
     afterAdd?(): void,
 }) => {
-  useEffect(() => {
-    orgUserRoleDataSet.reset();
-    orgUserRoleDataSet.create();
-  }, []);
+  const formDs = useMemo(() => new DataSet(FormDs()), []);
 
   const handleOK = async () => {
-    const res = await orgUserRoleDataSet.validate();
-    if (res) {
+    const validateRes = await formDs?.validate();
+    if (validateRes) {
       const data: any[] = [];
       dataSet.selected.forEach((itemSelect) => {
-        orgUserRoleDataSet.records.forEach((userRoleItem) => {
-          data.push({
-            roleId: userRoleItem.get('roles'),
-            memberId: itemSelect.get('id'),
-          });
+        data.push({
+          roleIds: formDs?.current?.get('role'),
+          memberId: itemSelect.get('id'),
+          timeChange: false,
         });
       });
       try {
@@ -49,6 +41,7 @@ const Index = observer(({
         if (afterAdd) {
           afterAdd();
         }
+        dataSet.unSelectAll();
         return true;
       } catch (e) {
         return false;
@@ -69,31 +62,9 @@ const Index = observer(({
         </span>
         项已选中
       </p>
-      {
-        orgUserRoleDataSet.records.map((record) => (
-          <Form className={`${cssPrefix}__form`} columns={8} record={record}>
-            <Select colSpan={7} name="roles">
-              {
-                orgRoleDataSet.records.map((roleRecord) => (
-                  <Option disabled={orgUserRoleDataSet.records.some((r: Record) => r.get('roles') === roleRecord.get('id'))} value={roleRecord.get('id')}>{ roleRecord.get('name') }</Option>
-                ))
-              }
-            </Select>
-            {
-              orgUserRoleDataSet.records.length > 1 && (
-                <Button
-                  className={`${cssPrefix}__form__delete`}
-                  icon="delete"
-                  onClick={() => orgUserRoleDataSet.delete(record, false)}
-                />
-              )
-            }
-          </Form>
-        ))
-      }
-      <Button onClick={() => orgUserRoleDataSet.create()} icon="add">
-        添加角色
-      </Button>
+      <Form dataSet={formDs}>
+        <Select name="role" options={orgRoleDataSet} multiple searchable />
+      </Form>
     </div>
   );
 });

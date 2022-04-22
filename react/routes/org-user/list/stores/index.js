@@ -18,6 +18,7 @@ export default Store;
 export const StoreProvider = injectIntl(inject('AppState')(
   (props) => {
     const { AppState: { currentMenuType: { id, organizationId } }, intl, children } = props;
+
     const intlPrefix = 'c7ncd.org-user';
 
     const formatCommon = useFormatCommon();
@@ -49,10 +50,16 @@ export const StoreProvider = injectIntl(inject('AppState')(
       }),
     ), [id]);
     const orgUserListDataSet = useMemo(() => new DataSet(OrgUserListDataSet({
-      id, formatCommon, formatProjectUser, statusOptionDs, safeOptionDs, orgRoleDataSet,
+      id,
+      formatCommon,
+      formatProjectUser,
+      statusOptionDs,
+      safeOptionDs,
+      orgRoleDataSet,
+      orgID: organizationId,
     })), [id]);
     const orgUserCreateDataSet = useMemo(() => new DataSet(OrgUserCreateDataSet({
-      id, formatCommon, formatProjectUser, orgRoleDataSet, userStore,
+      id, formatCommon, formatProjectUser, orgRoleDataSet, userStore, organizationId,
     })), [id]);
     const orgUserRoleDataSet = useMemo(() => new DataSet(OrgUserRoleDataSet({
       id, formatCommon, formatProjectUser, orgRoleDataSet,
@@ -83,6 +90,10 @@ export const StoreProvider = injectIntl(inject('AppState')(
       organizationId,
       passwordPolicyDataSet,
       userStore,
+      id,
+      statusOptionDs,
+      safeOptionDs,
+      orgID: organizationId,
     };
     return (
       <Store.Provider value={value}>
