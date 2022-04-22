@@ -77,8 +77,10 @@ export default observer((props) => {
       const idArr = formDs.current.get('roles').map(item=>{
        return typeof item === 'object' ? item.id : item
       })
+      const scheduleEntryTime = formDs.current.get('scheduleEntryTime') ? moment(formDs.current.get('scheduleEntryTime')).format('YYYY-MM-DD HH:mm:ss') : ''
+      const scheduleExitTime = formDs.current.get('scheduleExitTime') ? moment(formDs.current.get('scheduleExitTime')).format('YYYY-MM-DD HH:mm:ss') : ''
       const result = await axios.put(`/iam/choerodon/v1/projects/${projectId}/users/${current.toData().id}/assign_roles`,{
-        roleIds: idArr,  scheduleEntryTime: moment(formDs.current.get('scheduleEntryTime')).format('YYYY-MM-DD HH:mm:ss'),scheduleExitTime: moment(formDs.current.get('scheduleExitTime')).format('YYYY-MM-DD HH:mm:ss') 
+        roleIds: idArr,  scheduleEntryTime, scheduleExitTime,
       }) ;
       if (!result.failed) {
         await orgUserRoleDataSet.reset();
