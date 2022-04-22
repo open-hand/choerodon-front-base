@@ -51,10 +51,10 @@ export default observer((props) => {
     requestData.roles = requestData.roles.filter((v) => v).map((v) => ({ id: v }));
     const idArr = formDs.current.get('roles').map((item) => (typeof item === 'object' ? item.id : item));
     // if (requestData.roles.length === 0) return false;
-    const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${current.toData().id}/assign_roles`, {
+    const result = await axios.put(`/iam/choerodon/v1/organizations/${organizationId}/users/${current.toData().id}/assign_roles`, [{
       roleIds: compact(idArr),
       userLabels: formDs.current.get('userLabels'),
-    });
+    }]);
     if (!result.failed) {
       await orgUserRoleDataSet.reset();
       await onOk();
