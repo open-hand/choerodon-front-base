@@ -515,6 +515,7 @@ export default BrowserAdapter(observer((props) => {
           renderer={({ record }) => expandMoreColumn({ record, customMaxTagCount: 1 })}
         />
         <Table.Column
+          tooltip="overflow"
           // width={150}
           name="workingGroup"
         />
