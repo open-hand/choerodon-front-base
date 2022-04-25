@@ -169,7 +169,7 @@ export default function passwordPoliciesDataSet(organizationId, formatCommon, fo
     },
     {
       name: 'userLoginSecondCheck',
-      label: 'xxx',
+      label: '',
     },
   ];
 
