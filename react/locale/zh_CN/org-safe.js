@@ -27,6 +27,9 @@ const orgSafe = {
   'c7ncd.org-safe.pcLogins': 'PC端允许多处登录',
   'c7ncd.org-safe.mobileLogins': '移动端允许多处登录',
   'c7ncd.org-safe.pswChangeReLogin': '修改密码后重新登录',
+  'c7ncd.org-safe.max.length': '所有最少字数限制的总和须小于或等于最大密码长度',
+  'c7ncd.org-safe.min.length': '所有最少字数限制的总和须大于或等于最小密码长度',
+  'c7ncd.org-safe.min.lessthan.more': '最小密码长度须小于或等于最大密码长度',
 };
 
 export { orgSafe };

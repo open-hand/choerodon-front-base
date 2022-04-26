@@ -19,7 +19,7 @@ export const StoreProvider = injectIntl(inject('AppState')(
 
     const orgId = type === 'organization' ? id : organizationId;
     const passwordPolicyDataSet = useMemo(() => new DataSet(
-      PasswordPolicyDataSet(orgId, id, intl, intlPrefix),
+      PasswordPolicyDataSet(orgId, formatCommon, formatClient),
     ), [orgId]);
 
     const remoteMobxStore = useLocalStore(() => ({

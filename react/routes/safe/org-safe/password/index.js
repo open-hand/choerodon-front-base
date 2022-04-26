@@ -45,7 +45,7 @@ export default observer(() => {
       </Header>
       <Breadcrumb />
       <Content className="safe-content ml-15">
-        <Form pristine dataSet={passwordPolicyDataSet} labelWidth={450} className="tab1">
+        <Form pristine dataSet={passwordPolicyDataSet} labelWidth={450} className="tab1" labelLayout="vertical">
           <Row>
             <Col span={24}>
               <span className="policyTitle">{formatClient({ id: 'passwordSecurityPolicy' })}</span>
