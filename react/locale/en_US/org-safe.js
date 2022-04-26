@@ -27,6 +27,9 @@ const orgSafe = {
   'c7ncd.org-safe.pcLogins': 'Multiple logins are allowed on the PC',
   'c7ncd.org-safe.mobileLogins': 'The mobile terminal allows multiple logins',
   'c7ncd.org-safe.pswChangeReLogin': 'Change the password and log in again',
+  'c7ncd.org-safe.max.length': '所有最少字数限制的总和须小于或等于最大密码长度',
+  'c7ncd.org-safe.min.length': '所有最少字数限制的总和须大于或等于最小密码长度',
+  'c7ncd.org-safe.min.lessthan.more': '最小密码长度须小于或等于最大密码长度',
 };
 
 export { orgSafe };
