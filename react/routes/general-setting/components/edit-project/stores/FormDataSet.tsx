@@ -92,7 +92,6 @@ export default ({
       name: 'description',
       type: 'string' as FieldType,
       label: formatMessage({ id: `${intlPrefix}.description.title` }),
-      maxLength: 100,
     },
     {
       name: 'categories',
