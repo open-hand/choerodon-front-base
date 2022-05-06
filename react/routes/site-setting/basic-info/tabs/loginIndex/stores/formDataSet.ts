@@ -1,50 +1,51 @@
 import { systemApiConifg } from '@choerodon/master';
+import DataSet from 'choerodon-ui/dataset';
 
 export default ({ }: any): object => ({
   autoCreate: true,
   autoQuery: false,
   fields: [
-    // {
-    //   name: 'a',
-    //   label: '登录标题',
-    //   defaultValue: '登录猪齿鱼',
-    // },
-    // {
-    //   name: 'b',
-    //   label: '版权信息',
-    //   defaultValue: 'Copyright Hand China Co.,Ltd. All Rights Reserved
-    // 甄知技术股份有限公司沪ICP备14039535号-20',
-    // },
-    // {
-    //   name: 'c',
-    //   label: '域名备案号',
-    //   defaultValue: '沪ICP备14039535号-18',
-    // },
-    // {
-    //   name: 'd',
-    //   label: '默认语言',
-    //   defaultValue: '简体中文',
-    // },
-    // {
-    //   name: 'e',
-    //   label: '联系电话',
-    //   defaultValue: '400-168-4263',
-    // },
-    // {
-    //   name: 'f',
-    //   label: '联系邮箱',
-    //   defaultValue: 'zhuchiyu@vip.hand-china.com',
-    // },
-    // {
-    //   name: 'g',
-    //   label: '标语',
-    //   defaultValue: '传递体系化方法论，提供协作、测试、DevOps及容器工具，让团队效能提升更快更稳更简单',
-    // },
-    // {
-    //   name: 'h',
-    //   label: '登录方式',
-    //   defaultValue: '账户密码登录 手机验证登录',
-    // },
+    {
+      name: 'loginLogo',
+      label: 'loginLogo',
+    },
+    {
+      name: 'loginPage',
+      label: 'loginPage',
+    },
+    {
+      name: 'loginTitle',
+      label: '登录标题',
+      required: true,
+    },
+    {
+      name: 'loginCopyRight',
+      label: '版权信息',
+    },
+    {
+      name: 'loginInternetContentProvider',
+      label: '域名备案号',
+    },
+    {
+      name: 'loginPhone',
+      label: '联系电话',
+    },
+    {
+      name: 'loginEmail',
+      label: '联系邮箱',
+    },
+    {
+      name: 'loginSlogan',
+      label: '标语',
+    },
+    {
+      name: 'loginWays',
+      label: '登录方式',
+      required: true,
+      options: new DataSet({
+        data: [{ value: 'password', meaning: '账号密码登录' }, { value: 'phone', meaning: '手机验证登录' }],
+      }),
+    },
     {
       name: 'loginEnableDingTalkScanningLogin',
       label: '是否启用钉钉扫码登录',
@@ -52,12 +53,16 @@ export default ({ }: any): object => ({
     {
       name: 'loginDingTalkAppKey',
       label: 'AppKey',
-      required: true,
+      dynamicProps: {
+        required: ({ dataSet, record }:any) => record.get('loginEnableDingTalkScanningLogin') === 'true',
+      },
     },
     {
       name: 'loginDingTalkAppSecret',
       label: 'AppSecret',
-      required: true,
+      dynamicProps: {
+        required: ({ dataSet, record }:any) => record.get('loginEnableDingTalkScanningLogin') === 'true',
+      },
     },
   ],
   transport: {
