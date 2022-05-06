@@ -22,7 +22,7 @@ const {
 } = CONSTANTS;
 const formKey = Modal.key();
 
-const PageContent:React.FC<IProps> = (props) => {
+const PageContent: React.FC<IProps> = (props) => {
   const {
     intlPrefix, prefixCls, formDs,
   } = useStore();
@@ -51,7 +51,7 @@ const PageContent:React.FC<IProps> = (props) => {
     });
   };
 
-  const renderLoginEnableDingTalkScanningLogin = ({ value }:{value:string}) => (value === 'true' ? '是' : '否');
+  const renderLoginEnableDingTalkScanningLogin = ({ value }: { value: string }) => (value === 'true' ? '是' : '否');
 
   return (
     <TabPage>
@@ -79,8 +79,12 @@ const PageContent:React.FC<IProps> = (props) => {
               <Output name="loginSlogan" />
               <Output name="loginWays" />
               <Output name="loginEnableDingTalkScanningLogin" renderer={renderLoginEnableDingTalkScanningLogin} />
-              <Output name="loginDingTalkAppKey" />
-              <Output name="loginDingTalkAppSecret" />
+              {
+                formDs?.current?.get('loginEnableDingTalkScanningLogin') === 'true' && <Output name="loginDingTalkAppKey" />
+              }
+              {
+                formDs?.current?.get('loginEnableDingTalkScanningLogin') === 'true' && <Output name="loginDingTalkAppSecret" />
+              }
             </Form>
           </div>
           <div className={`${prefixCls}-page-right`}>
