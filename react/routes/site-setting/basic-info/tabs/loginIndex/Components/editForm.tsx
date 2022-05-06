@@ -61,7 +61,7 @@ const Index: React.FC<Iprops> = (props) => {
     const validateRes = await formDs.validate();
     if (validateRes) {
       const ajaxData:any = formDs?.toData()[0];
-      ajaxData.loginWays = ajaxData.loginWays.toString();
+      ajaxData.loginWay = ajaxData.loginWay.toString();
       try {
         await systemApi.editLoginIndexInfo({
           ...ajaxData,
@@ -106,7 +106,7 @@ const Index: React.FC<Iprops> = (props) => {
         </div>
         <TextField name="loginTitle" colSpan={1} />
         <TextField name="loginInternetContentProvider" colSpan={1} />
-        <TextArea name="loginCopyRight" colSpan={2} resize={'vertical' as any} rows={2} />
+        <TextArea name="loginCopyRight" colSpan={2} resize={'vertical' as any} rows={1} />
         <TextField name="loginPhone" colSpan={1} />
         <TextField name="loginEmail" colSpan={1} />
         <TextField name="loginSlogan" colSpan={2} />
@@ -133,7 +133,7 @@ const Index: React.FC<Iprops> = (props) => {
             </ImageCrop>
           </div>
         </div>
-        <Select name="loginWays" colSpan={1} multiple />
+        <Select name="loginWay" colSpan={1} multiple />
         <SelectBox name="loginEnableDingTalkScanningLogin" colSpan={2}>
           <Option value="true">是</Option>
           <Option value="false">否</Option>
