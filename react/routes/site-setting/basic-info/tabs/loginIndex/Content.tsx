@@ -51,6 +51,19 @@ const PageContent: React.FC<IProps> = (props) => {
     });
   };
 
+  const renderLoginWay = ({ value, text }:
+    { value: Array<string>, text: string }) => {
+    const arr = text.split('/');
+    if (value) {
+      return arr.map((item) => (
+        <span className={`${prefixCls}-loginway-tag`}>
+          {item}
+        </span>
+      ));
+    }
+    return '';
+  };
+
   const renderLoginEnableDingTalkScanningLogin = ({ value }: { value: string }) => (value === 'true' ? '是' : '否');
 
   return (
@@ -77,7 +90,7 @@ const PageContent: React.FC<IProps> = (props) => {
               <Output name="loginPhone" />
               <Output name="loginEmail" />
               <Output name="loginSlogan" />
-              <Output name="loginWays" />
+              <Output name="loginWay" renderer={renderLoginWay} />
               <Output name="loginEnableDingTalkScanningLogin" renderer={renderLoginEnableDingTalkScanningLogin} />
               {
                 formDs?.current?.get('loginEnableDingTalkScanningLogin') === 'true' && <Output name="loginDingTalkAppKey" />

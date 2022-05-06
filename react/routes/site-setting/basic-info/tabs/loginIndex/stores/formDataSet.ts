@@ -37,13 +37,14 @@ export default ({ }: any): object => ({
     {
       name: 'loginSlogan',
       label: '标语',
+      maxLength: 95,
     },
     {
-      name: 'loginWays',
+      name: 'loginWay',
       label: '登录方式',
       required: true,
       options: new DataSet({
-        data: [{ value: 'password', meaning: '账号密码登录' }, { value: 'phone', meaning: '手机验证登录' }],
+        data: [{ value: 'account', meaning: '账号密码登录' }, { value: 'phone', meaning: '手机验证登录' }],
       }),
     },
     {
@@ -69,6 +70,11 @@ export default ({ }: any): object => ({
     read: {
       url: systemApiConifg.getLoginIndexInfo().url,
       method: 'get',
+      transformResponse: (data:any) => {
+        const newData = JSON.parse(data);
+        newData.loginWay = newData.loginWay.split(',');
+        return newData;
+      },
     },
   },
 });
