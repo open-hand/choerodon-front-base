@@ -9,10 +9,7 @@ import {
   CONSTANTS,
 } from '@choerodon/boot';
 import { useStore } from './stores/index';
-
 import EditForm from './Components/editForm';
-import img1 from './1.svg';
-import img2 from './2.svg';
 
 export interface IProps {
 
@@ -74,33 +71,32 @@ const PageContent:React.FC<IProps> = (props) => {
         <div className={`${prefixCls}`}>
           <div className={`${prefixCls}-page-left`}>
             <Form labelWidth={150} labelAlign={'left' as any} labelLayout={'horizontal' as any} dataSet={formDs}>
-              {/* <Output name="a" />
-              <Output name="b" />
-              <Output name="c" />
-              <Output name="d" />
-              <Output name="e" />
-              <Output name="f" />
-              <Output name="g" />
-              <Output name="h" /> */}
+              <Output name="loginTitle" />
+              <Output name="loginCopyRight" />
+              <Output name="loginInternetContentProvider" />
+              <Output name="loginPhone" />
+              <Output name="loginEmail" />
+              <Output name="loginSlogan" />
+              <Output name="loginWays" />
               <Output name="loginEnableDingTalkScanningLogin" renderer={renderLoginEnableDingTalkScanningLogin} />
               <Output name="loginDingTalkAppKey" />
               <Output name="loginDingTalkAppSecret" />
             </Form>
           </div>
-          {/* <div className={`${prefixCls}-page-right`}>
+          <div className={`${prefixCls}-page-right`}>
             <div className={`${prefixCls}-page-right-item`} style={{ marginBottom: 20 }}>
               <p>登录首页Logo</p>
               <div className="img-container img-container1">
-                <img src={img1} alt="" />
+                <img className="img-logo" src={formDs?.current?.get('loginLogo')} alt="" />
               </div>
             </div>
             <div className={`${prefixCls}-page-right-item`}>
               <p>插图</p>
               <div className="img-container img-container2">
-                <img src={img2} alt="" />
+                <img className="img-illustration" src={formDs?.current?.get('loginPage')} alt="" />
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
 
       </Content>
