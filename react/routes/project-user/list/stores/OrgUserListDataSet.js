@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { axios, Choerodon } from '@choerodon/boot';
 import { DataSet } from 'choerodon-ui/pro';
+import moment from 'moment'
 
 const regPhone = new RegExp(/^1[3-9]\d{9}$/);
 const emptyReg = new RegExp(/^\s*$/);
@@ -110,8 +111,22 @@ export default ({
         name: 'userLabels',
         label: '标签',
       },
-      { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }) },
-      { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }) },
+      { name: 'scheduleEntryTime', type: 'string', label: formatProjectUser({ id: 'scheduleEntryTime' }),
+      validator: (value, name, record)=>{
+        if( record.get('scheduleExitTime') && moment(record.get('scheduleExitTime')).valueOf() < moment(value).valueOf() ) {
+          return '进场时间不能大于撤场时间'
+        }
+        return true
+      }
+      },
+      { name: 'scheduleExitTime', type: 'string', label: formatProjectUser({ id: 'scheduleExitTime' }),
+        validator: (value, name, record)=>{
+          if( record.get('scheduleEntryTime') && moment(record.get('scheduleEntryTime')).valueOf() > moment(value).valueOf() ) {
+            return '撤场时间不能小于进场时间'
+          }
+          return true
+        }
+       },
       { name: 'workingGroup', type: 'string', label: formatProjectUser({ id: 'workingGroup' }) },
     ],
     queryFields: [
