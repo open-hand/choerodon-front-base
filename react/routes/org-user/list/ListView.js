@@ -580,10 +580,11 @@ export default withRouter(
             <Column renderer={rednerEnabled} name="enabled" align="left" />
             <Column
               // minWidth={320}
-              // width={320}
+              width={320}
               renderer={expandMoreColumn}
               className="org-user-roles"
               name="myRoles"
+              tooltip="overflow"
             />
             <Column renderer={renderSource} name="ldap" align="left" />
             <Column renderer={renderLocked} name="locked" align="left" width={150} />

@@ -14,7 +14,7 @@ export default function renderRoles({
     if (!role.enabled) {
       return <span className="c7n-pro-output-multiple-block disable">{role.name}</span>;
     }
-    return <span className="c7n-pro-output-multiple-block">{role.name}</span>;
+    return <span className="c7n-pro-output-multiple-block role-block">{role.name}</span>;
   }
   record.getPristineValue('roles').forEach((role) => {
     currentLen += 20 + strLength(role.name);
