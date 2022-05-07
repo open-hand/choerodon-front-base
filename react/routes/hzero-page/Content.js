@@ -73,7 +73,7 @@ const loadData=async()=>{
   }
   return (
     <Page>
-      <Header>
+      {pageType==='role'&&<Header>
         <HeaderButtons
           showClassName={false}
           items={([{
@@ -83,7 +83,7 @@ const loadData=async()=>{
             handler: handleSystemFresh,
           }])}
         />
-      </Header>
+      </Header>}
       <Breadcrumb />
       <Content className={`${prefixCls}`}>
         <div className={`${prefixCls}-wrap`}>
