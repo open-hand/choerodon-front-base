@@ -13,6 +13,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props) =>
   const {
     children,
     location: { pathname },
+    AppState: { currentMenuType: { type, id } },
   } = props;
 
   const pageType = useMemo(() => (pathname.match(/\/hzero\/(\S*)/))[1] || '', [pathname]);
@@ -22,6 +23,7 @@ export const StoreProvider = withRouter(injectIntl(inject('AppState')((props) =>
     prefixCls: 'c7n-hzero-page',
     intlPrefix: 'c7n.hzero.page',
     pageType,
+    projectId: id,
   };
 
   return (
