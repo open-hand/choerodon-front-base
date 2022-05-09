@@ -9,10 +9,7 @@ import {
   CONSTANTS,
 } from '@choerodon/boot';
 import { useStore } from './stores/index';
-
 import EditForm from './Components/editForm';
-import img1 from './1.svg';
-import img2 from './2.svg';
 
 export interface IProps {
 
@@ -25,7 +22,7 @@ const {
 } = CONSTANTS;
 const formKey = Modal.key();
 
-const PageContent:React.FC<IProps> = (props) => {
+const PageContent: React.FC<IProps> = (props) => {
   const {
     intlPrefix, prefixCls, formDs,
   } = useStore();
@@ -54,7 +51,20 @@ const PageContent:React.FC<IProps> = (props) => {
     });
   };
 
-  const renderLoginEnableDingTalkScanningLogin = ({ value }:{value:string}) => (value === 'true' ? '是' : '否');
+  const renderLoginWay = ({ value, text }:
+    { value: Array<string>, text: string }) => {
+    const arr = text.split('/');
+    if (value) {
+      return arr.map((item) => (
+        <span className={`${prefixCls}-loginway-tag`}>
+          {item}
+        </span>
+      ));
+    }
+    return '';
+  };
+
+  const renderLoginEnableDingTalkScanningLogin = ({ value }: { value: string }) => (value === 'true' ? '是' : '否');
 
   return (
     <TabPage>
@@ -74,33 +84,36 @@ const PageContent:React.FC<IProps> = (props) => {
         <div className={`${prefixCls}`}>
           <div className={`${prefixCls}-page-left`}>
             <Form labelWidth={150} labelAlign={'left' as any} labelLayout={'horizontal' as any} dataSet={formDs}>
-              {/* <Output name="a" />
-              <Output name="b" />
-              <Output name="c" />
-              <Output name="d" />
-              <Output name="e" />
-              <Output name="f" />
-              <Output name="g" />
-              <Output name="h" /> */}
+              <Output name="loginTitle" />
+              <Output name="loginCopyRight" />
+              <Output name="loginInternetContentProvider" />
+              <Output name="loginPhone" />
+              <Output name="loginEmail" />
+              <Output name="loginSlogan" />
+              <Output name="loginWay" renderer={renderLoginWay} />
               <Output name="loginEnableDingTalkScanningLogin" renderer={renderLoginEnableDingTalkScanningLogin} />
-              <Output name="loginDingTalkAppKey" />
-              <Output name="loginDingTalkAppSecret" />
+              {
+                formDs?.current?.get('loginEnableDingTalkScanningLogin') === 'true' && <Output name="loginDingTalkAppKey" />
+              }
+              {
+                formDs?.current?.get('loginEnableDingTalkScanningLogin') === 'true' && <Output name="loginDingTalkAppSecret" />
+              }
             </Form>
           </div>
-          {/* <div className={`${prefixCls}-page-right`}>
+          <div className={`${prefixCls}-page-right`}>
             <div className={`${prefixCls}-page-right-item`} style={{ marginBottom: 20 }}>
               <p>登录首页Logo</p>
               <div className="img-container img-container1">
-                <img src={img1} alt="" />
+                <img className="img-logo" src={formDs?.current?.get('loginLogo')} alt="" />
               </div>
             </div>
             <div className={`${prefixCls}-page-right-item`}>
               <p>插图</p>
               <div className="img-container img-container2">
-                <img src={img2} alt="" />
+                <img className="img-illustration" src={formDs?.current?.get('loginPage')} alt="" />
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
 
       </Content>
