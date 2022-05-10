@@ -240,27 +240,43 @@ const funcMode = withRouter(observer(() => {
 
 const InfoView = observer(() => {
   const format = useFormatMessage('c7n.system-setting');
+
+  const data = [
+    {
+      title: format({ id: 'basicInfo' }),
+      tabKey: 'baseInfo',
+      component: basicInfo,
+    },
+    {
+      title: format({ id: 'functionModule' }),
+      tabKey: 'function',
+      component: funcMode,
+    },
+  ];
+
+  // eslint-disable-next-line no-undef
+  const hasBusiness = C7NHasModule('@choerodon/base-business');
+
+  hasBusiness && data.splice(1, 0, {
+    title: format({ id: 'loginIndex' }),
+    tabKey: 'loginIndex',
+    component: LoginIndex,
+  });
+
   return (
     <Page>
       <PageWrap noHeader={[]} cache>
-        <PageTab
-          title={format({ id: 'basicInfo' })}
-          tabKey="baseInfo"
-          component={basicInfo}
-          alwaysShow
-        />
-        <PageTab
-          title={format({ id: 'loginIndex' })}
-          tabKey="loginIndex"
-          component={LoginIndex}
-          alwaysShow
-        />
-        <PageTab
-          title={format({ id: 'functionModule' })}
-          tabKey="function"
-          component={funcMode}
-          alwaysShow
-        />
+        {data.map(({
+          title, route, tabKey, component,
+        }) => (
+          <PageTab
+            key={tabKey}
+            title={title}
+            tabKey={tabKey}
+            component={component}
+            alwaysShow
+          />
+        ))}
       </PageWrap>
     </Page>
   );

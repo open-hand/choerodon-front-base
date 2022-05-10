@@ -6,6 +6,7 @@ import BasicInfo from './basic-info';
 import Ldap from './LDAP';
 import WorkCalendarHome from './WorkCalendar';
 import Store from '@/routes/organization/organization-setting/stores';
+// import AAA from './thirdParty-appManagement';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (props) {
@@ -32,6 +33,12 @@ export default function (props) {
       tabKey: 'choerodon.code.organization.general-calendar',
       component: WorkCalendarHome,
     },
+    // {
+    //   title: formatClient({ id: 'thirdPartyAppManagement.thirdPartyAppManagement' }),
+    //   route: '/iam/organization-setting/thirdParty-appManagement',
+    //   tabKey: 'choerodon.code.organization.thirdParty-appManagement',
+    //   component: AAA,
+    // },
   ];
 
   has('base-business:thirdPartyAppManagement') && data.push({
