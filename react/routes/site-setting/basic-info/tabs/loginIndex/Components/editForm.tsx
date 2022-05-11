@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import { observer } from 'mobx-react-lite';
 import { inject } from 'mobx-react';
 import {
-  Form, TextField, TextArea, DataSet, Select, SelectBox, Icon, message, UrlField,
+  Form, TextField, TextArea, DataSet, Select, SelectBox, Icon, message, EmailField,
 } from 'choerodon-ui/pro';
 import { systemApi, axios } from '@choerodon/master';
 import { NewTips } from '@choerodon/components';
@@ -156,7 +156,7 @@ const Index: React.FC<Iprops> = (props) => {
           )}
         />
         <TextField name="loginPhone" colSpan={1} />
-        <UrlField name="loginEmail" colSpan={1} />
+        <EmailField name="loginEmail" colSpan={1} />
         <TextArea
           name="loginSlogan"
           colSpan={2}
