@@ -21,6 +21,7 @@ const orgSafe = React.lazy(() => import('./routes/safe/org-safe'));
 const siteSafe = React.lazy(() => import('./routes/safe/site-safe'));
 const orgAdmin = React.lazy(() => import('./routes/org-admin'));
 const orgClient = React.lazy(() => import('./routes/client/route'));
+const orgMsgLog = React.lazy(() => import('./routes/org-message-log'));
 
 // project
 const generalSetting = React.lazy(() => import('./routes/general-setting'));
@@ -90,6 +91,7 @@ const IAMIndex = () => {
           <Route path={`${match.url}/safe`} component={siteSafe} />
           <Route path={`${match.url}/client`} component={orgClient} />
           <Route path={`${match.url}/pro-client`} component={orgClient} />
+          <Route path={`${match.url}/org-msg-log`} component={orgMsgLog} />
           <Route path={`${match.url}/org-admin`} component={orgAdmin} />
           <Route path={`${match.url}/org-overview`} component={orgOverview} />
           <Route path={`${match.url}/platform-overview`} component={platformOverview} />
