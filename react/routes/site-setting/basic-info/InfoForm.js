@@ -84,8 +84,9 @@ const InfoForm = observer(({
         {renderAvatar()}
         <TextField name="systemName" required />
         <TextField name="systemTitle" />
-        <Select label="默认语言" defaultValue="zh_CN" required>
+        <Select name="defaultLanguage" label="默认语言" defaultValue="zh_CN" required>
           <Option value="zh_CN">简体中文</Option>
+          <Option value="en_US">英文（美式）</Option>
         </Select>
         <TextArea resize="vertical" name="resetGitlabPasswordUrl" required />
         {hasRegister && (
