@@ -23,7 +23,7 @@ export default ({ }: any): object => ({
       label: '版权信息',
     },
     {
-      name: 'loginInternetContentProvider',
+      name: 'loginBeian',
       label: '域名备案号',
     },
     {
@@ -33,6 +33,7 @@ export default ({ }: any): object => ({
     {
       name: 'loginEmail',
       label: '联系邮箱',
+      type: 'url',
     },
     {
       name: 'loginSlogan',

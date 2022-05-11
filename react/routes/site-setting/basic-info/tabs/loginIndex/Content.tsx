@@ -86,7 +86,7 @@ const PageContent: React.FC<IProps> = (props) => {
             <Form labelWidth={150} labelAlign={'left' as any} labelLayout={'horizontal' as any} dataSet={formDs}>
               <Output name="loginTitle" />
               <Output name="loginCopyRight" />
-              <Output name="loginInternetContentProvider" />
+              <Output name="loginBeian" />
               <Output name="loginPhone" />
               <Output name="loginEmail" />
               <Output name="loginSlogan" />
