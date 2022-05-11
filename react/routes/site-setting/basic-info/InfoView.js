@@ -39,6 +39,7 @@ const basicInfo = withRouter(observer(() => {
       }
       return false;
     } catch (e) {
+      console.log(e);
       return false;
     }
   }
@@ -110,6 +111,9 @@ const basicInfo = withRouter(observer(() => {
   function renderBoolean({ value }) {
     return value === true ? '是' : '否';
   }
+
+  const renderLanguage = ({ value }) => (value === 'en_US' ? '英文（美式）' : '简体中文');
+
   return (
     <TabPage service={['choerodon.code.site.setting.general-setting.ps.default']}>
       <Header>
@@ -156,7 +160,7 @@ const basicInfo = withRouter(observer(() => {
                 : <div className="c7n-system-setting-formImg-wrapper default-favicon" />}
             </div>
             <Output name="systemTitle" newLine />
-            <Output renderer={() => '简体中文'} name="defaultLanguage" newLine />
+            <Output renderer={renderLanguage} name="defaultLanguage" newLine />
             <Output renderer={() => (dataSet.current && dataSet.current.getPristineValue('resetGitlabPasswordUrl')) || '无'} name="resetGitlabPasswordUrl" />
             <div colSpan={1} rowSpan={3} className="c7n-system-setting-formImg" label={format({ id: 'platformNavigationBar' })}>
               {systemLogo ? <img src={systemLogo} alt="图片" />
