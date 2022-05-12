@@ -33,7 +33,7 @@ export default ({ }: any): object => ({
     {
       name: 'loginEmail',
       label: '联系邮箱',
-      type: 'url',
+      type: 'email',
     },
     {
       name: 'loginSlogan',
