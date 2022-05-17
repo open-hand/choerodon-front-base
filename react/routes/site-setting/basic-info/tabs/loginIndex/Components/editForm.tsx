@@ -113,13 +113,7 @@ const Index: React.FC<Iprops> = (props) => {
             <NewTips
               helpText={(
                 <div>
-                  ICP备案号是网站是否合法注册经营的标志，可随时到国家工业和信息化部网站备案系统上查询该ICP备案的相关详细信息（https://beian.miit.gov.cn/#/Integrated/index），ICP备案证号一般是省的简称然后是“备”，之后会是八位的ICP备案号，设置后编号指向工信部（beian.miit.gov.cn），参见下面几个正确的格式：
-                  <br />
-                  1、京公网安备11000002000001号
-                  <br />
-                  2、京ICP证030173号
-                  <br />
-                  3、粤公网安备 44030002000001号
+                  ICP备案号是网站是否合法注册经营的标志，可随时到国家工业和信息化部网站备案系统上查询该ICP备案的相关详细信息（https://beian.miit.gov.cn/#/Integrated/index），ICP备案证号一般是省的简称然后是“备”，之后会是八位的ICP备案号，设置后编号指向工信部（beian.miit.gov.cn）。
                 </div>
               )}
             />
@@ -134,8 +128,9 @@ const Index: React.FC<Iprops> = (props) => {
             <NewTips
               helpText={(
                 <div>
-                  从法律角度看，加入了伯尔尼公约的国家，版权保护是随着作品（无论是文字，还是图片）的问世即刻就得到版权的保护，
-                  作为惯例网站底部的版权声明加强浏览者意识，所观看内容受到版权保护。版权信息遵循格式是：Copyright+ [dates] + [author/owner]，
+                  从法律角度看，加入了伯尔尼公约的国家，版权保护是随着作品（无论是文字，还是图片）
+                  的问世即刻就得到版权的保护，作为惯例网站底部的版权声明加强浏览者意识，
+                  所观看内容受到版权保护。版权信息遵循格式是：Copyright+ [dates] + [author/owner]，
                   <br />
                   1、Copyright可以写成版权所有符号©，或者是单词“Copyright”的缩写“Copr”；
                   <br />
@@ -145,11 +140,11 @@ const Index: React.FC<Iprops> = (props) => {
                   <br />
                   参见下面几个正确的格式：
                   <br />
-                  1）©2021 Baidu
+                  1）©2021 xxxxxx
                   <br />
-                  2）© 2003-现在 Taobao.com 版权所有
+                  2）© 2003-现在 xxxxxx.com 版权所有
                   <br />
-                  3）Copyright 1998 - 2021 Tencent. All Rights Reserved
+                  3）Copyright 1998 - 2021 xxxxxx. All Rights Reserved
                 </div>
               )}
             />

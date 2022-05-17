@@ -1,41 +1,29 @@
-// import { organizationsApiConfig } from '@choerodon/master';
+import { messageApiConfig } from '@choerodon/master';
 
 export default ({ }): any => ({
   autoCreate: true,
+  selection: false,
   fields: [
     {
-      name: 'a',
+      name: 'messageName',
       label: '消息主题',
     },
     {
-      name: 'b',
+      name: 'statusMeaning',
       label: '状态',
     },
     {
-      name: 'c',
-      label: '类型',
-    },
-    {
-      name: 'd',
-      label: '接收人',
-    },
-    {
-      name: 'e',
-      label: '发送内容',
-    },
-    {
-      name: 'f',
+      name: 'failedReason',
       label: '失败原因',
     },
     {
-      name: 'g',
+      name: 'creationDate',
       label: '发送时间',
     },
   ],
   transport: {
     read: {
-      //   url: organizationsApiConfig.cooperationProjStatusList().url,
-      url: 'http://172.23.16.154:30094/agile/v1/projects/282911590022897664/waterfall/deliverable/page_by_projectId',
+      url: messageApiConfig.getMsgList().url,
       method: 'get',
     },
   },

@@ -1,8 +1,10 @@
-import React, { } from 'react';
-import { Action } from '@choerodon/master';
+import React, { useEffect } from 'react';
+import { Action, messageApi } from '@choerodon/master';
 import { StatusTag } from '@choerodon/components';
-import { Table, Modal } from 'choerodon-ui/pro';
+import { Table, Modal, message } from 'choerodon-ui/pro';
+import { mount } from '@choerodon/inject';
 import { observer } from 'mobx-react-lite';
+
 import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import {
   CONSTANTS,
@@ -16,7 +18,7 @@ const modalKey = Modal.key();
 
 const {
   MODAL_WIDTH: {
-    MIDDLE,
+    MAX,
   },
 } = CONSTANTS;
 
@@ -27,37 +29,71 @@ const TableIndex = () => {
     dingtalkMsgTableDs,
   } = useStore();
 
+  useEffect(() => {
+    dingtalkMsgTableDs.query();
+  }, []);
+
+  const handleDetailsClick = (record: Record) => {
+    const Ele = mount('notify:msgDetails', {
+      msgId: record.get('id'),
+      isOrgLev: true,
+    });
+    Modal.open({
+      key: modalKey,
+      children: Ele,
+      title: '查看接收方详情',
+      okCancel: false,
+      okText: '关闭',
+      drawer: true,
+      style: {
+        width: MAX,
+      },
+    });
+  };
+
+  const retryMsg = async (record:Record) => {
+    try {
+      await messageApi.reSendMsg(record.get('transactionId'));
+      message.success('发送成功！');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderAction = ({ text, record }: {text:string, record:Record}) => {
     const actionDatas = [
       {
         service: [],
-        text: '禁用',
-        // action: () => { handleDisable(record.get('id')); },
+        text: '查看接收方详情',
+        action: () => { handleDetailsClick(record); },
+      },
+      {
+        service: [],
+        text: '重发',
+        action: () => { retryMsg(record); },
       },
     ];
-
-    return <Action data={actionDatas} />;
+    return (
+      ['S', 'F'].includes(record.get('statusCode')) && (
+        <Action data={actionDatas} />
+      )
+    );
   };
 
-  const renderStatusTag = ({ value }: { value: boolean }) => (
+  const renderStatusTag = ({ value }: { value: string }) => (
     <StatusTag
-      colorCode={value ? 'success' : 'lost'}
-      name={value ? '启用' : '停用'}
+      name={value || '成功'}
+      colorCode={value !== '失败' ? 'success' : 'error'}
     />
   );
 
-  const renderType = ({ value }: { value: string }) => <span>{value}</span>;
-
   return (
     <Table pristine dataSet={dingtalkMsgTableDs} border={false} queryBar={'bar' as TableQueryBarType}>
-      <Column name="a" tooltip={'overflow' as TableColumnTooltip} />
+      <Column width={150} name="messageName" tooltip={'overflow' as TableColumnTooltip} />
       <Column width={60} renderer={renderAction} />
-      <Column name="b" renderer={renderStatusTag} tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="c" renderer={renderType} tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="d" tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="e" tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="f" tooltip={'overflow' as TableColumnTooltip} />
-      <Column name="g" tooltip={'overflow' as TableColumnTooltip} />
+      <Column name="statusMeaning" width={100} renderer={renderStatusTag} />
+      <Column name="failedReason" width={400} tooltip={'overflow' as TableColumnTooltip} />
+      <Column name="creationDate" width={160} tooltip={'overflow' as TableColumnTooltip} />
     </Table>
   );
 };

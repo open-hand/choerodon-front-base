@@ -91,7 +91,13 @@ const IAMIndex = () => {
           <Route path={`${match.url}/safe`} component={siteSafe} />
           <Route path={`${match.url}/client`} component={orgClient} />
           <Route path={`${match.url}/pro-client`} component={orgClient} />
-          <Route path={`${match.url}/org-msg-log`} component={orgMsgLog} />
+          <PermissionRoute
+            path={`${match.url}/org-msg-log`}
+            component={orgMsgLog}
+            service={[
+              'choerodon.code.organization.manager.msglog.ps.default',
+            ]}
+          />
           <Route path={`${match.url}/org-admin`} component={orgAdmin} />
           <Route path={`${match.url}/org-overview`} component={orgOverview} />
           <Route path={`${match.url}/platform-overview`} component={platformOverview} />
