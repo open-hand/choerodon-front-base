@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Action, messageApi } from '@choerodon/master';
 import { StatusTag } from '@choerodon/components';
-import { Table, Modal, message } from 'choerodon-ui/pro';
+import {
+  Table, Modal, message, Tooltip,
+} from 'choerodon-ui/pro';
 import { mount } from '@choerodon/inject';
 import { observer } from 'mobx-react-lite';
 
@@ -87,12 +89,23 @@ const TableIndex = () => {
     />
   );
 
+  const renderFailedReason = ({ value }:{ value: string }) => (
+    <Tooltip
+      placement="topLeft"
+      title={(
+        <p className="c7ncd-notify-page-content-tooltip">{value}</p>
+    )}
+    >
+      {value}
+    </Tooltip>
+  );
+
   return (
     <Table pristine dataSet={dingtalkMsgTableDs} border={false} queryBar={'bar' as TableQueryBarType}>
       <Column width={150} name="messageName" tooltip={'overflow' as TableColumnTooltip} />
       <Column width={60} renderer={renderAction} />
       <Column name="statusMeaning" width={100} renderer={renderStatusTag} />
-      <Column name="failedReason" width={400} tooltip={'overflow' as TableColumnTooltip} />
+      <Column name="failedReason" renderer={renderFailedReason} width={400} />
       <Column name="creationDate" width={160} tooltip={'overflow' as TableColumnTooltip} />
     </Table>
   );
