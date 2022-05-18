@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
-  useFormatCommon, useFormatMessage, Content, Page, Breadcrumb,
+  useFormatCommon, useFormatMessage, Content, Page, Breadcrumb, HeaderButtons, Header,
 } from '@choerodon/master';
 import { Tabs } from 'choerodon-ui/pro';
 import { useStore } from './stores/index';
@@ -16,12 +16,26 @@ const { TabPane } = Tabs;
 
 const PageContent: React.FC<Props> = (props) => {
   const {
-    intlPrefix, prefixCls,
+    intlPrefix, prefixCls, dingtalkMsgTableDs,
   } = useStore();
   const formatCommon = useFormatCommon();
   const formatMessage = useFormatMessage(intlPrefix);
 
   const [activeKey, setActiveKey] = useState('dingtalkmsg');
+
+  const dingtalkmsgRefresh = () => {
+    dingtalkMsgTableDs.query();
+  };
+
+  function getActiveKeyIndex(key: string) {
+    let activeIndex;
+    panes.forEach((item, index) => {
+      if (item.key === key) {
+        activeIndex = index;
+      }
+    });
+    return activeIndex;
+  }
 
   const panes = useMemo(() => [
     {
@@ -29,21 +43,23 @@ const PageContent: React.FC<Props> = (props) => {
       tab: '钉钉日志',
       child: <DingtalkMsgTable />,
       headerBtns: [
-        // {
-        //   name: formatClient({ id: 'pipeline.create' }),
-        //   icon: 'playlist_add',
-        //   handler: () => { pipelineTempCreate('default') },
-        // },
-        // {
-        //   icon: 'refresh',
-        //   handler: pinelineTempRefresh,
-        // },
+        {
+          icon: 'refresh',
+          handler: dingtalkmsgRefresh,
+        },
       ],
     },
   ], []);
 
+  // @ts-ignore
+  // eslint-disable-next-line max-len
+  const headerBtns = useMemo(() => () => panes[getActiveKeyIndex(activeKey)].headerBtns, [activeKey]);
+
   return (
     <Page>
+      <Header>
+        <HeaderButtons items={headerBtns()} />
+      </Header>
       <Breadcrumb />
       <Content className={`${prefixCls}-page-content`}>
         {/* onChange={tabsChange} */}
