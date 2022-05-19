@@ -13,6 +13,7 @@ import {
 } from '@choerodon/boot';
 import { TableQueryBarType, TableColumnTooltip } from 'choerodon-ui/pro/lib/table/enum';
 import { useStore } from '../stores';
+import './index.less';
 
 const { Column } = Table;
 
