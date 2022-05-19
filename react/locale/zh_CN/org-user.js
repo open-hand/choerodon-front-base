@@ -105,6 +105,7 @@ const orguser = {
   'c7ncd.org-user.action.lock': '锁定',
   'c7ncd.org-user.action.reset': '重置密码',
   'c7ncd.org-user.action.modify': '修改',
+  'c7ncd.org-user.action.remove': '移除',
   'c7ncd.org-user.sider.create.title': '创建用户',
   'c7ncd.org-user.sider.modify.title': '修改用户',
   'c7ncd.org-user.sider.role-assignment.title': '角色分配',

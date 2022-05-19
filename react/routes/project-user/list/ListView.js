@@ -209,8 +209,8 @@ export default BrowserAdapter(observer((props) => {
     } else {
       Modal.open({
         key: Modal.key(),
-        title: '删除用户',
-        children: `确认删除用户"${record.get('realName')}"在本项目下的全部角色吗?`,
+        title: '移除成员',
+        children: `确认移出用户"${record.get('realName')}"在本项目下的全部角色吗?`,
         onOk: async () => {
           const result = await axios.post(`/iam/choerodon/v1/projects/${projectId}/users/${record.get('id')}/role_members/delete`, JSON.stringify(postData));
           if (!result.failed) {
@@ -322,7 +322,7 @@ export default BrowserAdapter(observer((props) => {
       flag = true;
       actionDatas.push({
         service: [],
-        text: '删除',
+        text: '移除',
         action: () => handleDeleteUser(record),
       });
     }

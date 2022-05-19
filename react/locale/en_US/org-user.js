@@ -105,10 +105,12 @@ const orguser = {
   'c7ncd.org-user.action.lock': 'Lock',
   'c7ncd.org-user.action.reset': 'Reset password',
   'c7ncd.org-user.action.modify': 'Modify',
+  'c7ncd.org-user.action.remove': 'Remove',
   'c7ncd.org-user.sider.create.title': '创建用户',
   'c7ncd.org-user.sider.modify.title': '修改用户',
   'c7ncd.org-user.sider.role-assignment.title': '角色分配',
   'c7ncd.org-user.sider.import.title': '导入用户',
+
 };
 
 export {

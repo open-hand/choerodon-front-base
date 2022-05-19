@@ -83,9 +83,9 @@ const DeleteChildren = observer((props) => {
 
   return (
     <>
-      <p>{`确认删除用户"${record.get('realName')}"在组织"${orgName}"下的全部角色吗?`}</p>
+      <p>{`确认移出用户"${record.get('realName')}"在组织"${orgName}"下的全部角色吗?`}</p>
       <Radio name="options" value="onlyOrg" onChange={handleChangeDeleteOption}>
-        仅删除该用户在组织层的所有角色
+        仅移出该用户在组织层的所有角色
       </Radio>
       <Radio
         style={{ marginTop: 10 }}
@@ -327,7 +327,7 @@ export default withRouter(
       const orgName = AppState.currentMenuType.name;
       Modal.open({
         className: 'c7n-iam-confirm-modal',
-        title: '删除用户',
+        title: '移除用户',
         children: (
           <DeleteChildren
             organizationId={organizationId}
@@ -485,7 +485,7 @@ export default withRouter(
         actionDatas = [
           {
             service: ['choerodon.code.organization.manager.user.ps.delete'],
-            text: formatCommon({id: 'delete'}),
+            text: formatProjectUser({id: 'action.remove'}),
             action: () => handleDeleteUser(record),
           },
         ];
