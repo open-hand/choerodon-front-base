@@ -93,7 +93,7 @@ const TableIndex = () => {
     <Tooltip
       placement="topLeft"
       title={(
-        <p className="c7ncd-notify-page-content-tooltip">{value}</p>
+        <p className="c7ncd-message-log-page-content-tooltip">{value}</p>
     )}
     >
       {value}
