@@ -65,7 +65,13 @@ export default ({
       update: ({ data: editData }) => ({
         url: `/iam/choerodon/v1/organizations/${id}/users/${editData[0].id}`,
         method: 'put',
-        transformRequest: (([data]) => JSON.stringify(data)),
+        transformRequest: (([data]) => {
+          if (data.roles) {
+            // eslint-disable-next-line no-param-reassign
+            data.roles = data.roles.map((item) => ({ id: item }));
+          }
+          return JSON.stringify(data);
+        }),
       }),
     },
     fields: [
@@ -79,7 +85,7 @@ export default ({
         name: 'enabled', type: 'boolean', label: status, textField: 'text', valueField: 'value', options: statusOptionDs,
       },
       {
-        name: 'roles', type: 'object', label: formatCommon({ id: 'role' }), multiple: true, textField: 'name', valueField: 'id',
+        name: 'roles', type: 'string', label: formatCommon({ id: 'role' }), multiple: true, textField: 'name', valueField: 'id',
       },
       {
         name: 'locked', type: 'boolean', label: safeStatus, textField: 'text', valueField: 'value', options: safeOptionDs,

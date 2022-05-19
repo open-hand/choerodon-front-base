@@ -31,6 +31,9 @@ export default observer((props) => {
     ds.getField('roles').set('required', false);
     ds.loadData([orgUserRoleDataSet.current]);
     ds?.getField('userLabels')?.options?.query();
+
+    ds.current.set('roles', ds.current.get('roles').map((item) => item.id));
+
     return ds;
   }, []);
 
