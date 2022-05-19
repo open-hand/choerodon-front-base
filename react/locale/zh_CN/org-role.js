@@ -13,6 +13,8 @@ const orgRole = {
   'c7ncd.org-role.organizationLevel': '组织层',
   'c7ncd.org-role.enable.title': '停用自定义角色',
   'c7ncd.org-role.enable.des': '确定停用“{name}”自定义角色吗？',
+  'c7ncd.org-role.delete.title': '删除自定义角色',
+  'c7ncd.org-role.delete.des': '确定删除“{name}”自定义角色吗？',
 };
 
 export { orgRole };
