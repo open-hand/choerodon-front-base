@@ -123,6 +123,11 @@ export default withRouter(
     useEffect(() => {
       dataSet.query()
     }, [])
+
+    const refresh = ()=>{
+      dataSet.query()
+    }
+
     const modalProps = {
       create: {
         okText: '保存',
@@ -561,6 +566,11 @@ export default withRouter(
                 display: true,
                 permissions: ['choerodon.code.organization.manager.user.ps.ldap'],
                 handler: handleSyncSetting,
+              },
+              {
+                icon: 'refresh',
+                display: true,
+                handler: refresh,
               },
             ]}
           />
