@@ -383,7 +383,7 @@ export default BrowserAdapter(observer((props) => {
                           >
                             {item.realName}
                           </span>
-                          <UserLabels list={item.userLabels || []} maxTagNum={2} />
+                          <UserLabels list={item.userLabels || []} labelContainerWidth={200} />
                         </p>
                         <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                       </div>
@@ -485,7 +485,7 @@ export default BrowserAdapter(observer((props) => {
                 <Tooltip title={text}>
                   <span className="realName">{text}</span>
                 </Tooltip>
-                <UserLabels list={record.get('userLabels') || []} />
+                <UserLabels list={record.get('userLabels') || []} labelContainerWidth={160} />
               </div>
             </>
           )}

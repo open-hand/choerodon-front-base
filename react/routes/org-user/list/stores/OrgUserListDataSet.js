@@ -76,6 +76,9 @@ export default ({
     },
     fields: [
       {
+        name: 'origin', type: 'string', label: '来源',
+      },
+      {
         name: 'realName', type: 'string', label: username, required: true, validator: checkRealname,
       },
       {

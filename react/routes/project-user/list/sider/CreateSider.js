@@ -117,7 +117,7 @@ export default observer((props) => {
         avatar={record?.get('imageUrl')}
         style={{ marginRight: 6 }}
       />
-      <UserLabels list={record?.get('userLabels') || []} />
+      <UserLabels list={record?.get('userLabels') || []} labelContainerWidth={200} />
     </div>
   );
 

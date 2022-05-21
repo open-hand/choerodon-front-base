@@ -469,8 +469,8 @@ export default withRouter(
               >
                 {value}
               </span>
-              <UserLabels list={record.get("userLabels") || []} />
-              {idEqual && (
+              <UserLabels list={record.get("userLabels") || []} labelContainerWidth={200}/>
+              {/* {idEqual && (
                 <>
                   <div className="org-user-external-user">
                     <span className="org-user-external-user-text">
@@ -478,7 +478,7 @@ export default withRouter(
                     </span>
                   </div>
                 </>
-              )}
+              )} */}
               {record.get("sagaInstanceId") ? (
                 <Icon
                   className="org-user-dashBoard"
@@ -551,6 +551,20 @@ export default withRouter(
         });
       }
       return <Action data={actionDatas} />;
+    }
+
+    const renderFrom = ({ record })=>{
+      const idEqual =
+      record.get("organizationId").toString() !== organizationId;
+    return  idEqual?  (
+        <>
+          <div className="org-user-external-user">
+            <span className="org-user-external-user-text">
+              外部人员
+            </span>
+          </div>
+        </>
+      ): ''
     }
 
     function renderSource({ value }) {
@@ -683,6 +697,7 @@ export default withRouter(
               name="myRoles"
               tooltip="overflow"
             />
+            <Column renderer={renderFrom} name="origin"  align="left" />
             <Column renderer={renderSource} name="ldap" align="left" />
             <Column
               renderer={renderLocked}

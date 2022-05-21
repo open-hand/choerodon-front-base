@@ -13,6 +13,10 @@
       justify-content: flex-start;
       .realName {
         margin-right: 6px;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowarp;
       }
     }
   }
@@ -67,13 +71,16 @@
     text-align: left;
     line-height: 18px;
     margin-left: 6px;
+    background: #E6F7FF;
+    border-radius: 4px;
+    border: 1px solid #91D5FF;
     &-text {
       display: inline-block;
       transform: scale(0.84);
       font-size: 10px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
-      color: #5365ea;
+      color: #4D90FE;
     }
   }
 }
@@ -83,4 +90,8 @@
     display: flex;
     align-items: center;
   }
+}
+
+.c7ncd-status-tag > span {
+  transform: scale(0.9);
 }
