@@ -27,7 +27,8 @@
     "react-markdown": "^4.2.2",
     "react-quill": "^1.2.6",
     "rxjs-compat": "^6.5.3",
-    "universal-cookie": "2.2.0"
+    "universal-cookie": "2.2.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@choerodon/boot": "1.2.0",
