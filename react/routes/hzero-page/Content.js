@@ -9,6 +9,7 @@ import {
    Header, HeaderButtons,
 } from '@choerodon/boot';
 import {syncRolesApi} from '@/api/syncRole';
+import uuidv1 from 'uuid';
 
 import './index.less';
 import openCreateNotification from '@choerodon/master/lib/components/notification';
@@ -26,7 +27,6 @@ const HzeroPage = withRouter(((props) => {
     onClick,
     projectId,
   } = useHzeroPageStore();
-
   function handleClick() {
     const url = {
       user: 'hiam/sub-account-site',
@@ -50,7 +50,7 @@ const loadData=async()=>{
     const res=await syncRolesApi.SyncPermission();
     if(res){
       openCreateNotification({
-        notificationKey:projectId,
+        notificationKey:uuidv1(),
         loadProgress:()=>loadData(),
         textObject:{
           failed:{
