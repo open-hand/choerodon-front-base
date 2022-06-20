@@ -383,7 +383,7 @@ export default BrowserAdapter(observer((props) => {
                           >
                             {item.realName}
                           </span>
-                          <UserLabels list={item.userLabels || []} labelContainerWidth={200} />
+                          <UserLabels list={item.userLabels || []} labelContainerWidth={50} />
                         </p>
                         <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                       </div>
