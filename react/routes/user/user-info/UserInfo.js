@@ -28,6 +28,7 @@ import { cloneDeep } from 'lodash';
 import { CaptchaField } from '@choerodon/components/lib/index.js';
 import Cookies from 'universal-cookie';
 import { injectIntl } from 'react-intl';
+import isOverflow from 'choerodon-ui/pro/lib/overflow-tip/util';
 import topBg from './assets/bg.svg';
 import TextEditToggle from './textEditToggle';
 import { useStore } from './stores';
@@ -479,13 +480,38 @@ function UserInfo() {
       return false;
     };
 
+    const handleMouseEnter = (e, value) => {
+      const { currentTarget } = e;
+      if (isOverflow(currentTarget)) {
+        Tooltip.show(currentTarget, {
+          title: value,
+          placement: 'left',
+        });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      Tooltip.hide();
+    };
+
     // --------render
 
     const renderEmail = ({ value }) => {
       if (!editObj.email) {
         return (
-          <div style={{ position: 'relative' }}>
-            <span>{value}</span>
+          <div style={{
+            position: 'relative',
+          }}
+          >
+            <span
+              style={{
+                display: 'inline-block', overflow: 'hidden', maxWidth: 180, textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={(e) => { handleMouseEnter(e, value); }}
+              onMouseLeave={(e) => { handleMouseLeave(e, value); }}
+            >
+              {value}
+            </span>
             <span
               className={`${prefixCls}-info-container-fix-text`}
               role="none"
