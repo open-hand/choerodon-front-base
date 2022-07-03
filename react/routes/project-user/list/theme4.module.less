@@ -87,16 +87,22 @@
           font-family: PingFangSC-Regular, PingFang SC, sans-serif;
           font-weight: 400;
           color: #0f1358;
-          width: 100%;
+          width: calc(100% - 20px);
           display: flex;
           align-items: center;
           &-text {
+            flex-shrink: 0;
             max-width: 48%;
             white-space: nowrap;
             text-overflow: ellipsis;
             display: inline-block;
             overflow: hidden;
             margin-right: 6px;
+          }
+          :global {
+            .c7ncd-userLabels {
+              flex-grow: 1;
+            }
           }
           .c7n-iam-status-tag {
             width: 0.28rem !important;

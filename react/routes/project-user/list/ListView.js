@@ -350,7 +350,7 @@ export default BrowserAdapter(observer((props) => {
           <div>
             <div className={styles['theme4-c7n-member']}>
               {
-                dataSet.toData().map((item) => (
+                dataSet.toData().map((item, index) => (
                   <div className={styles['theme4-c7n-memberItem']}>
                     {
                       handleRenderActionDom(permissions, {
@@ -383,7 +383,11 @@ export default BrowserAdapter(observer((props) => {
                           >
                             {item.realName}
                           </span>
-                          <UserLabels list={item.userLabels || []} labelContainerWidth={50} />
+                          <UserLabels
+                            list={item.userLabels || []}
+                            sizeObserver
+                            labelContainerWidth={50}
+                          />
                         </p>
                         <p className={styles['theme4-c7n-memberItem-line-name-loginName']}>{item.loginName}</p>
                       </div>
