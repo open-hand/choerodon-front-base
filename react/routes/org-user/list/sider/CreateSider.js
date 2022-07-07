@@ -66,24 +66,6 @@ export default observer(() => {
     orgUserCreateDataSet.reset();
   });
 
-  const handleInput = (e) => {
-    const optionDs = orgUserCreateDataSet?.getField('userLabels').options;
-    optionDs.forEach((record) => {
-      if (record.get('status') === 'local' && !record.isSelected) {
-        optionDs.remove(record);
-      }
-    });
-    const arr = orgUserCreateDataSet?.getField('userLabels').options.toData();
-    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
-      arr.unshift({
-        name: e.target.value,
-        status: 'local',
-      });
-    }
-
-    orgUserCreateDataSet?.getField('userLabels').options.loadData(arr);
-  };
-
   return (
     <div className={`${prefixCls}-modal`}>
       <Form dataSet={orgUserCreateDataSet} className="hidden-password">
@@ -100,8 +82,8 @@ export default observer(() => {
           multiple
           name="userLabels"
           searchable
-          onInput={(e) => { handleInput(e); }}
           className="userLabels-select"
+          combo
         />
         <Select
           multiple

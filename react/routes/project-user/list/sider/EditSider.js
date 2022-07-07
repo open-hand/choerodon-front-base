@@ -135,6 +135,7 @@ export default observer((props) => {
           searchable
           colSpan={2}
           disabled
+          combo
         />
       </Form>
       <DeleteRoleModal

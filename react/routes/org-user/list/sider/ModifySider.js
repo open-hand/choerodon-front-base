@@ -63,24 +63,6 @@ export default observer((props) => {
   modal.handleOk(handleOk);
   modal.handleCancel(handleCancel);
 
-  const handleInput = (e) => {
-    const optionDs = formDs?.getField('userLabels').options;
-    optionDs.forEach((record) => {
-      if (record.get('status') === 'local' && !record.isSelected) {
-        optionDs.remove(record);
-      }
-    });
-    const arr = formDs?.getField('userLabels').options.toData();
-    if (findIndex(arr, (i) => i.name === e.target.value) === -1 && e.target.value) {
-      arr.unshift({
-        name: e.target.value,
-        status: 'local',
-      });
-    }
-
-    formDs?.getField('userLabels').options.loadData(arr);
-  };
-
   return (
     <div
       className={`${prefixCls}-modal`}
@@ -99,8 +81,8 @@ export default observer((props) => {
           multiple
           name="userLabels"
           searchable
-          onInput={(e) => { handleInput(e); }}
           className="userLabels-select"
+          combo
         />
         <Select
           multiple
