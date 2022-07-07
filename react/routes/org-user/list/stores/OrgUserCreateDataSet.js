@@ -85,7 +85,8 @@ export default ({
               url: `/iam/choerodon/v1/organizations/${organizationId}/list_user_labels`,
               method: 'get',
               transformResponse: (data) => {
-                const arr = JSON.parse(data);
+                const newData = JSON.parse(data);
+                const arr = newData.content || [];
                 const newArr = [];
                 arr.forEach((item) => {
                   const obj = {};
@@ -93,7 +94,8 @@ export default ({
                   obj.status = 'remote';
                   newArr.push(obj);
                 });
-                return newArr;
+                newData.content = newArr;
+                return newData;
               },
             },
           },
