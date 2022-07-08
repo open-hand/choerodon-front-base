@@ -1,3 +1,12 @@
+## [2.0.5-weic](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-base/compare/2.0.4-weic...2.0.5-weic) (2022-07-08)
+
+
+### Bug Fixes
+
+* **团队成员:** 团队成员报错 ([651de21](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-base/commits/651de21a65570068f04c4f778c125efb0faafb68))
+
+
+
 ## [2.0.4-weic](https://code.choerodon.com.cn/hand-yanqianyun-yq-devops/choerodon-front-base/compare/2.0.4...2.0.4-weic) (2022-07-07)
 
 
