@@ -15,7 +15,7 @@ import './index.less';
 
 export default observer(() => {
   const {
-    prefixCls, intlPrefix, intl, projectId, userId,
+    prefixCls, intlPrefix, intl, projectId, userId, onOk,
   } = useContext(Store);
 
   // 导入用户角色部分
@@ -60,6 +60,7 @@ export default observer(() => {
         if (status === 'done') {
           if (!response.failed) {
             Choerodon.prompt('上传成功');
+            onOk();
             pollHistory();
             setDelay(3000);
           } else {
