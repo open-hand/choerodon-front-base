@@ -42,7 +42,6 @@ choerodon_temp/
 yarn.lock
 lib
 node_modules
-package-lock.json
 **/lib/dist/
 **/lib/assets/
 **/lib/fonts/
