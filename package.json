@@ -1,7 +1,7 @@
 {
   "name": "@choerodon/base",
   "routeName": "iam",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "",
   "main": "./lib/index.js",
   "install": "./lib/install.js",
@@ -32,8 +32,8 @@
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
-    "@choerodon/boot": "1.2.0",
-    "@choerodon/master": "2.0.0",
+    "@choerodon/boot": "1.2.1",
+    "@choerodon/master": "2.0.13",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5gs",
