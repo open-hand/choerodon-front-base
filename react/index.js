@@ -59,6 +59,8 @@ const heroPage = React.lazy(() => import('./routes/hzero-page'));
 
 const orgPinelineTemplate = React.lazy(() => import('./routes/org-pipeline-template'));
 
+const pipelineTemplate = React.lazy(() => import('./routes/site-pipeline-template'));
+
 // 收集企业信息
 const enterpriseInfo = React.lazy(() => import('./routes/enterprises-info'));
 const IAMIndex = () => {
@@ -81,6 +83,13 @@ const IAMIndex = () => {
           <Route path={`${match.url}/user-info`} component={userInfo} />
           <Route path={`${match.url}/permission-info`} component={permissionInfo} />
           <Route path={`${match.url}/org-pipeline-template`} component={orgPinelineTemplate} />
+          <PermissionRoute
+            path={`${match.url}/pipeline-template`}
+            component={pipelineTemplate}
+            service={[
+              'choerodon.code.site.manager.pipeline.template.ps.default',
+            ]}
+          />
           <PermissionRoute
             path={`${match.url}/organization-setting`}
             component={organizationSetting}
