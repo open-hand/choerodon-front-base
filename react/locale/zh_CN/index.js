@@ -1,3 +1,5 @@
+export * from '@choerodon/devops/lib/locale/zh_CN'; // 引入开源版多语言
+
 const docServer = 'http://v0-14.choerodon.io/zh/docs';
 
 const enterprises = {
@@ -1856,3 +1858,4 @@ export * from './safe';
 export * from './hzero-page';
 export * from './root-user';
 export * from './team-member';
+export * from './org-pipeline-template';

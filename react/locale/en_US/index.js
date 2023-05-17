@@ -268,3 +268,4 @@ export * from './system-setting';
 export * from './safe';
 export * from './hzero-page';
 export * from './team-member';
+export * from './organization-management';
