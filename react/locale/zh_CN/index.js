@@ -1859,3 +1859,4 @@ export * from './hzero-page';
 export * from './root-user';
 export * from './team-member';
 export * from './org-pipeline-template';
+export * from './pipeline-template';
