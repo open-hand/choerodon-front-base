@@ -1,0 +1,24 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+appVersion: 2.0.0
+dependencies:
+  - name: common
+    repository: https://openchart.choerodon.com.cn/choerodon/c7n
+    version: 1.x.x
+description: Front of Choerodon.
+engine: gotpl
+home: https://github.com/open-hand/choerodon-front-base/tree/master/chart/choerodon-front-base
+icon: https://ui-avatars.com/api/?name=choerodon-front-base
+keywords:
+  - choerodon
+  - front
+maintainers:
+  - email: zhuchiyu@vip.hand-china.com
+    name: choerodon
+    url: https://choerodon.io
+name: choerodon-front-base
+sources:
+  - https://github.com/open-hand/choerodon-front-base
+  - https://gitee.com/open-hand/choerodon-front-base
+version: 2.0.0
