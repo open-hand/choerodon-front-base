@@ -8,8 +8,8 @@ export type PipelineTemplateStoreContext = {
   prefixCls: 'c7ncd-pipeline-template'
   intlPrefix: 'c7ncd.pipeline.template'
   mainStore: StoreProps
-  formatPipelineTemplate: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatPipelineTemplate: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

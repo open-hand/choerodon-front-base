@@ -35,6 +35,7 @@
   "devDependencies": {
     "@choerodon/boot": "1.2.1",
     "@choerodon/master": "2.0.13",
+    "@choerodon/devops": "2.0.9",
     "@types/react": "^16.9.44",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5gs",

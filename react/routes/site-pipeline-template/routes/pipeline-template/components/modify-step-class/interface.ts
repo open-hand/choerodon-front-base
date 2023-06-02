@@ -13,8 +13,8 @@ export type ModifyStepClassStoreContext = {
   prefixCls: 'c7ncd-modify-step-class'
   intlPrefix: 'c7ncd.modify.step.class'
   mainStore: StoreProps
-  formatModifyStepClass: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatModifyStepClass: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

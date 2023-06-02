@@ -8,8 +8,8 @@ export type TaskGroupManageStoreContext = {
   prefixCls: 'c7ncd-task-group-manage'
   intlPrefix: 'c7ncd.task.group.manage'
   mainStore: StoreProps
-  formatTaskGroupManage: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatTaskGroupManage: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

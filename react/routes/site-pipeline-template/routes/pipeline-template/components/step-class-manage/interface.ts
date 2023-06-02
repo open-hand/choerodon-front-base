@@ -8,8 +8,8 @@ export type StepClassManageStoreContext = {
   prefixCls: 'c7ncd-step-class-manage'
   intlPrefix: 'c7ncd.step.class.manage'
   mainStore: StoreProps
-  formatStepClassManage: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatStepClassManage: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

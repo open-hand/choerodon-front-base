@@ -1,4 +1,4 @@
-export * from '@choerodon/devops/lib/locale/zh_CN'; // 引入开源版多语言
+// export * from '@choerodon/devops/lib/locale/zh_CN'; // 引入开源版多语言
 
 const docServer = 'http://v0-14.choerodon.io/zh/docs';
 

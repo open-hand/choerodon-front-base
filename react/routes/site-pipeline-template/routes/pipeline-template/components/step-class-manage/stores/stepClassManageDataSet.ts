@@ -3,8 +3,8 @@ import { DataSet } from 'choerodon-ui/pro';
 import { IntlFormatters } from 'react-intl';
 
 interface StepClassManageProps{
-  formatStepClassManage: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatStepClassManage: any,
+  formatCommon: any,
 }
 export default ({
   formatStepClassManage, formatCommon,

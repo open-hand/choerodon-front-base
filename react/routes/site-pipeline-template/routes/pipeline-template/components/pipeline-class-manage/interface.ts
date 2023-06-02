@@ -9,8 +9,8 @@ export type PipelineClassManageStoreContext = {
   prefixCls: 'c7ncd-pipeline-class-manage'
   intlPrefix: 'c7ncd.pipeline.class.manage'
   mainStore: StoreProps
-  formatPipelineClassManage: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatPipelineClassManage: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

@@ -6,8 +6,8 @@ import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { pipelineTemplateApi } from '@choerodon/master';
 
 interface ModifyTaskGroupProps{
-  formatModifyTaskGroup: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatModifyTaskGroup: any,
+  formatCommon: any,
 }
 export default ({
   formatModifyTaskGroup, formatCommon,

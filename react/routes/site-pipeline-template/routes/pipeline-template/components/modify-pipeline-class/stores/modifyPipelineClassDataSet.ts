@@ -6,8 +6,8 @@ import Record from 'choerodon-ui/pro/lib/data-set/Record';
 import { pipelineTemplateApi } from '@choerodon/master';
 
 interface ModifyPipelineClassProps{
-  formatModifyPipelineClass: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatModifyPipelineClass: any,
+  formatCommon: any,
 }
 export default ({
   formatModifyPipelineClass, formatCommon,

@@ -4,8 +4,8 @@ import { IntlFormatters } from 'react-intl';
 import { pipelineTemplateApiConfig } from '@choerodon/master';
 
 interface TaskGroupManageProps{
-  formatTaskGroupManage: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatTaskGroupManage: any,
+  formatCommon: any,
 }
 export default ({
   formatTaskGroupManage, formatCommon,

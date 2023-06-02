@@ -13,8 +13,8 @@ export type ModifyPipelineClassStoreContext = {
   prefixCls: 'c7ncd-modify-pipeline-class'
   intlPrefix: 'c7ncd.modify.pipeline.class'
   mainStore: StoreProps
-  formatModifyPipelineClass: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatModifyPipelineClass: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

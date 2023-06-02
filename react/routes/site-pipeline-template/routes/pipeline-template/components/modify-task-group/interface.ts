@@ -13,8 +13,8 @@ export type ModifyTaskGroupStoreContext = {
   prefixCls: 'c7ncd-modify-task-group'
   intlPrefix: 'c7ncd.modify.task.group'
   mainStore: StoreProps,
-  formatModifyTaskGroup: IntlFormatters['formatMessage'],
-  formatCommon: IntlFormatters['formatMessage'],
+  formatModifyTaskGroup: any,
+  formatCommon: any,
 } & ProviderProps;
 
 export type ProviderProps = {

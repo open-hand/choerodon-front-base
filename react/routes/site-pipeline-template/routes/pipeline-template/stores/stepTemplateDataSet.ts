@@ -4,8 +4,8 @@ import { IntlFormatters } from 'react-intl';
 import { pipelineTemplateApiConfig } from '@choerodon/master';
 
 interface StepTemplateProps {
-    formatPipelineTemplate: IntlFormatters['formatMessage'],
-    formatCommon: IntlFormatters['formatMessage'],
+    formatPipelineTemplate: any,
+    formatCommon: any,
     sourceDs:DataSet,
 }
 export default ({
