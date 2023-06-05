@@ -100,14 +100,14 @@ const InfoView = observer(() => {
               ],
               handler: openModal,
             },
-            {
-              name: formatClient({ id: 'base.transfer' }),
-              icon: 'sync_alt',
-              permissions: [
-                'choerodon.code.organization.setting.general-setting.ps.orgTransfer',
-              ],
-              handler: openTransferModal,
-            },
+            // {
+            //   name: formatClient({ id: 'base.transfer' }),
+            //   icon: 'sync_alt',
+            //   permissions: [
+            //     'choerodon.code.organization.setting.general-setting.ps.orgTransfer',
+            //   ],
+            //   handler: openTransferModal,
+            // },
           ]}
         />
       </Header>
