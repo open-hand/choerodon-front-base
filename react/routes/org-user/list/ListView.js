@@ -564,7 +564,16 @@ export default withRouter(
             </span>
           </div>
         </>
-      ): ''
+      ): 
+      (
+        <>
+          <div className="org-user-external-user">
+            <span className="org-user-external-user-text">
+              内部人员
+            </span>
+          </div>
+        </>
+      )
     }
 
     function renderSource({ value }) {

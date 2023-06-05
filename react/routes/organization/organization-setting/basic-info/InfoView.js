@@ -92,14 +92,14 @@ const InfoView = observer(() => {
         <HeaderButtons
           showClassName={false}
           items={[
-            {
-              name: formatClient({ id: 'base.Edit' }),
-              icon: 'edit-o',
-              permissions: [
-                'choerodon.code.organization.setting.general-setting.ps.update.info',
-              ],
-              handler: openModal,
-            },
+            // {
+            //   name: formatClient({ id: 'base.Edit' }),
+            //   icon: 'edit-o',
+            //   permissions: [
+            //     'choerodon.code.organization.setting.general-setting.ps.update.info',
+            //   ],
+            //   handler: openModal,
+            // },
             // {
             //   name: formatClient({ id: 'base.transfer' }),
             //   icon: 'sync_alt',
