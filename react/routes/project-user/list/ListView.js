@@ -568,7 +568,7 @@ export default BrowserAdapter(observer((props) => {
             </Tooltip>
           )}
         />
-        <Table.Column
+        {/* <Table.Column
           // width={150}
           tooltip="overflow"
           name="scheduleEntryTime"
@@ -577,7 +577,7 @@ export default BrowserAdapter(observer((props) => {
           tooltip="overflow"
           // width={150}
           name="scheduleExitTime"
-        />
+        /> */}
       </Table>
     </div>
   );
