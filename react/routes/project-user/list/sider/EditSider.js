@@ -126,8 +126,8 @@ export default observer((props) => {
         <Select value="CTT" label="时区" disabled colSpan={2}>
           <Option value="CTT">中国</Option>
         </Select>
-        <DatePicker name='scheduleEntryTime' colSpan={1} style={{width:165}}/>
-        <DatePicker name='scheduleExitTime' colSpan={1} style={{width:165,position:'relative',left:6}}/>
+        {/* <DatePicker name='scheduleEntryTime' colSpan={1} style={{width:165}}/>
+        <DatePicker name='scheduleExitTime' colSpan={1} style={{width:165,position:'relative',left:6}}/> */}
         <TextField name="workingGroup" disabled colSpan={2}/>
         <Select
           multiple

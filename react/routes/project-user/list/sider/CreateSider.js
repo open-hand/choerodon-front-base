@@ -191,8 +191,9 @@ export default observer((props) => {
                 newLine
                 multiple
               />
-              <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
-              <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" />
+              {/* 屏蔽掉进场和撤场时间 */}
+              {/* <DatePicker newLine colSpan={5} name="scheduleEntryTime" format="YYYY-MM-DD HH:mm:ss" />
+              <DatePicker colSpan={5} name="scheduleExitTime" format="YYYY-MM-DD HH:mm:ss" /> */}
             </Form>
             {index !== 0 && (
               <Button
