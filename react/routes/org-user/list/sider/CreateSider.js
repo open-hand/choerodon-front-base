@@ -96,13 +96,13 @@ export default observer(() => {
           {...addonAfterObj}
         />
         <Password name="password" addonAfter={<NewTips helpText="不输入密码则使用默认密码。" />} />
-        <Select
+        {/* <Select
           multiple
           name="userLabels"
           searchable
           onInput={(e) => { handleInput(e); }}
           className="userLabels-select"
-        />
+        /> */}
         <Select
           multiple
           name="roles"

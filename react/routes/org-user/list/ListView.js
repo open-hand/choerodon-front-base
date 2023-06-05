@@ -469,7 +469,7 @@ export default withRouter(
               >
                 {value}
               </span>
-              <UserLabels list={record.get("userLabels") || []} labelContainerWidth={200}/>
+              {/* <UserLabels list={record.get("userLabels") || []} labelContainerWidth={200}/> */}
               {/* {idEqual && (
                 <>
                   <div className="org-user-external-user">

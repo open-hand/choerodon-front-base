@@ -108,34 +108,34 @@ export default ({
       },
       { name: 'myRoles', type: 'string', label: formatCommon({ id: 'role' }) },
       { name: 'ldap', type: 'boolean', label: source },
-      {
-        name: 'userLabels',
-        label: '标签',
-        textField: 'name',
-        valueField: 'name',
-        placeholder: '输入即可创建标签',
-        options: new DataSet({
-          selection: 'multiple',
-          autoQuery: false,
-          transport: {
-            read: {
-              url: `/iam/choerodon/v1/organizations/${orgID}/list_user_labels`,
-              method: 'get',
-              transformResponse: (data) => {
-                const arr = JSON.parse(data);
-                const newArr = [];
-                arr.forEach((item) => {
-                  const obj = {};
-                  obj.name = item;
-                  obj.status = 'remote';
-                  newArr.push(obj);
-                });
-                return newArr;
-              },
-            },
-          },
-        }),
-      },
+      // {
+      //   name: 'userLabels',
+      //   label: '标签',
+      //   textField: 'name',
+      //   valueField: 'name',
+      //   placeholder: '输入即可创建标签',
+      //   options: new DataSet({
+      //     selection: 'multiple',
+      //     autoQuery: false,
+      //     transport: {
+      //       read: {
+      //         url: `/iam/choerodon/v1/organizations/${orgID}/list_user_labels`,
+      //         method: 'get',
+      //         transformResponse: (data) => {
+      //           const arr = JSON.parse(data);
+      //           const newArr = [];
+      //           arr.forEach((item) => {
+      //             const obj = {};
+      //             obj.name = item;
+      //             obj.status = 'remote';
+      //             newArr.push(obj);
+      //           });
+      //           return newArr;
+      //         },
+      //       },
+      //     },
+      //   }),
+      // },
     ],
     queryFields: [
       { name: 'realName', type: 'string', label: formatCommon({ id: 'username' }) },

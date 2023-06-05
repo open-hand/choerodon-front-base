@@ -71,34 +71,34 @@ export default ({
         validator: checkEmail,
       },
       { name: 'password', type: 'string', label: formatCommon({ id: 'password' }) },
-      {
-        name: 'userLabels',
-        label: '标签',
-        textField: 'name',
-        valueField: 'name',
-        placeholder: '输入即可创建标签',
-        options: new DataSet({
-          selection: 'multiple',
-          autoQuery: true,
-          transport: {
-            read: {
-              url: `/iam/choerodon/v1/organizations/${organizationId}/list_user_labels`,
-              method: 'get',
-              transformResponse: (data) => {
-                const arr = JSON.parse(data);
-                const newArr = [];
-                arr.forEach((item) => {
-                  const obj = {};
-                  obj.name = item;
-                  obj.status = 'remote';
-                  newArr.push(obj);
-                });
-                return newArr;
-              },
-            },
-          },
-        }),
-      },
+      // {
+      //   name: 'userLabels',
+      //   label: '标签',
+      //   textField: 'name',
+      //   valueField: 'name',
+      //   placeholder: '输入即可创建标签',
+      //   options: new DataSet({
+      //     selection: 'multiple',
+      //     autoQuery: true,
+      //     transport: {
+      //       read: {
+      //         url: `/iam/choerodon/v1/organizations/${organizationId}/list_user_labels`,
+      //         method: 'get',
+      //         transformResponse: (data) => {
+      //           const arr = JSON.parse(data);
+      //           const newArr = [];
+      //           arr.forEach((item) => {
+      //             const obj = {};
+      //             obj.name = item;
+      //             obj.status = 'remote';
+      //             newArr.push(obj);
+      //           });
+      //           return newArr;
+      //         },
+      //       },
+      //     },
+      //   }),
+      // },
     ],
   };
 };
