@@ -1,3 +1,4 @@
+/* eslint-disable */
 const pipeline = {
   'c7ncd.org-pipeline-template.pipeline.create': '创建流水线模板',
   'c7ncd.org-pipeline-template.pipeline.pipelineTemplate': '流水线模板',
@@ -41,4 +42,15 @@ const steps = {
   'c7ncd.org-pipeline-template.steps.predefine': '预定义',
 };
 
-export { pipeline, tasks, steps };
+const APP_PIPELINE_EN_US = {
+
+};
+
+const APP_PIPELINE_EDIT_EN_US = {
+  'c7ncd.app.pipeline.edit.basicInfo': '基本信息',
+  'c7ncd.app.pipeline.edit.flowConfiguration': '流程配置',
+  'c7ncd.app.pipeline.edit.ciConfigs': 'CI变量配置',
+  'c7ncd.app.pipeline.edit.advancedSettings': '高级设置',
+};
+
+export { pipeline, tasks, steps, APP_PIPELINE_EDIT_EN_US, APP_PIPELINE_EN_US };
